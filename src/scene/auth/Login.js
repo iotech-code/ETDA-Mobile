@@ -1,0 +1,116 @@
+
+import React, { Component } from 'react';
+import {
+    SafeAreaView,
+    StyleSheet,
+    ScrollView,
+    View,
+    Text,
+    StatusBar,
+    Image,
+    TextInput
+} from 'react-native';
+
+import { Button } from 'react-native-elements';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import style from '../../styles/base'
+export default class Login extends Component {
+    render() {
+        return (
+            <View style={{ flex: 1 }}>
+                <StatusBar barStyle="dark-content" />
+                <SafeAreaView>
+                    <View style={{
+                        marginTop: hp('8%'),
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        ...style.container
+                    }}>
+                        <View style={styleScoped.imageLogo}>
+                            <Image
+                                source={require('../../assets/images/logo_etda-default-1.png')}
+                                style={style.imageContain}
+                            />
+                        </View>
+
+                    </View>
+                    <View style={{ marginTop: hp('7%') }}>
+                        <Text style={styleScoped.textWelcome}>Welcome to ETDA application.</Text>
+                    </View>
+                    <View style={style.container}>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <TextInput
+                                style={styleScoped.inputCustom}
+                                placeholder="Email address"
+                            />
+                        </View>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <TextInput
+                                style={styleScoped.inputCustom}
+                                placeholder="Password"
+                                secureTextEntry={true}
+                            />
+                        </View>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <Text style={{ color: '#4267B2', textAlign: 'right', textDecorationLine: 'underline', fontSize: hp('1.7%') }}>Forgot password?</Text>
+                        </View>
+                        <View style={{ marginTop: hp('3%') }}>
+                            <Button
+                                title="Login"
+                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                            />
+                        </View>
+                        <View style={{ marginTop: hp('2%'), alignItems: 'center' }}>
+                            <Text style={{ fontSize: hp('2%'), color: '#B5B5B5' }}>Or Login with</Text>
+                        </View>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <Button
+                                title="Continue with Line"
+                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#22BA4F' }}
+                            />
+                        </View>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <Button
+                                title="Continue with Facebook"
+                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#4267B2' }}
+                            />
+                        </View>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <Button
+                                title="Continue with Google"
+                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#FF0000' }}
+                            />
+                        </View>
+
+                        <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'center' }}>
+                            <Text style={{ color: '#707070', fontSize: hp('1.7%'), marginRight: hp('1%') }}>Do not have an account?</Text>
+                            <Text style={{ color: '#4267B2', textDecorationLine: 'underline', fontSize: hp('1.7%') }}>Register</Text>
+                        </View>
+
+
+                    </View>
+                </SafeAreaView>
+            </View>
+        );
+    }
+};
+
+const styleScoped = StyleSheet.create({
+    imageLogo: {
+        height: hp('15%'),
+        width: hp('23%')
+    },
+    textWelcome: {
+        textAlign: 'center',
+        fontSize: hp('2%'),
+        color: '#003764'
+    },
+    inputCustom: {
+        height: hp('5%'),
+        borderColor: 'gray',
+        borderWidth: 1,
+        paddingHorizontal: hp('1%')
+    }
+});
+
+
