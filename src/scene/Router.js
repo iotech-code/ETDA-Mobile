@@ -4,15 +4,23 @@ import { Scene, Stack, Router } from 'react-native-router-flux';
 
 // Auth
 import Login from './auth/Login'
-
-
+import Register from './auth/Register/Register'
+import ChooseUserType from './auth/Register/ChooseUserType'
+import RegisterSuccess from './auth/Register/Success'
+import ForgetPassword from './auth/Login/ForgetPassword'
 
 const RouterPage = () => {
     return (
-        
+
         <Router>
             <Stack key="root">
-                <Scene initial  key="Login" component={Login} title="Login" hideNavBar />
+                <Scene key="Login"               component={Login} title="Login" hideNavBar  initial/>
+                <Scene key="Register"            component={Register} title="Register" hideNavBar />
+                <Scene key="ChooseUserType"      component={ChooseUserType} title="ChooseUserType" hideNavBar />
+                <Scene key="RegisterSuccess"     component={RegisterSuccess} title="RegisterSuccess" hideNavBar />
+                <Scene key="ForgetPassword"      component={ForgetPassword} title="ForgetPassword" hideNavBar />
+               
+                
             </Stack>
         </Router>
 
