@@ -12,13 +12,128 @@ import {
     TextInput
 } from 'react-native';
 
-import { Button } from 'react-native-elements';
+import { Button, colors, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class ChooseUserType extends Component {
+
+    constructor(props) {
+        super(props)
+
+
+    }
+    state = {
+        visible: false
+    }
+
+    renderModalPostandRead() {
+        const { visible } = this.state
+        return (
+            <Overlay
+                isVisible={visible}
+                overlayStyle={{
+                    width: wp('90%'),
+                    paddingVertical: hp('2%'),
+                    paddingHorizontal: hp('2%')
+                }}
+            >
+                <View style={{
+                    borderBottomColor: '#707070',
+                    borderBottomWidth: 1,
+                    paddingBottom: hp('1.5%')
+                }}>
+                    <Text style={{
+                        textAlign: 'center',
+                        color: '#003764',
+                        fontSize: hp('1.7%'),
+                        fontWeight: '600'
+                    }}>Register posts and read permission</Text>
+                </View>
+                <Text
+                    style={{
+                        marginVertical: hp('2%'),
+                        textAlign: 'left',
+                        fontSize: hp('1.8%'),
+                        lineHeight: 27,
+                        fontWeight: '300'
+                    }}
+                >
+                    Please, enter your reason for register
+                    account in posts and read permission.
+                </Text>
+
+                <View style={{ ...style.customInput, height: hp('10%') }}>
+                    <TextInput
+                        style={{ fontSize: hp('2%') }}
+                        placeholder="Enter your reason…"
+                        multiline={true}
+                        numberOfLines={50}
+
+                    />
+                </View>
+
+                <Text
+                    style={{
+                        marginTop: hp('2%'),
+                        marginBottom: hp('1%'),
+                        textAlign: 'left',
+                        fontSize: hp('1.8%'),
+                        lineHeight: 27,
+                        fontWeight: '300'
+                    }}
+                >
+                    Please, enter your experience or
+                    workmanship that will help make decision
+                    for ETDA. (Give 3 experience or less than)
+                </Text>
+
+                <View >
+                    <TextInput
+                        style={{ ...style.customInput, fontSize: hp('2%') }}
+                        placeholder="Enter your experience…"
+                    />
+                </View>
+                <View style={{ marginTop: hp('1%') }}>
+                    <TextInput
+                        style={{ ...style.customInput, fontSize: hp('2%') }}
+                        placeholder="Enter your experience…"
+                    />
+                </View>
+                <View style={{ marginTop: hp('1%') }}>
+                    <TextInput
+                        style={{ ...style.customInput, fontSize: hp('2%') }}
+                        placeholder="Enter your experience…"
+                    />
+                </View>
+                <View style={{ marginTop: hp('1%') }}>
+                    <Button
+                        title="Confirm"
+                        buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                        onPress={() => this.setState({ visible: false })}
+                    />
+                </View>
+                <View style={{ marginTop: hp('1%') }}>
+                    <Button
+                        title="Cancle"
+                        Outline={true}
+                        titleStyle={{ color: '#003764' }}
+                        buttonStyle={{
+                            padding: hp('1.5%'),
+                            backgroundColor: 'white',
+                            borderColor: '#003764',
+                            borderWidth: 1
+                        }}
+                        onPress={() => this.setState({ visible: false })}
+                    />
+                </View>
+            </Overlay>
+        )
+    }
+
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -64,7 +179,10 @@ export default class ChooseUserType extends Component {
                                 </Text>
                             </View>
 
-                            <View style={{ width: '49%' }}>
+                            <TouchableOpacity
+                                style={{ width: '49%' }}
+                                onPress={() => this.setState({ visible: true })}
+                            >
                                 <View style={{
                                     padding: hp('3%'),
                                     borderRadius: 10,
@@ -82,7 +200,7 @@ export default class ChooseUserType extends Component {
                                 }}>
                                     Posts and Read
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
 
                         </View>
 
@@ -125,6 +243,7 @@ export default class ChooseUserType extends Component {
 
                     </View>
                 </SafeAreaView>
+                {this.renderModalPostandRead()}
             </View>
         );
     }

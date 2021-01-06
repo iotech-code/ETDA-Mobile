@@ -54,7 +54,7 @@ export default class Login extends Component {
                             />
                         </View>
                         <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <TouchableOpacity  onPress={()=>Actions.ForgetPassword()}>
+                            <TouchableOpacity onPress={() => Actions.ForgetPassword()}>
                                 <Text style={{
                                     color: '#4267B2',
                                     textAlign: 'right',
@@ -68,6 +68,7 @@ export default class Login extends Component {
                             <Button
                                 title="Login"
                                 buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                                onPress={()=>Actions.Main()}
                             />
                         </View>
                         <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>

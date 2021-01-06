@@ -8,19 +8,20 @@ import Register from './auth/Register/Register'
 import ChooseUserType from './auth/Register/ChooseUserType'
 import RegisterSuccess from './auth/Register/Success'
 import ForgetPassword from './auth/Login/ForgetPassword'
-
+import Main from './Main'
 const RouterPage = () => {
     return (
 
         <Router>
             <Stack key="root">
-                <Scene key="Login"               component={Login} title="Login" hideNavBar  initial/>
-                <Scene key="Register"            component={Register} title="Register" hideNavBar />
-                <Scene key="ChooseUserType"      component={ChooseUserType} title="ChooseUserType" hideNavBar />
-                <Scene key="RegisterSuccess"     component={RegisterSuccess} title="RegisterSuccess" hideNavBar />
-                <Scene key="ForgetPassword"      component={ForgetPassword} title="ForgetPassword" hideNavBar />
-               
-                
+                <Scene key="Login" component={Login} title="Login" hideNavBar initial />
+                <Scene key="Register" component={Register} title="Register" hideNavBar />
+                <Scene key="ChooseUserType" component={ChooseUserType} title="ChooseUserType" hideNavBar />
+                <Scene key="RegisterSuccess" component={RegisterSuccess} title="RegisterSuccess" hideNavBar />
+                <Scene key="ForgetPassword" component={ForgetPassword} title="ForgetPassword" hideNavBar />
+                <Scene key="Main" component={Main} title="Main" hideNavBar />
+
+
             </Stack>
         </Router>
 
