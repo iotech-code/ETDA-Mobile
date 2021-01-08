@@ -13,4 +13,4 @@ jobs:
         # Target url
         target_repo_url: "https://gitlab.com/etda-it-dev/dev-mobileapp/etda-mobile.git"
         # Username for ssh connection
-        ssh_username: "git" # optional, default is git
+        ssh_username: "iamapinan" # optional, default is git
