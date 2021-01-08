@@ -6,9 +6,10 @@ jobs:
   git-mirror:
     runs-on: ubuntu-latest
     steps:
-      - uses: wearerequired/git-mirror-action@v1
+      - uses: iamapinan/git-mirror-action@v1.0.2
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVK }}
         with:
           source-repo: 'git@github.com:techcraft-code/ETDA-Mobile.git'
           destination-repo: 'git@gitlab.com:etda-it-dev/dev-mobileapp/etda-mobile.git'
+          destination-branch: 'main'
