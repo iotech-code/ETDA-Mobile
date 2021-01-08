@@ -1,10 +1,16 @@
 name: Mirroring Repository
+on: [push]
 
-  uses: pixta-dev/repository-mirroring-action@v1
-  with:
-    # SSH private key for ssh connection to the target repository
-    ssh_private_key: ${{ secrets.SSH_PRIVK }} # optional
-    # Target url
-    target_repo_url: "https://gitlab.com/etda-it-dev/dev-mobileapp/etda-mobile.git"
-    # Username for ssh connection
-    ssh_username:  # optional, default is git
+jobs:
+  to_codecommit:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          # SSH private key for ssh connection to the target repository
+          ssh_private_key: ${{ secrets.SSH_PRIVK }} # optional
+          # Target url
+          target_repo_url: "https://gitlab.com/etda-it-dev/dev-mobileapp/etda-mobile.git"
+          # Username for ssh connection
+          ssh_username:  # optional, default is git
