@@ -10,5 +10,5 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVK }}
         with:
-          source-repo: 'https://github.com/techcraft-code/ETDA-Mobile.git'
-          destination-repo: 'https://gitlab.com/etda-it-dev/dev-mobileapp/etda-mobile.git'
+          source-repo: 'git@github.com:techcraft-code/ETDA-Mobile.git'
+          destination-repo: 'git@gitlab.com:etda-it-dev/dev-mobileapp/etda-mobile.git'
