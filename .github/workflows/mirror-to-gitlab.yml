@@ -1,4 +1,4 @@
-- name: Mirroring Repository
+name: Mirroring Repository
 
   uses: pixta-dev/repository-mirroring-action@v1
   with:
