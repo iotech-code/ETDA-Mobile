@@ -10,7 +10,7 @@ jobs:
     - name: Mirror + trigger CI
       uses: SvanBoxel/gitlab-mirror-and-ci-action@master
       with:
-        args: "https://gitlab.com/etda-it-dev/dev-mobileapp/etda-mobile"
+        args: "https://gitlab.com/etda-it-dev/dev-mobileapp/etda-mobile.git"
       env:
         GITLAB_HOSTNAME: "gitlab.com"
         GITLAB_USERNAME: "iamapinan"
