@@ -9,6 +9,7 @@ import ChooseUserType from './auth/Register/ChooseUserType'
 import RegisterSuccess from './auth/Register/Success'
 import ForgetPassword from './auth/Login/ForgetPassword'
 import Main from './Main'
+import Activity from './Activity/Activity'
 const RouterPage = () => {
     return (
 
@@ -19,8 +20,8 @@ const RouterPage = () => {
                 <Scene key="ChooseUserType" component={ChooseUserType} title="ChooseUserType" hideNavBar />
                 <Scene key="RegisterSuccess" component={RegisterSuccess} title="RegisterSuccess" hideNavBar />
                 <Scene key="ForgetPassword" component={ForgetPassword} title="ForgetPassword" hideNavBar />
-                <Scene key="Main" component={Main} title="Main" hideNavBar />
-
+                <Scene key="Main"     component={Main} title="Main" hideNavBar />
+                <Scene key="Activity" component={Activity} title="Activity" hideNavBar />
 
             </Stack>
         </Router>

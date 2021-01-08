@@ -30,10 +30,10 @@ export default class MenuFooter extends Component {
                     <Icon name="globe" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
                     <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Message Board</Text>
                 </View>
-                <View style={{ width: '33.33%' }}>
+                <TouchableOpacity style={{ width: '33.33%' }} onPress={() => Actions.Activity()}>
                     <Icon name="calendar" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
                     <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Activity</Text>
-                </View>
+                </TouchableOpacity>
 
             </View>
         );
@@ -42,6 +42,7 @@ export default class MenuFooter extends Component {
 
 const styleScoped = StyleSheet.create({
     container: {
+        paddingBottom: hp('4%'),
         flexDirection: 'row',
         paddingHorizontal: hp('2%'),
         paddingVertical: hp('1.5%'),

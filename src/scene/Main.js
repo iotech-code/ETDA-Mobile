@@ -29,40 +29,38 @@ export default class Main extends Component {
     render() {
         const { dataList } = this.state
         return (
-            <View style={{ flex: 1, backgroundColor: 'white' }}>
+            <View style={{ flex: 1, backgroundColor: 'white', paddingTop: hp('4.5%')}}>
                 <StatusBar barStyle="dark-content" />
-                <SafeAreaView style={{ flex: 1 }}>
-                    <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('10%') }}>
-                        <HeaderNavbar></HeaderNavbar>
-                        <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                padding: hp('2%'),
-                                alignItems: 'center'
-                            }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
-                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                            </View>
-
-                            <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), width: '36%' }}>
-                                <Button
-                                    title="E-commerce"
-                                    titleStyle={{ fontSize: hp('1.5%') }}
-                                    buttonStyle={{ backgroundColor: '#003764', padding: hp('0.5%') }}
-                                />
-                            </View>
-
-                            <ScrollView >
-                                <Post></Post>
-                                <Post></Post>
-                            </ScrollView>
-
-
+                <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('10%') }}>
+                    <HeaderNavbar></HeaderNavbar>
+                    <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            padding: hp('2%'),
+                            alignItems: 'center'
+                        }}>
+                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
+                            <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
+
+                        <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), width: '36%' }}>
+                            <Button
+                                title="E-commerce"
+                                titleStyle={{ fontSize: hp('1.5%') }}
+                                buttonStyle={{ backgroundColor: '#003764', padding: hp('0.5%') }}
+                            />
+                        </View>
+
+                        <ScrollView >
+                            <Post></Post>
+                            <Post></Post>
+                        </ScrollView>
+
+
                     </View>
-                    <MenuFooter></MenuFooter>
-                </SafeAreaView>
+                </View>
+                <MenuFooter></MenuFooter>
             </View>
         );
     }
