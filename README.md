@@ -19,3 +19,14 @@
         - Navbar component
         - Menu footer component
         - Card post
+
+
+# 8/1/2021
+    - อัปเดต
+        - สไตล์ หน้าหลัก (เขียนใหม่)
+        - อัปเดตองค์ประกอบ
+        - Menu footer component
+
+    - สร้าง
+        - หน้า Activity 
+        - Post component
