@@ -68,7 +68,7 @@ export default class Login extends Component {
                             <Button
                                 title="Login"
                                 buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
-                                onPress={()=>Actions.Main()}
+                                onPress={() => Actions.Main()}
                             />
                         </View>
                         <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
