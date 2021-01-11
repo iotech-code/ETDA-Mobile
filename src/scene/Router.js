@@ -10,6 +10,7 @@ import RegisterSuccess from './auth/Register/Success'
 import ForgetPassword from './auth/Login/ForgetPassword'
 import Main from './Main'
 import Activity from './Activity/Activity'
+import MessageBoard from './Message/MessageBoard'
 const RouterPage = () => {
     return (
 
@@ -22,6 +23,8 @@ const RouterPage = () => {
                 <Scene key="ForgetPassword" component={ForgetPassword} title="ForgetPassword" hideNavBar />
                 <Scene key="Main"     component={Main} title="Main" hideNavBar />
                 <Scene key="Activity" component={Activity} title="Activity" hideNavBar />
+                <Scene key="MessageBoard" component={MessageBoard} title="MessageBoard" hideNavBar />
+
 
             </Stack>
         </Router>

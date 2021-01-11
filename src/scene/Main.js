@@ -29,7 +29,7 @@ export default class Main extends Component {
     render() {
         const { dataList } = this.state
         return (
-            <View style={{ flex: 1, backgroundColor: 'white', paddingTop: hp('4.5%')}}>
+            <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
                 <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('10%') }}>
                     <HeaderNavbar></HeaderNavbar>

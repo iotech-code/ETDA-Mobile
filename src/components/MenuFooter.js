@@ -9,7 +9,8 @@ import {
     StatusBar,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Platform
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -22,14 +23,14 @@ export default class MenuFooter extends Component {
     render() {
         return (
             <View style={styleScoped.container}>
-                <View style={{ width: '33.33%' }}>
+                <TouchableOpacity style={{ width: '33.33%' }} onPress={()=>Actions.Main()}> 
                     <Icon name="home" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
                     <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Home</Text>
-                </View>
-                <View style={{ width: '33.33%' }}>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ width: '33.33%' }} onPress={()=>Actions.MessageBoard()}>
                     <Icon name="globe" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
                     <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Message Board</Text>
-                </View>
+                </TouchableOpacity>
                 <TouchableOpacity style={{ width: '33.33%' }} onPress={() => Actions.Activity()}>
                     <Icon name="calendar" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
                     <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Activity</Text>
@@ -42,7 +43,7 @@ export default class MenuFooter extends Component {
 
 const styleScoped = StyleSheet.create({
     container: {
-        paddingBottom: hp('4%'),
+        paddingBottom: Platform.OS === 'ios' ? hp('4%') : hp('1%'),
         flexDirection: 'row',
         paddingHorizontal: hp('2%'),
         paddingVertical: hp('1.5%'),

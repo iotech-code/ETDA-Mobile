@@ -30,3 +30,13 @@
     - สร้าง
         - หน้า Activity 
         - Post component
+
+# 11/1/2021
+    - อัปเดต
+        - สไตล์ ทั้งหมดให้ ios และ android เหมือนกัน
+        - อัปเดต MenuFooter component
+
+    - สร้าง
+        - หน้า Message 
+        - Message Post component
+    ในส่วนของ Message Board เสร็จไปแล้ว 80 %
