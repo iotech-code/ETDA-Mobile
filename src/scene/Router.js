@@ -11,6 +11,7 @@ import ForgetPassword from './auth/Login/ForgetPassword'
 import Main from './Main'
 import Activity from './Activity/Activity'
 import MessageBoard from './Message/MessageBoard'
+import CreatePost  from './Post/Create'
 const RouterPage = () => {
     return (
 
@@ -24,6 +25,8 @@ const RouterPage = () => {
                 <Scene key="Main"     component={Main} title="Main" hideNavBar />
                 <Scene key="Activity" component={Activity} title="Activity" hideNavBar />
                 <Scene key="MessageBoard" component={MessageBoard} title="MessageBoard" hideNavBar />
+                <Scene key="CreatePost" component={CreatePost} title="CreatePost" hideNavBar />
+
 
 
             </Stack>

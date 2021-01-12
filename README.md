@@ -40,3 +40,14 @@
         - หน้า Message 
         - Message Post component
     ในส่วนของ Message Board เสร็จไปแล้ว 80 %
+
+
+
+# 11/1/2021
+    - อัปเดต
+        - อัปเดต Message Post
+            - เพิีม option เมนู เมื่อคลิกที่จุดไข่ปลา
+            - update style 
+        - อัปเดต Message board
+    - สร้าง
+        - หน้า Create Post  
