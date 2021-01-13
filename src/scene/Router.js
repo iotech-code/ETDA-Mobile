@@ -11,7 +11,9 @@ import ForgetPassword from './auth/Login/ForgetPassword'
 import Main from './Main'
 import Activity from './Activity/Activity'
 import MessageBoard from './Message/MessageBoard'
-import CreatePost  from './Post/Create'
+import CreatePost from './Post/Create'
+import Event from './Activity/Event'
+import EventDetail from './Activity/EventDetail'
 const RouterPage = () => {
     return (
 
@@ -22,10 +24,14 @@ const RouterPage = () => {
                 <Scene key="ChooseUserType" component={ChooseUserType} title="ChooseUserType" hideNavBar />
                 <Scene key="RegisterSuccess" component={RegisterSuccess} title="RegisterSuccess" hideNavBar />
                 <Scene key="ForgetPassword" component={ForgetPassword} title="ForgetPassword" hideNavBar />
-                <Scene key="Main"     component={Main} title="Main" hideNavBar />
+                <Scene key="Main" component={Main} title="Main" hideNavBar />
                 <Scene key="Activity" component={Activity} title="Activity" hideNavBar />
                 <Scene key="MessageBoard" component={MessageBoard} title="MessageBoard" hideNavBar />
                 <Scene key="CreatePost" component={CreatePost} title="CreatePost" hideNavBar />
+                <Scene key="Event" component={Event} title="Event" hideNavBar />
+                <Scene key="EventDetail" component={EventDetail} title="EventDetail" hideNavBar />
+
+
 
 
 

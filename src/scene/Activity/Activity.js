@@ -34,79 +34,35 @@ export default class Activity extends Component {
                 <View style={{ flex: 1, paddingBottom: hp('10%') }}>
                     <HeaderNavbar></HeaderNavbar>
                     <View style={{ ...style.container, marginTop: hp('4%') }}>
-                        <View style={{
-                            padding: hp('2%'),
-                            borderRadius: 10,
-                            backgroundColor: '#003764'
-                        }}>
-                            <Text style={{ fontSize: hp('2%'), color: 'white', textAlign: 'center' }}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={()=>Actions.Event()}>
+                            <Text style={{ ...styleScoped.menuName }}>
                                 Event
                             </Text>
-                            <Icon name="account-plus" color="white" style={{
-                                textAlign: 'center',
-                                marginTop: hp('2%')
-                            }} size={hp('6%')} />
-                            <Text style={{
-                                fontSize: hp('1.2%'),
-                                marginTop: hp('2%'),
-                                color: 'white',
-                                textAlign: 'center',
-                                fontWeight: '300'
-
-                            }}>
+                            <Icon name="account-plus" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
+                            <Text style={{ ...styleScoped.description }}>
                                 Lorem ipsum dolor sit amet, consetetur
                             </Text>
-                        </View>
+                        </TouchableOpacity>
 
-                        <View style={{
-                            padding: hp('2%'),
-                            borderRadius: 10,
-                            backgroundColor: '#003764',
-                            marginTop: hp('2%')
-                        }}>
-                            <Text style={{ fontSize: hp('2%'), color: 'white', textAlign: 'center' }}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }}>
+                            <Text style={{ ...styleScoped.menuName }}>
                                 Event
                             </Text>
-                            <Icon name="checkbox-marked-outline" color="white" style={{
-                                textAlign: 'center',
-                                marginTop: hp('2%')
-                            }} size={hp('6%')} />
-                            <Text style={{
-                                fontSize: hp('1.2%'),
-                                marginTop: hp('2%'),
-                                color: 'white',
-                                textAlign: 'center',
-                                fontWeight: '300'
-
-                            }}>
+                            <Icon name="checkbox-marked-outline" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
+                            <Text style={{ ...styleScoped.description }}>
                                 Lorem ipsum dolor sit amet, consetetur
                             </Text>
-                        </View>
+                        </TouchableOpacity>
 
-                        <View style={{
-                            padding: hp('2%'),
-                            borderRadius: 10,
-                            backgroundColor: '#003764',
-                            marginTop: hp('2%')
-                        }}>
-                            <Text style={{ fontSize: hp('2%'), color: 'white', textAlign: 'center' }}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }}>
+                            <Text style={{ ...styleScoped.menuName }}>
                                 Event
                             </Text>
-                            <Icon name="flag" color="white" style={{
-                                textAlign: 'center',
-                                marginTop: hp('2%')
-                            }} size={hp('6%')} />
-                            <Text style={{
-                                fontSize: hp('1.2%'),
-                                marginTop: hp('2%'),
-                                color: 'white',
-                                textAlign: 'center',
-                                fontWeight: '300'
-
-                            }}>
+                            <Icon name="flag" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
+                            <Text style={{ ...styleScoped.description }}>
                                 Lorem ipsum dolor sit amet, consetetur
                             </Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <MenuFooter></MenuFooter>
@@ -116,30 +72,26 @@ export default class Activity extends Component {
 };
 
 const styleScoped = StyleSheet.create({
-    imageLogo: {
-        height: hp('15%'),
-        width: hp('23%')
+    warpperMenuEvent: {
+        padding: hp('2%'),
+        borderRadius: 10,
+        backgroundColor: '#003764'
     },
-    textWelcome: {
+    menuIcon: {
         textAlign: 'center',
+        marginTop: hp('2%')
+    },
+    description: {
+        fontSize: hp('1.2%'),
+        marginTop: hp('2%'),
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: '300'
+    },
+    menuName: {
         fontSize: hp('2%'),
-        color: '#003764'
-    },
-    inputCustom: {
-        height: hp('5%'),
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: hp('1%')
-    },
-    shadowCard: {
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
+        color: 'white',
+        textAlign: 'center'
     }
 });
 

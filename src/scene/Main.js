@@ -31,35 +31,33 @@ export default class Main extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
-                <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('10%') }}>
-                    <HeaderNavbar></HeaderNavbar>
-                    <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            padding: hp('2%'),
-                            alignItems: 'center'
-                        }}>
-                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
-                            <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                        </View>
+                <ScrollView>
+                    <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
+                        <HeaderNavbar></HeaderNavbar>
+                        <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                padding: hp('2%'),
+                                alignItems: 'center'
+                            }}>
+                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
+                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            </View>
 
-                        <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), width: '36%' }}>
-                            <Button
-                                title="E-commerce"
-                                titleStyle={{ fontSize: hp('1.5%') }}
-                                buttonStyle={{ backgroundColor: '#003764', padding: hp('0.5%') }}
-                            />
-                        </View>
-
-                        <ScrollView >
+                            <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), width: '36%' }}>
+                                <Button
+                                    title="E-commerce"
+                                    titleStyle={{ fontSize: hp('1.5%') }}
+                                    buttonStyle={{ backgroundColor: '#003764', padding: hp('0.5%') }}
+                                />
+                            </View>
                             <Post></Post>
                             <Post></Post>
-                        </ScrollView>
-
-
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
+
                 <MenuFooter></MenuFooter>
             </View>
         );
