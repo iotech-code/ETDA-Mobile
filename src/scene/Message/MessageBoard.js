@@ -46,8 +46,8 @@ export default class MessageBoard extends Component {
                             </View>
 
                             <View style={{ ...style.container }}>
-                                <TouchableOpacity style={{ ...styleScoped.btnCreateNewBlog }} onPress={() => Actions.CreatePost()}>
-                                    <Text style={{ ...styleScoped.textCreateNewBlog }}>Write New Blog</Text>
+                                <TouchableOpacity style={{ ...style.btnCreateNewBlog }} onPress={() => Actions.CreatePost()}>
+                                    <Text style={{ ...style.textCreateNewBlog }}>Write New Blog</Text>
                                 </TouchableOpacity>
                             </View>
 

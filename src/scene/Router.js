@@ -14,6 +14,10 @@ import MessageBoard from './Message/MessageBoard'
 import CreatePost from './Post/Create'
 import Event from './Activity/Event'
 import EventDetail from './Activity/EventDetail'
+import Poll from './Activity/Poll'
+import Survey from './Activity/Survey'
+import PollDetail from './Activity/PollDetail'
+import SurveyDetail from './Activity/SurveyDetail'
 const RouterPage = () => {
     return (
 
@@ -30,6 +34,14 @@ const RouterPage = () => {
                 <Scene key="CreatePost" component={CreatePost} title="CreatePost" hideNavBar />
                 <Scene key="Event" component={Event} title="Event" hideNavBar />
                 <Scene key="EventDetail" component={EventDetail} title="EventDetail" hideNavBar />
+                <Scene key="Poll" component={Poll} title="Poll" hideNavBar />
+                <Scene key="Survey" component={Survey} title="Survey" hideNavBar />
+                <Scene key="PollDetail" component={PollDetail} title="PollDetail" hideNavBar />
+                <Scene key="SurveyDetail" component={SurveyDetail} title="SurveyDetail" hideNavBar />
+
+
+
+
 
 
 

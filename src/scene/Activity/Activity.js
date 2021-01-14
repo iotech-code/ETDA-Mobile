@@ -44,9 +44,9 @@ export default class Activity extends Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.Poll()}>
                             <Text style={{ ...styleScoped.menuName }}>
-                                Event
+                                Poll
                             </Text>
                             <Icon name="checkbox-marked-outline" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
                             <Text style={{ ...styleScoped.description }}>
@@ -54,9 +54,9 @@ export default class Activity extends Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.Survey()}>
                             <Text style={{ ...styleScoped.menuName }}>
-                                Event
+                                Survey
                             </Text>
                             <Icon name="flag" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
                             <Text style={{ ...styleScoped.description }}>

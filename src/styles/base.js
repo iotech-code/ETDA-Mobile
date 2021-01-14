@@ -56,5 +56,19 @@ export default StyleSheet.create({
     textTag: {
         color: '#003764',
         fontSize: hp('2%')
+    },
+    btnCreateNewBlog:{
+        padding: hp('1.5%'),
+        width: '50%',
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#003764',
+        width: '100%'
+    },
+    textCreateNewBlog:{
+        fontSize: hp('2%'),
+        fontWeight: "300",
+        textAlign: 'center',
+        color: '#003764',
     }
 })
