@@ -62,6 +62,32 @@ export default class PollDetail extends Component {
                             </TouchableOpacity>
                         </View>
                         <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', ...style.container }}>
+                            <View style={{
+                                // height: hp('10%'),
+                                // width: hp('10%'),
+                                width: hp('10%'),
+                                height: hp('10%') ,
+                                backgroundColor: 'white',
+                                borderRadius:50,
+                                borderTopRightRadius: 50,
+                                borderBottomRightRadius: 50,
+                                borderColor: '#003764',
+                                borderWidth: 1
+                                // borderStartColor: 'rgba(0,0,0,0.16)',
+                                // borderEndColor: '#003764',
+                                // borderTopColor:'rgba(0,0,0,0.16)',
+                                // borderBottomColor:'rgba(0,0,0,0.16)',
+                                // borderRightColor: "#003764",
+                                // // borderLeftColor: 'rgba(0,0,0,0.16)',
+                                // borderRadius: 1,
+                                // borderWidth: 1
+
+                            }}>
+
+                            </View>
+                        </View>
                         {/* section content */}
 
                         <View style={{ ...style.container, marginTop: hp('20%') }}>

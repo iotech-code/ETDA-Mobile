@@ -21,6 +21,30 @@ import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import EventPost from '../../components/EventPost'
+import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
+
+LocaleConfig.locales['en'] = {
+    formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
+    monthNames: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+    ],
+    monthNamesShort: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+    dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+};
+
+LocaleConfig.defaultLocale = 'en';
 
 export default class Activity extends Component {
     state = {
@@ -47,10 +71,25 @@ export default class Activity extends Component {
                         </View>
 
                         {/* calendar*/}
+                        <View style={style.container}>
+                            <Calendar
+                                markingType={'period'}
+                                markedDates={{
+                                    '2021-01-15': { marked: true, dotColor: '#50cebb' },
+                                    '2021-01-16': { marked: true, dotColor: '#50cebb' },
+                                    '2021-01-21': { startingDay: true, color: '#50cebb', textColor: 'white' },
+                                    '2021-01-22': { color: '#70d7c7', textColor: 'white' },
+                                    '2021-01-23': { color: '#70d7c7', textColor: 'white', marked: true, dotColor: 'white' },
+                                    '2021-01-24': { color: '#70d7c7', textColor: 'white' },
+                                    '2021-01-25': { endingDay: true, color: '#50cebb', textColor: 'white' },
+                                }}
+                            />
+
+                        </View>
 
                         {/* end calendar */}
 
-                        <View>
+                        <View style={{ marginTop: hp('2%') }}>
                             <View style={{ ...style.container }}>
                                 <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>My events(1)</Text>
                             </View>

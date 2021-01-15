@@ -79,3 +79,20 @@
         - หน้า Survey Detail
         - Poll post component
         - Survey post component
+
+# 14/1/2021
+
+    - อัปเดต
+        - อัปเดตฟังชันก์ และ สไตล์
+            - Post
+            - Event Detail
+            - Event
+            - Poll Detail
+        - เพิ่มปฏิทินเข้าในส่วนของหน้า Event
+
+
+    - สร้าง
+        - หน้า Post Detail
+        - Comment component
+
+

@@ -13,14 +13,12 @@ import {
     FlatList
 } from 'react-native';
 
-import { Button, BottomSheet } from 'react-native-elements';
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
-import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MenuFooter from '../../components/MenuFooter'
-import EventPost from '../../components/EventPost'
+
 
 export default class EventDetail extends Component {
     state = {

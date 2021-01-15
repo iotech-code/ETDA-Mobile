@@ -53,11 +53,11 @@ export default class Post extends Component {
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
                         />
                     </View>
-                    <View style={{ marginTop: hp('1%') }}>
+                    <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={()=>Actions.PostDetail()}>
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>
                             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
                                     </Text>
-                    </View>
+                    </TouchableOpacity>
 
                     <View style={{
                         marginTop: hp('2%'),
