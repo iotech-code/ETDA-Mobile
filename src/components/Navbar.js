@@ -24,12 +24,12 @@ export default class HeaderNavbar extends Component {
             <View style={styleScoped.container}>
                 {/* left side  */}
                 <View style={styleScoped.leftSide}>
-                    <View style={styleScoped.avatar}>
+                    <TouchableOpacity style={styleScoped.avatar} onPress={()=>Actions.MyProfile()}>
                         <Image
                             source={require('../assets/images/avatar.png')}
                             style={styleScoped.imageAvatar}
                         />
-                    </View>
+                    </TouchableOpacity>
                     <Text style={styleScoped.textName}>John McMan</Text>
                 </View>
 

@@ -19,6 +19,7 @@ import Survey from './Activity/Survey'
 import PollDetail from './Activity/PollDetail'
 import SurveyDetail from './Activity/SurveyDetail'
 import PostDetail from './Post/Detail'
+import MyProfile from './Profile/MyProfile'
 const RouterPage = () => {
     return (
 
@@ -41,6 +42,8 @@ const RouterPage = () => {
                 <Scene key="SurveyDetail" component={SurveyDetail} title="SurveyDetail" hideNavBar />
 
                 <Scene key="PostDetail" component={PostDetail} title="PostDetail" hideNavBar />
+                <Scene key="MyProfile" component={MyProfile} title="MyProfile" hideNavBar />
+
 
 
 
