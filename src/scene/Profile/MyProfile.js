@@ -33,7 +33,9 @@ export default class MyProfile extends Component {
                         <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>My Profile</Text>
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Setting</Text>
+                            <TouchableOpacity onPress={() => Actions.ProfileSetting()}>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Setting</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <View style={{ ...style.container }}>
@@ -52,7 +54,7 @@ export default class MyProfile extends Component {
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
-                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5' , fontWeight:'300' }}>Bio / status / Introduction</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5', fontWeight: '300' }}>Bio / status / Introduction</Text>
                             </View>
 
                         </View>
@@ -101,7 +103,7 @@ export default class MyProfile extends Component {
                             <Button
                                 title="Edit Profile"
                                 buttonStyle={{ padding: hp('1%'), backgroundColor: '#003764' }}
-                                onPress={() => Actions.Main()}
+                                onPress={() => Actions.EditProfile()}
                             />
                         </View>
 

@@ -20,6 +20,9 @@ import PollDetail from './Activity/PollDetail'
 import SurveyDetail from './Activity/SurveyDetail'
 import PostDetail from './Post/Detail'
 import MyProfile from './Profile/MyProfile'
+import EditProfile from './Profile/EditProfile'
+import ProfileSetting from './Profile/ProfileSetting'
+import ChangePassword from './Profile/ChangePassword'
 const RouterPage = () => {
     return (
 
@@ -43,6 +46,12 @@ const RouterPage = () => {
 
                 <Scene key="PostDetail" component={PostDetail} title="PostDetail" hideNavBar />
                 <Scene key="MyProfile" component={MyProfile} title="MyProfile" hideNavBar />
+                <Scene key="EditProfile" component={EditProfile} title="EditProfile" hideNavBar />
+                <Scene key="ProfileSetting" component={ProfileSetting} title="ProfileSetting" hideNavBar />
+                <Scene key="ChangePassword" component={ChangePassword} title="ChangePassword" hideNavBar />
+
+
+
 
 
 

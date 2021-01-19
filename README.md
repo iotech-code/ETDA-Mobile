@@ -101,3 +101,12 @@
     - สร้าง
         - หน้า My Profile
 
+# 15/1/2021
+
+    - สร้าง
+        - หน้า Edit Profile
+        - หน้า Profile Setting
+        - หน้า Edit Change Password
+    
+
+
