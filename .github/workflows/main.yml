@@ -1,0 +1,14 @@
+on: push
+name: Slack Notification
+jobs:
+    slackNotification:
+      name: Slack Notification
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@master
+      - name: Slack Notification Demo
+        uses: bryannice/gitactions-slack-notification@2.0.0
+        env:
+          SLACK_INCOMING_WEBHOOK: 'https://hooks.slack.com/services/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'
+          SLACK_MESSAGE: 'New push from github'
+          SLACK_TITLE: 'Github Notification'
