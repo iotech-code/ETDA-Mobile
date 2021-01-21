@@ -21,7 +21,7 @@ import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import MessagePost from '../../components/MessagePost'
-
+import {colors} from '../../constant/util'
 
 export default class MessageBoard extends Component {
     state = {
@@ -32,7 +32,7 @@ export default class MessageBoard extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <ScrollView>
-                    <View style={{ flex: 1}}>
+                    <View style={{ flex: 1 }}>
                         <HeaderNavbar></HeaderNavbar>
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
                             <View style={{
@@ -46,9 +46,17 @@ export default class MessageBoard extends Component {
                             </View>
 
                             <View style={{ ...style.container }}>
-                                <TouchableOpacity style={{ ...style.btnCreateNewBlog }} onPress={() => Actions.CreatePost()}>
-                                    <Text style={{ ...style.textCreateNewBlog }}>Write New Blog</Text>
-                                </TouchableOpacity>
+                                <Button
+                                    title="Write New Blog"
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1.5%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded
+                                    }}
+                                    onPress={() => Actions.CreatePost()}
+                                />
                             </View>
 
 
@@ -100,20 +108,20 @@ const styleScoped = StyleSheet.create({
         width: '50%',
         backgroundColor: 'white',
         borderWidth: 1,
-        borderColor: '#003764',
+        borderColor: colors.primary,
     },
     textBtnGroup: {
         fontSize: hp('2%'),
         fontWeight: "300",
         textAlign: 'center',
-        color: '#003764',
+        color: colors.primary,
     },
     btnGroupActive: {
         padding: hp('1.5%'),
         width: '50%',
-        backgroundColor: '#003764',
+        backgroundColor: colors.primary,
         borderWidth: 1,
-        borderColor: '#003764',
+        borderColor: colors.primary,
     },
     textBtnGroupActive: {
         fontSize: hp('2%'),

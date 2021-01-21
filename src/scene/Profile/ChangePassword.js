@@ -30,7 +30,7 @@ export default class ChangePassword extends Component {
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
-                        <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                        <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Chnage Password</Text>
                             <TouchableOpacity onPress={() => Actions.MyProfile()}>
@@ -42,25 +42,28 @@ export default class ChangePassword extends Component {
                     <View style={{ ...style.container, marginTop: hp('2%') }}>
                         <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Current password</Text>
                         <TextInput
-                            style={{ ...style.customInput, width: '100%' }}
+                            style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder="Enter your password here…"
                         />
+                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
                     </View>
 
                     <View style={{ ...style.container, marginTop: hp('5%') }}>
                         <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>New password</Text>
                         <TextInput
-                            style={{ ...style.customInput, width: '100%' }}
+                            style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder="Enter your password here…"
                         />
+                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
                     </View>
 
                     <View style={{ ...style.container, marginTop: hp('5%') }}>
                         <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Confirm-New password</Text>
                         <TextInput
-                            style={{ ...style.customInput, width: '100%' }}
+                            style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder="Enter your password here…"
                         />
+                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
                     </View>
 
                 </ScrollView>

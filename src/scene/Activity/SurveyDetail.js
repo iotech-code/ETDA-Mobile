@@ -31,7 +31,7 @@ export default class SurveyDetail extends Component {
                 backgroundColor: "#F9FCFF"
             }}>
                 <ScrollView style={{ flex: 1, ...style.marginHeaderStatusBar }}>
-                    <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                    <View style={{...style.navbar}}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Survey Detail</Text>
                         <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
@@ -62,9 +62,35 @@ export default class SurveyDetail extends Component {
                             </TouchableOpacity>
                         </View>
                         <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', ...style.container }}>
+                            <View style={{
+                                // height: hp('10%'),
+                                // width: hp('10%'),
+                                width: hp('10%'),
+                                height: hp('10%') ,
+                                backgroundColor: 'white',
+                                borderRadius:50,
+                                borderTopRightRadius: 50,
+                                borderBottomRightRadius: 50,
+                                borderColor: '#003764',
+                                borderWidth: 1
+                                // borderStartColor: 'rgba(0,0,0,0.16)',
+                                // borderEndColor: '#003764',
+                                // borderTopColor:'rgba(0,0,0,0.16)',
+                                // borderBottomColor:'rgba(0,0,0,0.16)',
+                                // borderRightColor: "#003764",
+                                // // borderLeftColor: 'rgba(0,0,0,0.16)',
+                                // borderRadius: 1,
+                                // borderWidth: 1
+
+                            }}>
+
+                            </View>
+                        </View>
                         {/* section content */}
 
-                        <View style={{ ...style.container, marginTop: hp('20%') }}>
+                        <View style={{ ...style.container, marginTop: hp('8%') }}>
                             <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: hp('1%') }}>
                                 <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -121,7 +147,7 @@ export default class SurveyDetail extends Component {
                         <View style={{ ...style.container, marginTop: hp('3%') }}>
                             <Button
                                 title="Done"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnRounded, ...style.btnPrimary }}
                             />
                         </View>
 

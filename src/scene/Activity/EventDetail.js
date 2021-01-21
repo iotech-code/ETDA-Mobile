@@ -30,7 +30,7 @@ export default class EventDetail extends Component {
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
 
                     <View style={{ ...styleScoped.shadowCard  , backgroundColor:'white'}}>
-                        <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                        <View style={{...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Event Detail</Text>
                             <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />

@@ -48,6 +48,8 @@ const styleScoped = StyleSheet.create({
         paddingHorizontal: hp('2%'),
         paddingVertical: hp('1.5%'),
         backgroundColor: 'white',
+        borderTopRightRadius:30,
+        borderTopLeftRadius:30,
         alignItems: 'center',
         shadowColor: "#000",
         shadowOffset: {
@@ -56,7 +58,7 @@ const styleScoped = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 10,
     },
 
 });

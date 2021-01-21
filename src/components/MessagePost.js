@@ -49,8 +49,15 @@ export default class MessagsPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('24%') : hp('22%')}
+                height={Platform.OS === 'ios' ? hp('25%') : hp('23%')}
                 openDuration={250}
+                customStyles={{container:{
+                    borderTopRightRadius:30,
+                    borderTopLeftRadius:30,
+                    paddingTop:hp('1%'),
+                    backgroundColor:'white',
+                    ...style.shadowCard
+                }}}
             >
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
@@ -58,14 +65,14 @@ export default class MessagsPost extends Component {
                     <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
                 </TouchableOpacity>
-                <View style={{...style.divider}}></View>
+                <View style={{ ...style.divider }}></View>
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
                 </TouchableOpacity>
-                <View style={{...style.divider}}></View>
+                <View style={{ ...style.divider }}></View>
 
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
@@ -73,7 +80,7 @@ export default class MessagsPost extends Component {
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
                 </TouchableOpacity>
-                <View style={{...style.divider}}></View>
+                <View style={{ ...style.divider }}></View>
 
             </RBSheet>
         )
@@ -111,12 +118,13 @@ export default class MessagsPost extends Component {
                     </View>
                     <View style={{ marginTop: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%') }}>First time of Digital Law</Text>
-                        <Button
-                            title="Digital Law"
-                            titleStyle={{ fontSize: hp('1.5%') }}
-                            buttonStyle={{ backgroundColor: '#003764', padding: hp('0.5%') }}
-                            containerStyle={{ width: '30%', marginTop: hp('1%') }}
-                        />
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
+                            <Button
+                                title="Digital Law"
+                                titleStyle={{ fontSize: hp('1.5%') }}
+                                buttonStyle={{ ...style.btnTagPrimary }}
+                            />
+                        </View>
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
                         <Image
@@ -196,7 +204,7 @@ const styleScoped = StyleSheet.create({
         padding: hp('2%'),
         flexDirection: 'row',
         alignItems: 'center',
-        
+
     }
 });
 

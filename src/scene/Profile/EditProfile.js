@@ -114,7 +114,11 @@ export default class EditProfile extends Component {
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
                         title="Confirm"
-                        buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                        buttonStyle={{
+                            padding: hp('1.5%'),
+                            ...style.btnRounded,
+                            ...style.btnPrimary
+                        }}
                         onPress={() => this.setState({ visibleModalPostandRead: false })}
                     />
                 </View>
@@ -124,10 +128,8 @@ export default class EditProfile extends Component {
                         Outline={true}
                         titleStyle={{ color: '#003764' }}
                         buttonStyle={{
-                            padding: hp('1.5%'),
-                            backgroundColor: 'white',
-                            borderColor: '#003764',
-                            borderWidth: 1
+                            ...style.btnRounded,
+                            ...style.btnPrimaryOutline
                         }}
                         onPress={() => this.setState({ visibleModalPostandRead: false })}
                     />
@@ -194,19 +196,21 @@ export default class EditProfile extends Component {
                 <View style={{ marginTop: hp('2%') }}>
                     <Button
                         title="Continue"
-                        buttonStyle={{ padding: hp('1%'), backgroundColor: '#003764' }}
+                        buttonStyle={{
+                            padding: hp('1%'),
+                            ...style.btnRounded,
+                            ...style.btnPrimary
+                        }}
                         onPress={() => this.continueTypeOfUser()}
                     />
+                    <View style={{ marginTop: hp('1%') }}></View>
                     <Button
                         title="Cancle"
                         Outline={true}
                         titleStyle={{ color: '#003764' }}
                         buttonStyle={{
-                            marginTop: hp('1'),
-                            padding: hp('1%'),
-                            backgroundColor: 'white',
-                            borderColor: '#003764',
-                            borderWidth: 1
+                            ...style.btnPrimaryOutline,
+                            ...style.btnRounded
                         }}
                         onPress={() => this.setState({ visibleChangeTypeOfUser: false })}
                     />
@@ -220,7 +224,7 @@ export default class EditProfile extends Component {
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%'), marginBottom: hp('2%') }}>
-                        <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                        <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Profile</Text>
                             <TouchableOpacity >

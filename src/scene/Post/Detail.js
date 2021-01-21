@@ -19,7 +19,7 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
-
+import { fonts } from '../../constant/util'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false
@@ -33,7 +33,7 @@ export default class EventDetail extends Component {
                         ...styleScoped.shadowCard, backgroundColor: 'white', paddingBottom: hp('2%'),
                         marginBottom: hp('2%'),
                     }}>
-                        <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                        <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Blog Detail</Text>
                             <View></View>
@@ -56,7 +56,7 @@ export default class EventDetail extends Component {
                                 <View >
                                     <Text style={{ fontSize: hp('2%') }}>E-commerce new gen</Text>
                                     <Text style={{ fontSize: hp('2%') }}>By ETDA official</Text>
-                                    <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>11/11/2020  3:30 pm</Text>
+                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>11/11/2020  3:30 pm</Text>
                                 </View>
                             </View>
                         </View>
@@ -64,9 +64,11 @@ export default class EventDetail extends Component {
 
                         <View style={style.container}>
                             <View style={{ marginTop: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                                <View style={{ ...style.tagActive, padding: hp('0.5%') }}>
-                                    <Text style={{ ...style.textTagActive, fontSize: hp('1.5%') }}>E-commerce</Text>
-                                </View>
+                                <Button
+                                    title="E-commerce"
+                                    titleStyle={{ fontSize: hp('1.5%') }}
+                                    buttonStyle={{ ...style.btnTagPrimary }}
+                                />
                             </View>
 
 

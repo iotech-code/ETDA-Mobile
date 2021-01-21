@@ -31,7 +31,7 @@ export default class PollDetail extends Component {
                 backgroundColor: "#F9FCFF"
             }}>
                 <ScrollView style={{ flex: 1, ...style.marginHeaderStatusBar }}>
-                    <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                    <View style={{...style.navbar}}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll Detail</Text>
                         <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
@@ -90,7 +90,7 @@ export default class PollDetail extends Component {
                         </View>
                         {/* section content */}
 
-                        <View style={{ ...style.container, marginTop: hp('20%') }}>
+                        <View style={{ ...style.container, marginTop: hp('8%') }}>
                             <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: hp('1%') }}>
                                 <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -147,7 +147,7 @@ export default class PollDetail extends Component {
                         <View style={{ ...style.container, marginTop: hp('3%') }}>
                             <Button
                                 title="Done"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnRounded, ...style.btnPrimary }}
                             />
                         </View>
 

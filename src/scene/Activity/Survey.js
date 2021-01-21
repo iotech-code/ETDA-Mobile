@@ -20,7 +20,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import PostSurvey from '../../components/Survey'
-export default class Poll extends Component {
+export default class Survey extends Component {
     state = {
         visibleSearch: false
     }
@@ -28,7 +28,7 @@ export default class Poll extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                    <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                    <View style={{ ...style.navbar }}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Survey</Text>
                         <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />

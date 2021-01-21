@@ -67,7 +67,7 @@
         - หน้า Event Detail
         - Event post component
 
-# 14/1/2021
+# 15/1/2021
 
     - อัปเดต
         - อัปเดตฟังชันก์ หน่้า Activity และหน้า Message Board
@@ -80,7 +80,7 @@
         - Poll post component
         - Survey post component
 
-# 14/1/2021
+# 18/1/2021
 
     - อัปเดต
         - อัปเดตฟังชันก์ และ สไตล์
@@ -101,7 +101,7 @@
     - สร้าง
         - หน้า My Profile
 
-# 15/1/2021
+# 19/1/2021
 
     - สร้าง
         - หน้า Edit Profile
@@ -109,4 +109,6 @@
         - หน้า Edit Change Password
     
 
+# 21/1/2021
 
+    - Redesign ทั้งหมด

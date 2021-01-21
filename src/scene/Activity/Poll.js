@@ -30,7 +30,7 @@ export default class Poll extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                    <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
+                    <View style={{ ...style.navbar }}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll</Text>
                         <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
@@ -47,9 +47,17 @@ export default class Poll extends Component {
                         </View>
 
                         <View style={{ ...style.container }}>
-                            <TouchableOpacity style={{ ...style.btnCreateNewBlog }} onPress={() => Actions.CreatePost()}>
-                                <Text style={{ ...style.textCreateNewBlog }}>Create new poll</Text>
-                            </TouchableOpacity>
+                            <Button
+                                title="Create new poll"
+                                Outline={true}
+                                titleStyle={{ color: '#003764', }}
+                                buttonStyle={{
+                                    padding: hp('1%'),
+                                    ...style.btnPrimaryOutline,
+                                    ...style.btnRounded,
+                                }}
+                                onPress={() => Actions.CreatePost()}
+                            />
                         </View>
 
                         <View style={{ ...style.container, marginTop: hp('3%') }}>

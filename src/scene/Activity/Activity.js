@@ -20,7 +20,7 @@ import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
-
+import {colors} from '../../constant/util'
 
 export default class Activity extends Component {
     state = {
@@ -75,7 +75,7 @@ const styleScoped = StyleSheet.create({
     warpperMenuEvent: {
         padding: hp('2%'),
         borderRadius: 10,
-        backgroundColor: '#003764'
+        backgroundColor: colors.primary
     },
     menuIcon: {
         textAlign: 'center',

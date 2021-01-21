@@ -50,6 +50,22 @@ export default StyleSheet.create({
         paddingHorizontal: hp('1.5%'),
         paddingVertical: hp('0.5%')
     },
+    navbar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: hp('2%'),
+        paddingVertical: hp('1.5%'),
+        backgroundColor: colors.primary,
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
     boxTextBorder: {
         borderTopColor: '#B5B5B5',
         borderTopWidth: 1,
@@ -94,7 +110,8 @@ export default StyleSheet.create({
         width: '50%',
         backgroundColor: 'white',
         borderWidth: 1,
-        borderColor: '#003764',
+        borderColor: colors.primary,
+        borderRadius:10,
         width: '100%'
     },
     textCreateNewBlog: {

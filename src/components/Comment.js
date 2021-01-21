@@ -16,7 +16,7 @@ import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { fonts } from '../constant/util'
 
 
 
@@ -26,8 +26,9 @@ export default class Comment extends Component {
             <View style={{
                 ...styleScoped.shadowCard,
                 backgroundColor: 'white',
-                paddingVertical: hp('1%'),
-                marginBottom: hp('2%')
+                paddingVertical: hp('2%'),
+                marginBottom: hp('2%'),
+                borderRadius: 10
             }}>
                 <View style={{ paddingHorizontal: hp('2%') }}>
                     <View style={{
@@ -56,7 +57,7 @@ export default class Comment extends Component {
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: hp('1%') }}>
                         <TouchableOpacity>
-                            <Text style={{ fontSize: hp('2%'), color: '#003764' }}>Replay</Text>
+                            <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Replay</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -86,12 +87,12 @@ const styleScoped = StyleSheet.create({
         paddingHorizontal: hp('1%')
     },
     shadowCard: {
-        shadowColor: "#000",
+        shadowColor: "rgba(0,0,0,0.16)",
         shadowOffset: {
             width: 0,
             height: 2,
         },
-        shadowOpacity: 0.23,
+        shadowOpacity: 0.8,
         shadowRadius: 2.62,
         elevation: 4,
     }
