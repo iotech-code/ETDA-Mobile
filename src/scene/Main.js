@@ -45,11 +45,11 @@ export default class Main extends Component {
                                 <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                             </View>
 
-                            <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), width: '36%' }}>
+                            <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Button
                                     title="E-commerce"
                                     titleStyle={{ fontSize: hp('1.5%') }}
-                                    buttonStyle={{ backgroundColor: '#003764', padding: hp('0.5%') }}
+                                    buttonStyle={{...style.btnTagPrimary }}
                                 />
                             </View>
                             <Post></Post>

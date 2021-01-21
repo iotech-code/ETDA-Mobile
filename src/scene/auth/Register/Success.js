@@ -46,7 +46,7 @@ export default class RegisterSuccess extends Component {
                         <View style={{ marginTop: hp('3%') }}>
                             <Button
                                 title="Start"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
                             />
                         </View>
 

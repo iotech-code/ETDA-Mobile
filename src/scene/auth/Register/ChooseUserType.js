@@ -17,7 +17,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { fonts } from '../../../constant/util'
 export default class ChooseUserType extends Component {
 
     constructor(props) {
@@ -37,7 +37,8 @@ export default class ChooseUserType extends Component {
                 overlayStyle={{
                     width: wp('90%'),
                     paddingVertical: hp('2%'),
-                    paddingHorizontal: hp('2%')
+                    paddingHorizontal: hp('2%'),
+                    borderRadius: 5
                 }}
             >
                 <View style={{
@@ -47,7 +48,7 @@ export default class ChooseUserType extends Component {
                 }}>
                     <Text style={{
                         textAlign: 'center',
-                        color: '#003764',
+                        color: fonts.color.primary,
                         fontSize: hp('1.7%'),
                         fontWeight: '600'
                     }}>Register posts and read permission</Text>
@@ -71,7 +72,6 @@ export default class ChooseUserType extends Component {
                         placeholder="Enter your reason…"
                         multiline={true}
                         numberOfLines={50}
-
                     />
                 </View>
 
@@ -111,7 +111,7 @@ export default class ChooseUserType extends Component {
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
                         title="Confirm"
-                        buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                        buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
                         onPress={() => this.setState({ visible: false })}
                     />
                 </View>
@@ -119,12 +119,11 @@ export default class ChooseUserType extends Component {
                     <Button
                         title="Cancle"
                         Outline={true}
-                        titleStyle={{ color: '#003764' }}
+                        titleStyle={{ color: '#003764', }}
                         buttonStyle={{
                             padding: hp('1.5%'),
-                            backgroundColor: 'white',
-                            borderColor: '#003764',
-                            borderWidth: 1
+                            ...style.btnPrimaryOutline,
+                            ...style.btnRounded
                         }}
                         onPress={() => this.setState({ visible: false })}
                     />
@@ -207,7 +206,7 @@ export default class ChooseUserType extends Component {
                         <View style={{ marginTop: hp('3%') }}>
                             <Button
                                 title="Register"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
                                 onPress={() => Actions.RegisterSuccess()}
                             />
                         </View>
@@ -217,19 +216,19 @@ export default class ChooseUserType extends Component {
                         <View style={{ marginTop: hp('4%') }}>
                             <Button
                                 title="Continue with Line"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#22BA4F' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnLine, ...style.btnRounded }}
                             />
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
                                 title="Continue with Facebook"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#4267B2' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnFacebook, ...style.btnRounded }}
                             />
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
                                 title="Continue with Google"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#FF0000' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnGoogle, ...style.btnRounded }}
                             />
                         </View>
 

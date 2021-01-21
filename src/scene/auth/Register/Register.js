@@ -42,24 +42,30 @@ export default class Register extends Component {
                     </View>
                     <View style={style.container}>
                         <View style={{ marginTop: hp('3%') }}>
-                            <TextInput
-                                style={style.customInput}
-                                placeholder="Email address"
-                            />
+                            <View style={style.customInput}>
+                                <TextInput
+                                    style={style.input}
+                                    placeholder="Email address"
+                                />
+                            </View>
                         </View>
-                        <View style={{ marginTop: hp('2%') }}>
-                            <TextInput
-                                style={styleScoped.inputCustom}
-                                placeholder="Password"
-                                secureTextEntry={true}
-                            />
+                        <View style={{ marginTop: hp('1%') }}>
+                            <View style={style.customInput}>
+                                <TextInput
+                                    style={style.input}
+                                    placeholder="Password"
+                                    secureTextEntry={true}
+                                />
+                            </View>
                         </View>
-                        <View style={{ marginTop: hp('2%') }}>
-                            <TextInput
-                                style={styleScoped.inputCustom}
-                                placeholder="Confirm Password"
-                                secureTextEntry={true}
-                            />
+                        <View style={{ marginTop: hp('1%') }}>
+                            <View style={style.customInput}>
+                                <TextInput
+                                    style={style.input}
+                                    placeholder="Confirm Password"
+                                    secureTextEntry={true}
+                                />
+                            </View>
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Text style={{
@@ -79,7 +85,7 @@ export default class Register extends Component {
                         <View style={{ marginTop: hp('3%') }}>
                             <Button
                                 title="Continue"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
                                 onPress={() => Actions.ChooseUserType()}
                             />
                         </View>
@@ -89,19 +95,19 @@ export default class Register extends Component {
                         <View style={{ marginTop: hp('4%') }}>
                             <Button
                                 title="Continue with Line"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#22BA4F' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnLine, ...style.btnRounded }}
                             />
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
                                 title="Continue with Facebook"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#4267B2' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnFacebook, ...style.btnRounded }}
                             />
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
                                 title="Continue with Google"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#FF0000' }}
+                                buttonStyle={{ padding: hp('1.5%'), ...style.btnGoogle, ...style.btnRounded }}
                             />
                         </View>
 

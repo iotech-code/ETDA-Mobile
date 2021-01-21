@@ -17,6 +17,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { colors } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
     render() {
@@ -24,7 +25,7 @@ export default class HeaderNavbar extends Component {
             <View style={styleScoped.container}>
                 {/* left side  */}
                 <View style={styleScoped.leftSide}>
-                    <TouchableOpacity style={styleScoped.avatar} onPress={()=>Actions.MyProfile()}>
+                    <TouchableOpacity style={styleScoped.avatar} onPress={() => Actions.MyProfile()}>
                         <Image
                             source={require('../assets/images/avatar.png')}
                             style={styleScoped.imageAvatar}
@@ -52,7 +53,7 @@ const styleScoped = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: hp('2%'),
         paddingVertical: hp('1.5%'),
-        backgroundColor: '#003764',
+        backgroundColor: colors.primary,
         alignItems: 'center',
         shadowColor: "#000",
         shadowOffset: {

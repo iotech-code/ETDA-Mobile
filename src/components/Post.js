@@ -28,7 +28,7 @@ export default class Post extends Component {
                 ...styleScoped.shadowCard,
                 backgroundColor: 'white',
                 paddingVertical: hp('1%'),
-                marginBottom:hp('2%')
+                marginBottom: hp('2%')
             }}>
                 <View style={{ paddingHorizontal: hp('2%') }}>
                     <View style={{
@@ -40,11 +40,11 @@ export default class Post extends Component {
                         <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                     </View>
                     <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >2 minutes ago</Text>
-                    <View style={{ marginTop: hp('0.5%'), width: '30%' }}>
+                    <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row' }}>
                         <Button
                             title="E-commerce"
                             titleStyle={{ fontSize: hp('1.5%') }}
-                            buttonStyle={{ backgroundColor: '#003764', padding: hp('0.5%') }}
+                            buttonStyle={{ ...style.btnTagPrimary }}
                         />
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
@@ -53,7 +53,7 @@ export default class Post extends Component {
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
                         />
                     </View>
-                    <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={()=>Actions.PostDetail()}>
+                    <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}>
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>
                             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
                                     </Text>

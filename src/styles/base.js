@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import { colors } from '../constant/util'
 
 export default StyleSheet.create({
 
@@ -13,10 +13,42 @@ export default StyleSheet.create({
         resizeMode: 'contain'
     },
     customInput: {
-        height: hp('5%'),
-        borderColor: 'gray',
+        borderColor: '#CADAFB',
         borderWidth: 1,
-        paddingHorizontal: hp('1%')
+        borderRadius: 5,
+        paddingHorizontal: hp('1%'),
+        backgroundColor: '#F9FCFF',
+        padding: Platform.OS === 'ios' ? hp('1.3%') : hp('1%')
+    },
+    input: {
+        padding: 0,
+        fontSize: hp('2%'),
+        color: 'rgba(0,0,0,0.16)',
+    },
+    btnPrimary: {
+        backgroundColor: colors.primary
+    },
+    btnPrimaryOutline: {
+        backgroundColor: 'white',
+        borderColor: '#003764',
+        borderWidth: 1,
+    },
+    btnRounded: {
+        borderRadius: 30
+    },
+    btnFacebook: {
+        backgroundColor: '#4267B2'
+    },
+    btnLine: {
+        backgroundColor: '#22BA4F'
+    },
+    btnGoogle: {
+        backgroundColor: '#FF0000'
+    },
+    btnTagPrimary: {
+        backgroundColor: colors.primary,
+        paddingHorizontal: hp('1.5%'),
+        paddingVertical: hp('0.5%')
     },
     boxTextBorder: {
         borderTopColor: '#B5B5B5',
@@ -57,7 +89,7 @@ export default StyleSheet.create({
         color: '#003764',
         fontSize: hp('2%')
     },
-    btnCreateNewBlog:{
+    btnCreateNewBlog: {
         padding: hp('1.5%'),
         width: '50%',
         backgroundColor: 'white',
@@ -65,7 +97,7 @@ export default StyleSheet.create({
         borderColor: '#003764',
         width: '100%'
     },
-    textCreateNewBlog:{
+    textCreateNewBlog: {
         fontSize: hp('2%'),
         fontWeight: "300",
         textAlign: 'center',
