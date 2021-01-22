@@ -30,21 +30,29 @@ export default class ProfileSetting extends Component {
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
-                        <View style={{ ...style.navbar}}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                        <View style={{ ...style.navbar }}>
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('Main')} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Setting</Text>
                             <View></View>
                         </View>
                     </View>
                     <View >
                         <TouchableOpacity style={{ padding: hp('2%'), flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}
-                            onPress={() => Actions.ChangePassword()}
+                            onPress={() => Actions.replace('ChangePassword')}
                         >
                             <Icon name="key" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
                             <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Change password</Text>
                         </TouchableOpacity>
                         <View style={{ ...style.divider }}></View>
-                        <TouchableOpacity style={{ padding: hp('2%'), flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <TouchableOpacity
+                            style={{
+                                padding: hp('2%'),
+                                flexDirection: 'row',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center'
+                            }}
+                            onPress={() => Actions.replace('DeleteAccount')}
+                        >
                             <Icon name="close-octagon" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#FF0000' }} />
                             <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete account</Text>
                         </TouchableOpacity>

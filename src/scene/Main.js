@@ -29,7 +29,7 @@ export default class Main extends Component {
     render() {
         const { dataList } = this.state
         return (
-            <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+            <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
                     <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
@@ -49,7 +49,7 @@ export default class Main extends Component {
                                 <Button
                                     title="E-commerce"
                                     titleStyle={{ fontSize: hp('1.5%') }}
-                                    buttonStyle={{...style.btnTagPrimary }}
+                                    buttonStyle={{ ...style.btnTagPrimary }}
                                 />
                             </View>
                             <Post></Post>
@@ -57,8 +57,9 @@ export default class Main extends Component {
                         </View>
                     </View>
                 </ScrollView>
-
-                <MenuFooter></MenuFooter>
+                <View style={{ backgroundColor: null }}>
+                    <MenuFooter></MenuFooter>
+                </View>
             </View>
         );
     }

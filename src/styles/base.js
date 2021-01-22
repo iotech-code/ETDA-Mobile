@@ -48,7 +48,8 @@ export default StyleSheet.create({
     btnTagPrimary: {
         backgroundColor: colors.primary,
         paddingHorizontal: hp('1.5%'),
-        paddingVertical: hp('0.5%')
+        paddingVertical: hp('0.5%'),
+        marginRight: hp('1%')
     },
     navbar: {
         flexDirection: 'row',
@@ -111,7 +112,7 @@ export default StyleSheet.create({
         backgroundColor: 'white',
         borderWidth: 1,
         borderColor: colors.primary,
-        borderRadius:10,
+        borderRadius: 10,
         width: '100%'
     },
     textCreateNewBlog: {

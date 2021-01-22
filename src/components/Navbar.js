@@ -20,14 +20,18 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
+    state = {
+        imageAvatar: require('../assets/images/avatar.png')
+    }
     render() {
+        const { imageAvatar } = this.state
         return (
             <View style={styleScoped.container}>
                 {/* left side  */}
                 <View style={styleScoped.leftSide}>
-                    <TouchableOpacity style={styleScoped.avatar} onPress={() => Actions.MyProfile()}>
+                    <TouchableOpacity style={styleScoped.avatar} onPress={() => Actions.replace('MyProfile')}>
                         <Image
-                            source={require('../assets/images/avatar.png')}
+                            source={imageAvatar}
                             style={styleScoped.imageAvatar}
                         />
                     </TouchableOpacity>
@@ -36,7 +40,9 @@ export default class HeaderNavbar extends Component {
 
                 {/* right side */}
                 <View style={styleScoped.rightSide}>
-                    <Icon name="search" size={hp('2.4%')} color="white" style={{ marginRight: hp('2.5%') }} />
+                    <TouchableOpacity onPress={()=>Actions.replace('Search')}>
+                        <Icon name="search" size={hp('2.4%')} color="white" style={{ marginRight: hp('2.5%') }} />
+                    </TouchableOpacity>
                     <Icon name="bell" size={hp('2.4%')} color="white" />
 
                 </View>

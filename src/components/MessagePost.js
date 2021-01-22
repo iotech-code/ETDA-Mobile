@@ -32,7 +32,6 @@ export default class MessagsPost extends Component {
     }
 
     openOption() {
-        console.log('askdjkasjdkasjdk')
         this.setState({ visibleBottomSheet: true })
         this.RBSheet.open()
     }

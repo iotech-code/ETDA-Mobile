@@ -21,7 +21,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 
 
-export default class ChangePassword extends Component {
+export default class DeleteAccount extends Component {
     state = {
         visibleSearch: false
     }
@@ -31,34 +31,28 @@ export default class ChangePassword extends Component {
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('ProfileSetting')} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Chnage Password</Text>
-                            <TouchableOpacity onPress={() => Actions.MyProfile()}>
-                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Delete Account</Text>
+                            <TouchableOpacity onPress={() => Actions.replace('Main')}>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Confirm</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
 
+                    <View style={style.container}>
+                        <Text style={{ fontSize: hp('2%'), fontWeight: '600' }}>Delete your account permanently!</Text>
+                        <Text style={{ fontSize: hp('2%'), marginTop: hp('1%'), color: "#707070", fontWeight: '300' }}>
+                            Your data cannot be recovered if you reactivate
+                            your account in the future.
+                        </Text>
+                        <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
+                        <Text style={{ fontSize: hp('2%'), marginTop: hp('1%'), color: "#707070", fontWeight: '300' }}>
+                            If you want to delete. Please enter your
+                            password for confirm delete your account.
+                        </Text>
+                    </View>
                     <View style={{ ...style.container, marginTop: hp('2%') }}>
-                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Current password</Text>
-                        <TextInput
-                            style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
-                            placeholder="Enter your password here…"
-                        />
-                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
-                    </View>
-
-                    <View style={{ ...style.container, marginTop: hp('5%') }}>
-                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>New password</Text>
-                        <TextInput
-                            style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
-                            placeholder="Enter your password here…"
-                        />
-                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
-                    </View>
-
-                    <View style={{ ...style.container, marginTop: hp('5%') }}>
-                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Confirm-New password</Text>
+                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Password</Text>
                         <TextInput
                             style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder="Enter your password here…"

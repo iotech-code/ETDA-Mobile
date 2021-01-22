@@ -23,6 +23,8 @@ import MyProfile from './Profile/MyProfile'
 import EditProfile from './Profile/EditProfile'
 import ProfileSetting from './Profile/ProfileSetting'
 import ChangePassword from './Profile/ChangePassword'
+import Search from './Search'
+import DeleteAccount from './Profile/DeleteAccount'
 const RouterPage = () => {
     return (
 
@@ -49,6 +51,10 @@ const RouterPage = () => {
                 <Scene key="EditProfile" component={EditProfile} title="EditProfile" hideNavBar />
                 <Scene key="ProfileSetting" component={ProfileSetting} title="ProfileSetting" hideNavBar />
                 <Scene key="ChangePassword" component={ChangePassword} title="ChangePassword" hideNavBar />
+                <Scene key="Search" component={Search} title="Search" hideNavBar />
+                <Scene key="DeleteAccount" component={DeleteAccount} title="DeleteAccount" hideNavBar />
+
+
 
 
 

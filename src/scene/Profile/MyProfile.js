@@ -31,9 +31,9 @@ export default class MyProfile extends Component {
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%'), marginBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('Main')} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>My Profile</Text>
-                            <TouchableOpacity onPress={() => Actions.ProfileSetting()}>
+                            <TouchableOpacity onPress={() => Actions.replace('ProfileSetting')}>
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Setting</Text>
                             </TouchableOpacity>
                         </View>
