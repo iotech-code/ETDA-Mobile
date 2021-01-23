@@ -12,12 +12,13 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import { Button } from 'react-native-elements';
+import { Button, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { fonts } from '../constant/util';
 
 
 
@@ -34,11 +35,87 @@ export default class Post extends Component {
             like: 22,
             view: 22
         },
-        visibleBottomSheet: false
+        visibleBottomSheet: false,
+        visibleModalReport: false
     }
 
     openOption() {
         this.RBSheet.open()
+    }
+
+    openReport(){
+        this.setState({ visibleModalReport: true })
+        this.RBSheet.close()
+    }
+    renderModalReport() {
+        const { visibleModalReport } = this.state
+        return (
+            <Overlay
+                isVisible={visibleModalReport}
+                overlayStyle={{
+                    width: wp('90%'),
+                    paddingVertical: hp('2%'),
+                    paddingHorizontal: hp('2%')
+                }}
+            >
+                <View style={{
+                    borderBottomColor: '#707070',
+                    borderBottomWidth: 1,
+                    paddingBottom: hp('1.5%')
+                }}>
+                    <Text style={{
+                        textAlign: 'center',
+                        color: fonts.color.primary,
+                        fontSize: hp('2%'),
+                        fontWeight: '600'
+                    }}>Report</Text>
+                </View>
+
+                <View style={{ marginVertical: hp('1%') }}>
+                    <Text style={{ fontSize: hp('2%') }}>Select topic for report</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+                        <Button
+                            title="Fake news"
+                            titleStyle={{ fontSize: hp('2%') }}
+                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                        />
+                        <Button
+                            title="Cyber bully"
+                            titleStyle={{ fontSize: hp('2%') }}
+                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                        />
+                        <Button
+                            title="Threat"
+                            titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
+                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
+                        />
+                    </View>
+                    <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>Give reason for report this post not suitable</Text>
+                </View>
+
+                <View style={{ ...style.customInput, height: hp('20%'), flexDirection: 'column', justifyContent: 'flex-start' }}>
+                    <TextInput
+                        style={{ fontSize: hp('2%'), padding: 0 }}
+                        placeholder="Enter your reason…"
+                        multiline={true}
+                    />
+                </View>
+
+
+                <View style={{ marginTop: hp('1%') }}>
+                    <Button
+                        title="Report"
+                        buttonStyle={{
+                            padding: hp('1.5%'),
+                            ...style.btnRounded,
+                            ...style.btnPrimary
+                        }}
+                        onPress={() => this.setState({ visibleModalReport: false })}
+                    />
+                </View>
+
+            </Overlay>
+        )
     }
 
     renderBottomSheet() {
@@ -48,7 +125,7 @@ export default class Post extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('25%') : hp('23%')}
+                height={Platform.OS === 'ios' ? hp('32%') : hp('30%')}
                 openDuration={250}
                 customStyles={{
                     container: {
@@ -80,6 +157,12 @@ export default class Post extends Component {
                 }}>
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
+                </TouchableOpacity>
+                <View style={{ ...style.divider }}></View>
+
+                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
+                    <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Report</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
 
@@ -149,7 +232,7 @@ export default class Post extends Component {
                     </View>
                 </View>
 
-                <View style={{...style.sectionSocial}}>
+                <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
                     </TouchableOpacity>
@@ -161,6 +244,7 @@ export default class Post extends Component {
                     </TouchableOpacity>
                 </View>
                 {this.renderBottomSheet()}
+                {this.renderModalReport()}
             </View>
         );
     }

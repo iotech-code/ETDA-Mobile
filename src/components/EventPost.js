@@ -63,14 +63,14 @@ export default class MessagsPost extends Component {
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
-                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
+                    <Icon name="star" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Join event</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
-                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                    <Icon name="star-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Unjoin event</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>

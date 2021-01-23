@@ -20,6 +20,8 @@ import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
+import { colors, fonts } from '../../constant/util';
+
 export default class SurveyDetail extends Component {
     state = {
         visibleSearch: false
@@ -63,45 +65,26 @@ export default class SurveyDetail extends Component {
                         </View>
                         <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', ...style.container }}>
-                            <View style={{
-                                // height: hp('10%'),
-                                // width: hp('10%'),
-                                width: hp('10%'),
-                                height: hp('10%') ,
-                                backgroundColor: 'white',
-                                borderRadius:50,
-                                borderTopRightRadius: 50,
-                                borderBottomRightRadius: 50,
-                                borderColor: '#003764',
-                                borderWidth: 1
-                                // borderStartColor: 'rgba(0,0,0,0.16)',
-                                // borderEndColor: '#003764',
-                                // borderTopColor:'rgba(0,0,0,0.16)',
-                                // borderBottomColor:'rgba(0,0,0,0.16)',
-                                // borderRightColor: "#003764",
-                                // // borderLeftColor: 'rgba(0,0,0,0.16)',
-                                // borderRadius: 1,
-                                // borderWidth: 1
-
-                            }}>
-
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', ...style.container }}>
+                            <View style={{ ...styleScoped.borderStep }}>
+                                <Text style={{ fontSize: hp('3%'), color: fonts.color.primary }}>Step</Text>
                             </View>
+                            <Text style={{fontSize: hp('3%')}}>Step info</Text>
                         </View>
                         {/* section content */}
 
-                        <View style={{ ...style.container, marginTop: hp('8%') }}>
+                        <View style={{ ...style.container, marginTop: hp('3%') }}>
                             <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: hp('1%') }}>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>None</Text>
+                            <View style={{ ...styleScoped.warpperList }}>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
+                                    <Icon name="checkbox-blank-circle" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: colors.primary }} />
+                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>None</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
                                     <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
                                     <Text style={{ fontSize: hp('2%') }}>SomeTime</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
                                     <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
                                     <Text style={{ fontSize: hp('2%') }}>Always</Text>
                                 </TouchableOpacity>
@@ -110,16 +93,16 @@ export default class SurveyDetail extends Component {
 
                         <View style={{ ...style.container, marginTop: hp('3%') }}>
                             <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: hp('1%') }}>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <View style={{ ...styleScoped.warpperList }}>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
                                     <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
                                     <Text style={{ fontSize: hp('2%') }}>None</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>SomeTime</Text>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
+                                    <Icon name="checkbox-blank-circle" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: colors.primary }} />
+                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>SomeTime</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
                                     <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
                                     <Text style={{ fontSize: hp('2%') }}>Always</Text>
                                 </TouchableOpacity>
@@ -128,16 +111,16 @@ export default class SurveyDetail extends Component {
 
                         <View style={{ ...style.container, marginTop: hp('3%') }}>
                             <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: hp('1%') }}>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <View style={{ ...styleScoped.warpperList }}>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
                                     <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
                                     <Text style={{ fontSize: hp('2%') }}>None</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>SomeTime</Text>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
+                                    <Icon name="checkbox-blank-circle" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: colors.primary }} />
+                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>SomeTime</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
                                     <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
                                     <Text style={{ fontSize: hp('2%') }}>Always</Text>
                                 </TouchableOpacity>
@@ -185,7 +168,29 @@ const styleScoped = StyleSheet.create({
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
         elevation: 4,
+    },
+    listItem: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    warpperList: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: hp('1%')
+    },
+    borderStep: {
+        width: hp('10%'),
+        height: hp('10%'),
+        backgroundColor: 'white',
+        borderRadius: 50,
+        borderTopRightRadius: 50,
+        borderBottomRightRadius: 50,
+        borderColor: colors.primary,
+        borderWidth: 1,
+        alignItems: "center",
+        justifyContent: 'center',
+        marginRight: hp('3%')
     }
 });
-
-

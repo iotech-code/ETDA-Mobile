@@ -19,6 +19,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import MenuFooter from '../components/MenuFooter'
 import Post from '../components/Post'
 

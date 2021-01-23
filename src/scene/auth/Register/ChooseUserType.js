@@ -9,7 +9,8 @@ import {
     StatusBar,
     Image,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    Platform
 } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
@@ -67,12 +68,12 @@ export default class ChooseUserType extends Component {
                     account in posts and read permission.
                 </Text>
 
-                <View style={{ ...style.customInput, height: hp('10%') }}>
+                <View style={{ ...style.customInput, height: hp('15%') }}>
                     <TextInput
-                        style={{ fontSize: hp('2%') }}
+                        style={{ fontSize: hp('2%'), padding: 0 }}
                         placeholder="Enter your reason…"
                         multiline={true}
-                        numberOfLines={50}
+                    // numberOfLines={ Platform.OS === 'ios' ? 50 : 0}
                     />
                 </View>
 
@@ -159,9 +160,9 @@ export default class ChooseUserType extends Component {
                     <View style={style.container}>
 
                         <View style={{ marginTop: hp('5%'), flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View style={{ width: '49%' }}>
-                                <View style={styleScoped.option}>
-                                    <Icon name="description" size={hp('12%')} style={{ alignSelf: "center" }} />
+                            <TouchableOpacity style={{ width: '49%' }}>
+                                <View style={{ ...styleScoped.option, backgroundColor: colors.primary }}>
+                                    <Icon name="description" size={hp('12%')} style={{ alignSelf: "center" }} color="white" />
                                 </View>
                                 <Text style={{
                                     marginTop: hp('3%'),
@@ -170,14 +171,14 @@ export default class ChooseUserType extends Component {
                                 }}>
                                     Read only
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
 
                             <TouchableOpacity
                                 style={{ width: '49%' }}
                                 onPress={() => this.setState({ visible: true })}
                             >
                                 <View style={styleScoped.option}>
-                                    <Icon name="create" size={hp('12%')} style={{ alignSelf: "center" }} />
+                                    <Icon name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />
                                 </View>
                                 <Text style={{
                                     marginTop: hp('3%'),

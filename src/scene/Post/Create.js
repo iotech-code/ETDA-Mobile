@@ -20,6 +20,7 @@ import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
+import { fonts } from '../../constant/util';
 
 
 export default class CreatePost extends Component {
@@ -30,8 +31,10 @@ export default class CreatePost extends Component {
         const { dataList } = this.state
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                <View style={{ padding: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#003764' }}>
-                    <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                <View style={{ ...style.navbar }}>
+                    <TouchableOpacity onPress={() => Actions.pop()}>
+                        <Icon name="chevron-left" size={hp('3%')} color="white" />
+                    </TouchableOpacity>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create Blog</Text>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
                 </View>
@@ -71,13 +74,31 @@ export default class CreatePost extends Component {
                     </View>
 
 
-                    <View style={{ marginTop: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', paddingHorizontal: hp('2%') }}>
-                        <View style={{ ...style.tagActive }}>
-                            <Text style={{ ...style.textTagActive }}>E-commerce</Text>
-                        </View>
-                        <View style={{ ...style.tag }}>
-                            <Text style={{ ...style.textTag }}>E-commerce</Text>
-                        </View>
+                    <View style={{
+                        marginTop: hp('2%'),
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        paddingHorizontal: hp('2%'),
+                        flexWrap: 'wrap'
+
+                    }}>
+                        <Button
+                            title="E-commerce"
+                            titleStyle={{ fontSize: hp('2%') }}
+                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                        />
+                        <Button
+                            title="E-commerce"
+                            titleStyle={{ fontSize: hp('2%') }}
+                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                        />
+                        <Button
+                            title="E-commerce"
+                            titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
+                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
+                        />
+
                     </View>
 
 

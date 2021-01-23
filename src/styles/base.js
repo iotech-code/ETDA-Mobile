@@ -31,7 +31,7 @@ export default StyleSheet.create({
     btnPrimaryOutline: {
         backgroundColor: 'white',
         borderColor: '#003764',
-        borderWidth: 1,
+        borderWidth: 0.5,
     },
     btnRounded: {
         borderRadius: 30

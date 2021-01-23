@@ -18,6 +18,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { colors, fonts } from '../constant/util';
 
 export default class MenuFooter extends Component {
     render() {
@@ -25,8 +26,8 @@ export default class MenuFooter extends Component {
             <View >
                 <View style={styleScoped.container}>
                     <TouchableOpacity style={{ width: '33.33%' }} onPress={() => Actions.Main()}>
-                        <Icon name="home" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Home</Text>
+                        <Icon name="home" size={hp('2.6%')} color={colors.primary} style={{ alignSelf: 'center' }} />
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: fonts.color.primary }}>Home</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ width: '33.33%' }} onPress={() => Actions.MessageBoard()}>
                         <Icon name="globe" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
