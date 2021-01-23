@@ -54,10 +54,14 @@ export default class Activity extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                    <View style={{ ...style.navbar}}>
-                        <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                    <View style={{ ...style.navbar }}>
+                        <TouchableOpacity onPress={() => Actions.replace('Activity')}>
+                            <Icon name="chevron-left" size={hp('3%')} color="white" />
+                        </TouchableOpacity>
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Event</Text>
-                        <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                        <TouchableOpacity onPress={() => Actions.push('Search')}>
+                            <Icon name="magnify" size={hp('3%')} color="white"  />
+                        </TouchableOpacity>
                     </View>
                     <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
                         <View style={{

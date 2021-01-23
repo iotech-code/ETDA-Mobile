@@ -47,6 +47,7 @@ export default class RegisterSuccess extends Component {
                             <Button
                                 title="Start"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
+                                onPress={()=>Actions.replace('Main')}
                             />
                         </View>
 

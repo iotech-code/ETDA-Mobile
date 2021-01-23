@@ -27,7 +27,7 @@ export default class Poll extends Component {
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
-                        <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('Main')} />
+                        <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Search</Text>
                         <TouchableOpacity onPress={() => Actions.replace('Main')}>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Done</Text>

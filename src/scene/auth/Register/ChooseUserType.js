@@ -12,12 +12,13 @@ import {
     TextInput
 } from 'react-native';
 
-import { Button, colors, Overlay } from 'react-native-elements';
+import { Button, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { fonts } from '../../../constant/util'
+import { fonts, colors } from '../../../constant/util'
+
 export default class ChooseUserType extends Component {
 
     constructor(props) {
@@ -159,14 +160,7 @@ export default class ChooseUserType extends Component {
 
                         <View style={{ marginTop: hp('5%'), flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ width: '49%' }}>
-                                <View style={{
-                                    padding: hp('3%'),
-                                    borderRadius: 10,
-                                    borderColor: '#003764',
-                                    borderWidth: 1,
-                                    width: '100%',
-                                    height: hp('20%')
-                                }}>
+                                <View style={styleScoped.option}>
 
                                 </View>
                                 <Text style={{
@@ -182,15 +176,10 @@ export default class ChooseUserType extends Component {
                                 style={{ width: '49%' }}
                                 onPress={() => this.setState({ visible: true })}
                             >
-                                <View style={{
-                                    padding: hp('3%'),
-                                    borderRadius: 10,
-                                    borderColor: '#003764',
-                                    borderWidth: 1,
-                                    width: '100%',
-                                    height: hp('20%')
-                                }}>
-
+                                <View style={styleScoped.option}>
+                                    <Image source={require('../../../assets/icon/ic_description_24px.png')}
+                                        style={{ alignSelf: 'center', width: '100%', height: '100%', resizeMode: 'contain' }}
+                                    />
                                 </View>
                                 <Text style={{
                                     marginTop: hp('3%'),
@@ -263,6 +252,22 @@ const styleScoped = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         paddingHorizontal: hp('1%')
+    },
+    option: {
+        padding: hp('3%'),
+        borderRadius: 10,
+        borderColor: colors.primary,
+        borderWidth: 1,
+        width: '100%',
+        height: hp('20%')
+    },
+    optionActive: {
+        padding: hp('3%'),
+        borderRadius: 10,
+        borderColor: '#003764',
+        borderWidth: 1,
+        width: '100%',
+        height: hp('20%')
     }
 });
 

@@ -28,7 +28,18 @@ export default class MessagsPost extends Component {
     }
 
     state = {
-        visibleBottomSheet: false
+        visibleBottomSheet: false,
+        data: {
+            title: 'E-commerce new gen',
+            time: ' 11/11/2020  3:30 pm',
+            image: require('../assets/images/post_1.png'),
+            detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
+            tag: ['E-commerce', 'Digital Law']
+        },
+        socail: {
+            like: 22,
+            view: 22
+        },
     }
 
     openOption() {
@@ -50,13 +61,15 @@ export default class MessagsPost extends Component {
                 }}
                 height={Platform.OS === 'ios' ? hp('25%') : hp('23%')}
                 openDuration={250}
-                customStyles={{container:{
-                    borderTopRightRadius:30,
-                    borderTopLeftRadius:30,
-                    paddingTop:hp('1%'),
-                    backgroundColor:'white',
-                    ...style.shadowCard
-                }}}
+                customStyles={{
+                    container: {
+                        borderTopRightRadius: 30,
+                        borderTopLeftRadius: 30,
+                        paddingTop: hp('1%'),
+                        backgroundColor: 'white',
+                        ...style.shadowCard
+                    }
+                }}
             >
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
@@ -85,6 +98,7 @@ export default class MessagsPost extends Component {
         )
     }
     render() {
+        const { data, socail } = this.state
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -102,13 +116,14 @@ export default class MessagsPost extends Component {
                             <View style={{
                                 height: hp('5%'),
                                 width: hp('5%'),
-                                marginRight: hp('1%')
+                                marginRight: hp('1%'),
+                                borderRadius: 50
                             }}>
-                                <Image source={require('../assets/images/avatar.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image source={data.image} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), }}>E-commerce new gen</Text>
-                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > 11/11/2020  3:30 pm </Text>
+                                <Text style={{ fontSize: hp('2%'), }}>{data.title}</Text>
+                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{data.time}</Text>
                             </View>
                         </View>
                         <TouchableOpacity onPress={() => this.openOption()} >
@@ -118,23 +133,28 @@ export default class MessagsPost extends Component {
                     <View style={{ marginTop: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%') }}>First time of Digital Law</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
-                            <Button
-                                title="Digital Law"
-                                titleStyle={{ fontSize: hp('1.5%') }}
-                                buttonStyle={{ ...style.btnTagPrimary }}
-                            />
+                            {
+                                data.tag.map((item, index) => {
+                                    return (
+                                        <Button
+                                            title={item}
+                                            titleStyle={{ fontSize: hp('1.5%') }}
+                                            buttonStyle={{ ...style.btnTagPrimary }}
+                                            key={index}
+                                        />
+                                    )
+                                })
+                            }
                         </View>
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
                         <Image
-                            source={require('../assets/images/post_1.png')}
+                            source={data.image}
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
                         />
                     </View>
                     <View style={{ marginTop: hp('1%') }}>
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-                                    </Text>
+                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{data.detail}</Text>
                     </View>
 
                     <View style={{
@@ -144,9 +164,9 @@ export default class MessagsPost extends Component {
                         alignItems: 'center'
                     }}>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}>22</Text>
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}>{socail.like}</Text>
                         <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                        <Text style={{ color: '#B5B5B5' }}>22</Text>
+                        <Text style={{ color: '#B5B5B5' }}>{socail.view}</Text>
                     </View>
                 </View>
 

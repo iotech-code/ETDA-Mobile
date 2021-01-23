@@ -19,7 +19,7 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-
+import {fonts} from '../../constant/util'
 
 export default class MyProfile extends Component {
     state = {
@@ -104,6 +104,14 @@ export default class MyProfile extends Component {
                                 title="Edit Profile"
                                 buttonStyle={{ padding: hp('1%'), ...style.btnRounded , ...style.btnPrimary }}
                                 onPress={() => Actions.EditProfile()}
+                            />
+                        </View>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <Button
+                                title="Logout"
+                                titleStyle={{ color: fonts.color.primary }}
+                                buttonStyle={{ padding: hp('1%'), ...style.btnRounded , ...style.btnPrimaryOutline }}
+                                onPress={() => Actions.replace('Login')}
                             />
                         </View>
 

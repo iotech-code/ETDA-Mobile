@@ -21,7 +21,17 @@ import { fonts } from '../constant/util'
 
 
 export default class Comment extends Component {
+    state = {
+        data: {
+            avatar: require('../assets/images/avatar2.png'),
+            name: 'John',
+            time: '2 minutes ago',
+            detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod '
+        }
+
+    }
     render() {
+        const { data } = this.state
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -42,18 +52,18 @@ export default class Comment extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={require('../assets/images/avatar2.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image source={data.avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>John</Text>
-                                <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>2 minutes ago</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{data.name}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>{data.time}</Text>
                             </View>
                         </View>
                     </View>
 
 
                     <View style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}>
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod </Text>
+                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{data.detail}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: hp('1%') }}>
                         <TouchableOpacity>

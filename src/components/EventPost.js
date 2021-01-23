@@ -49,29 +49,30 @@ export default class MessagsPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('24%') : hp('22%')}
+                height={Platform.OS === 'ios' ? hp('18%') : hp('16%')}
                 openDuration={250}
+                customStyles={{
+                    container: {
+                        borderTopRightRadius: 30,
+                        borderTopLeftRadius: 30,
+                        paddingTop: hp('1%'),
+                        backgroundColor: 'white',
+                        ...style.shadowCard
+                    }
+                }}
             >
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
                     <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Join event</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Unjoin event</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
 
@@ -110,7 +111,7 @@ export default class MessagsPost extends Component {
                     </View>
 
 
-                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={()=>Actions.EventDetail()}>
+                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.EventDetail()}>
                         <Text style={{ fontSize: hp('2%') }}>Event Topic</Text>
                         <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>10/11/2020</Text>
 

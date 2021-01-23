@@ -22,9 +22,19 @@ import Comment from '../../components/Comment'
 import { fonts } from '../../constant/util'
 export default class EventDetail extends Component {
     state = {
-        visibleSearch: false
+        visibleSearch: false,
+        data: {
+            title: 'E-commerce new gen By ETDA official',
+            time: '11/11/2020  3:30 pm',
+            detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur',
+            image:require('../../assets/images/post_1.png')
+        },
+        socail: {
+
+        }
     }
     render() {
+        const { data } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -54,9 +64,9 @@ export default class EventDetail extends Component {
                                     <Image source={require('../../assets/images/avatar2.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
                                 </View>
                                 <View >
-                                    <Text style={{ fontSize: hp('2%') }}>E-commerce new gen</Text>
-                                    <Text style={{ fontSize: hp('2%') }}>By ETDA official</Text>
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>11/11/2020  3:30 pm</Text>
+                                    <Text style={{ fontSize: hp('2%') }}>{data.title}</Text>
+                                    {/* <Text style={{ fontSize: hp('2%') }}>By ETDA official</Text> */}
+                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{data.time}</Text>
                                 </View>
                             </View>
                         </View>
@@ -73,12 +83,11 @@ export default class EventDetail extends Component {
 
 
                             <View style={{ height: hp('24%'), width: '100%', marginTop: hp('1%') }}>
-                                <Image source={require('../../assets/images/post_1.png')} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
+                                <Image source={data.image} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
                                 <Text style={{ fontSize: hp('1.8%') }}>
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                                    Lorem ipsum dolor sit amet, consetetur
+                                    {data.detail}
                                 </Text>
                             </View>
 

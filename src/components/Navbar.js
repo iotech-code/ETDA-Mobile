@@ -40,7 +40,7 @@ export default class HeaderNavbar extends Component {
 
                 {/* right side */}
                 <View style={styleScoped.rightSide}>
-                    <TouchableOpacity onPress={()=>Actions.replace('Search')}>
+                    <TouchableOpacity onPress={()=>Actions.push('Search')}>
                         <Icon name="search" size={hp('2.4%')} color="white" style={{ marginRight: hp('2.5%') }} />
                     </TouchableOpacity>
                     <Icon name="bell" size={hp('2.4%')} color="white" />

@@ -34,7 +34,7 @@ export default class Activity extends Component {
                 <View style={{ flex: 1, paddingBottom: hp('10%') }}>
                     <HeaderNavbar></HeaderNavbar>
                     <View style={{ ...style.container, marginTop: hp('4%') }}>
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={()=>Actions.Event()}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={()=>Actions.replace('Event')}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 Event
                             </Text>
@@ -44,7 +44,7 @@ export default class Activity extends Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.Poll()}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.replace('Poll')}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 Poll
                             </Text>
@@ -54,7 +54,7 @@ export default class Activity extends Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.Survey()}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.replace('Survey')}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 Survey
                             </Text>
