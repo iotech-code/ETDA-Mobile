@@ -138,28 +138,27 @@ export default class Post extends Component {
                         justifyContent: 'flex-start',
                         alignItems: 'center'
                     }}>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}>{socail.like}</Text>
-                        <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                        <Text style={{ color: '#B5B5B5' }}>{socail.view}</Text>
+                        <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}>
+                            <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}>{socail.like}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}>
+                            <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            <Text style={{ color: '#B5B5B5' }}>{socail.view}</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
-                <View style={{
-                    marginTop: hp('2%'),
-                    paddingTop: hp('2.5%'),
-                    borderTopWidth: 1,
-                    borderTopColor: '#B5B5B5',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    paddingHorizontal: hp('2%'),
-                    paddingBottom: hp('1%')
-                }}>
-                    <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
-                    <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
-                    <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-
+                <View style={{...style.sectionSocial}}>
+                    <TouchableOpacity>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                    </TouchableOpacity>
                 </View>
                 {this.renderBottomSheet()}
             </View>

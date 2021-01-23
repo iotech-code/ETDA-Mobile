@@ -41,15 +41,23 @@ export default class ForgetPassword extends Component {
                     </View>
                     <View style={style.container}>
                         <View style={{ marginTop: hp('3%') }}>
-                            <TextInput
-                                style={styleScoped.inputCustom}
-                                placeholder="Email address"
-                            />
+                            <View style={{ ...style.customInput }}>
+                                <TextInput
+                                    style={style.input}
+                                    placeholder="Email address"
+                                />
+                            </View>
+
                         </View>
                         <View style={{ marginTop: hp('3%') }}>
                             <Button
                                 title="Send Email"
-                                buttonStyle={{ padding: hp('1.5%'), backgroundColor: '#003764' }}
+                                buttonStyle={{
+                                    padding: hp('1.5%'),
+                                    ...style.btnRounded,
+                                    ...style.btnPrimary
+                                }}
+                                onPress={()=>Actions.replace('Login')}
                             />
                         </View>
 

@@ -14,6 +14,8 @@ target 'ETDA_Mobile' do
 
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
 
+  pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
+
   target 'ETDA_MobileTests' do
     inherit! :complete
     # Pods for testing

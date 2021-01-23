@@ -16,7 +16,8 @@ import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
-
+import CheckBox from '@react-native-community/checkbox';
+import { colors } from '../../../constant/util'
 export default class Register extends Component {
     render() {
         return (
@@ -68,12 +69,22 @@ export default class Register extends Component {
                             </View>
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
-                            <Text style={{
-                                color: '#B5B5B5',
-                                textAlign: 'center',
-                                fontSize: hp('1.7%')
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <CheckBox
+                                    disabled={false}
+                                    tintColors={{ true: colors.primary }}
+                                    boxType="square"
+                                    style={{ marginRight: hp('1%') , }}
+                                />
 
-                            }}>To continue, you agree to ETDA app’s</Text>
+                                <Text style={{
+                                    color: '#B5B5B5',
+                                    textAlign: 'center',
+                                    fontSize: hp('1.7%')
+
+                                }}>To continue, you agree to ETDA app’s</Text>
+                            </View>
+
                             <Text style={{
                                 marginTop: hp('1%'),
                                 color: '#003764',

@@ -32,7 +32,6 @@ export default class MessagsPost extends Component {
     }
 
     openOption() {
-        console.log('askdjkasjdkasjdk')
         this.setState({ visibleBottomSheet: true })
         this.RBSheet.open()
     }
@@ -129,12 +128,19 @@ export default class MessagsPost extends Component {
 
                 </View>
 
-                <View style={{ ...styleScoped.sectionSocial }}>
-                    <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('3%'), color: '#4267B2' }} />
-                    <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('3%'), color: '#B5B5B5' }} />
-                    <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
 
+                <View style={{...style.sectionSocial}}>
+                    <TouchableOpacity>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                    </TouchableOpacity>
                 </View>
+
                 {this.renderBottomSheet()}
             </View>
         );

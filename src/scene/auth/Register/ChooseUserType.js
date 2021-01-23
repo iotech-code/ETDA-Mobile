@@ -16,7 +16,7 @@ import { Button, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fonts, colors } from '../../../constant/util'
 
 export default class ChooseUserType extends Component {
@@ -161,7 +161,7 @@ export default class ChooseUserType extends Component {
                         <View style={{ marginTop: hp('5%'), flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ width: '49%' }}>
                                 <View style={styleScoped.option}>
-
+                                    <Icon name="description" size={hp('12%')} style={{ alignSelf: "center" }} />
                                 </View>
                                 <Text style={{
                                     marginTop: hp('3%'),
@@ -177,9 +177,7 @@ export default class ChooseUserType extends Component {
                                 onPress={() => this.setState({ visible: true })}
                             >
                                 <View style={styleScoped.option}>
-                                    <Image source={require('../../../assets/icon/ic_description_24px.png')}
-                                        style={{ alignSelf: 'center', width: '100%', height: '100%', resizeMode: 'contain' }}
-                                    />
+                                    <Icon name="create" size={hp('12%')} style={{ alignSelf: "center" }} />
                                 </View>
                                 <Text style={{
                                     marginTop: hp('3%'),

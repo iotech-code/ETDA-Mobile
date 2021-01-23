@@ -120,5 +120,16 @@ export default StyleSheet.create({
         fontWeight: "300",
         textAlign: 'center',
         color: '#003764',
+    },
+    sectionSocial: {
+        marginTop: hp('2%'),
+        paddingTop: hp('2.5%'),
+        borderTopWidth: 1,
+        borderTopColor: '#B5B5B5',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        paddingHorizontal: hp('2%'),
+        paddingBottom: hp('1%')
     }
 })

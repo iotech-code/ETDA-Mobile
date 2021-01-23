@@ -16,7 +16,7 @@ import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { colors } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
@@ -40,10 +40,12 @@ export default class HeaderNavbar extends Component {
 
                 {/* right side */}
                 <View style={styleScoped.rightSide}>
-                    <TouchableOpacity onPress={()=>Actions.push('Search')}>
-                        <Icon name="search" size={hp('2.4%')} color="white" style={{ marginRight: hp('2.5%') }} />
+                    <TouchableOpacity onPress={() => Actions.push('Search')}>
+                        <Icon name="search" size={hp('3%')} color="white" style={{ marginRight: hp('1.5%') }} />
                     </TouchableOpacity>
-                    <Icon name="bell" size={hp('2.4%')} color="white" />
+                    <TouchableOpacity >
+                        <Icon name="notifications" size={hp('3%')} color="white" />
+                    </TouchableOpacity>
 
                 </View>
 
