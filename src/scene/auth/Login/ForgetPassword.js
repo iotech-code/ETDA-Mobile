@@ -17,10 +17,40 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 
 
 export default class ForgetPassword extends Component {
+
+
+    callForgot = async () => {
+        console.log('come in ')
+        const data = {
+            "user_email": this.state.email
+        }
+        console.log('come in ', data)
+        axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
+            .then((response) => {
+                console.log('come in ', response)
+                if (response.data.status == "success") {
+                    Actions.replace('Login')
+                } else {
+
+                }
+            })
+            .catch((error) => {
+            })
+            .finally(function () {
+            });
+
+    };
+
     render() {
+        onChangeTextEmail = async (value) => {
+            this.setState({
+                email: value
+            })
+        }
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
@@ -45,6 +75,9 @@ export default class ForgetPassword extends Component {
                                 <TextInput
                                     style={style.input}
                                     placeholder="Email address"
+                                    onChangeText={(value) => {
+                                        onChangeTextEmail(value)
+                                    }}
                                 />
                             </View>
 
@@ -57,7 +90,9 @@ export default class ForgetPassword extends Component {
                                     ...style.btnRounded,
                                     ...style.btnPrimary
                                 }}
-                                onPress={()=>Actions.replace('Login')}
+                                onPress={() =>
+                                    this.callForgot()
+                                }
                             />
                         </View>
 

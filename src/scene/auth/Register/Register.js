@@ -19,7 +19,54 @@ import { Actions } from 'react-native-router-flux'
 import CheckBox from '@react-native-community/checkbox';
 import { colors } from '../../../constant/util'
 export default class Register extends Component {
+
+    constructor() {
+        super();
+        this.state = { rEmail: '', rPass: '', rCPass: '', rPolicy: 'in-active' }
+    }
+
+
+
+
+
+
     render() {
+
+        // on change text
+        onChangeTextEmail = async (value) => {
+            this.setState({
+                rEmail: value
+            })
+        }
+
+        onChangeTextPassword = async (value) => {
+            this.setState({
+                rPass: value
+            })
+        }
+
+
+        onChangeTextConfirmPassword = async (value) => {
+            this.setState({
+                rCPass: value
+            })
+        }
+
+
+        // on change checkbox 
+
+        onChangeCheckBox = (value) => {
+            var policy = ""
+            if (value) {
+                policy = "active"
+            } else {
+                policy = "in-active"
+            }
+
+            this.setState({
+                rPolicy: policy
+            })
+        }
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
@@ -47,6 +94,9 @@ export default class Register extends Component {
                                 <TextInput
                                     style={style.input}
                                     placeholder="Email address"
+                                    onChangeText={(value) => {
+                                        onChangeTextEmail(value)
+                                    }}
                                 />
                             </View>
                         </View>
@@ -56,6 +106,9 @@ export default class Register extends Component {
                                     style={style.input}
                                     placeholder="Password"
                                     secureTextEntry={true}
+                                    onChangeText={(value) => {
+                                        onChangeTextConfirmPassword(value)
+                                    }}
                                 />
                             </View>
                         </View>
@@ -65,6 +118,9 @@ export default class Register extends Component {
                                     style={style.input}
                                     placeholder="Confirm Password"
                                     secureTextEntry={true}
+                                    onChangeText={(value) => {
+                                        onChangeTextPassword(value)
+                                    }}
                                 />
                             </View>
                         </View>
@@ -74,7 +130,11 @@ export default class Register extends Component {
                                     disabled={false}
                                     tintColors={{ true: colors.primary }}
                                     boxType="square"
-                                    style={{ marginRight: hp('1%') , }}
+                                    style={{ marginRight: hp('1%'), }}
+                                    value={this.state.rPolicy == 'in-active' ? false : true}
+                                    onValueChange={(newValue) => {
+                                        onChangeCheckBox(newValue)
+                                    }}
                                 />
 
                                 <Text style={{
@@ -97,7 +157,9 @@ export default class Register extends Component {
                             <Button
                                 title="Continue"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                                onPress={() => Actions.ChooseUserType()}
+                                onPress={() =>
+                                    Actions.ChooseUserType({ 'email': this.state.rEmail, 'password': this.state.rPass, 'accept_term': this.state.rPolicy })
+                                }
                             />
                         </View>
                         <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>

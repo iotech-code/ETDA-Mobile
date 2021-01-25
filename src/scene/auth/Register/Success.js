@@ -9,7 +9,8 @@ import {
     StatusBar,
     Image,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    AsyncStorage
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -17,9 +18,38 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 
 
 export default class RegisterSuccess extends Component {
+
+
+
+    callLogin = async () => {
+        const { navigation } = this.props;
+        const data = {
+            "user_email": navigation.getParam('email', ''),
+            "user_password": navigation.getParam('password', ''),
+            "authen_method": "local"
+        }
+        axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
+            .then((response) => {
+                if (response.data.status == "success") {
+                    AsyncStorage.setItem('token', response.data.token);
+                    Actions.replace('Main')
+                } else {
+
+                }
+            })
+            .catch((error) => {
+
+                // setLoading(false)
+                // console.log('data error : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -47,7 +77,7 @@ export default class RegisterSuccess extends Component {
                             <Button
                                 title="Start"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                                onPress={()=>Actions.replace('Main')}
+                                onPress={() => this.callLogin()}
                             />
                         </View>
 

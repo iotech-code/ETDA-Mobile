@@ -12,6 +12,7 @@ import {
     TextInput,
     Platform
 } from 'react-native';
+import axios from 'axios';
 
 import { Button, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -24,18 +25,42 @@ export default class ChooseUserType extends Component {
 
     constructor(props) {
         super(props)
-
+        this.state = { rType: 'read', rReason: '', rExp: [], rExp1: '', rExp2: '', rExp3: '', visible: false }
 
     }
-    state = {
-        visible: false
-    }
+
+
+
 
     renderModalPostandRead() {
         const { visible } = this.state
+        onChangeTextReason = async (value) => {
+            this.setState({
+                rReason: value
+            })
+        }
+
+        onChangeTextExp1 = async (value) => {
+            this.setState({
+                rExp1: value
+            })
+        }
+
+
+        onChangeTextExp2 = async (value) => {
+            this.setState({
+                rExp2: value
+            })
+        }
+
+        onChangeTextExp3 = async (value) => {
+            this.setState({
+                rExp3: value
+            })
+        }
         return (
             <Overlay
-                isVisible={visible}
+                isVisible={this.state.visible}
                 overlayStyle={{
                     width: wp('90%'),
                     paddingVertical: hp('2%'),
@@ -73,6 +98,9 @@ export default class ChooseUserType extends Component {
                         style={{ fontSize: hp('2%'), padding: 0 }}
                         placeholder="Enter your reason…"
                         multiline={true}
+                        onChangeText={(value) => {
+                            onChangeTextReason(value)
+                        }}
                     // numberOfLines={ Platform.OS === 'ios' ? 50 : 0}
                     />
                 </View>
@@ -96,25 +124,34 @@ export default class ChooseUserType extends Component {
                     <TextInput
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
+                        onChangeText={(value) => {
+                            onChangeTextExp1(value)
+                        }}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
+                        onChangeText={(value) => {
+                            onChangeTextExp2(value)
+                        }}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
+                        onChangeText={(value) => {
+                            onChangeTextExp3(value)
+                        }}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
                         title="Confirm"
                         buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                        onPress={() => this.setState({ visible: false })}
+                        onPress={() => { this.setState({ visible: false }) }}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
@@ -136,6 +173,10 @@ export default class ChooseUserType extends Component {
 
 
     render() {
+
+
+
+
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
@@ -160,7 +201,15 @@ export default class ChooseUserType extends Component {
                     <View style={style.container}>
 
                         <View style={{ marginTop: hp('5%'), flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <TouchableOpacity style={{ width: '49%' }}>
+                            <TouchableOpacity style={{ width: '49%' }}
+                                onPress={() => {
+                                    this.setState({
+                                        rType: 'read',
+                                        visible: false
+                                    })
+                                }}
+
+                            >
                                 <View style={{ ...styleScoped.option, backgroundColor: colors.primary }}>
                                     <Icon name="description" size={hp('12%')} style={{ alignSelf: "center" }} color="white" />
                                 </View>
@@ -175,7 +224,7 @@ export default class ChooseUserType extends Component {
 
                             <TouchableOpacity
                                 style={{ width: '49%' }}
-                                onPress={() => this.setState({ visible: true })}
+                                onPress={() => this.setState({ visible: true, rType: 'post_read' })}
                             >
                                 <View style={styleScoped.option}>
                                     <Icon name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />
@@ -195,7 +244,13 @@ export default class ChooseUserType extends Component {
                             <Button
                                 title="Register"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                                onPress={() => Actions.RegisterSuccess()}
+                                onPress={() => {
+
+                                    this.callRegister()
+                                }
+                                    //  
+
+                                }
                             />
                         </View>
                         <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
@@ -234,6 +289,37 @@ export default class ChooseUserType extends Component {
             </View>
         );
     }
+
+    callRegister = async () => {
+        const { navigation } = this.props;
+        this.state.rExp.push(this.state.rExp1)
+        this.state.rExp.push(this.state.rExp2)
+        this.state.rExp.push(this.state.rExp3)
+
+        const data = {
+            "user_email": navigation.getParam('email', ''),
+            "user_password": navigation.getParam('password', ''),
+            "user_rq_type": this.state.rType,
+            "rq_reason": this.state.rReason,
+            "rq_exp": this.state.rExp,
+            "accept_term": navigation.getParam('accept_term', '')
+        }
+
+        axios.post('https://etda.amn-corporation.com/api/backend/user/register', data)
+            .then((response) => {
+                if (response.data.status == "success") {
+                    Actions.RegisterSuccess({ 'email': navigation.getParam('email', ''), 'password': navigation.getParam('password', '') })
+                } else {
+
+                }
+            })
+            .catch((error) => {
+
+            })
+            .finally(function () {
+            });
+
+    };
 };
 
 const styleScoped = StyleSheet.create({

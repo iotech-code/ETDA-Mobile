@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -27,7 +28,21 @@ export default class Main extends Component {
     state = {
         visibleSearch: false
     }
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            console.log('token : ', token)
+        } catch (err) {
+            // handle errors
+        }
+    }
+
+
+
+
     render() {
+
         const { dataList } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>

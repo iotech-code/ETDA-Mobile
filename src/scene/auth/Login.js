@@ -9,15 +9,65 @@ import {
     StatusBar,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    AsyncStorage
 } from 'react-native';
 
+import axios from 'axios';
 import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 export default class Login extends Component {
+    constructor() {
+        super();
+        this.state = { email: '', pass: '' }
+    }
+
+
+
+
+
+
+    callLogin = async () => {
+        console.log('come in ')
+        const data = {
+            "user_email": this.state.email,
+            "user_password": this.state.pass,
+            "authen_method": "local"
+        }
+        console.log('come in ', data)
+        axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
+            .then((response) => {
+                console.log('come in ', response)
+                if (response.data.status == "success") {
+                    AsyncStorage.setItem('token', response.data.token);
+                    Actions.replace('Main')
+                } else {
+
+                }
+            })
+            .catch((error) => {
+            })
+            .finally(function () {
+            });
+
+    };
+
+
     render() {
+        // on change text
+        onChangeTextEmail = async (value) => {
+            this.setState({
+                email: value
+            })
+        }
+
+        onChangeTextPassword = async (value) => {
+            this.setState({
+                pass: value
+            })
+        }
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
@@ -45,6 +95,9 @@ export default class Login extends Component {
                                 <TextInput
                                     style={style.input}
                                     placeholder="Email address"
+                                    onChangeText={(value) => {
+                                        onChangeTextEmail(value)
+                                    }}
                                 />
                             </View>
                         </View>
@@ -54,6 +107,9 @@ export default class Login extends Component {
                                     style={style.input}
                                     placeholder="Password"
                                     secureTextEntry={true}
+                                    onChangeText={(value) => {
+                                        onChangeTextPassword(value)
+                                    }}
                                 />
                             </View>
                         </View>
@@ -72,7 +128,9 @@ export default class Login extends Component {
                             <Button
                                 title="Login"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                                onPress={() => Actions.replace('Main')}
+                                onPress={() =>
+                                    this.callLogin()
+                                }
                             />
                         </View>
                         <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
