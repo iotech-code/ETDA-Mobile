@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -19,13 +20,74 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
+import axios from 'axios';
 
 
 export default class ChangePassword extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super();
+        this.state = {
+            visibleSearch: false,
+            oldPass: '',
+            newPass: '',
+            token: ''
+        }
     }
+
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            this.setState({
+                token: token
+            })
+        } catch (err) {
+            // handle errors
+        }
+    }
+
+
+    callChangePassword = async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        const data = {
+            "old_ps": this.state.oldPass,
+            "new_ps": this.state.newPass
+        }
+        console.log('come in ', data)
+        axios.post('https://etda.amn-corporation.com/api/backend/user/change-password', data, {
+            headers
+        })
+            .then((response) => {
+                if (response.data.status == "success") {
+                    Actions.MyProfile()
+                } else {
+
+                }
+            })
+            .catch((error) => {
+            })
+            .finally(function () {
+            });
+
+    };
+
     render() {
+
+        onChangeTextOldPass = async (value) => {
+            this.setState({
+                oldPass: value
+            })
+        }
+
+        onChangeTextNewPass = async (value) => {
+            this.setState({
+                newPass: value
+            })
+        }
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -33,7 +95,7 @@ export default class ChangePassword extends Component {
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('ProfileSetting')} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Chnage Password</Text>
-                            <TouchableOpacity onPress={() => Actions.MyProfile()}>
+                            <TouchableOpacity onPress={() => this.callChangePassword()}>
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
                             </TouchableOpacity>
                         </View>
@@ -44,6 +106,9 @@ export default class ChangePassword extends Component {
                         <TextInput
                             style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder="Enter your password here…"
+                            onChangeText={(value) => {
+                                onChangeTextOldPass(value)
+                            }}
                         />
                         <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
                     </View>
@@ -53,6 +118,9 @@ export default class ChangePassword extends Component {
                         <TextInput
                             style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder="Enter your password here…"
+                            onChangeText={(value) => {
+                                onChangeTextNewPass(value)
+                            }}
                         />
                         <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
                     </View>

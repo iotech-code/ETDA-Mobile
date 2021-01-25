@@ -61,6 +61,22 @@ export default class Main extends Component {
                                 <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                             </View>
 
+                            {/* section admin */}
+                            <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                <Button
+                                    title="Write New Blog"
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded
+                                    }}
+                                    onPress={() => Actions.CreatePost()}
+                                />
+                            </View>
+                            {/* end section admin */}
+
                             <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Button
                                     title="E-commerce"

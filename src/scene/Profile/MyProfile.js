@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -19,12 +20,120 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-import {fonts} from '../../constant/util'
+import { fonts } from '../../constant/util'
+import axios from 'axios';
 
 export default class MyProfile extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super();
+        this.state = { visibleSearch: false, phone: '', professional: '', position: '', organization: '', type: '', name: '', photo: '', userId: '' }
     }
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            this.callInfomation(token)
+        } catch (err) {
+            // handle errors
+        }
+    }
+
+
+    callInfomation = async (token) => {
+        console.log('come in ')
+        const data = {
+            "Token": token
+        }
+        console.log('come in ', data)
+        axios.post('https://etda.amn-corporation.com/api/backend/user/information', data)
+            .then((response) => {
+                var phone = ''
+                var professional = ''
+                var position = ''
+                var organization = ''
+                var type = ''
+                var name = ''
+                var photo = ''
+                var userId = ''
+
+                if (response.data.status == "success") {
+                    if (response.data.data.mobile_number == null) {
+                        phone = ''
+                    } else {
+                        phone = response.data.data.mobile_number
+                    }
+
+
+                    if (response.data.data.professional == null) {
+                        professional = ''
+                    } else {
+                        professional = response.data.data.professional
+                    }
+
+
+                    if (response.data.data.position == null) {
+                        position = ''
+                    } else {
+                        position = response.data.data.position
+                    }
+
+
+                    if (response.data.data.organization == null) {
+                        organization = ''
+                    } else {
+                        organization = response.data.data.organization
+                    }
+
+
+                    if (response.data.data.type == null) {
+                        type = ''
+                    } else {
+                        type = response.data.data.type
+                    }
+
+
+                    if (response.data.data.name == null) {
+                        name = ''
+                    } else {
+                        name = response.data.data.name
+                    }
+
+                    if (response.data.data.photo == null) {
+                        photo = ''
+                    } else {
+                        photo = response.data.data.photo
+                    }
+
+                    if (response.data.data.userid == null) {
+                        userId = ''
+                    } else {
+                        userId = response.data.data.userid
+                    }
+
+                    this.setState({
+                        phone: phone,
+                        professional: professional,
+                        position: position,
+                        organization: organization,
+                        type: type,
+                        name: name,
+                        photo: photo,
+                        userId: userId
+                    })
+                    // AsyncStorage.setItem('token', response.data.token);
+                    // Actions.replace('Main')
+                } else {
+
+                }
+            })
+            .catch((error) => {
+            })
+            .finally(function () {
+            });
+
+    };
+
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -54,7 +163,7 @@ export default class MyProfile extends Component {
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
-                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5', fontWeight: '300' }}>Bio / status / Introduction</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5', fontWeight: '300' }}>{this.state.name}</Text>
                             </View>
 
                         </View>
@@ -64,7 +173,7 @@ export default class MyProfile extends Component {
                                 <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Contact me</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ 099-999-9999</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ {this.state.phone}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -72,7 +181,7 @@ export default class MyProfile extends Component {
                                 <Icon name="lightbulb-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Professional</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Digital Identity</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.professional}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -80,7 +189,7 @@ export default class MyProfile extends Component {
                                 <Icon name="domain" size={hp('3%')} color="#EE3397" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Organization</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Data Guardian</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.organization}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -88,7 +197,7 @@ export default class MyProfile extends Component {
                                 <Icon name="bag-checked" size={hp('3%')} color="#427AA1" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Position</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Software engineer</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.position}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -96,21 +205,32 @@ export default class MyProfile extends Component {
                                 <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Read only</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {this.state.type == 'read' ? 'Read only' : 'Read only'} </Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
                                 title="Edit Profile"
-                                buttonStyle={{ padding: hp('1%'), ...style.btnRounded , ...style.btnPrimary }}
-                                onPress={() => Actions.EditProfile()}
+                                buttonStyle={{ padding: hp('1%'), ...style.btnRounded, ...style.btnPrimary }}
+                                onPress={() => Actions.EditProfile(
+                                    {
+                                        'name': this.state.name,
+                                        'phone': this.state.phone,
+                                        'professional': this.state.professional,
+                                        'organization': this.state.organization,
+                                        'position': this.state.position,
+                                        'type': this.state.type,
+                                        'photo': this.state.photo,
+                                        'userId': this.state.userId
+                                    }
+                                )}
                             />
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
                                 title="Logout"
                                 titleStyle={{ color: fonts.color.primary }}
-                                buttonStyle={{ padding: hp('1%'), ...style.btnRounded , ...style.btnPrimaryOutline }}
+                                buttonStyle={{ padding: hp('1%'), ...style.btnRounded, ...style.btnPrimaryOutline }}
                                 onPress={() => Actions.replace('Login')}
                             />
                         </View>

@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    Platform
+    Platform,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, ListItem } from 'react-native-elements';
@@ -19,27 +20,44 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
+import axios from 'axios';
 
 
 export default class MessagsPost extends Component {
-
     constructor(props) {
         super(props)
+        this.state = {
+            token: '',
+            postId: '1',
+            type: 'edit',
+            visibleBottomSheet: false,
+            data: {
+                title: 'E-commerce new gen',
+                time: ' 11/11/2020  3:30 pm',
+                image: require('../assets/images/post_1.png'),
+                detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
+                tag: ['E-commerce', 'Digital Law']
+            },
+            socail: {
+                like: 22,
+                view: 22
+            }
+        }
     }
 
-    state = {
-        visibleBottomSheet: false,
-        data: {
-            title: 'E-commerce new gen',
-            time: ' 11/11/2020  3:30 pm',
-            image: require('../assets/images/post_1.png'),
-            detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
-            tag: ['E-commerce', 'Digital Law']
-        },
-        socail: {
-            like: 22,
-            view: 22
-        },
+
+
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            console.log('token : ', token)
+            this.setState({
+                token: token
+            })
+        } catch (err) {
+            // handle errors
+        }
     }
 
     openOption() {
@@ -47,10 +65,38 @@ export default class MessagsPost extends Component {
         this.RBSheet.open()
     }
 
-    componentDidMount() {
-        // this.RBSheet.open()
+    // componentDidMount() {
+    //     // this.RBSheet.open()
 
-    }
+    // }
+
+    callDeletePost = async () => {
+        this.setState({ visibleBottomSheet: false }),
+            this.RBSheet.close()
+        console.log('data come in : ', this.state.token)
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        axios.delete('https://etda.amn-corporation.com/api/backend/post/delete/1', {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
 
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
@@ -80,7 +126,15 @@ export default class MessagsPost extends Component {
                 <View style={{ ...style.divider }}></View>
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
-                }}>
+                }}
+                    onPress={() => {
+                        Actions.CreatePost({ 'type': this.props.type }),
+                            this.setState({ visibleBottomSheet: false }),
+                            this.RBSheet.close()
+
+
+                    }}
+                >
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
                 </TouchableOpacity>
@@ -88,7 +142,9 @@ export default class MessagsPost extends Component {
 
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
-                }}>
+                }}
+                    onPress={() => this.callDeletePost()}
+                >
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
                 </TouchableOpacity>
@@ -163,7 +219,7 @@ export default class MessagsPost extends Component {
                         justifyContent: 'flex-start',
                         alignItems: 'center'
                     }}>
-                               <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}>
+                        <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}>
                             <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
                             <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}>{socail.like}</Text>
                         </TouchableOpacity>
@@ -174,7 +230,7 @@ export default class MessagsPost extends Component {
                     </View>
                 </View>
 
-                <View style={{...style.sectionSocial}}>
+                <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
                     </TouchableOpacity>

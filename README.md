@@ -107,8 +107,12 @@
         - หน้า Edit Profile
         - หน้า Profile Setting
         - หน้า Edit Change Password
-    
 
 # 21/1/2021
 
     - Redesign ทั้งหมด
+
+# 25/1/2021
+
+    - update ui ในส่วนของ admin 
+    - ยังเหลือ poll และ survey ในส่วนของ admin

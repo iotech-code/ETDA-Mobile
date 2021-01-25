@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -21,12 +22,96 @@ import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import { fonts } from '../../constant/util';
+import axios from 'axios';
 
 
 export default class CreatePost extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super();
+        this.state = { visibleSearch: false, token: '', title: '', type: '', image: [], description: '', tag: [], addition: '', postId: '' }
     }
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            this.setState({
+                token: token
+            })
+        } catch (err) {
+            // handle errors
+        }
+    }
+
+    callCreatePost = async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        const data = {
+            "post_title": this.state.title,
+            "post_type": this.state.type,
+            "post_images": this.state.image,
+            "post_description": this.state.description,
+            "post_tag": this.state.tag,
+            "post_addition_data": this.state.addition
+        }
+
+        axios.post('https://etda.amn-corporation.com/api/backend/post/create', data, {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+                    Actions.MessageBoard()
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+
+
+    callUpdatePost = async () => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        const data = {
+            "post_title": this.state.title,
+            "post_type": this.state.type,
+            "post_images": this.state.image,
+            "post_description": this.state.description,
+            "post_tag": this.state.tag,
+            "post_addition_data": this.state.addition
+        }
+
+        axios.put('https://etda.amn-corporation.com/api/backend/post/update' + this.props.postId, data, {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+                    Actions.MessageBoard()
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
+
     render() {
         const { dataList } = this.state
         return (
@@ -104,6 +189,7 @@ export default class CreatePost extends Component {
 
 
                 </View>
+
             </ScrollView>
         );
     }

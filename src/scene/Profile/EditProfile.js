@@ -19,14 +19,43 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
+import axios from 'axios';
 
 
 export default class EditProfile extends Component {
-    state = {
-        visibleSearch: false,
-        visibleChangeTypeOfUser: false,
-        visibleModalPostandRead: false
+    constructor() {
+        super();
+        this.state = {
+            phone: '',
+            professional: '',
+            position: '',
+            organization: '',
+            type: '',
+            name: '',
+            photo: '',
+            userId: '',
+            visibleSearch: false,
+            visibleChangeTypeOfUser: false,
+            visibleModalPostandRead: false
+        }
     }
+
+
+    componentDidMount() {
+        const { navigation } = this.props;
+
+        this.setState({
+            phone: navigation.getParam('phone', ''),
+            professional: navigation.getParam('professional', ''),
+            position: navigation.getParam('position', ''),
+            organization: navigation.getParam('organization', ''),
+            type: navigation.getParam('type', ''),
+            name: navigation.getParam('name', ''),
+            photo: navigation.getParam('photo', ''),
+            userId: navigation.getParam('userId', ''),
+        })
+    }
+
     continueTypeOfUser() {
         this.setState({ visibleChangeTypeOfUser: false })
         this.setState({ visibleModalPostandRead: true })
@@ -219,7 +248,62 @@ export default class EditProfile extends Component {
             </Overlay>
         )
     }
+
+    callEditProfile = async () => {
+        const data = {
+            "user_id": this.state.userId,
+            "user_fullname": this.state.name,
+            "user_photo": this.state.photo,
+            "mobile_number": this.state.phone,
+            "organization": this.state.organization,
+            "position": this.state.position,
+            "bio": this.state.professional,
+        }
+        console.log('come in ', data)
+        axios.put('https://etda.amn-corporation.com/api/backend/user/update/' + this.props.userId, data)
+            .then((response) => {
+                if (response.data.status == "success") {
+                    Actions.MyProfile()
+                } else {
+
+                }
+            })
+            .catch((error) => {
+            })
+            .finally(function () {
+            });
+
+    };
+
+
     render() {
+        const { navigation } = this.props;
+
+        onChangeTextPhone = async (value) => {
+            this.setState({
+                phone: value
+            })
+        }
+
+        onChangeTextOrganization = async (value) => {
+            this.setState({
+                organization: value
+            })
+        }
+
+
+        onChangeTextPosition = async (value) => {
+            this.setState({
+                position: value
+            })
+        }
+
+
+        onChangeTextProfessional = async (value) => {
+            this.setState({
+                professional: value
+            })
+        }
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -227,7 +311,9 @@ export default class EditProfile extends Component {
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Profile</Text>
-                            <TouchableOpacity >
+                            <TouchableOpacity
+                                onPress={() => this.callEditProfile()}
+                            >
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
                             </TouchableOpacity>
                         </View>
@@ -248,7 +334,7 @@ export default class EditProfile extends Component {
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
-                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5', fontWeight: '300' }}>Bio / status / Introduction</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5', fontWeight: '300' }}>{this.state.name}</Text>
                             </View>
 
                         </View>
@@ -265,7 +351,10 @@ export default class EditProfile extends Component {
                                 />
                                 <TextInput
                                     style={{ ...style.customInput, width: '80%' }}
-                                    placeholder="099-999-9999"
+                                    placeholder={navigation.getParam('phone', '')}
+                                    onChangeText={(value) => {
+                                        onChangeTextPhone(value)
+                                    }}
                                 />
                             </View>
                             {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ 099-999-9999</Text> */}
@@ -278,7 +367,10 @@ export default class EditProfile extends Component {
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder="Digital Identity"
+                                placeholder={this.state.professional}
+                                onChangeText={(value) => {
+                                    onChangeTextProfessional(value)
+                                }}
                             />
                             {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Digital Identity</Text> */}
                         </View>
@@ -290,7 +382,10 @@ export default class EditProfile extends Component {
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder="Data Guardian"
+                                placeholder={this.state.organization}
+                                onChangeText={(value) => {
+                                    onChangeTextOrganization(value)
+                                }}
                             />
                             {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Data Guardian</Text> */}
                         </View>
@@ -302,7 +397,10 @@ export default class EditProfile extends Component {
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder="Software engineer"
+                                placeholder={this.state.position}
+                                onChangeText={(value) => {
+                                    onChangeTextPosition(value)
+                                }}
                             />
                             {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Software engineer</Text> */}
                         </View>
@@ -313,7 +411,7 @@ export default class EditProfile extends Component {
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Read only</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.type == "read" ? "Read only" : "Read only"}</Text>
                                 <TouchableOpacity
                                     style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
                                     onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
@@ -333,7 +431,14 @@ export default class EditProfile extends Component {
                 {this.renderModalPostandRead()}
             </View >
         );
+
+
+
+
+
     }
+
+
 };
 
 const styleScoped = StyleSheet.create({

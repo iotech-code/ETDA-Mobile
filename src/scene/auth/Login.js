@@ -41,8 +41,11 @@ export default class Login extends Component {
             .then((response) => {
                 console.log('come in ', response)
                 if (response.data.status == "success") {
-                    AsyncStorage.setItem('token', response.data.token);
-                    Actions.replace('Main')
+                    if (response.data.token != "") {
+                        AsyncStorage.setItem('token', response.data.token);
+                        Actions.replace('Main')
+                    }
+
                 } else {
 
                 }

@@ -21,11 +21,12 @@ import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import MessagePost from '../../components/MessagePost'
-import {colors} from '../../constant/util'
+import { colors } from '../../constant/util'
 
 export default class MessageBoard extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super();
+        this.state = { visibleSearch: false, type: 'create' }
     }
     render() {
         const { dataList } = this.state
@@ -55,7 +56,7 @@ export default class MessageBoard extends Component {
                                         ...style.btnPrimaryOutline,
                                         ...style.btnRounded
                                     }}
-                                    onPress={() => Actions.CreatePost()}
+                                    onPress={() => Actions.CreatePost({ 'type': this.props.type })}
                                 />
                             </View>
 

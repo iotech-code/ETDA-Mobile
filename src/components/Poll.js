@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    Platform
+    Platform,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, ListItem } from 'react-native-elements';
@@ -19,66 +20,126 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-
+import axios from 'axios';
 
 export default class MessagsPost extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            visibleBottomSheet: false,
+            postId: '',
+            type: '',
+            question: [],
+            answer: [],
+            choice: [],
+            token: ''
+        }
     }
 
-    state = {
-        visibleBottomSheet: false
-    }
+    // state = {
+    //     visibleBottomSheet: false
+    // }
 
     openOption() {
-        console.log('askdjkasjdkasjdk')
+        //    console.log('askdjkasjdkasjdk')
         this.setState({ visibleBottomSheet: true })
         this.RBSheet.open()
     }
 
-    componentDidMount() {
-        // this.RBSheet.open()
+    // componentDidMount() {
+    //     // this.RBSheet.open()
 
+    // }
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            console.log('token 1 : ', token)
+            this.setState({
+                token: token
+            })
+        } catch (err) {
+            // handle errors
+        }
     }
 
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
         return (
             <RBSheet
-            ref={ref => {
-                this.RBSheet = ref;
-            }}
-            height={Platform.OS === 'ios' ? hp('18%') : hp('16%')}
-            openDuration={250}
-            customStyles={{
-                container: {
-                    borderTopRightRadius: 30,
-                    borderTopLeftRadius: 30,
-                    paddingTop: hp('1%'),
-                    backgroundColor: 'white',
-                    ...style.shadowCard
-                }
-            }}
-        >
-            <TouchableOpacity style={{
-                ...styleScoped.listMore
-            }}>
-                <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
-                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Join Poll</Text>
-            </TouchableOpacity>
-            <View style={{ ...style.divider }}></View>
-            <TouchableOpacity style={{
-                ...styleScoped.listMore
-            }}>
-                <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Unjoin Poll</Text>
-            </TouchableOpacity>
-            <View style={{ ...style.divider }}></View>
+                ref={ref => {
+                    this.RBSheet = ref;
+                }}
+                height={Platform.OS === 'ios' ? hp('18%') : hp('16%')}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        borderTopRightRadius: 30,
+                        borderTopLeftRadius: 30,
+                        paddingTop: hp('1%'),
+                        backgroundColor: 'white',
+                        ...style.shadowCard
+                    }
+                }}
+            >
+                <TouchableOpacity style={{
+                    ...styleScoped.listMore
+                }}>
+                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Join Poll</Text>
+                </TouchableOpacity>
+                <View style={{ ...style.divider }}></View>
+                <TouchableOpacity style={{
+                    ...styleScoped.listMore
+                }}>
+                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Unjoin Poll</Text>
+                </TouchableOpacity>
+                <View style={{ ...style.divider }}></View>
 
-        </RBSheet>
+            </RBSheet>
         )
     }
+
+
+
+    callPoll = async () => {
+        console.log('data come in : ', this.state.token)
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+
+        const data = {
+            "post_id": this.state.postId,
+            "post_type": this.state.type,
+            "post_question": this.state.question,
+            "post_answer": this.state.answer,
+            "post_choice": this.state.choice
+        }
+
+        axios.post('https://etda.amn-corporation.com/api/backend/post/action', data, {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+
     render() {
         return (
             <View style={{

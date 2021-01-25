@@ -19,9 +19,52 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 export default class Poll extends Component {
-    state = {
-        visibleSearch: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            token: '',
+            text: '',
+            visibleSearch: false,
+        }
     }
+
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            this.setState({
+                token: token
+            })
+        } catch (err) {
+            // handle errors
+        }
+    }
+
+    callSearch = async () => {
+        console.log('data come in : ', this.state.token)
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        axios.get('https://etda.amn-corporation.com/api/backend/post/search?query=' + this.state.text, {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
     render() {
         return (
             <View style={{ flex: 1 }}>

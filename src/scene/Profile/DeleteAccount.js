@@ -25,6 +25,8 @@ export default class DeleteAccount extends Component {
     state = {
         visibleSearch: false
     }
+
+
     render() {
         return (
             <View style={{ flex: 1 }}>

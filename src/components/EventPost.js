@@ -41,6 +41,14 @@ export default class MessagsPost extends Component {
 
     }
 
+    onEdit(){
+        this.RBSheet.close()
+        Actions.push('EventEdit')
+    }
+
+
+  
+
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
         return (
@@ -48,7 +56,7 @@ export default class MessagsPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('18%') : hp('16%')}
+                // height={Platform.OS === 'ios' ? hp('30%') : hp('16%')}
                 openDuration={250}
                 customStyles={{
                     container: {
@@ -74,6 +82,20 @@ export default class MessagsPost extends Component {
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Unjoin event</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
+                {/* section admin */}
+                <TouchableOpacity style={{...styleScoped.listMore}} onPress={()=>this.onEdit()}>
+                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit Event</Text>
+                </TouchableOpacity>
+                <View style={{ ...style.divider }}></View>
+
+                <TouchableOpacity style={{ ...styleScoped.listMore}}>
+                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete Event</Text>
+                </TouchableOpacity>
+                <View style={{ ...style.divider }}></View>
+                {/* section admin */}
+
 
             </RBSheet>
         )
@@ -129,7 +151,7 @@ export default class MessagsPost extends Component {
                 </View>
 
 
-                <View style={{...style.sectionSocial}}>
+                <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
                     </TouchableOpacity>
