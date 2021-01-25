@@ -60,7 +60,7 @@ export default class Activity extends Component {
                         </TouchableOpacity>
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Event</Text>
                         <TouchableOpacity onPress={() => Actions.push('Search')}>
-                            <Icon name="magnify" size={hp('3%')} color="white"  />
+                            <Icon name="magnify" size={hp('3%')} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
@@ -73,6 +73,23 @@ export default class Activity extends Component {
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Event</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
+
+
+                        {/* section admin */}
+                        <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                            <Button
+                                title="Create New Event"
+                                Outline={true}
+                                titleStyle={{ color: '#003764', }}
+                                buttonStyle={{
+                                    padding: hp('1%'),
+                                    ...style.btnPrimaryOutline,
+                                    ...style.btnRounded
+                                }}
+                                onPress={() => Actions.push('EventCreate')}
+                            />
+                        </View>
+                        {/* end section admin */}
 
                         {/* calendar*/}
                         <View style={style.container}>

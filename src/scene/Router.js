@@ -25,6 +25,9 @@ import ProfileSetting from './Profile/ProfileSetting'
 import ChangePassword from './Profile/ChangePassword'
 import Search from './Search'
 import DeleteAccount from './Profile/DeleteAccount'
+import ManageBlog from './ManageBlog'
+import EventCreate from './Activity/EventCreate'
+import EventEdit from './Activity/EventEdit'
 const RouterPage = () => {
     return (
 
@@ -53,6 +56,12 @@ const RouterPage = () => {
                 <Scene key="ChangePassword" component={ChangePassword} title="ChangePassword" hideNavBar />
                 <Scene key="Search" component={Search} title="Search" hideNavBar />
                 <Scene key="DeleteAccount" component={DeleteAccount} title="DeleteAccount" hideNavBar />
+                <Scene key="ManageBlog" component={ManageBlog} title="ManageBlog" hideNavBar />
+                <Scene key="EventCreate" component={EventCreate} title="EventCreate" hideNavBar />
+                <Scene key="EventEdit" component={EventEdit} title="EventEdit" hideNavBar />
+
+
+
 
 
 
