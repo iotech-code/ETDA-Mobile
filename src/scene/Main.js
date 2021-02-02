@@ -22,17 +22,23 @@ import HeaderNavbar from '../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import MenuFooter from '../components/MenuFooter'
+import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
 
 export default class Main extends Component {
     state = {
-        visibleSearch: false
+        visibleSearch: false,
+        user_type: ''
     }
 
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token');
-            console.log('token : ', token)
+            const user_type = await AsyncStorage.getItem('user_type');
+            this.setState({
+                user_type: user_type
+            })
+            //  console.log('user_type : ', this.state.user_type)
         } catch (err) {
             // handle errors
         }
@@ -62,19 +68,25 @@ export default class Main extends Component {
                             </View>
 
                             {/* section admin */}
-                            <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                                <Button
-                                    title="Write New Blog"
-                                    Outline={true}
-                                    titleStyle={{ color: '#003764', }}
-                                    buttonStyle={{
-                                        padding: hp('1%'),
-                                        ...style.btnPrimaryOutline,
-                                        ...style.btnRounded
-                                    }}
-                                    onPress={() => Actions.CreatePost()}
-                                />
-                            </View>
+                            {this.state.user_type == 'read, post_read' ?
+                                <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                    <Button
+                                        title="Write New Blog"
+                                        Outline={true}
+                                        titleStyle={{ color: '#003764', }}
+                                        buttonStyle={{
+                                            padding: hp('1%'),
+                                            ...style.btnPrimaryOutline,
+                                            ...style.btnRounded
+                                        }}
+                                        onPress={() => Actions.CreatePost()}
+                                    />
+
+
+                                </View>
+                                :
+                                <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
+                            }
                             {/* end section admin */}
 
                             <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), flexDirection: 'row', justifyContent: 'flex-start' }}>
@@ -90,7 +102,7 @@ export default class Main extends Component {
                     </View>
                 </ScrollView>
                 <View style={{ backgroundColor: null }}>
-                    <MenuFooter></MenuFooter>
+                    <MenuFooterUser value={'home'}></MenuFooterUser>
                 </View>
             </View>
         );

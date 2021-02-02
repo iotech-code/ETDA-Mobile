@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -20,14 +21,37 @@ import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
+import MenuFooterUser from '../../components/MenuFooterUser'
 import MessagePost from '../../components/MessagePost'
 import { colors } from '../../constant/util'
+
 
 export default class MessageBoard extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, type: 'create' }
+        this.state = { visibleSearch: false, type: 'create', user_type: '', board: 'community' }
     }
+
+
+    async componentDidMount() {
+        try {
+            const user_type = await AsyncStorage.getItem('user_type');
+            console.log('user type : ', user_type)
+            this.setState({
+                user_type: user_type
+            })
+        } catch (err) {
+            console.log('err : ', err)
+            // handle errors
+        }
+    }
+
+    setBoard = (value) => {
+        this.setState({
+            board: value
+        })
+    }
+
     render() {
         const { dataList } = this.state
         return (
@@ -45,28 +69,39 @@ export default class MessageBoard extends Component {
                                 <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board(Read only)</Text>
                                 <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                             </View>
-
-                            <View style={{ ...style.container }}>
-                                <Button
-                                    title="Write New Blog"
-                                    Outline={true}
-                                    titleStyle={{ color: '#003764', }}
-                                    buttonStyle={{
-                                        padding: hp('1.5%'),
-                                        ...style.btnPrimaryOutline,
-                                        ...style.btnRounded
-                                    }}
-                                    onPress={() => Actions.CreatePost({ 'type': this.props.type })}
-                                />
-                            </View>
+                            {this.state.user_type == 'read, post_read' ?
+                                <View style={{ ...style.container }}>
+                                    <Button
+                                        title="Write New Blog"
+                                        Outline={true}
+                                        titleStyle={{ color: '#003764', }}
+                                        buttonStyle={{
+                                            padding: hp('1.5%'),
+                                            ...style.btnPrimaryOutline,
+                                            ...style.btnRounded
+                                        }}
+                                        onPress={() => Actions.CreatePost({ 'type': this.props.type })}
+                                    />
+                                </View>
+                                :
+                                <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
+                            }
 
 
                             <View style={{ ...styleScoped.wrapperButtonGroup }}>
-                                <TouchableOpacity style={{ ...styleScoped.btnGroupActive }}>
-                                    <Text style={{ ...styleScoped.textBtnGroupActive }}>Community board</Text>
+                                <TouchableOpacity style={this.state.board == 'community' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
+                                    onPress={() => {
+                                        this.setBoard('community')
+                                    }}
+                                >
+                                    <Text style={this.state.board == 'community' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>Community board</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ ...styleScoped.btnGroup }}>
-                                    <Text style={{ ...styleScoped.textBtnGroup }}>My board</Text>
+                                <TouchableOpacity style={this.state.board == 'my' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
+                                    onPress={() => {
+                                        this.setBoard('my')
+                                    }}
+                                >
+                                    <Text style={this.state.board == 'my' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>My board</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -79,7 +114,8 @@ export default class MessageBoard extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <MenuFooter></MenuFooter>
+                <MenuFooterUser value={'message'}></MenuFooterUser>
+                {/* <MenuFooter></MenuFooter> */}
             </View>
         );
     }

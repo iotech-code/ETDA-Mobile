@@ -20,7 +20,8 @@ import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
-import {colors} from '../../constant/util'
+import MenuFooterUser from '../../components/MenuFooterUser'
+import { colors } from '../../constant/util'
 
 export default class Activity extends Component {
     state = {
@@ -34,7 +35,7 @@ export default class Activity extends Component {
                 <View style={{ flex: 1, paddingBottom: hp('10%') }}>
                     <HeaderNavbar></HeaderNavbar>
                     <View style={{ ...style.container, marginTop: hp('4%') }}>
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={()=>Actions.replace('Event')}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={() => Actions.replace('Event')}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 Event
                             </Text>
@@ -44,7 +45,7 @@ export default class Activity extends Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.replace('Poll')}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={() => Actions.replace('Poll')}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 Poll
                             </Text>
@@ -54,7 +55,7 @@ export default class Activity extends Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.replace('Survey')}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={() => Actions.replace('Survey')}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 Survey
                             </Text>
@@ -65,7 +66,8 @@ export default class Activity extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <MenuFooter></MenuFooter>
+                <MenuFooterUser value={'activity'}></MenuFooterUser>
+                {/* <MenuFooter></MenuFooter> */}
             </View>
         );
     }

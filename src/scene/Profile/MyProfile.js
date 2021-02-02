@@ -44,7 +44,6 @@ export default class MyProfile extends Component {
         const data = {
             "Token": token
         }
-        console.log('come in ', data)
         axios.post('https://etda.amn-corporation.com/api/backend/user/information', data)
             .then((response) => {
                 var phone = ''

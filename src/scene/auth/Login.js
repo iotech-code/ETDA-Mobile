@@ -39,12 +39,39 @@ export default class Login extends Component {
         console.log('come in ', data)
         axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
             .then((response) => {
-                console.log('come in ', response)
+                console.log('come in 1 ', response.data.status)
+                console.log('come in 1 ', response.data.token)
                 if (response.data.status == "success") {
                     if (response.data.token != "") {
                         AsyncStorage.setItem('token', response.data.token);
-                        Actions.replace('Main')
+                        this.callInfomation(response.data.token)
                     }
+
+                } else {
+
+                }
+            })
+            .catch((error) => {
+            })
+            .finally(function () {
+            });
+
+    };
+
+
+    callInfomation = async (token) => {
+        console.log('come in ')
+        const data = {
+            "Token": token
+        }
+        axios.post('https://etda.amn-corporation.com/api/backend/user/information', data)
+            .then((response) => {
+
+
+                if (response.data.status == "success") {
+                    console.log('123456789 : ', response.data.data)
+                    AsyncStorage.setItem('user_type', response.data.data.user_type)
+                    Actions.replace('Main')
 
                 } else {
 
@@ -96,7 +123,7 @@ export default class Login extends Component {
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={style.customInput}>
                                 <TextInput
-                                    style={style.input}
+                                    style={[style.input, { color: 'black' }]}
                                     placeholder="Email address"
                                     onChangeText={(value) => {
                                         onChangeTextEmail(value)
@@ -107,7 +134,7 @@ export default class Login extends Component {
                         <View style={{ marginTop: hp('1%') }}>
                             <View style={style.customInput}>
                                 <TextInput
-                                    style={style.input}
+                                    style={[style.input, { color: 'black' }]}
                                     placeholder="Password"
                                     secureTextEntry={true}
                                     onChangeText={(value) => {
