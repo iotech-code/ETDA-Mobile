@@ -13,7 +13,7 @@ import {
     FlatList,
     Platform
 } from 'react-native';
-
+import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
@@ -29,6 +29,41 @@ export default class ManageBlog extends Component {
     state = {
         visibleSearch: false
     }
+
+
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const user_type = await AsyncStorage.getItem('user_type');
+            this.setState({
+                user_type: user_type,
+                token : token
+            })
+            this.callApproveList(token)
+        } catch (err) {
+
+        }
+    }
+
+
+
+    callApproveList = async (token) => {
+        axios.post('https://etda.amn-corporation.com/api/backend/post/approve-list',{
+            headers: {
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+                console.log('come in approve list : ', response.data)
+            })
+            .catch((error) => {
+            })
+            .finally(function () {
+            });
+
+    };
     render() {
         const { dataList } = this.state
         return (

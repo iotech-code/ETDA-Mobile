@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -20,6 +21,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import { fonts } from '../../constant/util'
+import axios from 'axios';
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -33,8 +35,77 @@ export default class EventDetail extends Component {
 
         }
     }
+
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            visibleSearch: false,
+            data: {
+                title: 'E-commerce new gen By ETDA official',
+                time: '11/11/2020  3:30 pm',
+                detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur',
+                image: require('../../assets/images/post_1.png')
+            },
+            token : '',
+            post_id : 0 ,
+            list_comment : []
+        }
+    }
+
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            const post_id = await AsyncStorage.getItem('post_id')
+            this.setState({
+                token : token
+            })
+
+            this.callGetComment(post_id)
+           
+        } catch (err) {
+            // handle errors
+        }
+    }
+
+
+    callGetComment = async (post_id) => {
+        const data = {
+            "post_id": post_id
+        }
+
+        console.log('post id 123 : ' , post_id)
+        console.log('token 123 : ' , this.state.token)
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        axios.post('https://etda.amn-corporation.com/api/backend/post/get-comment' , data , {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+                    this.setState({
+                        list_comment : response.data.comments
+                    })
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
     render() {
         const { data } = this.state
+        const { navigation } = this.props;
+       
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -61,12 +132,12 @@ export default class EventDetail extends Component {
                                     width: hp('7%'),
                                     marginRight: hp('1%')
                                 }}>
-                                    <Image source={require('../../assets/images/avatar2.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                    <Image source={{ uri: navigation.getParam('user_image', '') }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
                                 </View>
                                 <View >
-                                    <Text style={{ fontSize: hp('2%') }}>{data.title}</Text>
+                                    <Text style={{ fontSize: hp('2%') }}>{navigation.getParam('user_name', '')}</Text>
                                     {/* <Text style={{ fontSize: hp('2%') }}>By ETDA official</Text> */}
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{data.time}</Text>
+                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{navigation.getParam('user_date', '')}</Text>
                                 </View>
                             </View>
                         </View>
@@ -74,20 +145,32 @@ export default class EventDetail extends Component {
 
                         <View style={style.container}>
                             <View style={{ marginTop: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                                <Button
+                                {/* <Button
                                     title="E-commerce"
                                     titleStyle={{ fontSize: hp('1.5%') }}
                                     buttonStyle={{ ...style.btnTagPrimary }}
-                                />
+                                /> */}
+                                 {
+                                navigation.getParam('user_tags', '').map((item, index) => {
+                                    return (
+                                        <Button
+                                            title={item}
+                                            titleStyle={{ fontSize: hp('1.5%') }}
+                                            buttonStyle={{ ...style.btnTagPrimary }}
+                                            key={index}
+                                        />
+                                    )
+                                })
+                            }
                             </View>
 
 
                             <View style={{ height: hp('24%'), width: '100%', marginTop: hp('1%') }}>
-                                <Image source={data.image} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
+                                <Image source={{ uri: navigation.getParam('user_images', '')}} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
                                 <Text style={{ fontSize: hp('1.8%') }}>
-                                    {data.detail}
+                                    {navigation.getParam('user_description', '')}
                                 </Text>
                             </View>
 
@@ -98,9 +181,9 @@ export default class EventDetail extends Component {
                                 alignItems: 'center'
                             }}>
                                 <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}>22</Text>
+                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' ,marginTop : hp('0.4%')}}> {navigation.getParam('user_like', '')}</Text>
                                 <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                                <Text style={{ color: '#B5B5B5' }}>22</Text>
+                                <Text style={{ color: '#B5B5B5',marginTop : hp('0.4%') }}>{navigation.getParam('user_comment', '')}</Text>
                             </View>
                         </View>
 
@@ -115,15 +198,22 @@ export default class EventDetail extends Component {
                             paddingHorizontal: hp('2%'),
                         }}>
                             <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
-                            <Text style={{ fontSize: hp('2%'), fontWeight: '300', color: '#707070' }}>3 comments</Text>
+                            <Text style={{ fontSize: hp('2%'), fontWeight: '300', color: '#707070' }}>{this.state.list_comment.length} comments</Text>
                         </View>
                     </View>
 
 
                     {/* comment */}
-                    <View style={{ ...style.container }}>
-                        <Comment></Comment>
-                    </View>
+                    <ScrollView style={{ marginBottom: 24 }}>
+                                {this.state.list_comment.map((item, index) => {
+                                return (
+                                    <Comment data={item}></Comment>
+                                    )}
+                                )}
+                    </ScrollView>
+                    {/* <View style={{ ...style.container }}>
+                       
+                    </View> */}
                 </ScrollView>
             </View >
         );

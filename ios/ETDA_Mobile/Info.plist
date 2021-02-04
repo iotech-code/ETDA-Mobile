@@ -53,6 +53,14 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>NSCameraUsageDescription</key>
+  <string>Your message to user when the camera is accessed for the first time</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string></string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Your message to user when the microsphone is accessed for the first time</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Your message to user when the photo library is accessed for the first time</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

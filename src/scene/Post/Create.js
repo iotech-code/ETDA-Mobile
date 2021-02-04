@@ -23,6 +23,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import { fonts } from '../../constant/util';
 import axios from 'axios';
+import ImagePicker from 'react-native-image-crop-picker';
 
 
 export default class CreatePost extends Component {
@@ -57,22 +58,25 @@ export default class CreatePost extends Component {
             "post_addition_data": this.state.addition
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/create', data, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    Actions.MessageBoard()
-                } else {
 
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
+        console.log('post : ' , data )
+
+        // axios.post('https://etda.amn-corporation.com/api/backend/post/create', data, {
+        //     headers
+        // })
+        //     .then((response) => {
+        //         console.log('data : ', response.data)
+        //         if (response.data.status == "success") {
+        //             Actions.MessageBoard()
+        //         } else {
+
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.log('data : ', error)
+        //     })
+        //     .finally(function () {
+        //     });
 
     };
 
@@ -121,7 +125,9 @@ export default class CreatePost extends Component {
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create Blog</Text>
+                    <TouchableOpacity onPress={() => this.callCreatePost()}>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
+                    </TouchableOpacity>
                 </View>
                 {/* content */}
                 <View>
@@ -168,10 +174,18 @@ export default class CreatePost extends Component {
                         flexWrap: 'wrap'
 
                     }}>
+                    
                         <Button
                             title="E-commerce"
                             titleStyle={{ fontSize: hp('2%') }}
                             buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                            onPress={() => { 
+                                ImagePicker.openPicker({
+                                    multiple: true
+                                  }).then(images => {
+                                    console.log(images);
+                                  });
+                            }} 
                         />
                         <Button
                             title="E-commerce"
