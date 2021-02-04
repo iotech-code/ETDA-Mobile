@@ -67,18 +67,25 @@ export default class MessageBoard extends Component {
         })
             .then((response) => {
                 var i  
+                var objectFeed = {}
+                var list = []
                 for (i = 0 ; i < response.data.post_data.length ; i++){
-                    this.callUserData(
-                                 response.data.post_data[i].post_id ,
-                                 response.data.post_data[i].author_id , 
-                                 response.data.post_data[i].title,
-                                 response.data.post_data[i].post_date,
-                                 response.data.post_data[i].post_description,
-                                 response.data.post_data[i].tags,
-                                 response.data.post_data[i].post_images,
-                                 response.data.post_data[i].comment_number,
-                                 response.data.post_data[i].like
-                                 )
+                    objectFeed = {
+                        post_id : response.data.post_data[i].post_id,
+                        title : response.data.post_data[i].title,
+                        date : response.data.post_data[i].post_date,
+                        description : response.data.post_data[i].post_description,
+                        tags : response.data.post_data[i].tags,
+                        post_images : response.data.post_data[i].post_images,
+                        comment :  response.data.post_data[i].comment_number,
+                        like :  response.data.post_data[i].like,
+                        user_name : '',
+                        user_image : ''
+                    }
+                    list.push(objectFeed)
+                    this.setState({
+                        list_data : list
+                    })
                 }
             })
             .catch((error) => {
@@ -217,7 +224,7 @@ export default class MessageBoard extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost({ 'type': this.props.type })}
+                                        onPress={() => Actions.CreatePost({ 'type': this.props.type ,'type_value' : 'create' , 'data' : null })}
                                     />
                                 </View>
                                 :
@@ -248,9 +255,15 @@ export default class MessageBoard extends Component {
                             <ScrollView style={{ marginBottom: 24 }}>
                                 {this.state.list_data.map((item, index) => {
                                 return (
+                                    <TouchableOpacity 
+                                    onPress={() => {
+                                        Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'edit' , 'data' : item })
+                                    }}
+                                >
                                     <View>
                                         <MessagePost data={item}>   </MessagePost>
                                     </View>
+                                    </TouchableOpacity>
                                     )}
                                 )}
                             </ScrollView>

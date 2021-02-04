@@ -84,7 +84,7 @@ export default class MessagsPost extends Component {
             .then((response) => {
                 console.log('data : ', response.data)
                 if (response.data.status == "success") {
-
+                    Actions.MessageBoard()
                 } else {
 
                 }

@@ -13,6 +13,7 @@ import {
     FlatList,
     AsyncStorage
 } from 'react-native';
+import { SliderBox } from "react-native-image-slider-box";
 
 import { Button, BottomSheet, ThemeConsumer } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -29,14 +30,17 @@ import ImagePicker from 'react-native-image-crop-picker';
 export default class CreatePost extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, token: '', title: '', type: '', image: [], description: '', tag: [], addition: '', postId: '' }
+        this.state = { visibleSearch: false, token: '', title: '', type: 'blog', image: [], description: '', tag: ["tag1","tag2"], addition: '', postId: '' , images : [] }
     }
 
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token')
             this.setState({
-                token: token
+                token: token,
+                title : this.props.data.title,
+                description : this.props.data.description,
+                image : this.props.data.post_images
             })
         } catch (err) {
             // handle errors
@@ -52,52 +56,56 @@ export default class CreatePost extends Component {
         const data = {
             "post_title": this.state.title,
             "post_type": this.state.type,
-            "post_images": this.state.image,
+            "post_images": this.state.images,
             "post_description": this.state.description,
             "post_tag": this.state.tag,
             "post_addition_data": this.state.addition
         }
 
 
-        console.log('post : ' , data )
+        console.log('post : ' , this.state.images )
 
-        // axios.post('https://etda.amn-corporation.com/api/backend/post/create', data, {
-        //     headers
-        // })
-        //     .then((response) => {
-        //         console.log('data : ', response.data)
-        //         if (response.data.status == "success") {
-        //             Actions.MessageBoard()
-        //         } else {
+        axios.post('https://etda.amn-corporation.com/api/backend/post/create', data, {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+                   Actions.MessageBoard()
+                } else {
 
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.log('data : ', error)
-        //     })
-        //     .finally(function () {
-        //     });
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
 
     };
 
 
 
-    callUpdatePost = async () => {
+    callUpdatePost = async (title , type , images , description , tags , addition , post_id) => {
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
         }
 
         const data = {
-            "post_title": this.state.title,
-            "post_type": this.state.type,
-            "post_images": this.state.image,
-            "post_description": this.state.description,
-            "post_tag": this.state.tag,
-            "post_addition_data": this.state.addition
+            "post_title": title,
+            "post_type": type,
+            "post_images": images,
+            "post_description": description,
+            "post_tag": tags,
+            "post_addition_data": addition
         }
 
-        axios.put('https://etda.amn-corporation.com/api/backend/post/update' + this.props.postId, data, {
+        console.log('data update : ' , data)
+        console.log('post_id update : ' , post_id)
+        console.log('post_id update : ' , this.state.token)
+
+        axios.put('https://etda.amn-corporation.com/api/backend/post/update/' + post_id, data, {
             headers
         })
             .then((response) => {
@@ -118,6 +126,21 @@ export default class CreatePost extends Component {
 
     render() {
         const { dataList } = this.state
+
+        onChangeTextTitle = async (value) => {
+            this.setState({
+                title: value
+            })
+        }
+
+        onChangeTextDescription = async (value) => {
+            this.setState({
+                description: value
+            })
+        }
+
+        console.log('data : ' , this.props.data)
+        console.log('type value : ' , this.props.type_value)
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <View style={{ ...style.navbar }}>
@@ -125,21 +148,51 @@ export default class CreatePost extends Component {
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create Blog</Text>
-                    <TouchableOpacity onPress={() => this.callCreatePost()}>
+                    <TouchableOpacity onPress={() => 
+                        {
+                            if (this.props.type_value == 'create'){
+                                this.callCreatePost()
+                            }else{
+                                    this.callUpdatePost(this.state.title,
+                                        'blog' ,
+                                        this.state.images,
+                                        this.state.description,
+                                        this.state.tag,
+                                        this.state.addition,
+                                        this.props.data.post_id,
+                                        )
+                               
+                            }
+                        }
+                        }>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
                     </TouchableOpacity>
                 </View>
                 {/* content */}
                 <View>
                     <View style={{ height: hp('7%') }}>
-                        <TextInput placeholder="Enter your topic here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} ></TextInput>
+                        <TextInput placeholder="Enter your topic here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
+                            defaultValue={this.state.title}
+                            onChangeText={(value) => {
+                                onChangeTextTitle(value)
+                            }}
+                        >
+
+
+
+                        </TextInput>
                     </View>
                     <View style={{ ...style.divider }}></View>
                     <View style={{ height: hp('25%') }}>
-                        <TextInput placeholder="Enter your post here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} ></TextInput>
+                        <TextInput placeholder="Enter your post here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} multiline={true}
+                          defaultValue={this.state.description}
+                        onChangeText={(value) => {
+                            onChangeTextDescription(value)
+                        }}
+                        ></TextInput>
                     </View>
 
-                    {this.state.image.length == 0 ? 
+                    { this.state.image.length == 0 ? 
                     <View >
 
                     </View>
@@ -147,17 +200,34 @@ export default class CreatePost extends Component {
                     : 
                     
                     <View style={{ height: hp('30%') }}>
-
+                        <SliderBox
+                            images={this.state.image}
+                            sliderBoxHeight={hp('30%')}
+                        />
                     </View>
                     }
 
                     
 
                     <View style={{ ...style.divider }}></View>
-                    <TouchableOpacity onPress={() =>  ImagePicker.openPicker({
-                                    multiple: true
-                                  }).then(images => {
-                                    console.log(images);
+                    <TouchableOpacity onPress={() =>  
+                                ImagePicker.openPicker({ multiple: true,
+                                    includeBase64 : true
+                                    }).then(images => {
+                                    var j 
+                                    var image = []
+                                    var image_base64 = []
+                                    for (j = 0 ; j < images.length ; j++){
+                                        console.log('image path : ' , images[j].path)
+                                        image.push(images[j].path)
+                                        var image_send = 'data:image/jpeg;base64,' + images[j].data
+                                        image_base64.push(image_send)
+                                    }
+                                    this.setState({
+                                        image : image,
+                                        images : image_base64
+                                    })
+                                   // console.log('result image : ' , images[0]);
                                   })}>
                     <View style={{
                         marginTop: hp('1%'),
@@ -224,7 +294,7 @@ export default class CreatePost extends Component {
                         <Button
                             title="E-commerce"
                             titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
-                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
+                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') , marginBottom : hp('10%') }}
                         />
 
                     </View>

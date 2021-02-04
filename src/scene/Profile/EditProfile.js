@@ -82,10 +82,11 @@ export default class EditProfile extends Component {
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
+                console.log('data image : ' , response.data ) 
                 var image = 'data:image/jpeg;base64,' + response.data
-                this.setState({
-                    photo : image
-                })
+                // this.setState({
+                //     photo : image
+                // })
               //  callDeleting(response.uri, token, "test1.jpg")
             }
         });
