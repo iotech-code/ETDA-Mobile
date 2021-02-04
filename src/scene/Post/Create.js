@@ -14,7 +14,7 @@ import {
     AsyncStorage
 } from 'react-native';
 
-import { Button, BottomSheet } from 'react-native-elements';
+import { Button, BottomSheet, ThemeConsumer } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
@@ -135,9 +135,42 @@ export default class CreatePost extends Component {
                         <TextInput placeholder="Enter your topic here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} ></TextInput>
                     </View>
                     <View style={{ ...style.divider }}></View>
-                    <View style={{ height: hp('30%') }}>
+                    <View style={{ height: hp('25%') }}>
                         <TextInput placeholder="Enter your post here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} ></TextInput>
                     </View>
+
+                    {this.state.image.length == 0 ? 
+                    <View >
+
+                    </View>
+                    
+                    : 
+                    
+                    <View style={{ height: hp('30%') }}>
+
+                    </View>
+                    }
+
+                    
+
+                    <View style={{ ...style.divider }}></View>
+                    <TouchableOpacity onPress={() =>  ImagePicker.openPicker({
+                                    multiple: true
+                                  }).then(images => {
+                                    console.log(images);
+                                  })}>
+                    <View style={{
+                        marginTop: hp('1%'),
+                        marginBottom: hp('1%'),
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingHorizontal: hp('2%')
+                    }}>
+                        <Icon name="camera" style={{ marginRight: hp('2%') }} color="#003764" size={hp('3%') } />
+                        <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
+                    
+                    </View>
+                    </TouchableOpacity>
                     <View style={{ ...style.divider }}></View>
 
                     <View style={{
@@ -180,11 +213,7 @@ export default class CreatePost extends Component {
                             titleStyle={{ fontSize: hp('2%') }}
                             buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
                             onPress={() => { 
-                                ImagePicker.openPicker({
-                                    multiple: true
-                                  }).then(images => {
-                                    console.log(images);
-                                  });
+                               
                             }} 
                         />
                         <Button
