@@ -10,7 +10,8 @@ import {
     Image,
     TouchableOpacity,
     TextInput,
-    Platform
+    Platform,
+    KeyboardAvoidingView
 } from 'react-native';
 import axios from 'axios';
 
@@ -68,6 +69,7 @@ export default class ChooseUserType extends Component {
                     borderRadius: 5
                 }}
             >
+                <KeyboardAvoidingView behavior="position">
                 <View style={{
                     borderBottomColor: '#707070',
                     borderBottomWidth: 1,
@@ -101,7 +103,7 @@ export default class ChooseUserType extends Component {
                         onChangeText={(value) => {
                             onChangeTextReason(value)
                         }}
-                    // numberOfLines={ Platform.OS === 'ios' ? 50 : 0}
+                    numberOfLines={ Platform.OS === 'ios' ? 50 : 0}
                     />
                 </View>
 
@@ -167,6 +169,7 @@ export default class ChooseUserType extends Component {
                         onPress={() => this.setState({ visible: false })}
                     />
                 </View>
+                </KeyboardAvoidingView>
             </Overlay>
         )
     }
@@ -181,6 +184,7 @@ export default class ChooseUserType extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
+                <ScrollView>
                     <View style={{
                         marginTop: hp('3%'),
                         flexDirection: 'row',
@@ -189,7 +193,7 @@ export default class ChooseUserType extends Component {
                     }}>
                         <View style={styleScoped.imageLogo}>
                             <Image
-                                source={require('../../../assets/images/logo_etda-default-1.png')}
+                                source={require('../../../assets/images/logo.png')}
                                 style={style.imageContain}
                             />
                         </View>
@@ -281,6 +285,7 @@ export default class ChooseUserType extends Component {
 
 
                     </View>
+                </ScrollView>
                 </SafeAreaView>
                 {this.renderModalPostandRead()}
             </View>

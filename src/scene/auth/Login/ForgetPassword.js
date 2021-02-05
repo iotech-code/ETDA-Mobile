@@ -9,6 +9,7 @@ import {
     StatusBar,
     Image,
     TouchableOpacity,
+    KeyboardAvoidingView,
     TextInput
 } from 'react-native';
 
@@ -21,7 +22,12 @@ import axios from 'axios';
 
 
 export default class ForgetPassword extends Component {
-
+    constructor(props) {
+        super();
+        this.state = {
+            email: ''
+        }
+    }
 
     callForgot = async () => {
         console.log('come in ')
@@ -55,6 +61,7 @@ export default class ForgetPassword extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
+                <KeyboardAvoidingView behavior="position">
                     <View style={{
                         marginTop: hp('3%'),
                         flexDirection: 'row',
@@ -73,10 +80,12 @@ export default class ForgetPassword extends Component {
                         <View style={{ marginTop: hp('3%') }}>
                             <View style={{ ...style.customInput }}>
                                 <TextInput
+                                    value={this.state.email}
                                     style={style.input}
                                     placeholder="Email address"
+                                    keyboardType='email-address'
                                     onChangeText={(value) => {
-                                        onChangeTextEmail(value)
+                                        onChangeTextEmail(value.toLowerCase())
                                     }}
                                 />
                             </View>
@@ -97,6 +106,7 @@ export default class ForgetPassword extends Component {
                         </View>
 
                     </View>
+                    </KeyboardAvoidingView>
                 </SafeAreaView>
             </View>
         );

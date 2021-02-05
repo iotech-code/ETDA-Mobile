@@ -5,7 +5,7 @@ import { colors } from '../constant/util'
 export default StyleSheet.create({
 
     container: {
-        paddingHorizontal: hp('2%')
+        paddingHorizontal: hp('3%')
     },
     imageContain: {
         height: '100%',
@@ -18,12 +18,12 @@ export default StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: hp('1%'),
         backgroundColor: '#F9FCFF',
-        padding: Platform.OS === 'ios' ? hp('1.3%') : hp('1%')
+        padding: hp('1%')
     },
     input: {
         padding: 0,
         fontSize: hp('2%'),
-        color: 'rgba(0,0,0,0.16)',
+        color: '#333',
     },
     btnPrimary: {
         backgroundColor: colors.primary

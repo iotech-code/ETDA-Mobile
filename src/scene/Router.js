@@ -34,10 +34,10 @@ const RouterPage = () => {
         <Router>
             <Stack key="root">
                 <Scene key="Login" component={Login} title="Login" hideNavBar initial />
-                <Scene key="Register" component={Register} title="Register" hideNavBar />
-                <Scene key="ChooseUserType" component={ChooseUserType} title="ChooseUserType" hideNavBar />
+                <Scene key="Register" component={Register} title="Register" />
+                <Scene key="ChooseUserType" component={ChooseUserType} title="Choose User Type" />
                 <Scene key="RegisterSuccess" component={RegisterSuccess} title="RegisterSuccess" hideNavBar />
-                <Scene key="ForgetPassword" component={ForgetPassword} title="ForgetPassword" hideNavBar />
+                <Scene key="ForgetPassword" component={ForgetPassword} title="Forgot Password" />
                 <Scene key="Main" component={Main} title="Main" hideNavBar />
                 <Scene key="Activity" component={Activity} title="Activity" hideNavBar />
                 <Scene key="MessageBoard" component={MessageBoard} title="MessageBoard" hideNavBar />

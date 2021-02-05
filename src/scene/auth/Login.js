@@ -103,23 +103,25 @@ export default class Login extends Component {
                     }}>
                         <View style={styleScoped.imageLogo}>
                             <Image
-                                source={require('../../assets/images/logo_etda-default-1.png')}
+                                source={require('../../assets/images/logo.png')}
                                 style={style.imageContain}
                             />
                         </View>
 
                     </View>
                     <View style={{ marginTop: hp('5%') }}>
-                        <Text style={styleScoped.textWelcome}>Welcome to ETDA application.</Text>
+                        <Text style={styleScoped.textWelcome}>Welcome</Text>
                     </View>
                     <View style={style.container}>
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={style.customInput}>
                                 <TextInput
+                                    value={this.state.email}
                                     style={[style.input, { color: 'black' }]}
                                     placeholder="Email address"
+                                    keyboardType='email-address'
                                     onChangeText={(value) => {
-                                        onChangeTextEmail(value)
+                                        onChangeTextEmail( value.toLowerCase() )
                                     }}
                                 />
                             </View>
@@ -137,7 +139,7 @@ export default class Login extends Component {
                             </View>
                         </View>
                         <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <TouchableOpacity onPress={() => Actions.replace('ForgetPassword')}>
+                            <TouchableOpacity onPress={() => Actions.push('ForgetPassword')}>
                                 <Text style={{
                                     color: '#4267B2',
                                     textAlign: 'right',
@@ -180,7 +182,7 @@ export default class Login extends Component {
 
                         <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'center' }}>
                             <Text style={{ color: '#707070', fontSize: hp('1.7%'), marginRight: hp('1%') }}>Do not have an account?</Text>
-                            <TouchableOpacity onPress={() => Actions.Register()}>
+                            <TouchableOpacity onPress={() => Actions.push('Register')}>
                                 <Text style={{ color: '#4267B2', textDecorationLine: 'underline', fontSize: hp('1.7%') }} >Register</Text>
                             </TouchableOpacity>
                         </View>
