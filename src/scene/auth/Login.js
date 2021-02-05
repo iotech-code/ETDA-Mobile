@@ -24,11 +24,6 @@ export default class Login extends Component {
         this.state = { email: '', pass: '' }
     }
 
-
-
-
-
-
     callLogin = async () => {
         console.log('come in ')
         const data = {
@@ -82,8 +77,7 @@ export default class Login extends Component {
             });
 
     };
-
-
+    
     render() {
         // on change text
         onChangeTextEmail = async (value) => {
