@@ -52,18 +52,18 @@ export default class Comment extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={data.avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image source={{ uri: this.props.data.User.Photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{data.name}</Text>
-                                <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>{data.time}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{this.props.data.User.Fullname}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>{this.props.data.create_date}</Text>
                             </View>
                         </View>
                     </View>
 
 
-                    <View style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}>
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{data.detail}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginVertical: hp('1.5%') }} >
+                        <Text style={{ fontSize: hp('2%'), fontWeight: '300'  }}>{this.props.data.Message}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: hp('1%') }}>
                         <TouchableOpacity>

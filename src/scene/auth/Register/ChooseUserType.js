@@ -245,11 +245,8 @@ export default class ChooseUserType extends Component {
                                 title="Register"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
                                 onPress={() => {
-
                                     this.callRegister()
                                 }
-                                    //  
-
                                 }
                             />
                         </View>

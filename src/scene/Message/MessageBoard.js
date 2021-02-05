@@ -13,7 +13,7 @@ import {
     FlatList,
     AsyncStorage
 } from 'react-native';
-
+import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
@@ -29,20 +29,23 @@ import { colors } from '../../constant/util'
 export default class MessageBoard extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, type: 'create', user_type: '', board: 'community' }
+        this.state = { visibleSearch: false, type: 'create', user_type: '', board: 'community' , token : '' , list_data : []  }
     }
 
 
     async componentDidMount() {
         try {
+            const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
             console.log('user type : ', user_type)
+            console.log('token : ', token)
             this.setState({
-                user_type: user_type
+                user_type: user_type,
+                token : token 
             })
+            this.callCommunityFeed(token)
         } catch (err) {
             console.log('err : ', err)
-            // handle errors
         }
     }
 
@@ -51,6 +54,147 @@ export default class MessageBoard extends Component {
             board: value
         })
     }
+
+    callMYFeed = async (token) => {
+        this.setState({
+            list_data : []
+        })
+        axios.get('https://etda.amn-corporation.com/api/backend/post/my',{
+            headers: {
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+                var i  
+                var objectFeed = {}
+                var list = []
+                for (i = 0 ; i < response.data.post_data.length ; i++){
+                    objectFeed = {
+                        post_id : response.data.post_data[i].post_id,
+                        title : response.data.post_data[i].title,
+                        date : response.data.post_data[i].post_date,
+                        description : response.data.post_data[i].post_description,
+                        tags : response.data.post_data[i].tags,
+                        post_images : response.data.post_data[i].post_images,
+                        comment :  response.data.post_data[i].comment_number,
+                        like :  response.data.post_data[i].like,
+                        user_name : '',
+                        user_image : ''
+                    }
+                    list.push(objectFeed)
+                    this.setState({
+                        list_data : list
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log('e 2 : ' ,error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+
+
+    callCommunityFeed = async (token) => {
+        this.setState({
+            list_data : []
+        })
+        axios.get('https://etda.amn-corporation.com/api/backend/post/community-feed',{
+            headers: {
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+                var i  
+                var objectFeed = {}
+                var list = []
+                for (i = 0 ; i < response.data.post_data.length ; i++){
+                   
+                    
+                    objectFeed = {
+                        post_id : response.data.post_data[i].post_id,
+                        title : response.data.post_data[i].title,
+                        date : response.data.post_data[i].post_date,
+                        description : response.data.post_data[i].post_description,
+                        tags : response.data.post_data[i].tags,
+                        post_images : response.data.post_data[i].post_images,
+                        comment :  response.data.post_data[i].comment_number,
+                        like :  response.data.post_data[i].like,
+                        user_name : '',
+                        user_image : ''
+                    }
+                    list.push(objectFeed)
+                    this.setState({
+                        list_data : list
+                    })
+                    // this.callUserData(
+                    //              response.data.post_data[i].post_id ,
+                    //              response.data.post_data[i].author_id , 
+                    //              response.data.post_data[i].title,
+                    //              response.data.post_data[i].post_date,
+                    //              response.data.post_data[i].post_description,
+                    //              response.data.post_data[i].tags,
+                    //              response.data.post_data[i].post_images,
+                    //              response.data.post_data[i].comment_number,
+                    //              response.data.post_data[i].like
+                    //              )
+                }
+            })
+            .catch((error) => {
+                console.log('e 1 : ' ,error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+    callUserData = async (post_id , author_id ,  title , date , description , tags , images, comment , like  ) => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        axios.get('https://etda.amn-corporation.com/api/backend/user/user-data/' + author_id, {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+                    var objectFeed = {}
+                    var list = []
+                    
+                    objectFeed = {
+                        post_id : post_id,
+                        title : title,
+                        date : date,
+                        description : description,
+                        tags : tags,
+                        post_images : images,
+                        comment : comment,
+                        like : like,
+                        user_name : response.data.data.fullname,
+                        user_image : response.data.data.photo
+                    }
+                    list.push(objectFeed)
+                    this.setState({
+                        list_data : list
+                    })
+                    console.log('list data 1 : ' , this.state.list_data)
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
 
     render() {
         const { dataList } = this.state
@@ -80,7 +224,7 @@ export default class MessageBoard extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost({ 'type': this.props.type })}
+                                        onPress={() => Actions.CreatePost({ 'type': this.props.type ,'type_value' : 'create' , 'data' : null })}
                                     />
                                 </View>
                                 :
@@ -92,6 +236,7 @@ export default class MessageBoard extends Component {
                                 <TouchableOpacity style={this.state.board == 'community' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
                                     onPress={() => {
                                         this.setBoard('community')
+                                        this.callCommunityFeed(this.state.token)
                                     }}
                                 >
                                     <Text style={this.state.board == 'community' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>Community board</Text>
@@ -99,6 +244,7 @@ export default class MessageBoard extends Component {
                                 <TouchableOpacity style={this.state.board == 'my' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
                                     onPress={() => {
                                         this.setBoard('my')
+                                        this.callMYFeed(this.state.token)
                                     }}
                                 >
                                     <Text style={this.state.board == 'my' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>My board</Text>
@@ -106,8 +252,22 @@ export default class MessageBoard extends Component {
                             </View>
 
                             <View style={{ marginTop: hp('2%') }}>
-                                <MessagePost></MessagePost>
-                                <MessagePost></MessagePost>
+                            <ScrollView style={{ marginBottom: 24 }}>
+                                {this.state.list_data.map((item, index) => {
+                                return (
+                                    <TouchableOpacity 
+                                    onPress={() => {
+                                        Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'edit' , 'data' : item })
+                                    }}
+                                >
+                                    <View>
+                                        <MessagePost data={item}>   </MessagePost>
+                                    </View>
+                                    </TouchableOpacity>
+                                    )}
+                                )}
+                            </ScrollView>
+                                
 
                             </View>
 

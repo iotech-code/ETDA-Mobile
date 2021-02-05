@@ -13,7 +13,7 @@ import {
     FlatList,
     AsyncStorage
 } from 'react-native';
-
+import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
@@ -28,7 +28,9 @@ import Post from '../components/Post'
 export default class Main extends Component {
     state = {
         visibleSearch: false,
-        user_type: ''
+        user_type: '',
+        token :'',
+        list_data : []
     }
 
     async componentDidMount() {
@@ -36,14 +38,57 @@ export default class Main extends Component {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
             this.setState({
-                user_type: user_type
+                user_type: user_type,
+                token : token
             })
-            //  console.log('user_type : ', this.state.user_type)
+            this.callHomeFeed(token)
         } catch (err) {
-            // handle errors
+            console.log('err 1 : ' ,err)
         }
     }
 
+
+
+    callHomeFeed = async (token) => {
+        console.log('token 1 : ', token)
+        axios.get('https://etda.amn-corporation.com/api/backend/post/home-feed',{
+            headers: {
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+                console.log('response 1 : ' , response.data)
+                var i  
+                var objectHomeFeed = {}
+                var list = []
+                for (i = 0 ; i < response.data.post_data.length ; i++){
+                    objectHomeFeed = {
+                        post_id : response.data.post_data[i].post_id,
+                        title : response.data.post_data[i].title,
+                        date : response.data.post_data[i].post_date,
+                        description : response.data.post_data[i].post_description,
+                        tags : response.data.post_data[i].tags,
+                        post_images :  response.data.post_data[i].post_images,
+                        comment : response.data.post_data[i].comment_number,
+                        like : response.data.post_data[i].like,
+                    }
+                    list.push(objectHomeFeed)
+                }
+                this.setState({
+                    list_data : list
+                })
+            })
+            .catch((error) => {
+                console.log('err 2 : ' ,error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+
+    
 
 
 
@@ -89,17 +134,19 @@ export default class Main extends Component {
                             }
                             {/* end section admin */}
 
-                            <View style={{ paddingHorizontal: hp('2%'), marginBottom: hp('1%'), flexDirection: 'row', justifyContent: 'flex-start' }}>
-                                <Button
-                                    title="E-commerce"
-                                    titleStyle={{ fontSize: hp('1.5%') }}
-                                    buttonStyle={{ ...style.btnTagPrimary }}
-                                />
-                            </View>
-                            <Post></Post>
-                            <Post></Post>
+                            <ScrollView style={{ marginBottom: 24 }}>
+                                {this.state.list_data.map((item, index) => {
+                                return (
+                                    <Post data={item}></Post>
+                                    )}
+                                )}
+                            </ScrollView>
+
+
                         </View>
                     </View>
+                
+                
                 </ScrollView>
                 <View style={{ backgroundColor: null }}>
                     <MenuFooterUser value={'home'}></MenuFooterUser>

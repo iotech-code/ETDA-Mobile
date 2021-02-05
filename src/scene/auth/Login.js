@@ -64,7 +64,6 @@ export default class Login extends Component {
 
 
                 if (response.data.status == "success") {
-                    console.log('123456789 : ', response.data.data)
                     AsyncStorage.setItem('user_type', response.data.data.user_type)
                     Actions.replace('Main')
 

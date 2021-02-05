@@ -20,7 +20,22 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios';
+import ImagePicker from 'react-native-image-picker';
+import { fonts, colors } from '../../constant/util'
+import Icons from 'react-native-vector-icons/MaterialIcons';
 
+
+const options = {
+    // title: 'Select Avatar',
+    // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+    quality: 1.0,
+    maxWidth: 1400,
+    maxHeight: 1400,
+    storageOptions: {
+        skipBackup: true,
+        path: 'images',
+    },
+};
 
 export default class EditProfile extends Component {
     constructor() {
@@ -56,9 +71,36 @@ export default class EditProfile extends Component {
         })
     }
 
-    continueTypeOfUser() {
+    chooseImageFileRegister = () => {
+        ImagePicker.showImagePicker(options, (response) => {
+           // console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                console.log('data image : ' , response.data ) 
+                var image = 'data:image/jpeg;base64,' + response.data
+                // this.setState({
+                //     photo : image
+                // })
+              //  callDeleting(response.uri, token, "test1.jpg")
+            }
+        });
+    };
+
+
+    continueTypeOfUser(type ) {
+        if (type == 'read'){
+            this.setState({ visibleModalPostandRead: false })
+        }else{
+            this.setState({ visibleModalPostandRead: true })
+        }
         this.setState({ visibleChangeTypeOfUser: false })
-        this.setState({ visibleModalPostandRead: true })
+       
     }
 
     renderModalPostandRead() {
@@ -178,8 +220,11 @@ export default class EditProfile extends Component {
                 <Text style={{ fontSize: hp('2%'), textAlign: 'center', color: '#003764' }}>Change type of your account</Text>
                 <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
                 <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
-                    <View style={{ width: '49%' }}>
-                        <View style={{
+                <TouchableOpacity
+                        style={{ width: '49%' }}
+                        onPress={() => this.setState({ visible: true , type : 'read' })}
+                    >
+                        {/* <View style={{
                             padding: hp('3%'),
                             borderRadius: 10,
                             borderColor: '#003764',
@@ -188,6 +233,9 @@ export default class EditProfile extends Component {
                             height: hp('20%')
                         }}>
 
+                        </View> */}
+                        <View style={{ ...styleScoped.option, backgroundColor: colors.primary }}>
+                            <Icons name="description" size={hp('12%')} style={{ alignSelf: "center" }} color="white" />
                         </View>
                         <Text style={{
                             marginTop: hp('3%'),
@@ -195,13 +243,13 @@ export default class EditProfile extends Component {
                             fontSize: hp('2%'),
                             color: '#000000'
                         }}>Read only</Text>
-                    </View>
+                    </TouchableOpacity>
 
                     <TouchableOpacity
                         style={{ width: '49%' }}
-                        onPress={() => this.setState({ visible: true })}
+                        onPress={() => this.setState({ visible: true , type : 'read, post_read' })}
                     >
-                        <View style={{
+                        {/* <View style={{
                             padding: hp('3%'),
                             borderRadius: 10,
                             borderColor: '#003764',
@@ -210,6 +258,9 @@ export default class EditProfile extends Component {
                             height: hp('20%')
                         }}>
 
+                        </View> */}
+                        <View style={styleScoped.option}>
+                                    <Icons name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />
                         </View>
                         <Text style={{
                             marginTop: hp('3%'),
@@ -230,7 +281,7 @@ export default class EditProfile extends Component {
                             ...style.btnRounded,
                             ...style.btnPrimary
                         }}
-                        onPress={() => this.continueTypeOfUser()}
+                        onPress={() => this.continueTypeOfUser(this.state.type)}
                     />
                     <View style={{ marginTop: hp('1%') }}></View>
                     <Button
@@ -260,18 +311,18 @@ export default class EditProfile extends Component {
             "bio": this.state.professional,
         }
         console.log('come in ', data)
-        axios.put('https://etda.amn-corporation.com/api/backend/user/update/' + this.props.userId, data)
-            .then((response) => {
-                if (response.data.status == "success") {
-                    Actions.MyProfile()
-                } else {
+        // axios.put('https://etda.amn-corporation.com/api/backend/user/update/' + this.props.userId, data)
+        //     .then((response) => {
+        //         if (response.data.status == "success") {
+        //             Actions.MyProfile()
+        //         } else {
 
-                }
-            })
-            .catch((error) => {
-            })
-            .finally(function () {
-            });
+        //         }
+        //     })
+        //     .catch((error) => {
+        //     })
+        //     .finally(function () {
+        //     });
 
     };
 
@@ -328,7 +379,7 @@ export default class EditProfile extends Component {
                                     resizeMode: 'cover',
                                     borderRadius: 100
                                 }} />
-                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}>
+                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}  onPress={() => {this.chooseImageFileRegister()}}>
                                     <IconFonAwesome name="pencil" size={hp('2%')} color="white" />
                                 </TouchableOpacity>
                             </View>
@@ -411,7 +462,7 @@ export default class EditProfile extends Component {
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.type == "read" ? "Read only" : "Read only"}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.type == "read" ? "Read only" : "Read , Post_read"}</Text>
                                 <TouchableOpacity
                                     style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
                                     onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
@@ -465,6 +516,14 @@ const styleScoped = StyleSheet.create({
         shadowRadius: 5.46,
 
         elevation: 9,
+    },
+    option: {
+        padding: hp('3%'),
+        borderRadius: 10,
+        borderColor: colors.primary,
+        borderWidth: 1,
+        width: '100%',
+        height: hp('20%')
     },
 });
 

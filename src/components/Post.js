@@ -19,25 +19,47 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { fonts } from '../constant/util';
-
+import axios from 'axios';
 
 
 export default class Post extends Component {
-    state = {
-        data: {
-            title: 'E-commerce new gen',
-            time: '2 minutes ago',
-            image: require('../assets/images/post_1.png'),
-            detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
-            tag: ['E-commerce', 'Test Tag']
-        },
-        socail: {
-            like: 22,
-            view: 22
-        },
-        visibleBottomSheet: false,
-        visibleModalReport: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            data: {
+                title: 'E-commerce new gen',
+                time: '2 minutes ago',
+                image: require('../assets/images/post_1.png'),
+                detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
+                tag: ['E-commerce', 'Test Tag']
+            },
+            socail: {
+                like: 22,
+                view: 22
+            },
+            visibleBottomSheet: false,
+            visibleModalReport: false,
+            like : 0
+        }
     }
+
+
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            const like = this.props.data.like
+            console.log('token : ', token)
+            this.setState({
+                token: token,
+                like : like
+            })
+        } catch (err) {
+            // handle errors
+        }
+    }
+
+    
 
     openOption() {
         this.RBSheet.open()
@@ -139,14 +161,22 @@ export default class Post extends Component {
             >
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
-                }}>
+                }}
+                    onPress={() => this.callPostFollow(this.props.data.post_id)}
+                >
                     <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
-                }}>
+                }}
+                    onPress={() => {
+                        Actions.CreatePost({ 'type': this.props.type }),
+                            this.setState({ visibleBottomSheet: false }),
+                            this.RBSheet.close()
+                        }}
+                >
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
                 </TouchableOpacity>
@@ -154,7 +184,9 @@ export default class Post extends Component {
 
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
-                }}>
+                }}
+                    onPress={() => this.callDeletePost(this.props.data.post_id)}
+                >
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
                 </TouchableOpacity>
@@ -169,7 +201,104 @@ export default class Post extends Component {
             </RBSheet>
         )
     }
+
+
+    callDeletePost = async (post_id) => {
+        this.setState({ visibleBottomSheet: false }),
+            this.RBSheet.close()
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        axios.delete('https://etda.amn-corporation.com/api/backend/post/delete/' + post_id, {
+            headers
+        })
+            .then((response) => {
+                console.log('data : ', response.data)
+                if (response.data.status == "success") {
+
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+
+
+    callPostLike = async (post_id) => {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        const data = {
+            "post_id": post_id
+        }
+
+        axios.post('https://etda.amn-corporation.com/api/backend/post/like', data,{
+            headers
+        })
+            .then((response) => {
+                if (response.data.status == "success") {
+                    var like_result = this.state.like + 1
+
+                    this.setState({
+                        like : like_result
+                    })
+                    
+                    console.log('data success post like : ' , response.data)
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+
+    callPostFollow = async (post_id) => {
+        this.setState({ visibleBottomSheet: false }),
+            this.RBSheet.close()
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        const data = {
+            "post_id": post_id
+        }
+
+        axios.post('https://etda.amn-corporation.com/api/backend/post/follow', data,{
+            headers
+        })
+            .then((response) => {
+                if (response.data.status == "success") {
+                    
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
+
     render() {
+        console.log('1234 : ')
         const { data, socail } = this.state
         return (
             <View style={{
@@ -184,15 +313,15 @@ export default class Post extends Component {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
-                        <Text style={{ fontSize: hp('2%'), }}>{data.title}</Text>
+                        <Text style={{ fontSize: hp('2%'), }}>{this.props.data.title}</Text>
                         <TouchableOpacity onPress={() => this.openOption()}>
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{data.time}</Text>
+                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.post_date}</Text>
                     <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row' }}>
                         {
-                            data.tag.map((item, index) => {
+                            this.props.data.tags.map((item, index) => {
                                 return (
                                     <Button
                                         title={item}
@@ -207,13 +336,13 @@ export default class Post extends Component {
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
                         <Image
-                            source={data.image}
+                            source={{ uri: this.props.data.post_images[0] }}
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
                         />
                     </View>
-                    <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}>
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{data.detail}</Text>
-                    </TouchableOpacity>
+                    {/* <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}> */}
+                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
+                    {/* </TouchableOpacity> */}
 
                     <View style={{
                         marginTop: hp('2%'),
@@ -221,22 +350,39 @@ export default class Post extends Component {
                         justifyContent: 'flex-start',
                         alignItems: 'center'
                     }}>
-                        <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}>
+                        {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
                             <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}>{socail.like}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}>
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5',marginTop : hp('0.4%') }}>{this.props.data.like}</Text>
+                        {/* </TouchableOpacity> */}
+                        {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
                             <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                            <Text style={{ color: '#B5B5B5' }}>{socail.view}</Text>
-                        </TouchableOpacity>
+                            <Text style={{ color: '#B5B5B5',marginTop : hp('0.4%') }}>{this.props.data.comment}</Text>
+                        {/* </TouchableOpacity> */}
                     </View>
                 </View>
 
                 <View style={{ ...style.sectionSocial }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                           onPress={() => this.callPostLike(this.props.data.post_id)}
+                    >
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                          onPress={() => 
+                            {
+                            Actions.PostDetail({ 'user_image': '', 
+                                                 'user_name': '',
+                                                 'user_date': this.props.data.date,
+                                                 'user_title': this.props.data.title,
+                                                 'user_tags': this.props.data.tags,
+                                                 'user_images': this.props.data.post_images[0],
+                                                 'user_description': this.props.data.description,
+                                                 'user_like': this.props.data.like,
+                                                 'user_comment': this.props.data.comment,
+                                                 'user_post_id': this.props.data.post_id})
+                                                 AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
+                        }}
+                    >
                         <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                     <TouchableOpacity>
