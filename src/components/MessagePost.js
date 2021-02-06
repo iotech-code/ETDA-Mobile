@@ -45,60 +45,8 @@ export default class MessagsPost extends Component {
                 view: 22
             },
             default_avatar: require('../assets/images/default_avatar.jpg'),
-            imagesForView: [
-                {
-                    source: {
-                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-            ],
             isImageViewVisible: false,
             isIndeximageForshow: 0,
-            imageForShow: [
-                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
-                "https://facebook.github.io/react-native/docs/assets/favicon.png",
-                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
-                "https://facebook.github.io/react-native/docs/assets/favicon.png",
-                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
-                "https://facebook.github.io/react-native/docs/assets/favicon.png",
-            ],
             like: 0
         }
     }
@@ -283,6 +231,19 @@ export default class MessagsPost extends Component {
     render() {
         console.log('data 1234 ', this.props.data)
         const { data, socail, default_avatar } = this.state
+        let { post_images } = this.props.data
+        let image_viewer = []
+        for (let index = 0; index < post_images.length; index++) {
+            const element = post_images[index];
+            let obj = {
+                source: {
+                    uri: element,
+                },
+                width: 806,
+                height: 720,
+            }
+            image_viewer.push(obj)
+        }
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -338,11 +299,11 @@ export default class MessagsPost extends Component {
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
                         /> */}
                         <FbGrid
-                            images={this.state.imageForShow}
+                            images={post_images}
                             onPress={(url, index) => this.imageViewer(url, index)}
                         />
                         <ImageView
-                            images={this.state.imagesForView}
+                            images={image_viewer}
                             imageIndex={this.state.isIndeximageForshow}
                             isVisible={this.state.isImageViewVisible}
                             onClose={() => this.setState({ isImageViewVisible: false })}
