@@ -65,7 +65,22 @@ export default class Login extends Component {
 
 
                 if (response.data.status == "success") {
+                    var name = ''
+                    var image = ''
+                    if (response.data.data.fullname == null){
+                        name = ''
+                    }else{
+                        name = response.data.data.fullname 
+                    }
+
+                    if (response.data.data.photo == null){
+                        image = ''
+                    }else{
+                        image = response.data.data.photo
+                    }
                     AsyncStorage.setItem('user_type', response.data.data.user_type)
+                    AsyncStorage.setItem('fullname', name)
+                    AsyncStorage.setItem('photo', image)
                     Actions.replace('Main')
 
                 } else {

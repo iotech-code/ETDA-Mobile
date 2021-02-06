@@ -37,7 +37,7 @@ export default class Main extends Component {
         try {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
-            console.log('user_type',user_type)
+            console.log('user_type : ',user_type)
             this.setState({
                 user_type: user_type,
                 token : token
@@ -59,7 +59,6 @@ export default class Main extends Component {
             }
         })
             .then((response) => {
-                console.log('response 1 : ' , response.data)
                 var i  
                 var objectHomeFeed = {}
                 var list = []
@@ -76,6 +75,7 @@ export default class Main extends Component {
                     }
                     list.push(objectHomeFeed)
                 }
+                console.log('list detail : ' , list)
                 this.setState({
                     list_data : list
                 })
@@ -114,7 +114,7 @@ export default class Main extends Component {
                             </View>
 
                             {/* section admin */}
-                            {this.state.user_type == 'read,post_read' ?
+                            {this.state.user_type == 'read, post_read' ?
                                 <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                     <Button
                                         title="Write New Blog"
@@ -125,7 +125,9 @@ export default class Main extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost()}
+                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                        'description': '',
+                                        'post_images': []})}
                                     />
 
 

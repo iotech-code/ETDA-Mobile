@@ -228,7 +228,7 @@ export default class ChooseUserType extends Component {
 
                             <TouchableOpacity
                                 style={{ width: '49%' }}
-                                onPress={() => this.setState({ visible: true, rType: 'post_read' })}
+                                onPress={() => this.setState({ visible: true, rType: 'read, post_read' })}
                             >
                                 <View style={styleScoped.option}>
                                     <Icon name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />

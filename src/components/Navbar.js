@@ -9,7 +9,8 @@ import {
     StatusBar,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    AsyncStorage
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -21,7 +22,22 @@ import { colors } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
     state = {
-        imageAvatar: require('../assets/images/default_avatar.jpg')
+        imageAvatar: require('../assets/images/default_avatar.jpg'),
+        name : '',
+        photo : ''
+    }
+
+    async componentDidMount() {
+        try {
+            const fullname = await AsyncStorage.getItem('fullname');
+            const photo = await AsyncStorage.getItem('photo');
+            this.setState({
+                name: fullname,
+                photo : photo
+            })
+        } catch (err) {
+            console.log('err 1 : ' ,err)
+        }
     }
     render() {
         const { imageAvatar } = this.state
@@ -30,12 +46,20 @@ export default class HeaderNavbar extends Component {
                 {/* left side  */}
                 <View style={styleScoped.leftSide}>
                     <TouchableOpacity style={styleScoped.avatar} onPress={() => Actions.replace('MyProfile')}>
-                        <Image
-                            source={imageAvatar}
-                            style={styleScoped.imageAvatar}
-                        />
+                        {this.state.photo == '' || this.state.photo == null ? 
+                         <Image
+                         source={imageAvatar}
+                         style={styleScoped.imageAvatar}
+                     />
+                    :
+                    <Image
+                    source={{ uri: this.state.photo}}
+                    style={styleScoped.imageAvatar}
+                />
+                    }
+                       
                     </TouchableOpacity>
-                    <Text style={styleScoped.textName}>John McMan</Text>
+                    <Text style={styleScoped.textName}>{this.state.name}</Text>
                 </View>
 
                 {/* right side */}

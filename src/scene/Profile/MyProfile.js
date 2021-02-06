@@ -40,7 +40,6 @@ export default class MyProfile extends Component {
 
 
     callInfomation = async (token) => {
-        console.log('come in ')
         const data = {
             "Token": token
         }
@@ -54,6 +53,8 @@ export default class MyProfile extends Component {
                 var name = ''
                 var photo = ''
                 var userId = ''
+
+                console.log('type : ' , response.data)
 
                 if (response.data.status == "success") {
                     if (response.data.data.mobile_number == null) {
@@ -119,8 +120,11 @@ export default class MyProfile extends Component {
                         photo: photo,
                         userId: userId
                     })
-                    // AsyncStorage.setItem('token', response.data.token);
-                    // Actions.replace('Main')
+
+                    AsyncStorage.setItem('fullname', this.state.name)
+                    AsyncStorage.setItem('photo', this.state.photo)
+                    
+                    
                 } else {
 
                 }
@@ -150,12 +154,25 @@ export default class MyProfile extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
+                                {this.state.photo == null || this.state.photo == '' ?
+                                
                                 <Image source={this.state.dafault_avatar} style={{
                                     width: '100%',
                                     height: '100%',
                                     resizeMode: 'cover',
                                     borderRadius: 100
                                 }} />
+
+                                :
+
+                                <Image source={{ uri: this.state.photo}} style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    resizeMode: 'cover',
+                                    borderRadius: 100
+                                }} />
+
+                            }
                                 <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}>
                                     <IconFonAwesome name="pencil" size={hp('2%')} color="white" />
                                 </TouchableOpacity>
@@ -204,7 +221,7 @@ export default class MyProfile extends Component {
                                 <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {this.state.type == 'read' ? 'Read only' : 'Read only'} </Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {this.state.type == 'read' ? 'Read only' : 'Read , Post'} </Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>

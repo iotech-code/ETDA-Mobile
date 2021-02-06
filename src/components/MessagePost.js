@@ -198,7 +198,12 @@ export default class MessagsPost extends Component {
                     ...styleScoped.listMore
                 }}
                     onPress={() => {
-                        Actions.CreatePost({ 'type': this.props.type }),
+                           Actions.CreatePost({
+                            'type_value' : 'edit',
+                            'title': this.props.data.title,
+                            'description': this.props.data.description,
+                            'post_images': this.props.data.post_images
+                        })
                             this.setState({ visibleBottomSheet: false }),
                             this.RBSheet.close()
                     }}
@@ -279,9 +284,22 @@ export default class MessagsPost extends Component {
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
                         />
                     </View>
+                    <TouchableOpacity 
+                        onPress={() => {
+                            Actions.CreatePost({
+                                'type_value' : 'detail',
+                                'title': this.props.data.title,
+                                'description': this.props.data.description,
+                                'post_images': this.props.data.post_images
+                            })
+                          //  Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'detail' , 'data' : item })
+                        }}
+                    >
                     <View style={{ marginTop: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
                     </View>
+
+                    </TouchableOpacity>
 
                     <View style={{
                         marginTop: hp('2%'),

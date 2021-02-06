@@ -152,49 +152,7 @@ export default class MessageBoard extends Component {
 
     };
 
-    callUserData = async (post_id , author_id ,  title , date , description , tags , images, comment , like  ) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        axios.get('https://etda.amn-corporation.com/api/backend/user/user-data/' + author_id, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    var objectFeed = {}
-                    var list = []
-                    
-                    objectFeed = {
-                        post_id : post_id,
-                        title : title,
-                        date : date,
-                        description : description,
-                        tags : tags,
-                        post_images : images,
-                        comment : comment,
-                        like : like,
-                        user_name : response.data.data.fullname,
-                        user_image : response.data.data.photo
-                    }
-                    list.push(objectFeed)
-                    this.setState({
-                        list_data : list
-                    })
-                    console.log('list data 1 : ' , this.state.list_data)
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
+  
 
     render() {
         const { dataList } = this.state
@@ -224,7 +182,9 @@ export default class MessageBoard extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost({ 'type': this.props.type ,'type_value' : 'create' , 'data' : null })}
+                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                        'description': '',
+                                        'post_images': []})}
                                     />
                                 </View>
                                 :
@@ -255,15 +215,10 @@ export default class MessageBoard extends Component {
                             <ScrollView style={{ marginBottom: 24 }}>
                                 {this.state.list_data.map((item, index) => {
                                 return (
-                                    <TouchableOpacity 
-                                    onPress={() => {
-                                        Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'edit' , 'data' : item })
-                                    }}
-                                >
+                               
                                     <View>
                                         <MessagePost data={item}>   </MessagePost>
                                     </View>
-                                    </TouchableOpacity>
                                     )}
                                 )}
                             </ScrollView>

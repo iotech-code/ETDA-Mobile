@@ -35,12 +35,13 @@ export default class CreatePost extends Component {
 
     async componentDidMount() {
         try {
+            console.log('data : ' , this.props.title)
             const token = await AsyncStorage.getItem('token')
             this.setState({
                 token: token,
-                title : this.props.data.title,
-                description : this.props.data.description,
-                image : this.props.data.post_images
+                title : this.props.title,
+                description : this.props.description,
+                image : this.props.post_images
             })
         } catch (err) {
             // handle errors
@@ -147,32 +148,39 @@ export default class CreatePost extends Component {
                     <TouchableOpacity onPress={() => Actions.pop()}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
-                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create Blog</Text>
+                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{this.props.type_value == 'detail' ? 'Detail Blog' : this.props.type_value == 'create' ? 'Create Blog' : 'Edit Blog'}</Text>
+                    {this.props.type_value == 'detail' ? 
+                        <View>
+                        </View>     
+                    
+                    :
                     <TouchableOpacity onPress={() => 
-                        {
-                            if (this.props.type_value == 'create'){
+                    {
+                        if (this.props.type_value == 'create'){
                                 this.callCreatePost()
-                            }else{
-                                    this.callUpdatePost(this.state.title,
-                                        'blog' ,
-                                        this.state.images,
-                                        this.state.description,
-                                        this.state.tag,
-                                        this.state.addition,
-                                        this.props.data.post_id,
-                                        )
-                               
-                            }
+                        }else{
+                            this.callUpdatePost(this.state.title,
+                            'blog' ,
+                            this.state.images,
+                            this.state.description,
+                            this.state.tag,
+                            this.state.addition,
+                            this.props.data.post_id,
+                            )
                         }
-                        }>
-                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
-                    </TouchableOpacity>
+    }
+    }>
+<Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
+</TouchableOpacity>
+                    }
+                   
                 </View>
                 {/* content */}
                 <View>
                     <View style={{ height: hp('7%') }}>
                         <TextInput placeholder="Enter your topic here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
                             defaultValue={this.state.title}
+                            editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
                             onChangeText={(value) => {
                                 onChangeTextTitle(value)
                             }}
@@ -186,6 +194,7 @@ export default class CreatePost extends Component {
                     <View style={{ height: hp('25%') }}>
                         <TextInput placeholder="Enter your post here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} multiline={true}
                           defaultValue={this.state.description}
+                          editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
                         onChangeText={(value) => {
                             onChangeTextDescription(value)
                         }}
@@ -229,6 +238,12 @@ export default class CreatePost extends Component {
                                     })
                                    // console.log('result image : ' , images[0]);
                                   })}>
+                          {this.props.type_value == 'detail' ?           
+                   <View>
+                       
+                   </View>
+
+                    :
                     <View style={{
                         marginTop: hp('1%'),
                         marginBottom: hp('1%'),
@@ -240,6 +255,9 @@ export default class CreatePost extends Component {
                         <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
                     
                     </View>
+                } 
+
+
                     </TouchableOpacity>
                     <View style={{ ...style.divider }}></View>
 
@@ -252,7 +270,11 @@ export default class CreatePost extends Component {
                         <Icon name="tag" style={{ marginRight: hp('2%') }} color="#003764" size={hp('2.5%')} />
                         <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Tag</Text>
                     </View>
-
+                    {this.props.type_value == 'detail' ?   
+                        <View>
+                        </View>    
+                    :
+                    <View>
                     <View style={{ marginTop: hp('2%'), paddingHorizontal: hp('2%') }}>
                         <TextInput
                             style={style.customInput}
@@ -266,6 +288,10 @@ export default class CreatePost extends Component {
                             <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
                         </View>
                     </View>
+                    </View>
+
+                }
+
 
 
                     <View style={{

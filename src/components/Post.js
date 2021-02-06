@@ -174,7 +174,12 @@ export default class Post extends Component {
                     ...styleScoped.listMore
                 }}
                     onPress={() => {
-                        Actions.CreatePost({ 'type': this.props.type }),
+                        Actions.CreatePost({
+                            'type_value' : 'edit',
+                            'title': this.props.data.title,
+                            'description': this.props.data.detail,
+                            'post_images': this.props.data.post_images
+                        })
                             this.setState({ visibleBottomSheet: false }),
                             this.RBSheet.close()
                         }}
@@ -320,15 +325,15 @@ export default class Post extends Component {
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.post_date}</Text>
-                    <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row' }}>
+                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
+                    <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row',marginTop: hp('1%') ,flexWrap:'wrap' }}>
                         {
                             this.props.data.tags.map((item, index) => {
                                 return (
                                     <Button
                                         title={item}
                                         titleStyle={{ fontSize: hp('1.5%') }}
-                                        buttonStyle={{ ...style.btnTagPrimary }}
+                                        buttonStyle={{ ...style.btnTagPrimary , marginTop:hp('1%')}}
                                         key={index}
                                     />
                                 )
@@ -343,7 +348,19 @@ export default class Post extends Component {
                         />
                     </View>
                     {/* <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}> */}
+                    <TouchableOpacity 
+                        onPress={() => {
+                            Actions.CreatePost({
+                                'type_value' : 'detail',
+                                'title': this.props.data.title,
+                                'description': this.props.data.detail,
+                                'post_images': this.props.data.post_images
+                            })
+                          //  Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'detail' , 'data' : item })
+                        }}
+                    >
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
+                        </TouchableOpacity>
                     {/* </TouchableOpacity> */}
 
                     <View style={{
