@@ -26,7 +26,7 @@ import axios from 'axios';
 export default class MyProfile extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, phone: '', professional: '', position: '', organization: '', type: '', name: '', photo: '', userId: '' }
+        this.state = { visibleSearch: false, phone: '', professional: '', position: '', organization: '', type: '', name: '', photo: '', userId: '' , dafault_avatar:require('../../assets/images/default_avatar.jpg') }
     }
 
     async componentDidMount() {
@@ -150,7 +150,7 @@ export default class MyProfile extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
-                                <Image source={require('../../assets/images/avatar.png')} style={{
+                                <Image source={this.state.dafault_avatar} style={{
                                     width: '100%',
                                     height: '100%',
                                     resizeMode: 'cover',

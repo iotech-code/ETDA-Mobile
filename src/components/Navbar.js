@@ -21,7 +21,7 @@ import { colors } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
     state = {
-        imageAvatar: require('../assets/images/avatar.png')
+        imageAvatar: require('../assets/images/default_avatar.jpg')
     }
     render() {
         const { imageAvatar } = this.state
@@ -89,6 +89,7 @@ const styleScoped = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
+        borderRadius:50
     },
     textName: {
         fontSize: hp('2.2%'),
