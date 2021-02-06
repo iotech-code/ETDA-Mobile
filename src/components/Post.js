@@ -321,14 +321,14 @@ export default class Post extends Component {
                         </TouchableOpacity>
                     </View>
                     <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.post_date}</Text>
-                    <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row' }}>
+                    <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row' , flexWrap:'wrap' }}>
                         {
                             this.props.data.tags.map((item, index) => {
                                 return (
                                     <Button
                                         title={item}
                                         titleStyle={{ fontSize: hp('1.5%') }}
-                                        buttonStyle={{ ...style.btnTagPrimary }}
+                                        buttonStyle={{ ...style.btnTagPrimary , marginTop:hp('1%') }}
                                         key={index}
                                     />
                                 )
