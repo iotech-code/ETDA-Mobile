@@ -21,10 +21,11 @@ import { colors } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
     state = {
-        imageAvatar: require('../assets/images/default_avatar.jpg')
+        imageAvatar: require('../assets/images/default_avatar.jpg'),
+        user_name: 'John McMan'
     }
     render() {
-        const { imageAvatar } = this.state
+        const { imageAvatar, user_name } = this.state
         return (
             <View style={styleScoped.container}>
                 {/* left side  */}
@@ -35,7 +36,7 @@ export default class HeaderNavbar extends Component {
                             style={styleScoped.imageAvatar}
                         />
                     </TouchableOpacity>
-                    <Text style={styleScoped.textName}>John McMan</Text>
+                    <Text style={styleScoped.textName}>user_name</Text>
                 </View>
 
                 {/* right side */}
@@ -89,7 +90,7 @@ const styleScoped = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
-        borderRadius:50
+        borderRadius: 50
     },
     textName: {
         fontSize: hp('2.2%'),
