@@ -79,6 +79,7 @@ export default class Login extends Component {
                         image = response.data.data.photo
                     }
                     AsyncStorage.setItem('user_type', response.data.data.user_type)
+                    AsyncStorage.setItem('user_role', response.data.data.user_role)
                     AsyncStorage.setItem('fullname', name)
                     AsyncStorage.setItem('photo', image)
                     Actions.replace('Main')

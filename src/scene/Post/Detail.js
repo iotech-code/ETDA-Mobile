@@ -34,8 +34,15 @@ export default class EventDetail extends Component {
         },
         socail: {
 
-        }
+        },
+        comment : '',
+        post_id : 0,
+        reply_to : 0
     }
+
+
+
+
 
 
     constructor(props) {
@@ -61,7 +68,8 @@ export default class EventDetail extends Component {
             const token = await AsyncStorage.getItem('token')
             const post_id = await AsyncStorage.getItem('post_id')
             this.setState({
-                token: token
+                token: token,
+                post_id : post_id
             })
 
             this.callGetComment(post_id)
@@ -76,9 +84,6 @@ export default class EventDetail extends Component {
         const data = {
             "post_id": post_id
         }
-
-        console.log('post id 123 : ', post_id)
-        console.log('token 123 : ', this.state.token)
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
@@ -104,11 +109,55 @@ export default class EventDetail extends Component {
             });
 
     };
+
+
+    callPostComment = async () => {
+        const data = {
+            "post_id": this.state.post_id,
+            "reply_to" : this.state.reply_to,
+            "message" : this.state.comment
+        }
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+        axios.post('https://etda.amn-corporation.com/api/backend/post/comment', data, {
+            headers
+        })
+            .then((response) => {
+                if (response.data.status == "success") {
+                   this.callGetComment(this.state.post_id)
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('data : ', error)
+            })
+            .finally(function () {
+            });
+
+    };
+
+
+    onPressButtonChildren(data){
+        this.setState({
+            reply_to : data
+        })
+        console.log(data)
+      }
+
+
     render() {
         const { data, default_avatar } = this.state
         const { navigation } = this.props;
 
-
+        onChangeTextComment = async (value) => {
+            this.setState({
+                comment: value
+            })
+        }
 
         return (
             <View style={{ flex: 1 }}>
@@ -211,7 +260,7 @@ export default class EventDetail extends Component {
                     <ScrollView style={{ marginBottom: 24 }}>
                         {this.state.list_comment.map((item, index) => {
                             return (
-                                <Comment data={item}></Comment>
+                                <Comment data={item} fnPressButton={this.onPressButtonChildren.bind(this)}></Comment>
                             )
                         }
                         )}
@@ -228,7 +277,13 @@ export default class EventDetail extends Component {
                         <View style={{ ...styleScoped.boxInputCommment }}>
                             <TextInput
                                 placeholder="Comment here"
-                                style={{ padding: 0, fontSize: hp('2%') }}></TextInput>
+                                style={{ padding: 0, fontSize: hp('2%') }}
+                                onChangeText={(value) => {
+                                    onChangeTextComment(value)
+                                }}>
+
+
+                            </TextInput>
                         </View>
                     </View>
                 </KeyboardAvoidingView>

@@ -11,7 +11,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -19,6 +20,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 export default class Poll extends Component {
     constructor(props) {
         super(props)
@@ -26,6 +28,7 @@ export default class Poll extends Component {
             token: '',
             text: '',
             visibleSearch: false,
+            list_search : []
         }
     }
 
@@ -41,20 +44,30 @@ export default class Poll extends Component {
         }
     }
 
-    callSearch = async () => {
+    callSearch = async (name) => {
         console.log('data come in : ', this.state.token)
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.get('https://etda.amn-corporation.com/api/backend/post/search?query=' + this.state.text, {
+        axios.get('https://etda.amn-corporation.com/api/backend/post/search?query=' + name, {
             headers
         })
             .then((response) => {
                 console.log('data : ', response.data)
                 if (response.data.status == "success") {
+                    var i 
+                    var text = ""
+                    var list = []
+                    for (i = 0 ; i  < response.data.post_data.length ; i++){
+                        text = response.data.post_data[i].title
+                        list.push(text)
+                    }
 
+                    this.setState({
+                        list_search : list
+                    })
                 } else {
 
                 }
@@ -80,7 +93,11 @@ export default class Poll extends Component {
                         <View style={{ ...style.container, marginTop: hp('2%') }}>
                             <View style={{ ...styleScoped.customInputSearch }}>
                                 <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
-                                <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."></TextInput>
+                                <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."
+                                 onChangeText={(value) => {
+                                    this.callSearch(value)
+                                }}
+                                ></TextInput>
                             </View>
                             <View style={{ marginTop: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Search by tags</Text>
@@ -88,11 +105,11 @@ export default class Poll extends Component {
                         </View>
                         <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
                         <ScrollView style={{ ...style.container }}>
-                            <Text style={{ ...styleScoped.textList }}>E-commerce</Text>
-                            <Text style={{ ...styleScoped.textList }}>Cybersecurity</Text>
-                            <Text style={{ ...styleScoped.textList }}>E-standard</Text>
-                            <Text style={{ ...styleScoped.textList }}>Digital Service</Text>
-
+                        {this.state.list_search.map((item, index) => {
+                                return (
+                                    <Text style={{ ...styleScoped.textList }}>{item}</Text>
+                                    )}
+                                )}
                         </ScrollView>
                     </View>
             </View>

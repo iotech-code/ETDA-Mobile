@@ -29,7 +29,7 @@ import { colors } from '../../constant/util'
 export default class MessageBoard extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, type: 'create', user_type: '', board: 'community' , token : '' , list_data : []  }
+        this.state = { visibleSearch: false, type: 'create', user_type: '', board: 'community' , token : '' , list_data : []  , user_role : '' }
     }
 
 
@@ -37,11 +37,11 @@ export default class MessageBoard extends Component {
         try {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
-            console.log('user type : ', user_type)
-            console.log('token : ', token)
+            const user_role = await AsyncStorage.getItem('user_role');
             this.setState({
                 user_type: user_type,
-                token : token 
+                token : token,
+                user_role : user_role
             })
             this.callCommunityFeed(token)
         } catch (err) {
@@ -160,7 +160,11 @@ export default class MessageBoard extends Component {
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <ScrollView>
                     <View style={{ flex: 1 }}>
-                        <HeaderNavbar></HeaderNavbar>
+                    {this.state.user_role == "Member" ? 
+                    <HeaderNavbar  value={'member'}></HeaderNavbar>
+                    :
+                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
+                    }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
                             <View style={{
                                 flexDirection: 'row',
@@ -229,7 +233,11 @@ export default class MessageBoard extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <MenuFooterUser value={'message'}></MenuFooterUser>
+                {this.state.user_role == "Member" ? 
+                         <MenuFooterUser value={'message'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'message'}></MenuFooter>
+                    }
                 {/* <MenuFooter></MenuFooter> */}
             </View>
         );

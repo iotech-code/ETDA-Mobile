@@ -41,24 +41,38 @@ export default class HeaderNavbar extends Component {
     }
     render() {
         const { imageAvatar, user_name } = this.state
+
         return (
             <View style={styleScoped.container}>
                 {/* left side  */}
                 <View style={styleScoped.leftSide}>
-                    <TouchableOpacity style={styleScoped.avatar} onPress={() => Actions.replace('MyProfile')}>
-                        {this.state.photo == '' || this.state.photo == null ? 
-                         <Image
-                         source={imageAvatar}
-                         style={styleScoped.imageAvatar}
-                     />
-                    :
-                    <Image
-                    source={{ uri: this.state.photo}}
-                    style={styleScoped.imageAvatar}
-                />
+               
+                    <TouchableOpacity style={styleScoped.avatar} onPress={() => {
+                        if (this.props.value == 'admin'){
+
+                        }else{
+                            Actions.replace('MyProfile')}
+                        }
+ 
                     }
-                       
-                    </TouchableOpacity>
+                    
+                       >
+                    {this.state.photo == '' || this.state.photo == null ? 
+                     <Image
+                     source={imageAvatar}
+                     style={styleScoped.imageAvatar}
+                 />
+                :
+                <Image
+                source={{ uri: this.state.photo}}
+                style={styleScoped.imageAvatar}
+            />
+                }
+                   
+                </TouchableOpacity>
+                    
+                    
+                   
                     <Text style={styleScoped.textName}>{this.state.name}</Text>
                 </View>
 

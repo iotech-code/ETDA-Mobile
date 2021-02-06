@@ -123,8 +123,8 @@ export default class MyProfile extends Component {
 
                     AsyncStorage.setItem('fullname', this.state.name)
                     AsyncStorage.setItem('photo', this.state.photo)
-                    
-                    
+                    AsyncStorage.setItem('user_type', response.data.data.user_type)
+                    AsyncStorage.setItem('user_role', response.data.data.user_role)
                 } else {
 
                 }

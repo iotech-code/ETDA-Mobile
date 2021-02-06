@@ -234,7 +234,6 @@ export default class MessagsPost extends Component {
         )
     }
     render() {
-        console.log('data 1234 ', this.props.data)
         const { data, socail, default_avatar } = this.state
         let { post_images } = this.props.data
         let image_viewer = []

@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -25,7 +26,24 @@ import { colors } from '../../constant/util'
 
 export default class Activity extends Component {
     state = {
-        visibleSearch: false
+        visibleSearch: false,
+        user_type: '' , token : '' , user_role : ''
+    }
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const user_type = await AsyncStorage.getItem('user_type');
+            const user_role = await AsyncStorage.getItem('user_role');
+            this.setState({
+                user_type: user_type,
+                token : token,
+                user_role : user_role
+            })
+            this.callCommunityFeed(token)
+        } catch (err) {
+            console.log('err : ', err)
+        }
     }
     render() {
         const { dataList } = this.state
@@ -33,7 +51,11 @@ export default class Activity extends Component {
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
                 <View style={{ flex: 1, paddingBottom: hp('10%') }}>
-                    <HeaderNavbar></HeaderNavbar>
+                {this.state.user_role == "Member" ? 
+                    <HeaderNavbar  value={'member'}></HeaderNavbar>
+                    :
+                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
+        }
                     <View style={{ ...style.container, marginTop: hp('4%') }}>
                         <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={() => Actions.replace('Event')}>
                             <Text style={{ ...styleScoped.menuName }}>
@@ -66,7 +88,12 @@ export default class Activity extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <MenuFooterUser value={'activity'}></MenuFooterUser>
+                {this.state.user_role == "Member" ? 
+                         <MenuFooterUser value={'activity'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'activity'}></MenuFooter>
+                    }
+               
                 {/* <MenuFooter></MenuFooter> */}
             </View>
         );

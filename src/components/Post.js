@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
@@ -457,6 +458,7 @@ export default class Post extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => {
+                            console.log('post_id post : ' , this.props.data.post_id)
                             Actions.PostDetail({
                                 'user_image': '',
                                 'user_name': '',

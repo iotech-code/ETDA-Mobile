@@ -28,22 +28,28 @@ export default class MenuFooter extends Component {
         return (
             <View >
                 <View style={styleScoped.container}>
-                    <TouchableOpacity style={{ width: '25%' }} onPress={() => Actions.replace('Main')}>
-                        <Icon name="home" size={hp('2.6%')} color={colors.primary} style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: fonts.color.primary }}>Home</Text>
+                <TouchableOpacity style={{ width: '25%' }} onPress={() => {
+                        Actions.replace('Main')
+                    }}>
+                        <Icon name="home" size={hp('2.6%')} color={this.props.value == 'home' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'home' ? fonts.color.primary : color = "#B5B5B5" }}>Home</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ width: '25%' }} onPress={() => Actions.replace('MessageBoard')}>
-                        <Icon name="globe" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Message Board</Text>
+                    <TouchableOpacity style={{ width: '25%' }} onPress={() => {
+                        Actions.replace('MessageBoard')
+                    }}>
+                        <Icon name="globe" size={hp('2.6%')} color={this.props.value == 'message' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'message' ? fonts.color.primary : color = "#B5B5B5" }}>Message Board</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ width: '25%' }} onPress={() => Actions.replace('Activity')}>
-                        <Icon name="calendar" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Activity</Text>
+                    <TouchableOpacity style={{ width: '25%' }} onPress={() => {
+                        Actions.replace('Activity')
+                    }}>
+                        <Icon name="calendar" size={hp('2.6%')} color={this.props.value == 'activity' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'activity' ? fonts.color.primary : color = "#B5B5B5" }}>Activity</Text>
                     </TouchableOpacity>
                     {/* section admin */}
                     <TouchableOpacity style={{ width: '25%' }} onPress={() => Actions.replace('ManageBlog')}>
-                        <IconMaterail name="view-carousel" size={hp('2.6%')} color="#B5B5B5" style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: '#B5B5B5' }}>Manage Blogs</Text>
+                        <IconMaterail name="view-carousel" size={hp('2.6%')} color={this.props.value == 'manage' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'manage' ? fonts.color.primary : color = "#B5B5B5" }}>Manage Blogs</Text>
                     </TouchableOpacity>
                     {/* end section admin */}
 

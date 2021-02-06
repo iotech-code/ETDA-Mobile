@@ -355,22 +355,28 @@ export default class EditProfile extends Component {
         this.state.rExp.push(this.state.rExp1)
         this.state.rExp.push(this.state.rExp2)
         this.state.rExp.push(this.state.rExp3)
+        var image = []
+        if (this.state.photo == '' || this.state.photo == null){
+            image = this.state.photo
+        }else{
+            image = ''
+        }
 
-        
-
-       
         const data = {
             "user_id": this.state.userId,
             "user_fullname": this.state.name,
-            "user_photo": this.state.photo,
+            "user_photo": image,
             "mobile_number": this.state.phone,
             "organization": this.state.organization,
             "position": this.state.position,
-            "bio": this.state.professional,
+            "professional": this.state.professional,
             "user_rq_type": this.state.type,
             "rq_reason": this.state.rReason,
             "rq_exp": this.state.rExp
         }
+
+       
+         
         console.log('come in ', data)
         console.log('user id  ', this.props.userId)
         console.log('token  ', token)
