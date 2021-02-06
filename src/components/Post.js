@@ -9,7 +9,8 @@ import {
     StatusBar,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    KeyboardAvoidingView
 } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
@@ -80,6 +81,7 @@ export default class Post extends Component {
                     paddingHorizontal: hp('2%')
                 }}
             >
+                <KeyboardAvoidingView behavior="position">
                 <View style={{
                     borderBottomColor: '#707070',
                     borderBottomWidth: 1,
@@ -135,7 +137,7 @@ export default class Post extends Component {
                         onPress={() => this.setState({ visibleModalReport: false })}
                     />
                 </View>
-
+                    </KeyboardAvoidingView>
             </Overlay>
         )
     }

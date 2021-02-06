@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    KeyboardAvoidingView
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -68,33 +69,34 @@ export default class Poll extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                    <View style={{ ...style.navbar }}>
-                        <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Search</Text>
-                        <TouchableOpacity onPress={() => Actions.replace('Main')}>
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Done</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ ...style.container, marginTop: hp('2%') }}>
-                        <View style={{ ...styleScoped.customInputSearch }}>
-                            <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
-                            <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."></TextInput>
+                <KeyboardAvoidingView behavior="position">
+                    <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+                        <View style={{ ...style.navbar }}>
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Search</Text>
+                            <TouchableOpacity onPress={() => Actions.replace('Main')}>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Done</Text>
+                            </TouchableOpacity>
                         </View>
-                        <View style={{ marginTop: hp('2%') }}>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Search by tags</Text>
+                        <View style={{ ...style.container, marginTop: hp('2%') }}>
+                            <View style={{ ...styleScoped.customInputSearch }}>
+                                <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
+                                <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."></TextInput>
+                            </View>
+                            <View style={{ marginTop: hp('2%') }}>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Search by tags</Text>
+                            </View>
                         </View>
+                        <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
+                        <ScrollView style={{ ...style.container }}>
+                            <Text style={{ ...styleScoped.textList }}>E-commerce</Text>
+                            <Text style={{ ...styleScoped.textList }}>Cybersecurity</Text>
+                            <Text style={{ ...styleScoped.textList }}>E-standard</Text>
+                            <Text style={{ ...styleScoped.textList }}>Digital Service</Text>
+
+                        </ScrollView>
                     </View>
-                    <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
-                    <ScrollView style={{ ...style.container }}>
-                        <Text style={{ ...styleScoped.textList }}>E-commerce</Text>
-                        <Text style={{ ...styleScoped.textList }}>Cybersecurity</Text>
-                        <Text style={{ ...styleScoped.textList }}>E-standard</Text>
-                        <Text style={{ ...styleScoped.textList }}>Digital Service</Text>
-
-                    </ScrollView>
-                </View>
-
+                </KeyboardAvoidingView>
             </View>
         );
     }

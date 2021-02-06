@@ -37,6 +37,7 @@ export default class Main extends Component {
         try {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
+            console.log('user_type',user_type)
             this.setState({
                 user_type: user_type,
                 token : token
@@ -113,7 +114,7 @@ export default class Main extends Component {
                             </View>
 
                             {/* section admin */}
-                            {this.state.user_type == 'read, post_read' ?
+                            {this.state.user_type == 'read,post_read' ?
                                 <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                     <Button
                                         title="Write New Blog"

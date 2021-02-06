@@ -10,6 +10,7 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
+    KeyboardAvoidingView,
     AsyncStorage
 } from 'react-native';
 
@@ -95,6 +96,7 @@ export default class Login extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
+                <KeyboardAvoidingView behavior="position">
                     <View style={{
                         marginTop: hp('8%'),
                         flexDirection: 'row',
@@ -189,6 +191,7 @@ export default class Login extends Component {
 
 
                     </View>
+                    </KeyboardAvoidingView>
                 </SafeAreaView>
             </View>
         );
