@@ -21,6 +21,8 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import axios from 'axios';
+import FbGrid from "react-native-fb-image-grid";
+import ImageView from 'react-native-image-view';
 
 
 export default class MessagsPost extends Component {
@@ -43,7 +45,60 @@ export default class MessagsPost extends Component {
                 view: 22
             },
             default_avatar: require('../assets/images/default_avatar.jpg'),
-
+            imagesForView: [
+                {
+                    source: {
+                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+            ],
+            isImageViewVisible: false,
+            isIndeximageForshow: 0,
+            imageForShow: [
+                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
+                "https://facebook.github.io/react-native/docs/assets/favicon.png",
+                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
+                "https://facebook.github.io/react-native/docs/assets/favicon.png",
+                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
+                "https://facebook.github.io/react-native/docs/assets/favicon.png",
+            ],
             like: 0
         }
     }
@@ -165,6 +220,10 @@ export default class MessagsPost extends Component {
 
     };
 
+    async imageViewer(url, index) {
+        await this.setState({ isIndeximageForshow: index })
+        await this.setState({ isImageViewVisible: true })
+    }
 
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
@@ -258,14 +317,14 @@ export default class MessagsPost extends Component {
                     </View>
                     <View style={{ marginTop: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{this.props.data.title}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') , flexWrap:'wrap' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%'), flexWrap: 'wrap' }}>
                             {
                                 this.props.data.tags.map((item, index) => {
                                     return (
                                         <Button
                                             title={item}
                                             titleStyle={{ fontSize: hp('1.5%') }}
-                                            buttonStyle={{ ...style.btnTagPrimary, marginTop:hp('1%') }}
+                                            buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
                                             key={index}
                                         />
                                     )
@@ -274,10 +333,21 @@ export default class MessagsPost extends Component {
                         </View>
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                        <Image
+                        {/* <Image
                             source={{ uri: this.props.data.post_images[0] }}
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
+                        /> */}
+                        <FbGrid
+                            images={this.state.imageForShow}
+                            onPress={(url, index) => this.imageViewer(url, index)}
                         />
+                        <ImageView
+                            images={this.state.imagesForView}
+                            imageIndex={this.state.isIndeximageForshow}
+                            isVisible={this.state.isImageViewVisible}
+                            onClose={() => this.setState({ isImageViewVisible: false })}
+                        />
+
                     </View>
                     <View style={{ marginTop: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
