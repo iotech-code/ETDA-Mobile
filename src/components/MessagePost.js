@@ -258,14 +258,14 @@ export default class MessagsPost extends Component {
                     </View>
                     <View style={{ marginTop: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{this.props.data.title}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') , flexWrap:'wrap' }}>
                             {
                                 this.props.data.tags.map((item, index) => {
                                     return (
                                         <Button
                                             title={item}
                                             titleStyle={{ fontSize: hp('1.5%') }}
-                                            buttonStyle={{ ...style.btnTagPrimary }}
+                                            buttonStyle={{ ...style.btnTagPrimary, marginTop:hp('1%') }}
                                             key={index}
                                         />
                                     )
