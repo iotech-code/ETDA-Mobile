@@ -36,7 +36,7 @@ export default class HeaderNavbar extends Component {
                             style={styleScoped.imageAvatar}
                         />
                     </TouchableOpacity>
-                    <Text style={styleScoped.textName}>user_name</Text>
+                    <Text style={styleScoped.textName}>{user_name}</Text>
                 </View>
 
                 {/* right side */}
