@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import { fonts } from '../../constant/util'
 import axios from 'axios';
+import { KeyboardAvoidingView } from 'react-native';
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -49,7 +50,8 @@ export default class EventDetail extends Component {
             },
             token: '',
             post_id: 0,
-            list_comment: []
+            list_comment: [],
+            default_avatar: require('../../assets/images/default_avatar.jpg'),
         }
     }
 
@@ -103,8 +105,10 @@ export default class EventDetail extends Component {
 
     };
     render() {
-        const { data } = this.state
+        const { data, default_avatar } = this.state
         const { navigation } = this.props;
+
+
 
         return (
             <View style={{ flex: 1 }}>
@@ -132,7 +136,7 @@ export default class EventDetail extends Component {
                                     width: hp('7%'),
                                     marginRight: hp('1%')
                                 }}>
-                                    <Image source={{ uri: navigation.getParam('user_image', '') }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                    <Image source={navigation.getParam('user_image') ? { uri: navigation.getParam('user_image') } : default_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                                 </View>
                                 <View >
                                     <Text style={{ fontSize: hp('2%') }}>{navigation.getParam('user_name', '')}</Text>
@@ -216,12 +220,40 @@ export default class EventDetail extends Component {
                        
                     </View> */}
                 </ScrollView>
+                <KeyboardAvoidingView behavior="position">
+                    <View style={{ ...styleScoped.warpperComment }}>
+                        <TouchableOpacity>
+                            <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
+                        </TouchableOpacity>
+                        <View style={{ ...styleScoped.boxInputCommment }}>
+                            <TextInput
+                                placeholder="Comment here"
+                                style={{ padding: 0, fontSize: hp('2%') }}></TextInput>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+
             </View >
         );
     }
 };
 
 const styleScoped = StyleSheet.create({
+    warpperComment: {
+        paddingHorizontal: hp('3%'),
+        paddingTop: hp('1%'),
+        paddingBottom: hp('4%'),
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    boxInputCommment: {
+        padding: hp('1%'),
+        borderColor: '#C8C8CC',
+        borderWidth: 1,
+        borderRadius: 5,
+        width: '85%'
+    },
     imageLogo: {
         height: hp('15%'),
         width: hp('23%')
