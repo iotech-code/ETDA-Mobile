@@ -40,7 +40,7 @@ export default class HeaderNavbar extends Component {
         }
     }
     render() {
-        const { imageAvatar } = this.state
+        const { imageAvatar, user_name } = this.state
         return (
             <View style={styleScoped.container}>
                 {/* left side  */}
@@ -113,7 +113,7 @@ const styleScoped = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
-        borderRadius:50
+        borderRadius: 50
     },
     textName: {
         fontSize: hp('2.2%'),

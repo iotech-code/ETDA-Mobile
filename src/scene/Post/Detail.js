@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import { fonts } from '../../constant/util'
 import axios from 'axios';
+import { KeyboardAvoidingView } from 'react-native';
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -47,9 +48,10 @@ export default class EventDetail extends Component {
                 detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur',
                 image: require('../../assets/images/post_1.png')
             },
-            token : '',
-            post_id : 0 ,
-            list_comment : []
+            token: '',
+            post_id: 0,
+            list_comment: [],
+            default_avatar: require('../../assets/images/default_avatar.jpg'),
         }
     }
 
@@ -59,11 +61,11 @@ export default class EventDetail extends Component {
             const token = await AsyncStorage.getItem('token')
             const post_id = await AsyncStorage.getItem('post_id')
             this.setState({
-                token : token
+                token: token
             })
 
             this.callGetComment(post_id)
-           
+
         } catch (err) {
             // handle errors
         }
@@ -75,21 +77,21 @@ export default class EventDetail extends Component {
             "post_id": post_id
         }
 
-        console.log('post id 123 : ' , post_id)
-        console.log('token 123 : ' , this.state.token)
+        console.log('post id 123 : ', post_id)
+        console.log('token 123 : ', this.state.token)
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/get-comment' , data , {
+        axios.post('https://etda.amn-corporation.com/api/backend/post/get-comment', data, {
             headers
         })
             .then((response) => {
                 console.log('data : ', response.data)
                 if (response.data.status == "success") {
                     this.setState({
-                        list_comment : response.data.comments
+                        list_comment: response.data.comments
                     })
                 } else {
 
@@ -103,9 +105,11 @@ export default class EventDetail extends Component {
 
     };
     render() {
-        const { data } = this.state
+        const { data, default_avatar } = this.state
         const { navigation } = this.props;
-       
+
+
+
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -132,7 +136,7 @@ export default class EventDetail extends Component {
                                     width: hp('7%'),
                                     marginRight: hp('1%')
                                 }}>
-                                    <Image source={{ uri: navigation.getParam('user_image', '') }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                    <Image source={navigation.getParam('user_image') ? { uri: navigation.getParam('user_image') } : default_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                                 </View>
                                 <View >
                                     <Text style={{ fontSize: hp('2%') }}>{navigation.getParam('user_name', '')}</Text>
@@ -144,29 +148,29 @@ export default class EventDetail extends Component {
 
 
                         <View style={style.container}>
-                            <View style={{ marginTop: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                            <View style={{ marginTop: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
                                 {/* <Button
                                     title="E-commerce"
                                     titleStyle={{ fontSize: hp('1.5%') }}
                                     buttonStyle={{ ...style.btnTagPrimary }}
                                 /> */}
-                                 {
-                                navigation.getParam('user_tags', '').map((item, index) => {
-                                    return (
-                                        <Button
-                                            title={item}
-                                            titleStyle={{ fontSize: hp('1.5%') }}
-                                            buttonStyle={{ ...style.btnTagPrimary }}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
+                                {
+                                    navigation.getParam('user_tags', '').map((item, index) => {
+                                        return (
+                                            <Button
+                                                title={item}
+                                                titleStyle={{ fontSize: hp('1.5%') }}
+                                                buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
+                                                key={index}
+                                            />
+                                        )
+                                    })
+                                }
                             </View>
 
 
                             <View style={{ height: hp('24%'), width: '100%', marginTop: hp('1%') }}>
-                                <Image source={{ uri: navigation.getParam('user_images', '')}} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
+                                <Image source={{ uri: navigation.getParam('user_images', '') }} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
                                 <Text style={{ fontSize: hp('1.8%') }}>
@@ -181,9 +185,9 @@ export default class EventDetail extends Component {
                                 alignItems: 'center'
                             }}>
                                 <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' ,marginTop : hp('0.4%')}}> {navigation.getParam('user_like', '')}</Text>
+                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}> {navigation.getParam('user_like', '')}</Text>
                                 <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                                <Text style={{ color: '#B5B5B5',marginTop : hp('0.4%') }}>{navigation.getParam('user_comment', '')}</Text>
+                                <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{navigation.getParam('user_comment', '')}</Text>
                             </View>
                         </View>
 
@@ -205,22 +209,51 @@ export default class EventDetail extends Component {
 
                     {/* comment */}
                     <ScrollView style={{ marginBottom: 24 }}>
-                                {this.state.list_comment.map((item, index) => {
-                                return (
-                                    <Comment data={item}></Comment>
-                                    )}
-                                )}
+                        {this.state.list_comment.map((item, index) => {
+                            return (
+                                <Comment data={item}></Comment>
+                            )
+                        }
+                        )}
                     </ScrollView>
                     {/* <View style={{ ...style.container }}>
                        
                     </View> */}
                 </ScrollView>
+                <KeyboardAvoidingView behavior="position">
+                    <View style={{ ...styleScoped.warpperComment }}>
+                        <TouchableOpacity>
+                            <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
+                        </TouchableOpacity>
+                        <View style={{ ...styleScoped.boxInputCommment }}>
+                            <TextInput
+                                placeholder="Comment here"
+                                style={{ padding: 0, fontSize: hp('2%') }}></TextInput>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+
             </View >
         );
     }
 };
 
 const styleScoped = StyleSheet.create({
+    warpperComment: {
+        paddingHorizontal: hp('3%'),
+        paddingTop: hp('1%'),
+        paddingBottom: hp('4%'),
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    boxInputCommment: {
+        padding: hp('1%'),
+        borderColor: '#C8C8CC',
+        borderWidth: 1,
+        borderRadius: 5,
+        width: '85%'
+    },
     imageLogo: {
         height: hp('15%'),
         width: hp('23%')

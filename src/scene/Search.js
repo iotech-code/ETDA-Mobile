@@ -69,7 +69,6 @@ export default class Poll extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <KeyboardAvoidingView behavior="position">
                     <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
@@ -96,7 +95,6 @@ export default class Poll extends Component {
 
                         </ScrollView>
                     </View>
-                </KeyboardAvoidingView>
             </View>
         );
     }

@@ -21,6 +21,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { fonts } from '../constant/util';
 import axios from 'axios';
+import FbGrid from "react-native-fb-image-grid";
+import ImageView from 'react-native-image-view';
+
 
 
 export default class Post extends Component {
@@ -40,7 +43,61 @@ export default class Post extends Component {
             },
             visibleBottomSheet: false,
             visibleModalReport: false,
-            like : 0
+            imagesForView: [
+                {
+                    source: {
+                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+                {
+                    source: {
+                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
+                    },
+                    width: 806,
+                    height: 720,
+                },
+            ],
+            isImageViewVisible: false,
+            isIndeximageForshow: 0,
+            imageForShow: [
+                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
+                "https://facebook.github.io/react-native/docs/assets/favicon.png",
+                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
+                "https://facebook.github.io/react-native/docs/assets/favicon.png",
+                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
+                "https://facebook.github.io/react-native/docs/assets/favicon.png",
+            ],
+            like: 0
         }
     }
 
@@ -53,22 +110,26 @@ export default class Post extends Component {
             console.log('token : ', token)
             this.setState({
                 token: token,
-                like : like
+                like: like
             })
         } catch (err) {
             // handle errors
         }
     }
 
-    
+
 
     openOption() {
         this.RBSheet.open()
     }
 
-    openReport(){
+    openReport() {
         this.setState({ visibleModalReport: true })
         this.RBSheet.close()
+    }
+    async imageViewer(url, index) {
+        await this.setState({ isIndeximageForshow: index })
+        await this.setState({ isImageViewVisible: true })
     }
     renderModalReport() {
         const { visibleModalReport } = this.state
@@ -82,62 +143,62 @@ export default class Post extends Component {
                 }}
             >
                 <KeyboardAvoidingView behavior="position">
-                <View style={{
-                    borderBottomColor: '#707070',
-                    borderBottomWidth: 1,
-                    paddingBottom: hp('1.5%')
-                }}>
-                    <Text style={{
-                        textAlign: 'center',
-                        color: fonts.color.primary,
-                        fontSize: hp('2%'),
-                        fontWeight: '600'
-                    }}>Report</Text>
-                </View>
+                    <View style={{
+                        borderBottomColor: '#707070',
+                        borderBottomWidth: 1,
+                        paddingBottom: hp('1.5%')
+                    }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            color: fonts.color.primary,
+                            fontSize: hp('2%'),
+                            fontWeight: '600'
+                        }}>Report</Text>
+                    </View>
 
-                <View style={{ marginVertical: hp('1%') }}>
-                    <Text style={{ fontSize: hp('2%') }}>Select topic for report</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-                        <Button
-                            title="Fake news"
-                            titleStyle={{ fontSize: hp('2%') }}
-                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
-                        />
-                        <Button
-                            title="Cyber bully"
-                            titleStyle={{ fontSize: hp('2%') }}
-                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
-                        />
-                        <Button
-                            title="Threat"
-                            titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
-                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
+                    <View style={{ marginVertical: hp('1%') }}>
+                        <Text style={{ fontSize: hp('2%') }}>Select topic for report</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+                            <Button
+                                title="Fake news"
+                                titleStyle={{ fontSize: hp('2%') }}
+                                buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                            />
+                            <Button
+                                title="Cyber bully"
+                                titleStyle={{ fontSize: hp('2%') }}
+                                buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                            />
+                            <Button
+                                title="Threat"
+                                titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
+                                buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
+                            />
+                        </View>
+                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>Give reason for report this post not suitable</Text>
+                    </View>
+
+                    <View style={{ ...style.customInput, height: hp('20%'), flexDirection: 'column', justifyContent: 'flex-start' }}>
+                        <TextInput
+                            style={{ fontSize: hp('2%'), padding: 0 }}
+                            placeholder="Enter your reason…"
+                            multiline={true}
                         />
                     </View>
-                    <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>Give reason for report this post not suitable</Text>
-                </View>
-
-                <View style={{ ...style.customInput, height: hp('20%'), flexDirection: 'column', justifyContent: 'flex-start' }}>
-                    <TextInput
-                        style={{ fontSize: hp('2%'), padding: 0 }}
-                        placeholder="Enter your reason…"
-                        multiline={true}
-                    />
-                </View>
 
 
-                <View style={{ marginTop: hp('1%') }}>
-                    <Button
-                        title="Report"
-                        buttonStyle={{
-                            padding: hp('1.5%'),
-                            ...style.btnRounded,
-                            ...style.btnPrimary
-                        }}
-                        onPress={() => this.setState({ visibleModalReport: false })}
-                    />
-                </View>
-                    </KeyboardAvoidingView>
+                    <View style={{ marginTop: hp('1%') }}>
+                        <Button
+                            title="Report"
+                            buttonStyle={{
+                                padding: hp('1.5%'),
+                                ...style.btnRounded,
+                                ...style.btnPrimary
+                            }}
+                            onPress={() => this.setState({ visibleModalReport: false })}
+                        />
+                    </View>
+                </KeyboardAvoidingView>
             </Overlay>
         )
     }
@@ -182,7 +243,7 @@ export default class Post extends Component {
                         })
                             this.setState({ visibleBottomSheet: false }),
                             this.RBSheet.close()
-                        }}
+                    }}
                 >
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
@@ -249,7 +310,7 @@ export default class Post extends Component {
             "post_id": post_id
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/like', data,{
+        axios.post('https://etda.amn-corporation.com/api/backend/post/like', data, {
             headers
         })
             .then((response) => {
@@ -257,10 +318,10 @@ export default class Post extends Component {
                     var like_result = this.state.like + 1
 
                     this.setState({
-                        like : like_result
+                        like: like_result
                     })
-                    
-                    console.log('data success post like : ' , response.data)
+
+                    console.log('data success post like : ', response.data)
                 } else {
 
                 }
@@ -286,12 +347,12 @@ export default class Post extends Component {
             "post_id": post_id
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/follow', data,{
+        axios.post('https://etda.amn-corporation.com/api/backend/post/follow', data, {
             headers
         })
             .then((response) => {
                 if (response.data.status == "success") {
-                    
+
                 } else {
 
                 }
@@ -305,8 +366,22 @@ export default class Post extends Component {
     };
 
     render() {
-        console.log('1234 : ')
+        console.log('Post component Created ! ')
         const { data, socail } = this.state
+
+        let { post_images } = this.props.data
+        let image_viewer = []
+        for (let index = 0; index < post_images.length; index++) {
+            const element = post_images[index];
+            let obj = {
+                source: {
+                    uri: element,
+                },
+                width: 806,
+                height: 720,
+            }
+            image_viewer.push(obj)
+        }
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -325,15 +400,15 @@ export default class Post extends Component {
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
-                    <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row',marginTop: hp('1%') ,flexWrap:'wrap' }}>
+                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.post_date}</Text>
+                    <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
                             this.props.data.tags.map((item, index) => {
                                 return (
                                     <Button
                                         title={item}
                                         titleStyle={{ fontSize: hp('1.5%') }}
-                                        buttonStyle={{ ...style.btnTagPrimary , marginTop:hp('1%')}}
+                                        buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
                                         key={index}
                                     />
                                 )
@@ -342,25 +417,19 @@ export default class Post extends Component {
 
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                        <Image
-                            source={{ uri: this.props.data.post_images[0] }}
-                            style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
+                        <FbGrid
+                            images={post_images}
+                            onPress={(url, index) => this.imageViewer(url, index)}
+                        />
+                        <ImageView
+                            images={image_viewer}
+                            imageIndex={this.state.isIndeximageForshow}
+                            isVisible={this.state.isImageViewVisible}
+                            onClose={() => this.setState({ isImageViewVisible: false })}
                         />
                     </View>
                     {/* <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}> */}
-                    <TouchableOpacity 
-                        onPress={() => {
-                            Actions.CreatePost({
-                                'type_value' : 'detail',
-                                'title': this.props.data.title,
-                                'description': this.props.data.detail,
-                                'post_images': this.props.data.post_images
-                            })
-                          //  Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'detail' , 'data' : item })
-                        }}
-                    >
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
-                        </TouchableOpacity>
+                    <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
                     {/* </TouchableOpacity> */}
 
                     <View style={{
@@ -370,36 +439,37 @@ export default class Post extends Component {
                         alignItems: 'center'
                     }}>
                         {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
-                            <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5',marginTop : hp('0.4%') }}>{this.props.data.like}</Text>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.like}</Text>
                         {/* </TouchableOpacity> */}
                         {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
-                            <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                            <Text style={{ color: '#B5B5B5',marginTop : hp('0.4%') }}>{this.props.data.comment}</Text>
+                        <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                        <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.comment}</Text>
                         {/* </TouchableOpacity> */}
                     </View>
                 </View>
 
                 <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity
-                           onPress={() => this.callPostLike(this.props.data.post_id)}
+                        onPress={() => this.callPostLike(this.props.data.post_id)}
                     >
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
                     </TouchableOpacity>
                     <TouchableOpacity
-                          onPress={() => 
-                            {
-                            Actions.PostDetail({ 'user_image': '', 
-                                                 'user_name': '',
-                                                 'user_date': this.props.data.date,
-                                                 'user_title': this.props.data.title,
-                                                 'user_tags': this.props.data.tags,
-                                                 'user_images': this.props.data.post_images[0],
-                                                 'user_description': this.props.data.description,
-                                                 'user_like': this.props.data.like,
-                                                 'user_comment': this.props.data.comment,
-                                                 'user_post_id': this.props.data.post_id})
-                                                 AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
+                        onPress={() => {
+                            Actions.PostDetail({
+                                'user_image': '',
+                                'user_name': '',
+                                'user_date': this.props.data.date,
+                                'user_title': this.props.data.title,
+                                'user_tags': this.props.data.tags,
+                                'user_images': this.props.data.post_images[0],
+                                'user_description': this.props.data.description,
+                                'user_like': this.props.data.like,
+                                'user_comment': this.props.data.comment,
+                                'user_post_id': this.props.data.post_id
+                            })
+                            AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
                         }}
                     >
                         <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />

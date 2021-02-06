@@ -21,6 +21,8 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import axios from 'axios';
+import FbGrid from "react-native-fb-image-grid";
+import ImageView from 'react-native-image-view';
 
 
 export default class MessagsPost extends Component {
@@ -43,7 +45,8 @@ export default class MessagsPost extends Component {
                 view: 22
             },
             default_avatar: require('../assets/images/default_avatar.jpg'),
-
+            isImageViewVisible: false,
+            isIndeximageForshow: 0,
             like: 0
         }
     }
@@ -165,6 +168,10 @@ export default class MessagsPost extends Component {
 
     };
 
+    async imageViewer(url, index) {
+        await this.setState({ isIndeximageForshow: index })
+        await this.setState({ isImageViewVisible: true })
+    }
 
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
@@ -229,6 +236,19 @@ export default class MessagsPost extends Component {
     render() {
         console.log('data 1234 ', this.props.data)
         const { data, socail, default_avatar } = this.state
+        let { post_images } = this.props.data
+        let image_viewer = []
+        for (let index = 0; index < post_images.length; index++) {
+            const element = post_images[index];
+            let obj = {
+                source: {
+                    uri: element,
+                },
+                width: 806,
+                height: 720,
+            }
+            image_viewer.push(obj)
+        }
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -263,14 +283,14 @@ export default class MessagsPost extends Component {
                     </View>
                     <View style={{ marginTop: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{this.props.data.title}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') , flexWrap:'wrap' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%'), flexWrap: 'wrap' }}>
                             {
                                 this.props.data.tags.map((item, index) => {
                                     return (
                                         <Button
                                             title={item}
                                             titleStyle={{ fontSize: hp('1.5%') }}
-                                            buttonStyle={{ ...style.btnTagPrimary, marginTop:hp('1%') }}
+                                            buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
                                             key={index}
                                         />
                                     )
@@ -279,10 +299,21 @@ export default class MessagsPost extends Component {
                         </View>
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                        <Image
+                        {/* <Image
                             source={{ uri: this.props.data.post_images[0] }}
                             style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
+                        /> */}
+                        <FbGrid
+                            images={post_images}
+                            onPress={(url, index) => this.imageViewer(url, index)}
                         />
+                        <ImageView
+                            images={image_viewer}
+                            imageIndex={this.state.isIndeximageForshow}
+                            isVisible={this.state.isImageViewVisible}
+                            onClose={() => this.setState({ isImageViewVisible: false })}
+                        />
+
                     </View>
                     <TouchableOpacity 
                         onPress={() => {
