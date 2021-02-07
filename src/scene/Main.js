@@ -24,7 +24,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
-import { apiServer } from '../../constant/util';
+import { apiServer } from '../constant/util';
 export default class Main extends Component {
     state = {
         visibleSearch: false,

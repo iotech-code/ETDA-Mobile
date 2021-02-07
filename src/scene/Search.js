@@ -21,7 +21,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
-import { apiServer } from '../../constant/util';
+import { apiServer } from '../constant/util';
 export default class Poll extends Component {
     constructor(props) {
         super(props)

@@ -25,8 +25,6 @@ import axios from 'axios';
 import FbGrid from "react-native-fb-image-grid";
 import ImageView from 'react-native-image-view';
 
-
-
 export default class Post extends Component {
     constructor(props) {
         super(props)

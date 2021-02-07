@@ -70,9 +70,6 @@ export default class HeaderNavbar extends Component {
                 }
                    
                 </TouchableOpacity>
-                    
-                    
-                   
                     <Text style={styleScoped.textName}>{this.state.name}</Text>
                 </View>
 

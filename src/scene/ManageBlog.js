@@ -32,9 +32,7 @@ export default class ManageBlog extends Component {
         user_type: '' , token : '' , user_role : '',
         list_data : [],
     }
-
-
-
+    
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token');

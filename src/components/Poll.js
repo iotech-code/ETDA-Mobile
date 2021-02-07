@@ -21,7 +21,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import axios from 'axios';
-import { apiServer } from '../../constant/util';
+import { apiServer } from '../constant/util';
 export default class MessagsPost extends Component {
 
     constructor(props) {

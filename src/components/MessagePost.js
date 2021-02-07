@@ -23,7 +23,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import axios from 'axios';
 import FbGrid from "react-native-fb-image-grid";
 import ImageView from 'react-native-image-view';
-import { apiServer } from '../../constant/util';
+import { apiServer } from '../constant/util';
 
 export default class MessagsPost extends Component {
     constructor(props) {
