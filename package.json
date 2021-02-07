@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-native-community/checkbox": "^0.5.7",
     "@react-native-community/datetimepicker": "^3.0.9",
+    "@react-native-community/google-signin": "^5.0.0",
+    "@xmartlabs/react-native-line": "^2.0.1",
     "axios": "^0.21.1",
     "moment": "^2.29.1",
     "react": "16.13.1",
@@ -19,7 +21,9 @@
     "react-native-calendars": "^1.1129.0",
     "react-native-elements": "^3.1.0",
     "react-native-fb-image-grid": "0.0.5",
+    "react-native-fbsdk": "^3.0.0",
     "react-native-gesture-handler": "^1.9.0",
+    "react-native-google-login": "^1.2.5",
     "react-native-image-crop-picker": "^0.35.3",
     "react-native-image-picker": "^2.3.4",
     "react-native-image-slider-box": "^1.0.12",
