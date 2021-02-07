@@ -22,6 +22,8 @@ target 'LOOKs' do
   
   pod 'Firebase/Analytics'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing

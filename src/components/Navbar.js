@@ -48,15 +48,11 @@ export default class HeaderNavbar extends Component {
                 <View style={styleScoped.leftSide}>
                
                     <TouchableOpacity style={styleScoped.avatar} onPress={() => {
-                        if (this.props.value == 'admin'){
-
-                        }else{
-                            Actions.replace('MyProfile')}
+                            Actions.replace('MyProfile')
                         }
- 
                     }
                     
-                       >
+                    >
                     {this.state.photo == '' || this.state.photo == null ? 
                      <Image
                      source={imageAvatar}
