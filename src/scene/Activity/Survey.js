@@ -20,6 +20,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import PostSurvey from '../../components/Survey'
+import { apiServer } from '../../constant/util';
 export default class Survey extends Component {
     state = {
         visibleSearch: false

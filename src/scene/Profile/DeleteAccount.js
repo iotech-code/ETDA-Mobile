@@ -19,7 +19,7 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-
+import { apiServer } from '../../constant/util';
 
 export default class DeleteAccount extends Component {
     state = {

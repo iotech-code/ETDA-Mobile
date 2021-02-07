@@ -21,7 +21,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios';
-
+import { colors, apiServer } from '../../constant/util'
 
 export default class ChangePassword extends Component {
     constructor() {
@@ -58,7 +58,7 @@ export default class ChangePassword extends Component {
             "new_ps": this.state.newPass
         }
         console.log('come in ', data)
-        axios.post('https://etda.amn-corporation.com/api/backend/user/change-password', data, {
+        axios.post(apiServer.url + '/api/backend/user/change-password', data, {
             headers
         })
             .then((response) => {

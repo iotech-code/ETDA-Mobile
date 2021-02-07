@@ -23,7 +23,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import MessagePost from '../../components/MessagePost'
-import { colors } from '../../constant/util'
+import { colors, apiServer } from '../../constant/util'
 
 
 export default class MessageBoard extends Component {
@@ -59,7 +59,7 @@ export default class MessageBoard extends Component {
         this.setState({
             list_data : []
         })
-        axios.get('https://etda.amn-corporation.com/api/backend/post/my',{
+        axios.get(apiServer.url + '/api/backend/post/my',{
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,
@@ -102,7 +102,7 @@ export default class MessageBoard extends Component {
         this.setState({
             list_data : []
         })
-        axios.get('https://etda.amn-corporation.com/api/backend/post/community-feed',{
+        axios.get(apiServer.url + '/api/backend/post/community-feed',{
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,
@@ -131,17 +131,6 @@ export default class MessageBoard extends Component {
                     this.setState({
                         list_data : list
                     })
-                    // this.callUserData(
-                    //              response.data.post_data[i].post_id ,
-                    //              response.data.post_data[i].author_id , 
-                    //              response.data.post_data[i].title,
-                    //              response.data.post_data[i].post_date,
-                    //              response.data.post_data[i].post_description,
-                    //              response.data.post_data[i].tags,
-                    //              response.data.post_data[i].post_images,
-                    //              response.data.post_data[i].comment_number,
-                    //              response.data.post_data[i].like
-                    //              )
                 }
             })
             .catch((error) => {

@@ -19,7 +19,7 @@ import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-
+import { colors, apiServer } from '../../../constant/util'
 
 export default class RegisterSuccess extends Component {
 
@@ -32,7 +32,7 @@ export default class RegisterSuccess extends Component {
             "user_password": navigation.getParam('password', ''),
             "authen_method": "local"
         }
-        axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
+        axios.post(apiServer.url+'/api/backend/user/login', data)
             .then((response) => {
                 if (response.data.status == "success") {
                     AsyncStorage.setItem('token', response.data.token);

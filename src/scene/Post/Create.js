@@ -25,7 +25,7 @@ import MenuFooter from '../../components/MenuFooter'
 import { fonts } from '../../constant/util';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
-
+import { apiServer } from '../../constant/util';
 
 export default class CreatePost extends Component {
     constructor() {
@@ -66,7 +66,7 @@ export default class CreatePost extends Component {
 
         console.log('post : ' , this.state.images )
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/create', data, {
+        axios.post(apiServer.url + '/api/backend/post/create', data, {
             headers
         })
             .then((response) => {
@@ -106,7 +106,7 @@ export default class CreatePost extends Component {
         console.log('post_id update : ' , post_id)
         console.log('post_id update : ' , this.state.token)
 
-        axios.put('https://etda.amn-corporation.com/api/backend/post/update/' + post_id, data, {
+        axios.put(apiServer.url + '/api/backend/post/update/' + post_id, data, {
             headers
         })
             .then((response) => {

@@ -18,7 +18,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '../constant/util'
+import { colors, apiServer } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
     state = {
@@ -70,9 +70,6 @@ export default class HeaderNavbar extends Component {
                 }
                    
                 </TouchableOpacity>
-                    
-                    
-                   
                     <Text style={styleScoped.textName}>{this.state.name}</Text>
                 </View>
 
@@ -81,7 +78,7 @@ export default class HeaderNavbar extends Component {
                     <TouchableOpacity onPress={() => Actions.push('Search')}>
                         <Icon name="search" size={hp('3%')} color="white" style={{ marginRight: hp('1.5%') }} />
                     </TouchableOpacity>
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={()=> Actions.push('Notification')}>
                         <Icon name="notifications" size={hp('3%')} color="white" />
                     </TouchableOpacity>
 

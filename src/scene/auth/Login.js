@@ -55,19 +55,17 @@ export default class Login extends Component {
             "authen_method": type,
             "social_id" : social_id
         }
-        console.log('come in ', data)
-        axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
+        // console.log(apiServer.url + '/api/backend/user/login',data)
+        axios.post(apiServer.url + '/api/backend/user/login', data)
             .then((response) => {
-                console.log('come in 1 ', response.data.status)
-                console.log('come in 1 ', response.data.token)
+                console.log(response.data)
                 if (response.data.status == "success") {
                     if (response.data.token != "") {
                         AsyncStorage.setItem('token', response.data.token);
                         this.callInfomation(response.data.token)
                     }
-
                 } else {
-
+                    alert("Wrong email or password.")
                 }
             })
             .catch((error) => {
@@ -119,7 +117,7 @@ export default class Login extends Component {
         const data = {
             "Token": token
         }
-        axios.post('https://etda.amn-corporation.com/api/backend/user/information', data)
+        axios.post(apiServer.url + '/api/backend/user/information', data)
             .then((response) => {
 
 

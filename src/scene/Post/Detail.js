@@ -20,9 +20,10 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
-import { fonts } from '../../constant/util'
+import { fonts, apiServer } from '../../constant/util'
 import axios from 'axios';
 import { KeyboardAvoidingView } from 'react-native';
+
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -35,9 +36,9 @@ export default class EventDetail extends Component {
         socail: {
 
         },
-        comment : '',
-        post_id : 0,
-        reply_to : 0
+        comment: '',
+        post_id: 0,
+        reply_to: 0
     }
 
 
@@ -69,7 +70,7 @@ export default class EventDetail extends Component {
             const post_id = await AsyncStorage.getItem('post_id')
             this.setState({
                 token: token,
-                post_id : post_id
+                post_id: post_id
             })
 
             this.callGetComment(post_id)
@@ -89,7 +90,7 @@ export default class EventDetail extends Component {
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/get-comment', data, {
+        axios.post(apiServer.url + '/api/backend/post/get-comment', data, {
             headers
         })
             .then((response) => {
@@ -114,20 +115,20 @@ export default class EventDetail extends Component {
     callPostComment = async () => {
         const data = {
             "post_id": this.state.post_id,
-            "reply_to" : this.state.reply_to,
-            "message" : this.state.comment
+            "reply_to": this.state.reply_to,
+            "message": this.state.comment
         }
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/comment', data, {
+        axios.post(apiServer.url + '/api/backend/post/comment', data, {
             headers
         })
             .then((response) => {
                 if (response.data.status == "success") {
-                   this.callGetComment(this.state.post_id)
+                    this.callGetComment(this.state.post_id)
                 } else {
 
                 }
@@ -141,12 +142,12 @@ export default class EventDetail extends Component {
     };
 
 
-    onPressButtonChildren(data){
+    onPressButtonChildren(data) {
         this.setState({
-            reply_to : data
+            reply_to: data
         })
         console.log(data)
-      }
+    }
 
 
     render() {
@@ -281,10 +282,13 @@ export default class EventDetail extends Component {
                                 onChangeText={(value) => {
                                     onChangeTextComment(value)
                                 }}>
-
-
                             </TextInput>
                         </View>
+                        <Button
+                            title="send"
+                            buttonStyle={{...style.btnPrimary }}
+                        />
+
                     </View>
                 </KeyboardAvoidingView>
 
@@ -307,7 +311,8 @@ const styleScoped = StyleSheet.create({
         borderColor: '#C8C8CC',
         borderWidth: 1,
         borderRadius: 5,
-        width: '85%'
+        width: '70%',
+        marginRight:hp('1%')
     },
     imageLogo: {
         height: hp('15%'),

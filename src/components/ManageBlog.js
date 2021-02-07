@@ -21,8 +21,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import { fonts } from '../constant/util';
 import FbGrid from "react-native-fb-image-grid";
 import ImageView from 'react-native-image-view';
-
-
+import { apiServer } from '../constant/util';
 
 export default class ManageBlog extends Component {
     state = {

@@ -19,7 +19,7 @@ import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-
+import { colors, apiServer } from '../../../constant/util'
 
 export default class ForgetPassword extends Component {
     constructor(props) {
@@ -35,7 +35,7 @@ export default class ForgetPassword extends Component {
             "user_email": this.state.email
         }
         console.log('come in ', data)
-        axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
+        axios.post(apiServer.url + '/api/backend/user/login', data)
             .then((response) => {
                 console.log('come in ', response)
                 if (response.data.status == "success") {

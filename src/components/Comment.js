@@ -16,7 +16,7 @@ import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
-import { fonts } from '../constant/util'
+import { fonts, apiServer } from '../constant/util'
 
 
 

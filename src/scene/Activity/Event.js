@@ -19,9 +19,10 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MenuFooter from '../../components/MenuFooter'
+import MenuFooterUser from '../../components/MenuFooter'
 import EventPost from '../../components/EventPost'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
+import { apiServer } from '../../constant/util';
 
 LocaleConfig.locales['en'] = {
     formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
@@ -132,7 +133,7 @@ export default class Activity extends Component {
 
                     </View>
                 </ScrollView>
-                <MenuFooter></MenuFooter>
+                <MenuFooterUser></MenuFooterUser>
             </View>
         );
     }
