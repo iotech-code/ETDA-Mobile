@@ -24,7 +24,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
-import { apiServer } from '../constant/util';
+import { apiServer, refreshToken } from '../constant/util';
 export default class Main extends Component {
     state = {
         visibleSearch: false,
@@ -36,6 +36,7 @@ export default class Main extends Component {
 
     async componentDidMount() {
         try {
+            await refreshToken()
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
             const user_role = await AsyncStorage.getItem('user_role');
@@ -53,47 +54,40 @@ export default class Main extends Component {
 
 
     callHomeFeed = async (token) => {
-        console.log('token 1 : ', token)
         axios.get(apiServer.url + '/api/backend/post/home-feed',{
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,
             }
         })
-            .then((response) => {
-                var i  
-                var objectHomeFeed = {}
-                var list = []
-                for (i = 0 ; i < response.data.post_data.length ; i++){
-                    objectHomeFeed = {
-                        post_id : response.data.post_data[i].post_id,
-                        title : response.data.post_data[i].title,
-                        date : response.data.post_data[i].post_date,
-                        description : response.data.post_data[i].post_description,
-                        tags : response.data.post_data[i].tags,
-                        post_images :  response.data.post_data[i].post_images,
-                        comment : response.data.post_data[i].comment_number,
-                        like : response.data.post_data[i].like,
-                    }
-                    list.push(objectHomeFeed)
+        .then((response) => {
+            var i  
+            var objectHomeFeed = {}
+            var list = []
+            for (i = 0 ; i < response.data.post_data.length ; i++){
+                objectHomeFeed = {
+                    post_id : response.data.post_data[i].post_id,
+                    title : response.data.post_data[i].title,
+                    date : response.data.post_data[i].post_date,
+                    description : response.data.post_data[i].post_description,
+                    tags : response.data.post_data[i].tags,
+                    post_images :  response.data.post_data[i].post_images,
+                    comment : response.data.post_data[i].comment_number,
+                    like : response.data.post_data[i].like,
                 }
-                console.log('list detail : ' , list)
-                this.setState({
-                    list_data : list
-                })
+                list.push(objectHomeFeed)
+            }
+            this.setState({
+                list_data : list
             })
-            .catch((error) => {
-                console.log('err 2 : ' ,error)
-            })
-            .finally(function () {
-            });
+        })
+        .catch((error) => {
+            console.log('err 2 : ' ,error)
+        })
+        .finally(function () {
+        });
 
     };
-
-
-    
-
-
 
     render() {
 

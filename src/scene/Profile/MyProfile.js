@@ -43,6 +43,7 @@ export default class MyProfile extends Component {
         const data = {
             "Token": token
         }
+
         axios.post(apiServer.url + '/api/backend/user/information', data)
             .then((response) => {
                 var phone = ''
@@ -53,8 +54,6 @@ export default class MyProfile extends Component {
                 var name = ''
                 var photo = ''
                 var userId = ''
-
-                console.log('type : ' , response.data)
 
                 if (response.data.status == "success") {
                     if (response.data.data.mobile_number == null) {
@@ -133,9 +132,7 @@ export default class MyProfile extends Component {
             })
             .finally(function () {
             });
-
     };
-
 
     render() {
         return (
@@ -173,9 +170,6 @@ export default class MyProfile extends Component {
                                 }} />
 
                             }
-                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}>
-                                    <IconFonAwesome name="pencil" size={hp('2%')} color="white" />
-                                </TouchableOpacity>
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
@@ -250,8 +244,6 @@ export default class MyProfile extends Component {
                                 onPress={() => Actions.replace('Login')}
                             />
                         </View>
-
-
                     </View>
                 </ScrollView>
             </View >
