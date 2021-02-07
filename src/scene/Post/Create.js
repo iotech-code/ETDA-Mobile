@@ -30,7 +30,7 @@ import { apiServer } from '../../constant/util';
 export default class CreatePost extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, token: '', title: '', type: 'blog', image: [], description: '', tag: ["tag1","tag2"], addition: '', postId: '' , images : [] }
+        this.state = { visibleSearch: false, token: '', title: '', type: 'blog', image: [], description: '', tag: [], addition: '', postId: '' , images : [] , tags : [] }
     }
 
     async componentDidMount() {
@@ -43,10 +43,43 @@ export default class CreatePost extends Component {
                 description : this.props.description,
                 image : this.props.post_images
             })
+            this.callTagsList(token)
         } catch (err) {
             // handle errors
         }
     }
+
+
+    callTagsList = async (token) => {
+        console.log('token : ' , token)
+        axios.get(apiServer.url + '/api/backend/post/tag-list',{
+            headers: {
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+                if (response.data.status == "success") {
+                    var list = []
+                    var i
+                    for (i = 0 ; i < response.data.post_data.length ; i++){
+                        var name = response.data.post_data[i].tag
+                        list.push(name)
+                    }
+                    this.setState({
+                        tag : list
+                    })
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('error : ' , error)
+            })
+            .finally(function () {
+            });
+
+    };
 
     callCreatePost = async () => {
         const headers = {

@@ -74,9 +74,43 @@ export default class Notification extends Component {
                     title: 'commented on your blog.',
                     time: '2 minutes ago'
                 }
-            ]
+            ],
+            list_data :[]
         }
     }
+
+
+    async componentDidMount() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            this.setState({
+                token : token,
+            })
+            this.callNotiList(token)
+        } catch (err) {
+
+        }
+    }
+
+
+    callNotiList = async (token) => {
+        console.log('token : ' , token)
+        axios.get(apiServer.url + '/api/backend/noti/noti-list',{
+            headers: {
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+               
+            })
+            .catch((error) => {
+                console.log('error : ' , error)
+            })
+            .finally(function () {
+            });
+
+    };
 
     render() {
         const { dataEvent, dataNoti } = this.state
