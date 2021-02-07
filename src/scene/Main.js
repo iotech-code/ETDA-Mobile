@@ -140,7 +140,7 @@ export default class Main extends Component {
                             <ScrollView style={{ marginBottom: 24 }}>
                                 {this.state.list_data.map((item, index) => {
                                 return (
-                                    <Post data={item}></Post>
+                                    <Post data={item} key={`post_${index}`}></Post>
                                     )}
                                 )}
                             </ScrollView>

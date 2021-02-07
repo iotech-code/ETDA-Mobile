@@ -20,8 +20,53 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb684361125039191</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.146795595892-iknorag6t3ki892dn1dum7uqlo0c5nlp</string>
+			</array>
+		</dict>
+	</array>
+  <key>CFBundleURLTypes</key>
+  <array>
+      <dict>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+              <!-- Specify URL scheme to use when returning from LINE to your app. -->
+              <string>line3rdp.$(org.reactjs.native.example.ETDA-Mobile)</string>
+          </array>
+      </dict>
+  </array>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+      <!-- Specify URL scheme to use when launching LINE from your app. -->
+      <string>lineauth2</string>
+  </array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>684361125039191</string>
+	<key>FacebookDisplayName</key>
+	<string>LOOKs</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -40,7 +85,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Your message to user when the camera is accessed for the first time</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Your message to user when the microsphone is accessed for the first time</string>
 	<key>NSPhotoLibraryUsageDescription</key>
