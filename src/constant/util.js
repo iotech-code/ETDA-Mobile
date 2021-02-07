@@ -9,4 +9,6 @@ export const fonts = {
         secondary:'#B5B5B5'
     }
 }
-
+export const apiServer  = {
+    url: 'https://etda.amn-corporation.com'
+}

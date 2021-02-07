@@ -64,22 +64,6 @@ const RouterPage = () => {
                 <Scene key="Notification" component={Notification} title="Notification" hideNavBar />
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </Stack>
         </Router>
 
