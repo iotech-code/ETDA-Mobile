@@ -20,6 +20,8 @@ target 'LOOKs' do
 
   pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing
