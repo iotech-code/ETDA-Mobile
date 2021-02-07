@@ -28,6 +28,8 @@ import DeleteAccount from './Profile/DeleteAccount'
 import ManageBlog from './ManageBlog'
 import EventCreate from './Activity/EventCreate'
 import EventEdit from './Activity/EventEdit'
+import Notification from './Notification'
+
 const RouterPage = () => {
     return (
 
@@ -59,6 +61,8 @@ const RouterPage = () => {
                 <Scene key="ManageBlog" component={ManageBlog} title="ManageBlog" hideNavBar />
                 <Scene key="EventCreate" component={EventCreate} title="EventCreate" hideNavBar />
                 <Scene key="EventEdit" component={EventEdit} title="EventEdit" hideNavBar />
+                <Scene key="Notification" component={Notification} title="Notification" hideNavBar />
+
 
 
 
