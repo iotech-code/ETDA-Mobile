@@ -178,19 +178,63 @@ export default class ChooseUserType extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
-                    <ScrollView>
-                        <View style={{
-                            marginTop: hp('3%'),
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            ...style.container
-                        }}>
-                            <View style={styleScoped.imageLogo}>
-                                <Image
-                                    source={require('../../../assets/images/logo.png')}
-                                    style={style.imageContain}
-                                />
-                            </View>
+                <ScrollView>
+                    <View style={{
+                        marginTop: hp('3%'),
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        ...style.container
+                    }}>
+                        <View style={styleScoped.imageLogo}>
+                            <Image
+                                source={require('../../../assets/images/logo.png')}
+                                style={style.imageContain}
+                            />
+                        </View>
+
+                    </View>
+                    <View style={{ marginTop: hp('3%') }}>
+                        <Text style={styleScoped.textWelcome}>Please, select type of your account</Text>
+                    </View>
+                    <View style={style.container}>
+
+                        <View style={{ marginTop: hp('5%'), flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TouchableOpacity style={{ width: '49%' }}
+                                onPress={() => {
+                                    this.setState({
+                                        rType: 'read',
+                                        visible: false
+                                    })
+                                }}
+
+                            >
+                                <View style={{ ...styleScoped.option, backgroundColor: colors.primary }}>
+                                    <Icon name="description" size={hp('12%')} style={{ alignSelf: "center" }} color="white" />
+                                </View>
+                                <Text style={{
+                                    marginTop: hp('3%'),
+                                    textAlign: 'center',
+                                    fontSize: hp('2%')
+                                }}>
+                                    Read only
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={{ width: '49%' }}
+                                onPress={() => this.setState({ visible: true, rType: 'read, post_read' })}
+                            >
+                                <View style={styleScoped.option}>
+                                    <Icon name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />
+                                </View>
+                                <Text style={{
+                                    marginTop: hp('3%'),
+                                    textAlign: 'center',
+                                    fontSize: hp('2%')
+                                }}>
+                                    Posts and Read
+                                </Text>
+                            </TouchableOpacity>
 
                         </View>
                         <View style={{ marginTop: hp('3%') }}>

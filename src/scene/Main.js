@@ -30,16 +30,19 @@ export default class Main extends Component {
         visibleSearch: false,
         user_type: '',
         token :'',
-        list_data : []
+        list_data : [],
+        user_role : ''
     }
 
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
+            const user_role = await AsyncStorage.getItem('user_role');
             this.setState({
                 user_type: user_type,
-                token : token
+                token : token,
+                user_role : user_role
             })
             this.callHomeFeed(token)
         } catch (err) {
@@ -58,7 +61,6 @@ export default class Main extends Component {
             }
         })
             .then((response) => {
-                console.log('response 1 : ' , response.data)
                 var i  
                 var objectHomeFeed = {}
                 var list = []
@@ -75,6 +77,7 @@ export default class Main extends Component {
                     }
                     list.push(objectHomeFeed)
                 }
+                console.log('list detail : ' , list)
                 this.setState({
                     list_data : list
                 })
@@ -100,7 +103,11 @@ export default class Main extends Component {
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
                     <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                        <HeaderNavbar></HeaderNavbar>
+                    {this.state.user_role == "Member" ? 
+                    <HeaderNavbar  value={'member'}></HeaderNavbar>
+                    :
+                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
+                    }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
                             <View style={{
                                 flexDirection: 'row',
@@ -124,7 +131,9 @@ export default class Main extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost()}
+                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                        'description': '',
+                                        'post_images': []})}
                                     />
 
 
@@ -149,7 +158,12 @@ export default class Main extends Component {
                 
                 </ScrollView>
                 <View style={{ backgroundColor: null }}>
-                    <MenuFooterUser value={'home'}></MenuFooterUser>
+                    {this.state.user_role == "Member" ? 
+                         <MenuFooterUser value={'home'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'home'}></MenuFooter>
+                    }
+                   
                 </View>
             </View>
         );

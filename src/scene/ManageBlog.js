@@ -11,7 +11,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    Platform
+    Platform,
+    AsyncStorage
 } from 'react-native';
 import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
@@ -27,7 +28,9 @@ import { fonts } from '../constant/util';
 
 export default class ManageBlog extends Component {
     state = {
-        visibleSearch: false
+        visibleSearch: false,
+        user_type: '' , token : '' , user_role : '',
+        list_data : [],
     }
 
 
@@ -36,9 +39,11 @@ export default class ManageBlog extends Component {
         try {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
+            const user_role = await AsyncStorage.getItem('user_role');
             this.setState({
                 user_type: user_type,
-                token : token
+                token : token,
+                user_role : user_role
             })
             this.callApproveList(token)
         } catch (err) {
@@ -47,18 +52,70 @@ export default class ManageBlog extends Component {
     }
 
 
+    callPostApprove = async (token) => {
+        console.log('token : ' , token)
+
+        const data = {
+            "post_id": [],
+        }
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+        }
+
+
+        axios.post('https://etda.amn-corporation.com/api/backend/post/approve', data, {
+            headers
+        })
+            .then((response) => {
+                console.log('response : ' , response)
+                if (response.data.status == "success"){
+                    this.callApproveList(token)
+                }else{
+
+                }
+            })
+            .catch((error) => {
+                console.log('error : ' , error)
+            })
+            .finally(function () {
+            });
+
+    };
+
 
     callApproveList = async (token) => {
-        axios.post('https://etda.amn-corporation.com/api/backend/post/approve-list',{
+        console.log('token : ' , token)
+        axios.get('https://etda.amn-corporation.com/api/backend/post/approve-list',{
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,
             }
         })
             .then((response) => {
-                console.log('come in approve list : ', response.data)
+                console.log('response : ' , response)
+                var i  
+                var objectHomeFeed = {}
+                var list = []
+                for (i = 0 ; i < response.data.post_data.length ; i++){
+                    objectHomeFeed = {
+                        post_id : response.data.post_data[i].post_id,
+                        title : response.data.post_data[i].title,
+                        date : response.data.post_data[i].post_date,
+                        description : response.data.post_data[i].post_description,
+                        tags : response.data.post_data[i].tags,
+                        post_images :  response.data.post_data[i].post_images
+                    }
+                    list.push(objectHomeFeed)
+                }
+                console.log('list detail : ' , list.length)
+                this.setState({
+                    list_data : list
+                })
             })
             .catch((error) => {
+                console.log('error : ' , error)
             })
             .finally(function () {
             });
@@ -71,8 +128,12 @@ export default class ManageBlog extends Component {
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
                     <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                        <HeaderNavbar></HeaderNavbar>
-                        <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
+                    {this.state.user_role == "Member" ? 
+                    <HeaderNavbar  value={'member'}></HeaderNavbar>
+                    :
+                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
+                    }
+                        <View style={{ backgroundColor: '#F9FCFF', }}>
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
@@ -90,7 +151,7 @@ export default class ManageBlog extends Component {
                                 alignItems: 'center',
                                 marginBottom: hp('2%')
                             }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Waiting for publish(5)</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Waiting for publish({this.state.list_data.length})</Text>
                                 <Button
                                     title="Select all"
                                     titleStyle={{ fontSize: hp('1.5%'), fontWeight: '300', padding: hp('1%') }}
@@ -98,8 +159,14 @@ export default class ManageBlog extends Component {
                                 />
                             </View>
 
-                            <BlogManager></BlogManager>
-                            <BlogManager></BlogManager>
+                            <ScrollView >
+                                {this.state.list_data.map((item, index) => {
+                                return (
+                                    <BlogManager data={item}></BlogManager>
+                                    )}
+                                )}
+                            </ScrollView>
+
                         </View>
                     </View>
                 </ScrollView>
@@ -128,6 +195,12 @@ export default class ManageBlog extends Component {
                         />
                     </View>
                 </View>
+           
+                {this.state.user_role == "Member" ? 
+                         <MenuFooterUser value={'home'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'manage'}></MenuFooter>
+                    }
             </View>
         );
     }

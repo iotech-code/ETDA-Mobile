@@ -9,7 +9,8 @@ import {
     StatusBar,
     Image,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    KeyboardAvoidingView
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -64,6 +65,7 @@ export default class Register extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
+                <KeyboardAvoidingView behavior="position">
                     <ScrollView>
                         <View style={{
                             marginTop: hp('3%'),
@@ -203,6 +205,7 @@ export default class Register extends Component {
 
                         </View>
                     </ScrollView>
+                    </KeyboardAvoidingView>
                 </SafeAreaView>
             </View>
         );

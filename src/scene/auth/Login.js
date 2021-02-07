@@ -10,6 +10,7 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
+    KeyboardAvoidingView,
     AsyncStorage
 } from 'react-native';
 import { apiServer } from '../../constant/util'
@@ -61,8 +62,23 @@ export default class Login extends Component {
 
 
                 if (response.data.status == "success") {
+                    var name = ''
+                    var image = ''
+                    if (response.data.data.fullname == null){
+                        name = ''
+                    }else{
+                        name = response.data.data.fullname 
+                    }
+
+                    if (response.data.data.photo == null){
+                        image = ''
+                    }else{
+                        image = response.data.data.photo
+                    }
                     AsyncStorage.setItem('user_type', response.data.data.user_type)
-                    AsyncStorage.setItem('user_data', response.data.data)
+                    AsyncStorage.setItem('user_role', response.data.data.user_role)
+                    AsyncStorage.setItem('fullname', name)
+                    AsyncStorage.setItem('photo', image)
                     Actions.replace('Main')
 
                 } else {
@@ -93,6 +109,7 @@ export default class Login extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
+                <KeyboardAvoidingView behavior="position">
                     <View style={{
                         marginTop: hp('8%'),
                         flexDirection: 'row',
@@ -187,6 +204,7 @@ export default class Login extends Component {
 
 
                     </View>
+                    </KeyboardAvoidingView>
                 </SafeAreaView>
             </View>
         );

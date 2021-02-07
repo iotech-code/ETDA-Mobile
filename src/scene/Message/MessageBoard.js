@@ -29,7 +29,7 @@ import { colors } from '../../constant/util'
 export default class MessageBoard extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, type: 'create', user_type: '', board: 'community' , token : '' , list_data : []  }
+        this.state = { visibleSearch: false, type: 'create', user_type: '', board: 'community' , token : '' , list_data : []  , user_role : '' }
     }
 
 
@@ -37,11 +37,11 @@ export default class MessageBoard extends Component {
         try {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
-            console.log('user type : ', user_type)
-            console.log('token : ', token)
+            const user_role = await AsyncStorage.getItem('user_role');
             this.setState({
                 user_type: user_type,
-                token : token 
+                token : token,
+                user_role : user_role
             })
             this.callCommunityFeed(token)
         } catch (err) {
@@ -152,49 +152,7 @@ export default class MessageBoard extends Component {
 
     };
 
-    callUserData = async (post_id , author_id ,  title , date , description , tags , images, comment , like  ) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        axios.get('https://etda.amn-corporation.com/api/backend/user/user-data/' + author_id, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    var objectFeed = {}
-                    var list = []
-                    
-                    objectFeed = {
-                        post_id : post_id,
-                        title : title,
-                        date : date,
-                        description : description,
-                        tags : tags,
-                        post_images : images,
-                        comment : comment,
-                        like : like,
-                        user_name : response.data.data.fullname,
-                        user_image : response.data.data.photo
-                    }
-                    list.push(objectFeed)
-                    this.setState({
-                        list_data : list
-                    })
-                    console.log('list data 1 : ' , this.state.list_data)
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
+  
 
     render() {
         const { dataList } = this.state
@@ -202,7 +160,11 @@ export default class MessageBoard extends Component {
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <ScrollView>
                     <View style={{ flex: 1 }}>
-                        <HeaderNavbar></HeaderNavbar>
+                    {this.state.user_role == "Member" ? 
+                    <HeaderNavbar  value={'member'}></HeaderNavbar>
+                    :
+                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
+                    }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
                             <View style={{
                                 flexDirection: 'row',
@@ -224,7 +186,9 @@ export default class MessageBoard extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost({ 'type': this.props.type ,'type_value' : 'create' , 'data' : null })}
+                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                        'description': '',
+                                        'post_images': []})}
                                     />
                                 </View>
                                 :
@@ -255,15 +219,10 @@ export default class MessageBoard extends Component {
                             <ScrollView style={{ marginBottom: 24 }}>
                                 {this.state.list_data.map((item, index) => {
                                 return (
-                                    <TouchableOpacity 
-                                    onPress={() => {
-                                        Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'edit' , 'data' : item })
-                                    }}
-                                >
+                               
                                     <View>
                                         <MessagePost data={item}>   </MessagePost>
                                     </View>
-                                    </TouchableOpacity>
                                     )}
                                 )}
                             </ScrollView>
@@ -274,7 +233,11 @@ export default class MessageBoard extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <MenuFooterUser value={'message'}></MenuFooterUser>
+                {this.state.user_role == "Member" ? 
+                         <MenuFooterUser value={'message'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'message'}></MenuFooter>
+                    }
                 {/* <MenuFooter></MenuFooter> */}
             </View>
         );

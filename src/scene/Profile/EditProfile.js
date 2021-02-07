@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    AsyncStorage
 } from 'react-native';
 
 import { Button, BottomSheet, Overlay } from 'react-native-elements';
@@ -41,6 +42,7 @@ export default class EditProfile extends Component {
     constructor() {
         super();
         this.state = {
+            token:'',
             phone: '',
             professional: '',
             position: '',
@@ -51,24 +53,37 @@ export default class EditProfile extends Component {
             userId: '',
             visibleSearch: false,
             visibleChangeTypeOfUser: false,
-            visibleModalPostandRead: false
+            visibleModalPostandRead: false,
+            rReason: '', 
+            rExp: [], 
+            rExp1: '', 
+            rExp2: '', 
+            rExp3: '',
+            dafault_avatar:require('../../assets/images/default_avatar.jpg')
         }
     }
 
 
-    componentDidMount() {
+    async  componentDidMount() {
         const { navigation } = this.props;
-
-        this.setState({
-            phone: navigation.getParam('phone', ''),
-            professional: navigation.getParam('professional', ''),
-            position: navigation.getParam('position', ''),
-            organization: navigation.getParam('organization', ''),
-            type: navigation.getParam('type', ''),
-            name: navigation.getParam('name', ''),
-            photo: navigation.getParam('photo', ''),
-            userId: navigation.getParam('userId', ''),
-        })
+        try {
+            const token = await AsyncStorage.getItem('token');
+            console.log('token 1 : ' , token)
+            this.setState({
+                token : token,
+                phone: navigation.getParam('phone', ''),
+                professional: navigation.getParam('professional', ''),
+                position: navigation.getParam('position', ''),
+                organization: navigation.getParam('organization', ''),
+                type: navigation.getParam('type', ''),
+                name: navigation.getParam('name', ''),
+                photo: navigation.getParam('photo', ''),
+                userId: navigation.getParam('userId', ''),
+            })
+        } catch (err) {
+            console.log('err 1 : ' ,err)
+        }
+       
     }
 
     chooseImageFileRegister = () => {
@@ -82,11 +97,11 @@ export default class EditProfile extends Component {
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
-                console.log('data image : ' , response.data ) 
+                console.log('data image : ' , response ) 
                 var image = 'data:image/jpeg;base64,' + response.data
-                // this.setState({
-                //     photo : image
-                // })
+                this.setState({
+                    photo : image
+                })
               //  callDeleting(response.uri, token, "test1.jpg")
             }
         });
@@ -104,6 +119,30 @@ export default class EditProfile extends Component {
     }
 
     renderModalPostandRead() {
+        onChangeTextReason = async (value) => {
+            this.setState({
+                rReason: value
+            })
+        }
+
+        onChangeTextExp1 = async (value) => {
+            this.setState({
+                rExp1: value
+            })
+        }
+
+
+        onChangeTextExp2 = async (value) => {
+            this.setState({
+                rExp2: value
+            })
+        }
+
+        onChangeTextExp3 = async (value) => {
+            this.setState({
+                rExp3: value
+            })
+        }
         const { visibleModalPostandRead } = this.state
         return (
             <Overlay
@@ -144,6 +183,9 @@ export default class EditProfile extends Component {
                         style={{ fontSize: hp('2%') }}
                         placeholder="Enter your reason…"
                         multiline={true}
+                        onChangeText={(value) => {
+                            onChangeTextReason(value)
+                        }}
                         numberOfLines={50}
 
                     />
@@ -168,18 +210,27 @@ export default class EditProfile extends Component {
                     <TextInput
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
+                        onChangeText={(value) => {
+                            onChangeTextExp1(value)
+                        }}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
+                        onChangeText={(value) => {
+                            onChangeTextExp2(value)
+                        }}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
+                        onChangeText={(value) => {
+                            onChangeTextExp3(value)
+                        }}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
@@ -300,29 +351,53 @@ export default class EditProfile extends Component {
         )
     }
 
-    callEditProfile = async () => {
+    callEditProfile = async (token) => {
+        this.state.rExp.push(this.state.rExp1)
+        this.state.rExp.push(this.state.rExp2)
+        this.state.rExp.push(this.state.rExp3)
+        var image = []
+        if (this.state.photo == '' || this.state.photo == null){
+            image = this.state.photo
+        }else{
+            image = ''
+        }
+
         const data = {
             "user_id": this.state.userId,
             "user_fullname": this.state.name,
-            "user_photo": this.state.photo,
+            "user_photo": image,
             "mobile_number": this.state.phone,
             "organization": this.state.organization,
             "position": this.state.position,
-            "bio": this.state.professional,
+            "professional": this.state.professional,
+            "user_rq_type": this.state.type,
+            "rq_reason": this.state.rReason,
+            "rq_exp": this.state.rExp
         }
-        console.log('come in ', data)
-        // axios.put('https://etda.amn-corporation.com/api/backend/user/update/' + this.props.userId, data)
-        //     .then((response) => {
-        //         if (response.data.status == "success") {
-        //             Actions.MyProfile()
-        //         } else {
 
-        //         }
-        //     })
-        //     .catch((error) => {
-        //     })
-        //     .finally(function () {
-        //     });
+       
+         
+        console.log('come in ', data)
+        console.log('user id  ', this.props.userId)
+        console.log('token  ', token)
+        axios.put('https://etda.amn-corporation.com/api/backend/user/update/' + this.props.userId, data,{
+            headers: {
+                Accept: 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then((response) => {
+                if (response.data.status == "success") {
+                    Actions.MyProfile()
+                } else {
+
+                }
+            })
+            .catch((error) => {
+                console.log('error 1 : ', error)
+            })
+            .finally(function () {
+            });
 
     };
 
@@ -363,7 +438,7 @@ export default class EditProfile extends Component {
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Profile</Text>
                             <TouchableOpacity
-                                onPress={() => this.callEditProfile()}
+                                onPress={() => this.callEditProfile(this.state.token)}
                             >
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
                             </TouchableOpacity>
@@ -373,12 +448,23 @@ export default class EditProfile extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
-                                <Image source={require('../../assets/images/avatar.png')} style={{
+                                {this.state.photo == '' || this.state.photo == null ?
+                                <Image source={this.state.dafault_avatar} style={{
                                     width: '100%',
                                     height: '100%',
                                     resizeMode: 'cover',
                                     borderRadius: 100
                                 }} />
+                                :
+                                <Image source={{
+                                    uri: this.state.photo,
+                                  }} style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    resizeMode: 'cover',
+                                    borderRadius: 100
+                                }} />
+                            }
                                 <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}  onPress={() => {this.chooseImageFileRegister()}}>
                                     <IconFonAwesome name="pencil" size={hp('2%')} color="white" />
                                 </TouchableOpacity>

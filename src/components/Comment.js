@@ -32,6 +32,10 @@ export default class Comment extends Component {
     }
     render() {
         const { data } = this.state
+
+        const onPress = (reply_to) =>  {
+           this.props.fnPressButton(reply_to)
+        }
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -66,7 +70,7 @@ export default class Comment extends Component {
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300'  }}>{this.props.data.Message}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: hp('1%') }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => onPress( this.props.data.Reply_to.User_id)}>
                             <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Replay</Text>
                         </TouchableOpacity>
                     </View>
