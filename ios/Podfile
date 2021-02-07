@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'ETDA_Mobile' do
+target 'LOOKs' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
@@ -20,7 +20,7 @@ target 'ETDA_Mobile' do
 
   pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
 
-  target 'ETDA_MobileTests' do
+  target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -35,10 +35,10 @@ target 'ETDA_Mobile' do
   end
 end
 
-target 'ETDA_Mobile-tvOS' do
+target 'LOOKs-tvOS' do
   # Pods for ETDA_Mobile-tvOS
 
-  target 'ETDA_Mobile-tvOSTests' do
+  target 'LOOKs-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
