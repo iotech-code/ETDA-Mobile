@@ -20,7 +20,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconMaterail from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { colors, fonts } from '../constant/util';
+import { colors, fonts, apiServer } from '../constant/util';
 
 export default class MenuFooter extends Component {
 

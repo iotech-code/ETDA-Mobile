@@ -20,7 +20,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconMaterail from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { colors, fonts } from '../constant/util';
+import { colors, fonts, apiServer } from '../constant/util';
 
 export default class MenuFooterUser extends Component {
     constructor(props) {
@@ -32,35 +32,6 @@ export default class MenuFooterUser extends Component {
         // };
     }
     render() {
-
-        console.log('123456 : ', this.props.value)
-
-        // const setEvent = (data) => {
-        //     if (data == 'home') {
-        //         this.setState({
-        //             home: true,
-        //             message: false,
-        //             activity: false
-        //         })
-        //     } else if (data == 'message') {
-        //         this.setState({
-        //             home: false,
-        //             message: true,
-        //             activity: false
-        //         })
-        //     } else if (data == 'activity') {
-        //         this.setState({
-        //             home: false,
-        //             message: false,
-        //             activity: true
-        //         })
-        //     }
-        // };
-
-
-        // console.log('1 : ', this.state.home)
-        // console.log('2 : ', this.state.message)
-        // console.log('3 : ', this.state.activity)
         return (
             <View >
                 <View style={styleScoped.container}>

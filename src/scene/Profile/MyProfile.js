@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 import { fonts } from '../../constant/util'
 import axios from 'axios';
-
+import { apiServer } from '../../constant/util';
 export default class MyProfile extends Component {
     constructor() {
         super();
@@ -43,7 +43,7 @@ export default class MyProfile extends Component {
         const data = {
             "Token": token
         }
-        axios.post('https://etda.amn-corporation.com/api/backend/user/information', data)
+        axios.post(apiServer.url + '/api/backend/user/information', data)
             .then((response) => {
                 var phone = ''
                 var professional = ''

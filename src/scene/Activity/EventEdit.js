@@ -18,7 +18,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { fonts } from '../../constant/util';
+import { fonts, apiServer } from '../../constant/util';
 import { Button, BottomSheet } from 'react-native-elements';
 
 export default class EventEdit extends Component {

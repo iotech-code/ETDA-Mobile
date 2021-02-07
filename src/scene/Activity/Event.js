@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooterUser from '../../components/MenuFooter'
 import EventPost from '../../components/EventPost'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
+import { apiServer } from '../../constant/util';
 
 LocaleConfig.locales['en'] = {
     formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",

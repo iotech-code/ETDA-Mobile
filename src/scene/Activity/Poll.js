@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import EventPost from '../../components/EventPost'
 import PostPoll from '../../components/Poll'
+import { apiServer } from '../../constant/util';
 export default class Poll extends Component {
     state = {
         visibleSearch: false

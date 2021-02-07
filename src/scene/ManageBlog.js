@@ -24,7 +24,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import MenuFooter from '../components/MenuFooter'
 import BlogManager from '../components/ManageBlog'
-import { fonts } from '../constant/util';
+import { fonts, apiServer } from '../constant/util';
 
 export default class ManageBlog extends Component {
     state = {
@@ -65,11 +65,10 @@ export default class ManageBlog extends Component {
         }
 
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/approve', data, {
+        axios.post(apiServer.url + '/api/backend/post/approve', data, {
             headers
         })
             .then((response) => {
-                console.log('response : ' , response)
                 if (response.data.status == "success"){
                     this.callApproveList(token)
                 }else{
@@ -87,7 +86,7 @@ export default class ManageBlog extends Component {
 
     callApproveList = async (token) => {
         console.log('token : ' , token)
-        axios.get('https://etda.amn-corporation.com/api/backend/post/approve-list',{
+        axios.get(apiServer.url + '/api/backend/post/approve-list',{
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,

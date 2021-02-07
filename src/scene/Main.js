@@ -24,7 +24,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
-
+import { apiServer } from '../../constant/util';
 export default class Main extends Component {
     state = {
         visibleSearch: false,
@@ -54,7 +54,7 @@ export default class Main extends Component {
 
     callHomeFeed = async (token) => {
         console.log('token 1 : ', token)
-        axios.get('https://etda.amn-corporation.com/api/backend/post/home-feed',{
+        axios.get(apiServer.url + '/api/backend/post/home-feed',{
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,

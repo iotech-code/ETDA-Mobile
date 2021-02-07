@@ -20,9 +20,10 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
-import { fonts } from '../../constant/util'
+import { fonts, apiServer } from '../../constant/util'
 import axios from 'axios';
 import { KeyboardAvoidingView } from 'react-native';
+
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -89,7 +90,7 @@ export default class EventDetail extends Component {
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/get-comment', data, {
+        axios.post(apiServer.url + '/api/backend/post/get-comment', data, {
             headers
         })
             .then((response) => {
@@ -122,7 +123,7 @@ export default class EventDetail extends Component {
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/comment', data, {
+        axios.post(apiServer.url + '/api/backend/post/comment', data, {
             headers
         })
             .then((response) => {

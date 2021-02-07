@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
-import { fonts, colors } from '../../constant/util'
+import { fonts, colors, apiServer } from '../../constant/util'
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
 
@@ -375,12 +375,7 @@ export default class EditProfile extends Component {
             "rq_exp": this.state.rExp
         }
 
-       
-         
-        console.log('come in ', data)
-        console.log('user id  ', this.props.userId)
-        console.log('token  ', token)
-        axios.put('https://etda.amn-corporation.com/api/backend/user/update/' + this.props.userId, data,{
+        axios.put(apiServer.url + '/api/backend/user/update/' + this.props.userId, data,{
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,

@@ -104,7 +104,6 @@ export default class EventCreate extends Component {
                             <Text style={{ fontSize: hp('2%'), marginLeft: hp('2%') }}>Post to ETDA feed</Text>
 
                         </View>
-
                         <View style={{ marginTop: hp('2%'), ...style.container }}>
                             <Button
                                 title="Create"
@@ -116,13 +115,6 @@ export default class EventCreate extends Component {
                                 onPress={() => Actions.push('EventCreate')}
                             />
                         </View>
-
-
-
-
-
-
-
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>

@@ -18,7 +18,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '../constant/util'
+import { colors, apiServer } from '../constant/util'
 
 export default class HeaderNavbar extends Component {
     state = {

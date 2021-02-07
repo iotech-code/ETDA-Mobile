@@ -26,7 +26,7 @@ import IconMaterail from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import HeaderNavbar from '../components/Navbar';
 import { Fragment } from 'react';
-
+import { apiServer } from '../../constant/util';
 export default class Notification extends Component {
     constructor(props) {
         super(props);

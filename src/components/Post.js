@@ -20,7 +20,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { fonts } from '../constant/util';
+import { fonts, apiServer } from '../constant/util';
 import axios from 'axios';
 import FbGrid from "react-native-fb-image-grid";
 import ImageView from 'react-native-image-view';
@@ -280,7 +280,7 @@ export default class Post extends Component {
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.delete('https://etda.amn-corporation.com/api/backend/post/delete/' + post_id, {
+        axios.delete(apiServer.url + '/api/backend/post/delete/' + post_id, {
             headers
         })
             .then((response) => {
@@ -311,7 +311,7 @@ export default class Post extends Component {
             "post_id": post_id
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/like', data, {
+        axios.post(apiServer.url + '/api/backend/post/like', data, {
             headers
         })
             .then((response) => {
@@ -348,7 +348,7 @@ export default class Post extends Component {
             "post_id": post_id
         }
 
-        axios.post('https://etda.amn-corporation.com/api/backend/post/follow', data, {
+        axios.post(apiServer.url + '/api/backend/post/follow', data, {
             headers
         })
             .then((response) => {

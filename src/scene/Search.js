@@ -21,6 +21,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
+import { apiServer } from '../../constant/util';
 export default class Poll extends Component {
     constructor(props) {
         super(props)
@@ -51,7 +52,7 @@ export default class Poll extends Component {
             'Authorization': 'Bearer ' + this.state.token
         }
 
-        axios.get('https://etda.amn-corporation.com/api/backend/post/search?query=' + name, {
+        axios.get(apiServer.url + '/api/backend/post/search?query=' + name, {
             headers
         })
             .then((response) => {
