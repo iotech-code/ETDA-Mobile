@@ -60,22 +60,6 @@ const RouterPage = () => {
                 <Scene key="EventCreate" component={EventCreate} title="EventCreate" hideNavBar />
                 <Scene key="EventEdit" component={EventEdit} title="EventEdit" hideNavBar />
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </Stack>
         </Router>
 

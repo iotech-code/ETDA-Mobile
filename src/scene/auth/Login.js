@@ -12,7 +12,7 @@ import {
     TouchableOpacity,
     AsyncStorage
 } from 'react-native';
-
+import { apiServer } from '../../constant/util'
 import axios from 'axios';
 import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -25,25 +25,22 @@ export default class Login extends Component {
     }
 
     callLogin = async () => {
-        console.log('come in ')
         const data = {
             "user_email": this.state.email,
             "user_password": this.state.pass,
             "authen_method": "local"
         }
-        console.log('come in ', data)
-        axios.post('https://etda.amn-corporation.com/api/backend/user/login', data)
+        // console.log(apiServer.url + '/api/backend/user/login',data)
+        axios.post(apiServer.url + '/api/backend/user/login', data)
             .then((response) => {
-                console.log('come in 1 ', response.data.status)
-                console.log('come in 1 ', response.data.token)
+                console.log(response.data)
                 if (response.data.status == "success") {
                     if (response.data.token != "") {
                         AsyncStorage.setItem('token', response.data.token);
                         this.callInfomation(response.data.token)
                     }
-
                 } else {
-
+                    alert("Wrong email or password.")
                 }
             })
             .catch((error) => {
@@ -59,12 +56,13 @@ export default class Login extends Component {
         const data = {
             "Token": token
         }
-        axios.post('https://etda.amn-corporation.com/api/backend/user/information', data)
+        axios.post(apiServer.url + '/api/backend/user/information', data)
             .then((response) => {
 
 
                 if (response.data.status == "success") {
                     AsyncStorage.setItem('user_type', response.data.data.user_type)
+                    AsyncStorage.setItem('user_data', response.data.data)
                     Actions.replace('Main')
 
                 } else {

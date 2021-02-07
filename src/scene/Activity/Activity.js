@@ -45,7 +45,7 @@ export default class Activity extends Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={() => Actions.replace('Poll')}>
+                        {/* <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={() => Actions.replace('Poll')}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 Poll
                             </Text>
@@ -63,7 +63,7 @@ export default class Activity extends Component {
                             <Text style={{ ...styleScoped.description }}>
                                 Lorem ipsum dolor sit amet, consetetur
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
                 <MenuFooterUser value={'activity'}></MenuFooterUser>
