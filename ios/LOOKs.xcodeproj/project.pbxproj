@@ -57,7 +57,7 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* ETDA_MobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ETDA_MobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* LOOKsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LOOKsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ETDA_MobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ETDA_MobileTests.m; sourceTree = "<group>"; };
 		024D3939B63CBCB4BE8E2A56 /* Pods-ETDA_Mobile-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-tvOSTests/Pods-ETDA_Mobile-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -66,14 +66,14 @@
 		0CB2B9D0D763435B9803F177 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		0F14F2E0C0D147489D8981D8 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		121FEA24D36624095A0D9F9E /* Pods-ETDA_Mobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-tvOS/Pods-ETDA_Mobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* ETDA_Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ETDA_Mobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* LOOKs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LOOKs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ETDA_Mobile/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ETDA_Mobile/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ETDA_Mobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ETDA_Mobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ETDA_Mobile/main.m; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* ETDA_Mobile-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ETDA_Mobile-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* ETDA_Mobile-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ETDA_Mobile-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E47B1E0B4A5D006451C7 /* LOOKs-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LOOKs-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* LOOKs-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "LOOKs-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		354E4630FD94A4C4B3973384 /* Pods-ETDA_Mobile-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-tvOS/Pods-ETDA_Mobile-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		4AC4C0292D4442F9A823EE78 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		4E1990520BA1E31B59DA1AEA /* Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-ETDA_MobileTests/Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -207,10 +207,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* ETDA_Mobile.app */,
-				00E356EE1AD99517003FC87E /* ETDA_MobileTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* ETDA_Mobile-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* ETDA_Mobile-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* LOOKs.app */,
+				00E356EE1AD99517003FC87E /* LOOKsTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* LOOKs-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* LOOKs-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -256,9 +256,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* ETDA_MobileTests */ = {
+		00E356ED1AD99517003FC87E /* LOOKsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ETDA_MobileTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "LOOKsTests" */;
 			buildPhases = (
 				0ABD3C648CDED1F447ECF98A /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -271,14 +271,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = ETDA_MobileTests;
+			name = LOOKsTests;
 			productName = ETDA_MobileTests;
-			productReference = 00E356EE1AD99517003FC87E /* ETDA_MobileTests.xctest */;
+			productReference = 00E356EE1AD99517003FC87E /* LOOKsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* ETDA_Mobile */ = {
+		13B07F861A680F5B00A75B9A /* LOOKs */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ETDA_Mobile" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "LOOKs" */;
 			buildPhases = (
 				612BE30195BBD50311DE4148 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -292,14 +292,14 @@
 			);
 			dependencies = (
 			);
-			name = ETDA_Mobile;
+			name = LOOKs;
 			productName = ETDA_Mobile;
-			productReference = 13B07F961A680F5B00A75B9A /* ETDA_Mobile.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* LOOKs.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* ETDA_Mobile-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* LOOKs-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "ETDA_Mobile-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LOOKs-tvOS" */;
 			buildPhases = (
 				4FA5D5CE68F06E4D7BBDE586 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
@@ -312,14 +312,14 @@
 			);
 			dependencies = (
 			);
-			name = "ETDA_Mobile-tvOS";
+			name = "LOOKs-tvOS";
 			productName = "ETDA_Mobile-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* ETDA_Mobile-tvOS.app */;
+			productReference = 2D02E47B1E0B4A5D006451C7 /* LOOKs-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* ETDA_Mobile-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* LOOKs-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "ETDA_Mobile-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LOOKs-tvOSTests" */;
 			buildPhases = (
 				DFA8DAAB7ADB1A046AD8066D /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -331,9 +331,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "ETDA_Mobile-tvOSTests";
+			name = "LOOKs-tvOSTests";
 			productName = "ETDA_Mobile-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* ETDA_Mobile-tvOSTests.xctest */;
+			productReference = 2D02E4901E0B4A5D006451C7 /* LOOKs-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -349,8 +349,9 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = B2GBWZNK28;
+						DevelopmentTeam = UR5PCN4NPJ;
 						LastSwiftMigration = 1120;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -363,7 +364,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "ETDA_Mobile" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "LOOKs" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -376,10 +377,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* ETDA_Mobile */,
-				00E356ED1AD99517003FC87E /* ETDA_MobileTests */,
-				2D02E47A1E0B4A5D006451C7 /* ETDA_Mobile-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* ETDA_Mobile-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* LOOKs */,
+				00E356ED1AD99517003FC87E /* LOOKsTests */,
+				2D02E47A1E0B4A5D006451C7 /* LOOKs-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* LOOKs-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -739,12 +740,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* ETDA_Mobile */;
+			target = 13B07F861A680F5B00A75B9A /* LOOKs */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* ETDA_Mobile-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* LOOKs-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -769,7 +770,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ETDA_Mobile.app/ETDA_Mobile";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LOOKs.app/LOOKs";
 			};
 			name = Debug;
 		};
@@ -789,7 +790,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ETDA_Mobile.app/ETDA_Mobile";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LOOKs.app/LOOKs";
 			};
 			name = Release;
 		};
@@ -799,8 +800,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B2GBWZNK28;
+				DEVELOPMENT_TEAM = UR5PCN4NPJ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ETDA_Mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -809,8 +812,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = ETDA_Mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etda.looks;
+				PRODUCT_NAME = LOOKs;
+				PROVISIONING_PROFILE_SPECIFIER = LOOKs;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -823,8 +827,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B2GBWZNK28;
+				DEVELOPMENT_TEAM = UR5PCN4NPJ;
 				INFOPLIST_FILE = ETDA_Mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -832,8 +838,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = ETDA_Mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.etda.looks;
+				PRODUCT_NAME = LOOKs;
+				PROVISIONING_PROFILE_SPECIFIER = LOOKs;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -917,7 +924,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.ETDA_Mobile-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ETDA_Mobile-tvOS.app/ETDA_Mobile-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LOOKs-tvOS.app/LOOKs-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
@@ -944,7 +951,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.ETDA_Mobile-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ETDA_Mobile-tvOS.app/ETDA_Mobile-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LOOKs-tvOS.app/LOOKs-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -1065,7 +1072,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ETDA_MobileTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "LOOKsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1074,7 +1081,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ETDA_Mobile" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "LOOKs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1083,7 +1090,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "ETDA_Mobile-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LOOKs-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1092,7 +1099,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "ETDA_Mobile-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "LOOKs-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1101,7 +1108,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "ETDA_Mobile" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "LOOKs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
