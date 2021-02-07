@@ -210,7 +210,7 @@ export default class MessageBoard extends Component {
                                 return (
                                
                                     <View>
-                                        <MessagePost data={item}>   </MessagePost>
+                                        <MessagePost data={item} key={`MessagePost_${index}`}>   </MessagePost>
                                     </View>
                                     )}
                                 )}
