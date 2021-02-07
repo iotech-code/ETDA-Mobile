@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-#import "RNLine-Swift.h"
+//#import "RNLine-Swift.h"
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -67,7 +67,7 @@ static void InitializeFlipper(UIApplication *application) {
 
   [[FBSDKApplicationDelegate sharedInstance] application:application
       didFinishLaunchingWithOptions:launchOptions];
-  [LineLogin setupWithChannelID:@"1655648600" universalLinkURL:nil];
+//  [LineLogin setupWithChannelID:@"1655648600" universalLinkURL:nil];
   [FIRApp configure];
   return YES;
 }
@@ -88,15 +88,15 @@ static void InitializeFlipper(UIApplication *application) {
 }
 
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
-  return [LineLogin application:app open:url options:options];
-}
-
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
-{
-  BOOL handledLine = [LineLogin application:application continue:userActivity restorationHandler:restorationHandler];
-  return handledLine;
-}
+//- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+//{
+//  return [LineLogin application:app open:url options:options];
+//}
+//
+//- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+//{
+//  BOOL handledLine = [LineLogin application:application continue:userActivity restorationHandler:restorationHandler];
+//  return handledLine;
+//}
 
 @end
