@@ -90,7 +90,6 @@
 		77306D8134BE4668A7ED3500 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ETDA_Mobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		878C53271710417AB1E91254 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-<<<<<<< HEAD:ios/ETDA_Mobile.xcodeproj/project.pbxproj
 		94820F244A29EBD21C79D6EB /* Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-ETDA_MobileTests/Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig"; sourceTree = "<group>"; };
 		94EA73258B5CFF66DD72F0B4 /* Pods-ETDA_Mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile/Pods-ETDA_Mobile.release.xcconfig"; sourceTree = "<group>"; };
 		980B745F6FFA60124AE4C053 /* libPods-ETDA_Mobile-ETDA_MobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ETDA_Mobile-ETDA_MobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,13 +97,6 @@
 		C3502B1A25D039450044F5DD /* ETDA_Mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ETDA_Mobile-Bridging-Header.h"; sourceTree = "<group>"; };
 		C3502B1B25D039460044F5DD /* BridgeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeHeader.swift; sourceTree = "<group>"; };
 		C3502B1D25D0537C0044F5DD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
-=======
-		8E2CDA04A9FF2C387A4FD89E /* Pods-LOOKs-LOOKsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs-LOOKsTests.debug.xcconfig"; path = "Target Support Files/Pods-LOOKs-LOOKsTests/Pods-LOOKs-LOOKsTests.debug.xcconfig"; sourceTree = "<group>"; };
-		A59EE6CBB8F5BA76F4F78F0C /* Pods-LOOKs-LOOKsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs-LOOKsTests.release.xcconfig"; path = "Target Support Files/Pods-LOOKs-LOOKsTests/Pods-LOOKs-LOOKsTests.release.xcconfig"; sourceTree = "<group>"; };
-		B3B549B4265D0DAACFF100BB /* Pods-LOOKs.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs.debug.xcconfig"; path = "Target Support Files/Pods-LOOKs/Pods-LOOKs.debug.xcconfig"; sourceTree = "<group>"; };
-		B8A69D49CD7C2552330AC1AC /* Pods-LOOKs.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs.release.xcconfig"; path = "Target Support Files/Pods-LOOKs/Pods-LOOKs.release.xcconfig"; sourceTree = "<group>"; };
-		BF2E135153A742C1B9C25752 /* libPods-LOOKs-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LOOKs-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
->>>>>>> d156a6a17f5fefb0fdff4ace3b4fdddb9560cdb8:ios/LOOKs.xcodeproj/project.pbxproj
 		C841CD6262B24EFB8498B1F9 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		C958CBADD883D3E652D42D25 /* Pods-LOOKs-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-LOOKs-tvOS/Pods-LOOKs-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		DD8A952EBDF94FAE80AEB6D1 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -367,14 +359,8 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-<<<<<<< HEAD:ios/ETDA_Mobile.xcodeproj/project.pbxproj
 						DevelopmentTeam = B2GBWZNK28;
 						LastSwiftMigration = 1240;
-=======
-						DevelopmentTeam = UR5PCN4NPJ;
-						LastSwiftMigration = 1120;
-						ProvisioningStyle = Manual;
->>>>>>> d156a6a17f5fefb0fdff4ace3b4fdddb9560cdb8:ios/LOOKs.xcodeproj/project.pbxproj
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -561,14 +547,10 @@
 			files = (
 			);
 			inputPaths = (
-<<<<<<< HEAD:ios/ETDA_Mobile.xcodeproj/project.pbxproj
 				"${PODS_ROOT}/Target Support Files/Pods-ETDA_Mobile/Pods-ETDA_Mobile-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/LineSDKSwift/LineSDK.bundle",
-=======
-				"${PODS_ROOT}/Target Support Files/Pods-LOOKs/Pods-LOOKs-resources.sh",
->>>>>>> d156a6a17f5fefb0fdff4ace3b4fdddb9560cdb8:ios/LOOKs.xcodeproj/project.pbxproj
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -625,14 +607,10 @@
 			files = (
 			);
 			inputPaths = (
-<<<<<<< HEAD:ios/ETDA_Mobile.xcodeproj/project.pbxproj
 				"${PODS_ROOT}/Target Support Files/Pods-ETDA_Mobile-ETDA_MobileTests/Pods-ETDA_Mobile-ETDA_MobileTests-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/LineSDKSwift/LineSDK.bundle",
-=======
-				"${PODS_ROOT}/Target Support Files/Pods-LOOKs-LOOKsTests/Pods-LOOKs-LOOKsTests-resources.sh",
->>>>>>> d156a6a17f5fefb0fdff4ace3b4fdddb9560cdb8:ios/LOOKs.xcodeproj/project.pbxproj
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -860,15 +838,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-<<<<<<< HEAD:ios/ETDA_Mobile.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ETDA_Mobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "ETDA_Mobile-Bridging-Header.h";
-=======
-				PRODUCT_BUNDLE_IDENTIFIER = com.etda.looks;
-				PRODUCT_NAME = LOOKs;
-				PROVISIONING_PROFILE_SPECIFIER = LOOKs;
->>>>>>> d156a6a17f5fefb0fdff4ace3b4fdddb9560cdb8:ios/LOOKs.xcodeproj/project.pbxproj
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -892,15 +864,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-<<<<<<< HEAD:ios/ETDA_Mobile.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ETDA_Mobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "ETDA_Mobile-Bridging-Header.h";
-=======
-				PRODUCT_BUNDLE_IDENTIFIER = com.etda.looks;
-				PRODUCT_NAME = LOOKs;
-				PROVISIONING_PROFILE_SPECIFIER = LOOKs;
->>>>>>> d156a6a17f5fefb0fdff4ace3b4fdddb9560cdb8:ios/LOOKs.xcodeproj/project.pbxproj
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
