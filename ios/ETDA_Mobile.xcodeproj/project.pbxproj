@@ -31,6 +31,8 @@
 		A11D4B285D2C4D34BD58971B /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0CB2B9D0D763435B9803F177 /* FontAwesome5_Regular.ttf */; };
 		B12F1E8BB27F4693B4E653D4 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 059D04BC968940DFAE974ECD /* Zocial.ttf */; };
 		C1C61E2A9AF3400C9149DF85 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 878C53271710417AB1E91254 /* Fontisto.ttf */; };
+		C3502B1C25D039460044F5DD /* BridgeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3502B1B25D039460044F5DD /* BridgeHeader.swift */; };
+		C3502B1E25D0537C0044F5DD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3502B1D25D0537C0044F5DD /* GoogleService-Info.plist */; };
 		C8B4811D8F18663674C6B407 /* libPods-ETDA_Mobile-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F171434DC6BDC520BC19941F /* libPods-ETDA_Mobile-tvOSTests.a */; };
 		D6CBBFAAD4DF201539A28E9A /* libPods-ETDA_Mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6765FA971FDE93C68FF642D /* libPods-ETDA_Mobile.a */; };
 		E98AF4A91CE16A993FF92211 /* libPods-ETDA_Mobile-ETDA_MobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 980B745F6FFA60124AE4C053 /* libPods-ETDA_Mobile-ETDA_MobileTests.a */; };
@@ -90,6 +92,9 @@
 		94EA73258B5CFF66DD72F0B4 /* Pods-ETDA_Mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile/Pods-ETDA_Mobile.release.xcconfig"; sourceTree = "<group>"; };
 		980B745F6FFA60124AE4C053 /* libPods-ETDA_Mobile-ETDA_MobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ETDA_Mobile-ETDA_MobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6765FA971FDE93C68FF642D /* libPods-ETDA_Mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ETDA_Mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3502B1A25D039450044F5DD /* ETDA_Mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ETDA_Mobile-Bridging-Header.h"; sourceTree = "<group>"; };
+		C3502B1B25D039460044F5DD /* BridgeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeHeader.swift; sourceTree = "<group>"; };
+		C3502B1D25D0537C0044F5DD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C841CD6262B24EFB8498B1F9 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		CE8677C18EF4BE9F4D78FD62 /* libPods-ETDA_Mobile-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ETDA_Mobile-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD8A952EBDF94FAE80AEB6D1 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -157,6 +162,7 @@
 		13B07FAE1A68108700A75B9A /* ETDA_Mobile */ = {
 			isa = PBXGroup;
 			children = (
+				C3502B1D25D0537C0044F5DD /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -164,6 +170,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				C3502B1B25D039460044F5DD /* BridgeHeader.swift */,
+				C3502B1A25D039450044F5DD /* ETDA_Mobile-Bridging-Header.h */,
 			);
 			name = ETDA_Mobile;
 			sourceTree = "<group>";
@@ -350,7 +358,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = B2GBWZNK28;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1240;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -407,6 +415,7 @@
 				A11D4B285D2C4D34BD58971B /* FontAwesome5_Regular.ttf in Resources */,
 				93BB6EF5EC7C4215BE309B17 /* FontAwesome5_Solid.ttf in Resources */,
 				C1C61E2A9AF3400C9149DF85 /* Fontisto.ttf in Resources */,
+				C3502B1E25D0537C0044F5DD /* GoogleService-Info.plist in Resources */,
 				2CFF23E8CC8C4B0DAEB705C1 /* Foundation.ttf in Resources */,
 				60915AF83DD0488CB6B342CA /* Ionicons.ttf in Resources */,
 				1CE5A15D515948B6AC813DC2 /* MaterialCommunityIcons.ttf in Resources */,
@@ -536,6 +545,9 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ETDA_Mobile/Pods-ETDA_Mobile-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/LineSDKSwift/LineSDK.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -558,6 +570,9 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/LineSDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -590,6 +605,9 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ETDA_Mobile-ETDA_MobileTests/Pods-ETDA_Mobile-ETDA_MobileTests-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/LineSDKSwift/LineSDK.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -612,6 +630,9 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/LineSDK.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -712,6 +733,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3502B1C25D039460044F5DD /* BridgeHeader.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -754,6 +776,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 94820F244A29EBD21C79D6EB /* Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -777,6 +800,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4E1990520BA1E31B59DA1AEA /* Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = ETDA_MobileTests/Info.plist;
@@ -811,6 +835,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ETDA_Mobile;
+				SWIFT_OBJC_BRIDGING_HEADER = "ETDA_Mobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -834,6 +859,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ETDA_Mobile;
+				SWIFT_OBJC_BRIDGING_HEADER = "ETDA_Mobile-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
