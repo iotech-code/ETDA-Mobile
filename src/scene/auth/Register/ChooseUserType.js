@@ -321,10 +321,12 @@ export default class ChooseUserType extends Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
+                        </View>
                     </ScrollView>
                 </SafeAreaView>
                 {this.renderModalPostandRead()}
             </View>
+            
         );
     }
     callInfomation = async (token) => {

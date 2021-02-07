@@ -35,9 +35,9 @@ export default class EventDetail extends Component {
         socail: {
 
         },
-        comment : '',
-        post_id : 0,
-        reply_to : 0
+        comment: '',
+        post_id: 0,
+        reply_to: 0
     }
 
 
@@ -69,7 +69,7 @@ export default class EventDetail extends Component {
             const post_id = await AsyncStorage.getItem('post_id')
             this.setState({
                 token: token,
-                post_id : post_id
+                post_id: post_id
             })
 
             this.callGetComment(post_id)
@@ -114,8 +114,8 @@ export default class EventDetail extends Component {
     callPostComment = async () => {
         const data = {
             "post_id": this.state.post_id,
-            "reply_to" : this.state.reply_to,
-            "message" : this.state.comment
+            "reply_to": this.state.reply_to,
+            "message": this.state.comment
         }
         const headers = {
             'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export default class EventDetail extends Component {
         })
             .then((response) => {
                 if (response.data.status == "success") {
-                   this.callGetComment(this.state.post_id)
+                    this.callGetComment(this.state.post_id)
                 } else {
 
                 }
@@ -141,12 +141,12 @@ export default class EventDetail extends Component {
     };
 
 
-    onPressButtonChildren(data){
+    onPressButtonChildren(data) {
         this.setState({
-            reply_to : data
+            reply_to: data
         })
         console.log(data)
-      }
+    }
 
 
     render() {
@@ -281,10 +281,13 @@ export default class EventDetail extends Component {
                                 onChangeText={(value) => {
                                     onChangeTextComment(value)
                                 }}>
-
-
                             </TextInput>
                         </View>
+                        <Button
+                            title="send"
+                            buttonStyle={{...style.btnPrimary }}
+                        />
+
                     </View>
                 </KeyboardAvoidingView>
 
@@ -307,7 +310,8 @@ const styleScoped = StyleSheet.create({
         borderColor: '#C8C8CC',
         borderWidth: 1,
         borderRadius: 5,
-        width: '85%'
+        width: '70%',
+        marginRight:hp('1%')
     },
     imageLogo: {
         height: hp('15%'),
