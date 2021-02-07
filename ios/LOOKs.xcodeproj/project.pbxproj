@@ -60,12 +60,10 @@
 		00E356EE1AD99517003FC87E /* LOOKsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LOOKsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ETDA_MobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ETDA_MobileTests.m; sourceTree = "<group>"; };
-		024D3939B63CBCB4BE8E2A56 /* Pods-ETDA_Mobile-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-tvOSTests/Pods-ETDA_Mobile-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		059D04BC968940DFAE974ECD /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		075C261F5FD543D3BE7AEBC0 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		0CB2B9D0D763435B9803F177 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		0F14F2E0C0D147489D8981D8 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
-		121FEA24D36624095A0D9F9E /* Pods-ETDA_Mobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-tvOS/Pods-ETDA_Mobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* LOOKs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LOOKs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ETDA_Mobile/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ETDA_Mobile/AppDelegate.m; sourceTree = "<group>"; };
@@ -75,25 +73,19 @@
 		274F41CE28990FD7B34BF36A /* Pods-LOOKs-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs-tvOS.release.xcconfig"; path = "Target Support Files/Pods-LOOKs-tvOS/Pods-LOOKs-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* LOOKs-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LOOKs-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* LOOKs-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "LOOKs-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		354E4630FD94A4C4B3973384 /* Pods-ETDA_Mobile-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-tvOS/Pods-ETDA_Mobile-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		388803A243B9740A6402C86D /* Pods-LOOKs-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-LOOKs-tvOSTests/Pods-LOOKs-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		4AC4C0292D4442F9A823EE78 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		4B2AD437CB05BC2226014D06 /* libPods-LOOKs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LOOKs.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E1990520BA1E31B59DA1AEA /* Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-ETDA_MobileTests/Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig"; sourceTree = "<group>"; };
 		4E73CED95D3E474F987AEB33 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		5303216E961747EE85610D8A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		60CDC88CCA60702773A1694D /* Pods-ETDA_Mobile-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-tvOSTests/Pods-ETDA_Mobile-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6285DE000B1B49721ABA1E32 /* libPods-LOOKs-LOOKsTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LOOKs-LOOKsTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A63806B38AE4B29A1521680 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		729B2A6BB2134B81A580A128 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		74B94E4F8338590900905B29 /* libPods-LOOKs-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LOOKs-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		77306D8134BE4668A7ED3500 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
-		7C4E27BEA41CE2FE9F28A82A /* Pods-ETDA_Mobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile.debug.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile/Pods-ETDA_Mobile.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ETDA_Mobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		878C53271710417AB1E91254 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		8E2CDA04A9FF2C387A4FD89E /* Pods-LOOKs-LOOKsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs-LOOKsTests.debug.xcconfig"; path = "Target Support Files/Pods-LOOKs-LOOKsTests/Pods-LOOKs-LOOKsTests.debug.xcconfig"; sourceTree = "<group>"; };
-		94820F244A29EBD21C79D6EB /* Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile-ETDA_MobileTests/Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig"; sourceTree = "<group>"; };
-		94EA73258B5CFF66DD72F0B4 /* Pods-ETDA_Mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETDA_Mobile.release.xcconfig"; path = "Target Support Files/Pods-ETDA_Mobile/Pods-ETDA_Mobile.release.xcconfig"; sourceTree = "<group>"; };
 		A59EE6CBB8F5BA76F4F78F0C /* Pods-LOOKs-LOOKsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs-LOOKsTests.release.xcconfig"; path = "Target Support Files/Pods-LOOKs-LOOKsTests/Pods-LOOKs-LOOKsTests.release.xcconfig"; sourceTree = "<group>"; };
 		B3B549B4265D0DAACFF100BB /* Pods-LOOKs.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs.debug.xcconfig"; path = "Target Support Files/Pods-LOOKs/Pods-LOOKs.debug.xcconfig"; sourceTree = "<group>"; };
 		B8A69D49CD7C2552330AC1AC /* Pods-LOOKs.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LOOKs.release.xcconfig"; path = "Target Support Files/Pods-LOOKs/Pods-LOOKs.release.xcconfig"; sourceTree = "<group>"; };
@@ -145,13 +137,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* ETDA_MobileTests */ = {
+		00E356EF1AD99517003FC87E /* LOOKsTests */ = {
 			isa = PBXGroup;
 			children = (
 				00E356F21AD99517003FC87E /* ETDA_MobileTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = ETDA_MobileTests;
+			path = LOOKsTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -162,7 +154,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* ETDA_Mobile */ = {
+		13B07FAE1A68108700A75B9A /* LOOKs */ = {
 			isa = PBXGroup;
 			children = (
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -173,7 +165,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = ETDA_Mobile;
+			name = LOOKs;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -199,9 +191,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* ETDA_Mobile */,
+				13B07FAE1A68108700A75B9A /* LOOKs */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* ETDA_MobileTests */,
+				00E356EF1AD99517003FC87E /* LOOKsTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BCE0FDAC772C8D124BADCDF8 /* Pods */,
@@ -226,14 +218,6 @@
 		BCE0FDAC772C8D124BADCDF8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				7C4E27BEA41CE2FE9F28A82A /* Pods-ETDA_Mobile.debug.xcconfig */,
-				94EA73258B5CFF66DD72F0B4 /* Pods-ETDA_Mobile.release.xcconfig */,
-				94820F244A29EBD21C79D6EB /* Pods-ETDA_Mobile-ETDA_MobileTests.debug.xcconfig */,
-				4E1990520BA1E31B59DA1AEA /* Pods-ETDA_Mobile-ETDA_MobileTests.release.xcconfig */,
-				121FEA24D36624095A0D9F9E /* Pods-ETDA_Mobile-tvOS.debug.xcconfig */,
-				354E4630FD94A4C4B3973384 /* Pods-ETDA_Mobile-tvOS.release.xcconfig */,
-				60CDC88CCA60702773A1694D /* Pods-ETDA_Mobile-tvOSTests.debug.xcconfig */,
-				024D3939B63CBCB4BE8E2A56 /* Pods-ETDA_Mobile-tvOSTests.release.xcconfig */,
 				B3B549B4265D0DAACFF100BB /* Pods-LOOKs.debug.xcconfig */,
 				B8A69D49CD7C2552330AC1AC /* Pods-LOOKs.release.xcconfig */,
 				8E2CDA04A9FF2C387A4FD89E /* Pods-LOOKs-LOOKsTests.debug.xcconfig */,
@@ -375,6 +359,7 @@
 					};
 					2D02E48F1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = UR5PCN4NPJ;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
@@ -464,7 +449,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		0ABD3C648CDED1F447ECF98A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -882,7 +867,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.ETDA_Mobile-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.etda.lookstv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -910,7 +895,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.ETDA_Mobile-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.etda.lookstv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -928,6 +913,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UR5PCN4NPJ;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "ETDA_Mobile-tvOSTests/Info.plist";
@@ -956,6 +942,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = UR5PCN4NPJ;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "ETDA_Mobile-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

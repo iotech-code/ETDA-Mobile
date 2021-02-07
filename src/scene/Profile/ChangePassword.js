@@ -21,7 +21,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios';
-import { colors, apiServer } from '../../../constant/util'
+import { colors, apiServer } from '../../constant/util'
 
 export default class ChangePassword extends Component {
     constructor() {
