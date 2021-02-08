@@ -25,11 +25,6 @@ import { colors, fonts, apiServer } from '../constant/util';
 export default class MenuFooterUser extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //     home: false,
-        //     message: false,
-        //     activity: false
-        // };
     }
     render() {
         return (
