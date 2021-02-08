@@ -138,3 +138,12 @@ npx react-native bundle --platform android --dev false --entry-file index.js --b
 
 npx react-native run-android
 ```
+
+### วิธีแก้เปิดโหมด Debug ไม่ได้ บน android
+```
+cd android && ./gradlew clean && cd ..
+react-native start --reset-cache
+
+# Open new terminal at same folder.
+react-native run-android
+```
