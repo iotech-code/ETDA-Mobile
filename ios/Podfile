@@ -24,6 +24,8 @@ target 'LOOKs' do
 
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing

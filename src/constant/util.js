@@ -15,14 +15,14 @@ export const fonts = {
     }
 }
 export const apiServer  = {
-    url: 'https://etda.amn-corporation.com'
+    url: 'https://looks.etda.or.th'
 }
 
 export const refreshToken = async () => {
     token = await AsyncStorage.getItem('token')
-    console.log(token)
-    // newToken = await getUserInfo(token) !== true ? getRefreshToken(token) : token
-    // AsyncStorage.setItem('token', newToken)
+    //console.log(token)
+    newToken = await getUserInfo(token) !== true ? getRefreshToken(token) : token
+    AsyncStorage.setItem('token', newToken)
 }
 
 const getUserInfo = (token) => {

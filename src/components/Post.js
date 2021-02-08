@@ -30,72 +30,22 @@ export default class Post extends Component {
         super(props)
         this.state = {
             data: {
-                title: 'E-commerce new gen',
-                time: '2 minutes ago',
+                title: '',
+                time: '',
                 image: require('../assets/images/post_1.png'),
-                detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
-                tag: ['E-commerce', 'Test Tag']
+                detail: '',
+                tag: []
             },
             socail: {
-                like: 22,
-                view: 22
+                like: 0,
+                view: 0
             },
             visibleBottomSheet: false,
             visibleModalReport: false,
-            imagesForView: [
-                {
-                    source: {
-                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-                {
-                    source: {
-                        uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-                    },
-                    width: 806,
-                    height: 720,
-                },
-            ],
+            imagesForView: [],
             isImageViewVisible: false,
             isIndeximageForshow: 0,
-            imageForShow: [
-                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
-                "https://facebook.github.io/react-native/docs/assets/favicon.png",
-                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
-                "https://facebook.github.io/react-native/docs/assets/favicon.png",
-                "https://cdn.pixabay.com/photo/2017/08/17/10/47/paris-2650808_960_720.jpg",
-                "https://facebook.github.io/react-native/docs/assets/favicon.png",
-            ],
+            imageForShow: [],
             like: 0
         }
     }
@@ -104,12 +54,9 @@ export default class Post extends Component {
 
     async componentDidMount() {
         try {
-            const token = await AsyncStorage.getItem('token')
-            const like = this.props.data.like
-            console.log('token : ', token)
             this.setState({
-                token: token,
-                like: like
+                token: await AsyncStorage.getItem('token'),
+                like: this.props.data.like
             })
         } catch (err) {
             // handle errors
@@ -282,11 +229,8 @@ export default class Post extends Component {
             headers
         })
             .then((response) => {
-                console.log('data : ', response.data)
                 if (response.data.status == "success") {
-
-                } else {
-
+                    Actions.refresh();
                 }
             })
             .catch((error) => {
@@ -365,7 +309,6 @@ export default class Post extends Component {
     };
 
     render() {
-        console.log('Post component Created ! ')
         const { data, socail } = this.state
 
         let { post_images } = this.props.data
@@ -388,7 +331,24 @@ export default class Post extends Component {
                 paddingVertical: hp('1%'),
                 marginBottom: hp('2%')
             }}>
-                <View style={{ paddingHorizontal: hp('2%') }}>
+                <TouchableOpacity
+                    onPress={() => {
+                        Actions.PostDetail({
+                            'user_image': '',
+                            'user_name': '',
+                            'user_date': this.props.data.date,
+                            'user_title': this.props.data.title,
+                            'user_tags': this.props.data.tags,
+                            'user_images': this.props.data.post_images[0],
+                            'user_description': this.props.data.description,
+                            'user_like': this.props.data.like,
+                            'user_comment': this.props.data.comment,
+                            'user_post_id': this.props.data.post_id
+                        })
+                        AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
+                    }}
+                    style={{ paddingHorizontal: hp('2%') }}
+                >
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -446,34 +406,13 @@ export default class Post extends Component {
                         <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.comment}</Text>
                         {/* </TouchableOpacity> */}
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 <View style={{ ...style.sectionSocial }}>
-                    <TouchableOpacity
-                        onPress={() => this.callPostLike(this.props.data.post_id)}
-                    >
+                    <TouchableOpacity onPress={() => this.callPostLike(this.props.data.post_id)}>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            console.log('post_id post : ' , this.props.data.post_id)
-                            Actions.PostDetail({
-                                'user_image': '',
-                                'user_name': '',
-                                'user_date': this.props.data.date,
-                                'user_title': this.props.data.title,
-                                'user_tags': this.props.data.tags,
-                                'user_images': this.props.data.post_images[0],
-                                'user_description': this.props.data.description,
-                                'user_like': this.props.data.like,
-                                'user_comment': this.props.data.comment,
-                                'user_post_id': this.props.data.post_id
-                            })
-                            AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
-                        }}
-                    >
-                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
-                    </TouchableOpacity>
+                    <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
                     <TouchableOpacity>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>

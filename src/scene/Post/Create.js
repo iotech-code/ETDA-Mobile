@@ -103,7 +103,6 @@ export default class CreatePost extends Component {
             headers
         })
             .then((response) => {
-                console.log('data : ', response.data)
                 if (response.data.status == "success") {
                    Actions.MessageBoard()
                 } else {
@@ -135,9 +134,6 @@ export default class CreatePost extends Component {
             "post_addition_data": addition
         }
 
-        console.log('data update : ' , data)
-        console.log('post_id update : ' , post_id)
-        console.log('post_id update : ' , this.state.token)
 
         axios.put(apiServer.url + '/api/backend/post/update/' + post_id, data, {
             headers
@@ -173,8 +169,6 @@ export default class CreatePost extends Component {
             })
         }
 
-        console.log('data : ' , this.props.data)
-        console.log('type value : ' , this.props.type_value)
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <View style={{ ...style.navbar }}>

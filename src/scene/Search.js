@@ -46,7 +46,6 @@ export default class Poll extends Component {
     }
 
     callSearch = async (name) => {
-        console.log('data come in : ', this.state.token)
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token

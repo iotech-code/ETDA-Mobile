@@ -119,6 +119,7 @@ export default class MyProfile extends Component {
                         photo: photo,
                         userId: userId
                     })
+                    console.log(this.state)
 
                     AsyncStorage.setItem('fullname', this.state.name)
                     AsyncStorage.setItem('photo', this.state.photo)

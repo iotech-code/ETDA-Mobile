@@ -75,10 +75,12 @@ export default class Main extends Component {
                     comment : response.data.post_data[i].comment_number,
                     like : response.data.post_data[i].like,
                 }
-                list.push(objectHomeFeed)
-            }
-            this.setState({
-                list_data : list
+                this.setState({
+                    list_data : list
+                })
+            })
+            .catch((error) => {
+                console.log('err 2 : ' ,error)
             })
         })
         .catch((error) => {

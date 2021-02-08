@@ -362,6 +362,7 @@ export default class EditProfile extends Component {
         })
             .then((response) => {
                 if (response.data.status == "success") {
+                    console.log(response.data)
                     Actions.MyProfile()
                 } else {
 
@@ -446,6 +447,7 @@ export default class EditProfile extends Component {
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
                                 <TextInput
+                                    value={this.state.name}
                                     style={{ ...style.customInput, minWidth: '60%', marginTop: 5, borderWidth: 0 }}
                                     placeholder="Fullname"
                                     onChangeText={(value) => {
