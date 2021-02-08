@@ -120,6 +120,7 @@ export default class MyProfile extends Component {
                         photo: photo,
                         userId: userId
                     })
+                    console.log(this.state)
 
                     AsyncStorage.setItem('fullname', this.state.name)
                     AsyncStorage.setItem('photo', this.state.photo)
@@ -173,9 +174,6 @@ export default class MyProfile extends Component {
                                 }} />
 
                             }
-                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}>
-                                    <IconFonAwesome name="pencil" size={hp('2%')} color="white" />
-                                </TouchableOpacity>
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>

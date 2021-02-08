@@ -275,16 +275,6 @@ export default class EditProfile extends Component {
                         style={{ width: '49%' }}
                         onPress={() => this.setState({ visible: true , type : 'read' })}
                     >
-                        {/* <View style={{
-                            padding: hp('3%'),
-                            borderRadius: 10,
-                            borderColor: '#003764',
-                            borderWidth: 1,
-                            width: '100%',
-                            height: hp('20%')
-                        }}>
-
-                        </View> */}
                         <View style={{ ...styleScoped.option, backgroundColor: colors.primary }}>
                             <Icons name="description" size={hp('12%')} style={{ alignSelf: "center" }} color="white" />
                         </View>
@@ -300,16 +290,6 @@ export default class EditProfile extends Component {
                         style={{ width: '49%' }}
                         onPress={() => this.setState({ visible: true , type : 'read, post_read' })}
                     >
-                        {/* <View style={{
-                            padding: hp('3%'),
-                            borderRadius: 10,
-                            borderColor: '#003764',
-                            borderWidth: 1,
-                            width: '100%',
-                            height: hp('20%')
-                        }}>
-
-                        </View> */}
                         <View style={styleScoped.option}>
                                     <Icons name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />
                         </View>
@@ -383,6 +363,7 @@ export default class EditProfile extends Component {
         })
             .then((response) => {
                 if (response.data.status == "success") {
+                    console.log(response.data)
                     Actions.MyProfile()
                 } else {
 
@@ -466,7 +447,14 @@ export default class EditProfile extends Component {
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
-                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5', fontWeight: '300' }}>{this.state.name}</Text>
+                                <TextInput
+                                    value={this.state.name}
+                                    style={{ ...style.customInput, minWidth: '60%', marginTop: 5, borderWidth: 0 }}
+                                    placeholder="Fullname"
+                                    onChangeText={(value) => {
+                                        this.setState({name: value})
+                                    }}
+                                />
                             </View>
 
                         </View>
@@ -484,6 +472,7 @@ export default class EditProfile extends Component {
                                 <TextInput
                                     style={{ ...style.customInput, width: '80%' }}
                                     placeholder={navigation.getParam('phone', '')}
+                                    keyboardType='number-pad'
                                     onChangeText={(value) => {
                                         onChangeTextPhone(value)
                                     }}

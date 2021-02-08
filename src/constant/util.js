@@ -15,7 +15,7 @@ export const fonts = {
     }
 }
 export const apiServer  = {
-    url: 'https://etda.amn-corporation.com'
+    url: 'https://looks.etda.or.th'
 }
 
 export const refreshToken = async () => {

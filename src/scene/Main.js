@@ -53,7 +53,6 @@ export default class Main extends Component {
 
 
     callHomeFeed = async (token) => {
-        console.log('token 1 : ', token)
         axios.get(apiServer.url + '/api/backend/post/home-feed',{
             headers: {
                 Accept: 'application/json',
@@ -77,7 +76,6 @@ export default class Main extends Component {
                     }
                     list.push(objectHomeFeed)
                 }
-                console.log('list detail : ' , list)
                 this.setState({
                     list_data : list
                 })

@@ -38,12 +38,15 @@ export default class MessageBoard extends Component {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
             const user_role = await AsyncStorage.getItem('user_role');
+            console.log("my role", user_role)
+            console.log("my type", user_type)
             this.setState({
                 user_type: user_type,
                 token : token,
                 user_role : user_role
             })
             this.callCommunityFeed(token)
+
         } catch (err) {
             console.log('err : ', err)
         }
@@ -96,8 +99,6 @@ export default class MessageBoard extends Component {
 
     };
 
-
-
     callCommunityFeed = async (token) => {
         this.setState({
             list_data : []
@@ -113,8 +114,6 @@ export default class MessageBoard extends Component {
                 var objectFeed = {}
                 var list = []
                 for (i = 0 ; i < response.data.post_data.length ; i++){
-                   
-                    
                     objectFeed = {
                         post_id : response.data.post_data[i].post_id,
                         title : response.data.post_data[i].title,
@@ -155,17 +154,18 @@ export default class MessageBoard extends Component {
                     <HeaderNavbar  value={'admin'}></HeaderNavbar>
                     }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                padding: hp('2%'),
-                                alignItems: 'center'
-                            }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board(Read only)</Text>
-                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                            </View>
-                            {this.state.user_type == 'read, post_read' ?
+                           
+                            {this.state.user_type == 'read,post_read' ?
                                 <View style={{ ...style.container }}>
+                                     <View style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        padding: hp('2%'),
+                                        alignItems: 'center'
+                                    }}>
+                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board</Text>
+                                        <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                                    </View>
                                     <Button
                                         title="Write New Blog"
                                         Outline={true}
@@ -181,7 +181,18 @@ export default class MessageBoard extends Component {
                                     />
                                 </View>
                                 :
-                                <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
+                                <View>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        padding: hp('2%'),
+                                        alignItems: 'center'
+                                    }}>
+                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board(Read only)</Text>
+                                        <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                                    </View>
+                                    <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
+                                </View>
                             }
 
 
