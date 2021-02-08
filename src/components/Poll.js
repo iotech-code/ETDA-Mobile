@@ -95,12 +95,10 @@ export default class MessagsPost extends Component {
 
 
     callPoll = async () => {
-        console.log('data come in : ', this.state.token)
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
         }
-
 
         const data = {
             "post_id": this.state.postId,
@@ -167,13 +165,7 @@ export default class MessagsPost extends Component {
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
                     </View>
-
-
-
-
                 </View>
-
-
                 {this.renderBottomSheet()}
             </View>
         );

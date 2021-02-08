@@ -241,8 +241,6 @@ export default class Post extends Component {
 
     };
 
-
-
     callPostLike = async (post_id) => {
         const headers = {
             'Content-Type': 'application/json',
@@ -365,7 +363,6 @@ export default class Post extends Component {
                                 )
                             })
                         }
-
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
                         <FbGrid
@@ -379,24 +376,17 @@ export default class Post extends Component {
                             onClose={() => this.setState({ isImageViewVisible: false })}
                         />
                     </View>
-                    {/* <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}> */}
                     <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
-                    {/* </TouchableOpacity> */}
-
                     <View style={{
                         marginTop: hp('2%'),
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
                         alignItems: 'center'
                     }}>
-                        {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
                         <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.like}</Text>
-                        {/* </TouchableOpacity> */}
-                        {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
                         <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                         <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.comment}</Text>
-                        {/* </TouchableOpacity> */}
                     </View>
                 </TouchableOpacity>
 

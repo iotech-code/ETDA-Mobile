@@ -48,8 +48,6 @@ export default class MenuFooterUser extends Component {
                         <Icon name="calendar" size={hp('2.6%')} color={this.props.value == 'activity' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
                         <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'activity' ? fonts.color.primary : color = "#B5B5B5" }}>Activity</Text>
                     </TouchableOpacity>
-
-
                 </View>
             </View>
         );

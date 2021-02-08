@@ -46,13 +46,10 @@ export default class MenuFooter extends Component {
                         <Icon name="calendar" size={hp('2.6%')} color={this.props.value == 'activity' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
                         <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'activity' ? fonts.color.primary : color = "#B5B5B5" }}>Activity</Text>
                     </TouchableOpacity>
-                    {/* section admin */}
                     <TouchableOpacity style={{ width: '25%' }} onPress={() => Actions.replace('ManageBlog')}>
                         <IconMaterail name="view-carousel" size={hp('2.6%')} color={this.props.value == 'manage' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
                         <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'manage' ? fonts.color.primary : color = "#B5B5B5" }}>Manage Blogs</Text>
                     </TouchableOpacity>
-                    {/* end section admin */}
-
                 </View>
             </View>
         );
