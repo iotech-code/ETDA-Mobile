@@ -130,3 +130,11 @@
     - react-native link
     - cd ios && pod install && cd ..
     - react-native run-ios  หรือ react-native run-android
+
+
+### วิธีแก้เมื่อรันแอปแล้วเป็นรุ่นเก่า
+```
+npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+
+npx react-native run-android
+```

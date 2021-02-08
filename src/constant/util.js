@@ -23,18 +23,17 @@ export const apiServer = {
 
 export const refreshToken = async () => {
     token = await AsyncStorage.getItem('token')
-    //console.log(token)
     newToken = await getUserInfo(token) !== true ? getRefreshToken(token) : token
     AsyncStorage.setItem('token', newToken)
 }
 
 const getUserInfo = (token) => {
     axios.get(apiServer.url + '/api/backend/user/information', { 'Token': token })
-        .then(res => {
-            return true
-        }).catch(error => {
-            return error.response.status
-        })
+    .then(res => {
+        return true
+    }).catch(error => {
+        return error.response.status
+    })
 }
 
 const getRefreshToken = token => {
@@ -45,10 +44,10 @@ const getRefreshToken = token => {
             "Authorization": `Bearer ${token}`,
         }
     })
-        .then(res => {
-            return res.data.token
-        })
-        .catch(err => {
-            console.log(err.config)
-        })
+    .then(res => {
+        return res.data.token
+    })
+    .catch(err => {
+        console.log(err.config)
+    })
 }

@@ -29,9 +29,9 @@ export default class Main extends Component {
     state = {
         visibleSearch: false,
         user_type: '',
-        token :'',
-        list_data : [],
-        user_role : ''
+        token: '',
+        list_data: [],
+        user_role: ''
     }
 
     async componentDidMount() {
@@ -41,71 +41,59 @@ export default class Main extends Component {
             const user_role = await AsyncStorage.getItem('user_role');
             this.setState({
                 user_type: user_type,
-                token : token,
-                user_role : user_role
+                token: token,
+                user_role: user_role
             })
             this.callHomeFeed(token)
         } catch (err) {
-            console.log('err 1 : ' ,err)
+            console.log('err 1 : ', err)
         }
     }
 
-
-
     callHomeFeed = async (token) => {
-        axios.get(apiServer.url + '/api/backend/post/home-feed',{
+        axios.get(apiServer.url + '/api/backend/post/home-feed', {
             headers: {
                 Accept: 'application/json',
                 'Authorization': 'Bearer ' + token,
             }
         })
-            .then((response) => {
-                var i  
-                var objectHomeFeed = {}
-                var list = []
-                for (i = 0 ; i < response.data.post_data.length ; i++){
-                    objectHomeFeed = {
-                        post_id : response.data.post_data[i].post_id,
-                        title : response.data.post_data[i].title,
-                        date : response.data.post_data[i].post_date,
-                        description : response.data.post_data[i].post_description,
-                        tags : response.data.post_data[i].tags,
-                        post_images :  response.data.post_data[i].post_images,
-                        comment : response.data.post_data[i].comment_number,
-                        like : response.data.post_data[i].like,
-                    }
-                    list.push(objectHomeFeed)
+        .then((response) => {
+            var i
+            var objectHomeFeed = {}
+            var list = []
+            for (i = 0; i < response.data.post_data.length; i++) {
+                objectHomeFeed = {
+                    post_id: response.data.post_data[i].post_id,
+                    title: response.data.post_data[i].title,
+                    date: response.data.post_data[i].post_date,
+                    description: response.data.post_data[i].post_description,
+                    tags: response.data.post_data[i].tags,
+                    post_images: response.data.post_data[i].post_images,
+                    comment: response.data.post_data[i].comment_number,
+                    like: response.data.post_data[i].like,
                 }
-                this.setState({
-                    list_data : list
-                })
+                list.push(objectHomeFeed)
+            }
+            this.setState({
+                list_data: list
             })
-            .catch((error) => {
-                console.log('err 2 : ' ,error)
-            })
-            .finally(function () {
-            });
+        })
 
     };
 
 
-    
-
-
-
     render() {
-
         const { dataList } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
                     <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                    {this.state.user_role == "Member" ? 
-                    <HeaderNavbar  value={'member'}></HeaderNavbar>
-                    :
-                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
-                    }
+                        {this.state.user_role == "Member" ?
+                            <HeaderNavbar value={'member'}></HeaderNavbar>
+                            :
+                            <HeaderNavbar value={'admin'}></HeaderNavbar>
+                        }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
                             <View style={{
                                 flexDirection: 'row',
@@ -129,39 +117,36 @@ export default class Main extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
-                                        'description': '',
-                                        'post_images': []})}
+                                        onPress={() => Actions.CreatePost({
+                                            'type_value': 'create', 'title': '',
+                                            'description': '',
+                                            'post_images': []
+                                        })}
                                     />
-
-
                                 </View>
                                 :
                                 <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
                             }
-                            {/* end section admin */}
-
                             <ScrollView style={{ marginBottom: 24 }}>
                                 {this.state.list_data.map((item, index) => {
-                                return (
-                                    <Post data={item} key={`post_${index}`}></Post>
-                                    )}
+                                    return (
+                                        <Post data={item} key={`post_${index}`}></Post>
+                                    )
+                                }
                                 )}
                             </ScrollView>
-
-
                         </View>
                     </View>
-                
-                
+
+
                 </ScrollView>
                 <View style={{ backgroundColor: null }}>
-                    {this.state.user_role == "Member" ? 
-                         <MenuFooterUser value={'home'}></MenuFooterUser>
+                    {this.state.user_role == "Member" ?
+                        <MenuFooterUser value={'home'}></MenuFooterUser>
                         :
                         <MenuFooter value={'home'}></MenuFooter>
                     }
-                   
+
                 </View>
             </View>
         );

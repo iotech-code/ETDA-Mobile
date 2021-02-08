@@ -53,7 +53,6 @@ export default class MessagsPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                // height={Platform.OS === 'ios' ? hp('30%') : hp('16%')}
                 openDuration={250}
                 customStyles={{
                     container: {

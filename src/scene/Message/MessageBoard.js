@@ -38,8 +38,7 @@ export default class MessageBoard extends Component {
             const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
             const user_role = await AsyncStorage.getItem('user_role');
-            console.log("my role", user_role)
-            console.log("my type", user_type)
+
             this.setState({
                 user_type: user_type,
                 token : token,
