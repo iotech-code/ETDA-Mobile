@@ -39,8 +39,6 @@ export default class ManageBlog extends Component {
         selected: false
 
     }
-
-
     render() {
         const { data, socail, selected } = this.state
         let { post_images } = this.props.data
@@ -84,30 +82,24 @@ export default class ManageBlog extends Component {
                     </View>
                     <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%'), flexWrap: 'wrap' }}>
-                            {
-                                this.props.data.tags.map((item, index) => {
-                                    return (
-                                        <Button
-                                            title={item}
-                                            titleStyle={{ fontSize: hp('1.5%') }}
-                                            buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </View>
+                        {
+                            this.props.data.tags.map((item, index) => {
+                                return (
+                                    <Button
+                                        title={item}
+                                        titleStyle={{ fontSize: hp('1.5%') }}
+                                        buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
+                                        key={index}
+                                    />
+                                )
+                            })
+                        }
+                    </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                    <FbGrid
+                        <FbGrid
                             images={post_images}
-                            onPress={(url, index) => console.log('url : ' , url)}
+                            onPress={(url, index) => console.log('url : ', url)}
                         />
-                        {/* <ImageView
-                            images={image_viewer}
-                            imageIndex={this.state.isIndeximageForshow}
-                            isVisible={this.state.isImageViewVisible}
-                            onClose={() => this.setState({ isImageViewVisible: false })}
-                        /> */}
                     </View>
                     <TouchableOpacity style={{ marginTop: hp('1%') }} >
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>

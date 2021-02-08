@@ -286,10 +286,6 @@ export default class MessagsPost extends Component {
                         </View>
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                        {/* <Image
-                            source={{ uri: this.props.data.post_images[0] }}
-                            style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
-                        /> */}
                         <FbGrid
                             images={post_images}
                             onPress={(url, index) => this.imageViewer(url, index)}
@@ -310,7 +306,6 @@ export default class MessagsPost extends Component {
                                 'description': this.props.data.description,
                                 'post_images': this.props.data.post_images
                             })
-                            //  Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'detail' , 'data' : item })
                         }}
                     >
                         <View style={{ marginTop: hp('1%') }}>

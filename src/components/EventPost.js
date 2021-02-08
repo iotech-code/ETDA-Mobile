@@ -46,9 +46,6 @@ export default class MessagsPost extends Component {
         Actions.push('EventEdit')
     }
 
-
-  
-
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
         return (

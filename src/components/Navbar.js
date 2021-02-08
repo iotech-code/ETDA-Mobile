@@ -68,7 +68,6 @@ export default class HeaderNavbar extends Component {
                     <TouchableOpacity onPress={() => Actions.push('Notification')}>
                         <Icon name="notifications" size={hp('3%')} color="white" />
                     </TouchableOpacity>
-
                 </View>
             </View>
         );
