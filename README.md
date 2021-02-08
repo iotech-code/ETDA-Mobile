@@ -116,3 +116,17 @@
 
     - update ui ในส่วนของ admin 
     - ยังเหลือ poll และ survey ในส่วนของ admin
+
+
+
+
+
+# การติดตั้ง
+    - ลบโฟลเดอร์ node_modules 
+    - ลบข้อมูลในโฟลเอร์ ios/Pods/
+    - ลบไฟล์ Podfile.lock
+    # คำสั่งหลังจากลบไฟล์
+    - npm install
+    - react-native link
+    - cd ios && pod install && cd ..
+    - react-native run-ios  หรือ react-native run-android
