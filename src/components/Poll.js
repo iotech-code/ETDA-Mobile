@@ -37,20 +37,10 @@ export default class MessagsPost extends Component {
         }
     }
 
-    // state = {
-    //     visibleBottomSheet: false
-    // }
-
     openOption() {
-        //    console.log('askdjkasjdkasjdk')
         this.setState({ visibleBottomSheet: true })
         this.RBSheet.open()
     }
-
-    // componentDidMount() {
-    //     // this.RBSheet.open()
-
-    // }
 
     async componentDidMount() {
         try {

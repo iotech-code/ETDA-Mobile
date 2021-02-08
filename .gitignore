@@ -38,7 +38,6 @@ android/local.properties
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
 !debug.keystore
 
 
@@ -58,4 +57,5 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-./ios/Podfile.lock
+ios/Podfile.lock
+package-lock.json

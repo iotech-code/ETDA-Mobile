@@ -28,7 +28,7 @@ export default class MenuFooter extends Component {
         return (
             <View >
                 <View style={styleScoped.container}>
-                <TouchableOpacity style={{ width: '25%' }} onPress={() => {
+                    <TouchableOpacity style={{ width: '25%' }} onPress={() => {
                         Actions.replace('Main')
                     }}>
                         <Icon name="home" size={hp('2.6%')} color={this.props.value == 'home' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />

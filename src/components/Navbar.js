@@ -70,8 +70,6 @@ export default class HeaderNavbar extends Component {
                     </TouchableOpacity>
 
                 </View>
-
-
             </View>
         );
     }
