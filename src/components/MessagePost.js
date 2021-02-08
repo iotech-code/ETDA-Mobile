@@ -34,11 +34,11 @@ export default class MessagsPost extends Component {
             type: 'edit',
             visibleBottomSheet: false,
             data: {
-                title: 'E-commerce new gen',
-                time: ' 11/11/2020  3:30 pm',
-                image: require('../assets/images/post_1.png'),
-                detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
-                tag: ['E-commerce', 'Digital Law']
+                title: '',
+                time: '',
+                image: '',
+                detail: '',
+                tag: []
             },
             socail: {
                 like: 22,
@@ -51,14 +51,10 @@ export default class MessagsPost extends Component {
         }
     }
 
-
-
-
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token')
             const like = this.props.data.like
-            console.log('token : ', token)
             this.setState({
                 token: token,
                 like: like
@@ -100,8 +96,6 @@ export default class MessagsPost extends Component {
             });
 
     };
-
-
 
     callPostLike = async (post_id) => {
         const headers = {
@@ -160,12 +154,6 @@ export default class MessagsPost extends Component {
 
                 }
             })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
     };
 
     async imageViewer(url, index) {
@@ -205,13 +193,13 @@ export default class MessagsPost extends Component {
                     ...styleScoped.listMore
                 }}
                     onPress={() => {
-                           Actions.CreatePost({
-                            'type_value' : 'edit',
+                        Actions.CreatePost({
+                            'type_value': 'edit',
                             'title': this.props.data.title,
                             'description': this.props.data.description,
                             'post_images': this.props.data.post_images
                         })
-                            this.setState({ visibleBottomSheet: false }),
+                        this.setState({ visibleBottomSheet: false }),
                             this.RBSheet.close()
                     }}
                 >
@@ -314,20 +302,20 @@ export default class MessagsPost extends Component {
                         />
 
                     </View>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={() => {
                             Actions.CreatePost({
-                                'type_value' : 'detail',
+                                'type_value': 'detail',
                                 'title': this.props.data.title,
                                 'description': this.props.data.description,
                                 'post_images': this.props.data.post_images
                             })
-                          //  Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'detail' , 'data' : item })
+                            //  Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'detail' , 'data' : item })
                         }}
                     >
-                    <View style={{ marginTop: hp('1%') }}>
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
-                    </View>
+                        <View style={{ marginTop: hp('1%') }}>
+                            <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
+                        </View>
 
                     </TouchableOpacity>
 

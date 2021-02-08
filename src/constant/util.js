@@ -11,13 +11,13 @@ export const fonts = {
     primary: '',
     color: {
         primary: '#003764',
-        secondary:'#B5B5B5'
+        secondary: '#B5B5B5'
     }
 }
 // export const apiServer  = {
 //     url: 'https://looks.etda.or.th'
 // }
-export const apiServer  = {
+export const apiServer = {
     url: 'https://etda.amn-corporation.com'
 }
 
@@ -29,12 +29,12 @@ export const refreshToken = async () => {
 }
 
 const getUserInfo = (token) => {
-    axios.get(apiServer.url + '/api/backend/user/information', {'Token': token})
-    .then( res => {
-        return true
-    }).catch(error => {
-        return error.response.status
-    })
+    axios.get(apiServer.url + '/api/backend/user/information', { 'Token': token })
+        .then(res => {
+            return true
+        }).catch(error => {
+            return error.response.status
+        })
 }
 
 const getRefreshToken = token => {
@@ -45,10 +45,10 @@ const getRefreshToken = token => {
             "Authorization": `Bearer ${token}`,
         }
     })
-    .then(res => {
-        return res.data.token
-    })
-    .catch( err => {
-        console.log(err.config)
-    })
+        .then(res => {
+            return res.data.token
+        })
+        .catch(err => {
+            console.log(err.config)
+        })
 }

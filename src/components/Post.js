@@ -182,12 +182,12 @@ export default class Post extends Component {
                 }}
                     onPress={() => {
                         Actions.CreatePost({
-                            'type_value' : 'edit',
+                            'type_value': 'edit',
                             'title': this.props.data.title,
                             'description': this.props.data.detail,
                             'post_images': this.props.data.post_images
                         })
-                            this.setState({ visibleBottomSheet: false }),
+                        this.setState({ visibleBottomSheet: false }),
                             this.RBSheet.close()
                     }}
                 >
@@ -265,16 +265,8 @@ export default class Post extends Component {
                     })
 
                     console.log('data success post like : ', response.data)
-                } else {
-
                 }
             })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
     };
 
 

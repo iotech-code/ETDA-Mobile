@@ -19,12 +19,11 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { colors, apiServer } from '../constant/util'
-
 export default class HeaderNavbar extends Component {
     state = {
         imageAvatar: require('../assets/images/default_avatar.jpg'),
-        name : '',
-        photo : ''
+        name: '',
+        photo: ''
     }
 
     async componentDidMount() {
@@ -33,45 +32,40 @@ export default class HeaderNavbar extends Component {
             const photo = await AsyncStorage.getItem('photo');
             this.setState({
                 name: fullname,
-                photo : photo
+                photo: photo
             })
         } catch (err) {
-            console.log('err 1 : ' ,err)
+            console.log('err 1 : ', err)
         }
     }
+
     render() {
         const { imageAvatar, user_name } = this.state
 
         return (
             <View style={styleScoped.container}>
-                {/* left side  */}
                 <View style={styleScoped.leftSide}>
-               
-                    <TouchableOpacity style={styleScoped.avatar} onPress={() => {
-                        Actions.replace('MyProfile')
-                    }}>
-                    {this.state.photo == '' || this.state.photo == null ? 
-                     <Image
-                     source={imageAvatar}
-                     style={styleScoped.imageAvatar}
-                 />
-                :
-                <Image
-                source={{ uri: this.state.photo}}
-                style={styleScoped.imageAvatar}
-            />
-                }
-                   
-                </TouchableOpacity>
+                    <TouchableOpacity style={styleScoped.avatar} onPress={() => { Actions.replace('MyProfile') }}>
+                        {
+                            this.state.photo == '' || this.state.photo == null ?
+                                <Image
+                                    source={imageAvatar}
+                                    style={styleScoped.imageAvatar}
+                                />
+                                :
+                                <Image
+                                    source={{ uri: this.state.photo }}
+                                    style={styleScoped.imageAvatar}
+                                />
+                        }
+                    </TouchableOpacity>
                     <Text style={styleScoped.textName}>{this.state.name}</Text>
                 </View>
-
-                {/* right side */}
                 <View style={styleScoped.rightSide}>
                     <TouchableOpacity onPress={() => Actions.push('Search')}>
                         <Icon name="search" size={hp('3%')} color="white" style={{ marginRight: hp('1.5%') }} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=> Actions.push('Notification')}>
+                    <TouchableOpacity onPress={() => Actions.push('Notification')}>
                         <Icon name="notifications" size={hp('3%')} color="white" />
                     </TouchableOpacity>
 
