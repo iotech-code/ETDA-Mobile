@@ -170,7 +170,6 @@ export default class EventCreate extends Component {
         )
 
     }
-
     render() {
         const {
             post_to_feed,

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "146795595892",
+    "project_id": "looks-7ab68",
+    "storage_bucket": "looks-7ab68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146795595892:android:9f6ceb3db91741f138e921",
+        "android_client_info": {
+          "package_name": "com.etda_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146795595892-q5e7v9jjg39gfdp5c7a9310iob9butdq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvTq4G7CjPyDNecWX35ljH2v_HJqFhQUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146795595892-q5e7v9jjg39gfdp5c7a9310iob9butdq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "146795595892-iknorag6t3ki892dn1dum7uqlo0c5nlp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.ETDA-Mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -68,7 +68,7 @@ export default class EditProfile extends Component {
         const { navigation } = this.props;
         try {
             const token = await AsyncStorage.getItem('token');
-            console.log('token 1 : ' , token)
+
             this.setState({
                 token : token,
                 phone: navigation.getParam('phone', ''),
@@ -83,7 +83,6 @@ export default class EditProfile extends Component {
         } catch (err) {
             console.log('err 1 : ' ,err)
         }
-       
     }
 
     chooseImageFileRegister = () => {
