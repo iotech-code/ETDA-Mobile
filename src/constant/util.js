@@ -14,8 +14,11 @@ export const fonts = {
         secondary:'#B5B5B5'
     }
 }
+// export const apiServer  = {
+//     url: 'https://looks.etda.or.th'
+// }
 export const apiServer  = {
-    url: 'https://looks.etda.or.th'
+    url: 'https://etda.amn-corporation.com'
 }
 
 export const refreshToken = async () => {

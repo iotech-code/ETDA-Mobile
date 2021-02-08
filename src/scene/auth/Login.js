@@ -34,7 +34,6 @@ export default class Login extends Component {
         // console.log(apiServer.url + '/api/backend/user/login',data)
         axios.post(apiServer.url + '/api/backend/user/login', data)
             .then((response) => {
-                console.log(response.data)
                 if (response.data.status == "success") {
                     if (response.data.token != "") {
                         AsyncStorage.setItem('token', response.data.token);
