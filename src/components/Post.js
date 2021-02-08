@@ -50,8 +50,6 @@ export default class Post extends Component {
         }
     }
 
-
-
     async componentDidMount() {
         try {
             this.setState({
@@ -62,9 +60,6 @@ export default class Post extends Component {
             // handle errors
         }
     }
-
-
-
     openOption() {
         this.RBSheet.open()
     }
