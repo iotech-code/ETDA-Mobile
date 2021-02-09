@@ -10,8 +10,7 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    KeyboardAvoidingView,
-    AsyncStorage
+    KeyboardAvoidingView
 } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
@@ -24,6 +23,10 @@ import { fonts, apiServer } from '../constant/util';
 import axios from 'axios';
 import FbGrid from "react-native-fb-image-grid";
 import ImageView from 'react-native-image-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import ImageGrid from './ImageGrid'
+
 
 export default class Post extends Component {
     constructor(props) {
@@ -293,9 +296,24 @@ export default class Post extends Component {
 
     };
 
-    render() {
-        const { data, socail } = this.state
+    seePostDetai(){
+        Actions.PostDetail({
+            'user_image': '',
+            'user_name': '',
+            'user_date': this.props.data.date,
+            'user_title': this.props.data.title,
+            'user_tags': this.props.data.tags,
+            'user_images': this.props.data.post_images[0],
+            'user_description': this.props.data.description,
+            'user_like': this.props.data.like,
+            'user_comment': this.props.data.comment,
+            'user_post_id': this.props.data.post_id
+        })
+        AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
+    }
 
+    render() {
+    
         let { post_images } = this.props.data
         let image_viewer = []
         for (let index = 0; index < post_images.length; index++) {
@@ -317,21 +335,7 @@ export default class Post extends Component {
                 marginBottom: hp('2%')
             }}>
                 <TouchableOpacity
-                    onPress={() => {
-                        Actions.PostDetail({
-                            'user_image': '',
-                            'user_name': '',
-                            'user_date': this.props.data.date,
-                            'user_title': this.props.data.title,
-                            'user_tags': this.props.data.tags,
-                            'user_images': this.props.data.post_images[0],
-                            'user_description': this.props.data.description,
-                            'user_like': this.props.data.like,
-                            'user_comment': this.props.data.comment,
-                            'user_post_id': this.props.data.post_id
-                        })
-                        AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
-                    }}
+                    onPress={() => {this.seePostDetai()}}
                     style={{ paddingHorizontal: hp('2%') }}
                 >
                     <View style={{
@@ -359,17 +363,8 @@ export default class Post extends Component {
                             })
                         }
                     </View>
-                    <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                        <FbGrid
-                            images={post_images}
-                            onPress={(url, index) => this.imageViewer(url, index)}
-                        />
-                        <ImageView
-                            images={image_viewer}
-                            imageIndex={this.state.isIndeximageForshow}
-                            isVisible={this.state.isImageViewVisible}
-                            onClose={() => this.setState({ isImageViewVisible: false })}
-                        />
+                    <View style={{ maxHeight: hp('23%'), marginTop: hp('1%') }}>
+                        <ImageGrid data={post_images} />
                     </View>
                     <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
                     <View style={{

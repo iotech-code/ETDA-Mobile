@@ -22,6 +22,8 @@ target 'LOOKs' do
 
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+
   target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing
