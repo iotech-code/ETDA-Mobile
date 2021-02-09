@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -26,22 +26,22 @@ import { fonts } from '../../constant/util';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
 import { apiServer } from '../../constant/util';
-
+import ImageGrid from '../../components/ImageGrid'
 export default class CreatePost extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, token: '', title: '', type: 'blog', image: [], description: '', tag: ["tag1","tag2"], addition: '', postId: '' , images : [] }
+        this.state = { visibleSearch: false, token: '', title: '', type: 'blog', image: [], description: '', tag: ["tag1", "tag2"], addition: '', postId: '', images: [] }
     }
 
     async componentDidMount() {
         try {
-            console.log('data : ' , this.props.title)
+            console.log('data : ', this.props.title)
             const token = await AsyncStorage.getItem('token')
             this.setState({
                 token: token,
-                title : this.props.title,
-                description : this.props.description,
-                image : this.props.post_images
+                title: this.props.title,
+                description: this.props.description,
+                image: this.props.post_images
             })
         } catch (err) {
             // handle errors
@@ -64,14 +64,14 @@ export default class CreatePost extends Component {
         }
 
 
-        console.log('post : ' , this.state.images )
+        console.log('post : ', this.state.images)
 
         axios.post(apiServer.url + '/api/backend/post/create', data, {
             headers
         })
             .then((response) => {
                 if (response.data.status == "success") {
-                   Actions.MessageBoard()
+                    Actions.MessageBoard()
                 } else {
 
                 }
@@ -86,7 +86,7 @@ export default class CreatePost extends Component {
 
 
 
-    callUpdatePost = async (title , type , images , description , tags , addition , post_id) => {
+    callUpdatePost = async (title, type, images, description, tags, addition, post_id) => {
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
@@ -121,6 +121,28 @@ export default class CreatePost extends Component {
 
     };
 
+    async pickImage() {
+        let images = await ImagePicker.openPicker({
+            multiple: true,
+            includeBase64: true,
+            maxFiles: 8
+        })
+        var image = []
+        var image_base64 = []
+        for (let index = 0; index < images.length; index++) {
+            const element = images[index];
+            if (index < 7) {
+                image.push(element.path)
+                var image_send = 'data:image/jpeg;base64,' + element.data
+                image_base64.push(image_send)
+            }
+        }
+        this.setState({
+            image: image,
+            images: image_base64
+        })
+    }
+
     render() {
         const { dataList } = this.state
 
@@ -143,31 +165,30 @@ export default class CreatePost extends Component {
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{this.props.type_value == 'detail' ? 'Detail Blog' : this.props.type_value == 'create' ? 'Create Blog' : 'Edit Blog'}</Text>
-                    {this.props.type_value == 'detail' ? 
+                    {this.props.type_value == 'detail' ?
                         <View>
-                        </View>     
-                    
-                    :
-                    <TouchableOpacity onPress={() => 
-                    {
-                        if (this.props.type_value == 'create'){
+                        </View>
+
+                        :
+                        <TouchableOpacity onPress={() => {
+                            if (this.props.type_value == 'create') {
                                 this.callCreatePost()
-                        }else{
-                            this.callUpdatePost(this.state.title,
-                            'blog' ,
-                            this.state.images,
-                            this.state.description,
-                            this.state.tag,
-                            this.state.addition,
-                            this.props.data.post_id,
-                            )
+                            } else {
+                                this.callUpdatePost(this.state.title,
+                                    'blog',
+                                    this.state.images,
+                                    this.state.description,
+                                    this.state.tag,
+                                    this.state.addition,
+                                    this.props.data.post_id,
+                                )
+                            }
                         }
-    }
-    }>
-<Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
-</TouchableOpacity>
+                        }>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
+                        </TouchableOpacity>
                     }
-                   
+
                 </View>
                 {/* content */}
                 <View>
@@ -187,69 +208,47 @@ export default class CreatePost extends Component {
                     <View style={{ ...style.divider }}></View>
                     <View style={{ height: hp('25%') }}>
                         <TextInput placeholder="Enter your post here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} multiline={true}
-                          defaultValue={this.state.description}
-                          editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
-                        onChangeText={(value) => {
-                            onChangeTextDescription(value)
-                        }}
+                            defaultValue={this.state.description}
+                            editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
+                            onChangeText={(value) => {
+                                onChangeTextDescription(value)
+                            }}
                         ></TextInput>
                     </View>
 
-                    { this.state.image.length == 0 ? 
-                    <View >
+                    {this.state.image.length == 0 ? null :
 
-                    </View>
-                    
-                    : 
-                    
-                    <View style={{ height: hp('30%') }}>
-                        <SliderBox
-                            images={this.state.image}
-                            sliderBoxHeight={hp('30%')}
-                        />
-                    </View>
+                        <View style={{ maxHeight: hp('30%'), alignItems: 'center' }}>
+                            <ImageGrid data={this.state.image} />
+                            {/* <SliderBox
+                                images={this.state.image}
+                                sliderBoxHeight={hp('30%')}
+                            /> */}
+                        </View>
                     }
 
-                    
+
 
                     <View style={{ ...style.divider }}></View>
-                    <TouchableOpacity onPress={() =>  
-                                ImagePicker.openPicker({ multiple: true,
-                                    includeBase64 : true
-                                    }).then(images => {
-                                    var j 
-                                    var image = []
-                                    var image_base64 = []
-                                    for (j = 0 ; j < images.length ; j++){
-                                        console.log('image path : ' , images[j].path)
-                                        image.push(images[j].path)
-                                        var image_send = 'data:image/jpeg;base64,' + images[j].data
-                                        image_base64.push(image_send)
-                                    }
-                                    this.setState({
-                                        image : image,
-                                        images : image_base64
-                                    })
-                                   // console.log('result image : ' , images[0]);
-                                  })}>
-                          {this.props.type_value == 'detail' ?           
-                   <View>
-                       
-                   </View>
+                    <TouchableOpacity onPress={() => this.pickImage()}>
+                        {this.props.type_value == 'detail' ?
+                            <View>
 
-                    :
-                    <View style={{
-                        marginTop: hp('1%'),
-                        marginBottom: hp('1%'),
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingHorizontal: hp('2%')
-                    }}>
-                        <Icon name="camera" style={{ marginRight: hp('2%') }} color="#003764" size={hp('3%') } />
-                        <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
-                    
-                    </View>
-                } 
+                            </View>
+
+                            :
+                            <View style={{
+                                marginTop: hp('1%'),
+                                marginBottom: hp('1%'),
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                paddingHorizontal: hp('2%')
+                            }}>
+                                <Icon name="camera" style={{ marginRight: hp('2%') }} color="#003764" size={hp('3%')} />
+                                <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
+
+                            </View>
+                        }
 
 
                     </TouchableOpacity>
@@ -264,27 +263,33 @@ export default class CreatePost extends Component {
                         <Icon name="tag" style={{ marginRight: hp('2%') }} color="#003764" size={hp('2.5%')} />
                         <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Tag</Text>
                     </View>
-                    {this.props.type_value == 'detail' ?   
-                        <View>
-                        </View>    
-                    :
-                    <View>
-                    <View style={{ marginTop: hp('2%'), paddingHorizontal: hp('2%') }}>
-                        <TextInput
-                            style={style.customInput}
-                            placeholder="Add tag by yourself…"
-                        />
-                    </View>
+                    {this.props.type_value == 'detail' ? null :
+                        <Fragment>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('2%') , alignItems:'center' }}>
+                                <View style={{ paddingHorizontal: hp('2%') ,width:'80%' }}>
+                                    <TextInput
+                                        style={{...style.customInput  }}
+                                        placeholder="Add tag by yourself…"
+                                    />
+                                </View>
+                                <Button
+                                    title="Add Tag"
+                                    titleStyle={{ fontSize: hp('1.5%') }}
+                                    buttonStyle={{ ...style.btnPrimary }}
+                                    onPress={() => {
 
+                                    }}
+                                />
+                            </View>
 
-                    <View style={{ paddingHorizontal: hp('2%') }}>
-                        <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
-                            <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
-                        </View>
-                    </View>
-                    </View>
+                            <View style={{ paddingHorizontal: hp('2%') }}>
+                                <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
+                                    <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
+                                </View>
+                            </View>
+                        </Fragment>
 
-                }
+                    }
 
 
 
@@ -297,14 +302,14 @@ export default class CreatePost extends Component {
                         flexWrap: 'wrap'
 
                     }}>
-                    
+
                         <Button
                             title="E-commerce"
                             titleStyle={{ fontSize: hp('2%') }}
                             buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
-                            onPress={() => { 
-                               
-                            }} 
+                            onPress={() => {
+
+                            }}
                         />
                         <Button
                             title="E-commerce"
@@ -314,7 +319,7 @@ export default class CreatePost extends Component {
                         <Button
                             title="E-commerce"
                             titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
-                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') , marginBottom : hp('10%') }}
+                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%'), marginBottom: hp('10%') }}
                         />
 
                     </View>

@@ -57,27 +57,27 @@ export default class Main extends Component {
                 'Authorization': 'Bearer ' + token,
             }
         })
-        .then((response) => {
-            var i
-            var objectHomeFeed = {}
-            var list = []
-            for (i = 0; i < response.data.post_data.length; i++) {
-                objectHomeFeed = {
-                    post_id: response.data.post_data[i].post_id,
-                    title: response.data.post_data[i].title,
-                    date: response.data.post_data[i].post_date,
-                    description: response.data.post_data[i].post_description,
-                    tags: response.data.post_data[i].tags,
-                    post_images: response.data.post_data[i].post_images,
-                    comment: response.data.post_data[i].comment_number,
-                    like: response.data.post_data[i].like,
+            .then((response) => {
+                var i
+                var objectHomeFeed = {}
+                var list = []
+                for (i = 0; i < response.data.post_data.length; i++) {
+                    objectHomeFeed = {
+                        post_id: response.data.post_data[i].post_id,
+                        title: response.data.post_data[i].title,
+                        date: response.data.post_data[i].post_date,
+                        description: response.data.post_data[i].post_description,
+                        tags: response.data.post_data[i].tags,
+                        post_images: response.data.post_data[i].post_images,
+                        comment: response.data.post_data[i].comment_number,
+                        like: response.data.post_data[i].like,
+                    }
+                    list.push(objectHomeFeed)
                 }
-                list.push(objectHomeFeed)
-            }
-            this.setState({
-                list_data: list
+                this.setState({
+                    list_data: list
+                })
             })
-        })
 
     };
 
@@ -106,7 +106,7 @@ export default class Main extends Component {
                             </View>
 
                             {/* section admin */}
-                            {this.state.user_type == 'read, post_read' ?
+                            {this.state.user_type == 'read,post_read' ?
                                 <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                     <Button
                                         title="Write New Blog"
