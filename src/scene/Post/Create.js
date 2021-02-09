@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -122,7 +122,7 @@ export default class CreatePost extends Component {
     };
 
     async pickImage() {
-        let images  =  await ImagePicker.openPicker({
+        let images = await ImagePicker.openPicker({
             multiple: true,
             includeBase64: true,
             maxFiles: 8
@@ -131,7 +131,7 @@ export default class CreatePost extends Component {
         var image_base64 = []
         for (let index = 0; index < images.length; index++) {
             const element = images[index];
-            if(index < 7){
+            if (index < 7) {
                 image.push(element.path)
                 var image_send = 'data:image/jpeg;base64,' + element.data
                 image_base64.push(image_send)
@@ -218,7 +218,7 @@ export default class CreatePost extends Component {
 
                     {this.state.image.length == 0 ? null :
 
-                        <View style={{ maxHeight: hp('30%')  , alignItems:'center'}}>
+                        <View style={{ maxHeight: hp('30%'), alignItems: 'center' }}>
                             <ImageGrid data={this.state.image} />
                             {/* <SliderBox
                                 images={this.state.image}
@@ -263,25 +263,31 @@ export default class CreatePost extends Component {
                         <Icon name="tag" style={{ marginRight: hp('2%') }} color="#003764" size={hp('2.5%')} />
                         <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Tag</Text>
                     </View>
-                    {this.props.type_value == 'detail' ?
-                        <View>
-                        </View>
-                        :
-                        <View>
-                            <View style={{ marginTop: hp('2%'), paddingHorizontal: hp('2%') }}>
-                                <TextInput
-                                    style={style.customInput}
-                                    placeholder="Add tag by yourself…"
+                    {this.props.type_value == 'detail' ? null :
+                        <Fragment>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('2%') , alignItems:'center' }}>
+                                <View style={{ paddingHorizontal: hp('2%') ,width:'80%' }}>
+                                    <TextInput
+                                        style={{...style.customInput  }}
+                                        placeholder="Add tag by yourself…"
+                                    />
+                                </View>
+                                <Button
+                                    title="Add Tag"
+                                    titleStyle={{ fontSize: hp('1.5%') }}
+                                    buttonStyle={{ ...style.btnPrimary }}
+                                    onPress={() => {
+
+                                    }}
                                 />
                             </View>
-
 
                             <View style={{ paddingHorizontal: hp('2%') }}>
                                 <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
                                     <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
                                 </View>
                             </View>
-                        </View>
+                        </Fragment>
 
                     }
 
