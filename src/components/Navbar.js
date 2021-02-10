@@ -9,10 +9,9 @@ import {
     StatusBar,
     Image,
     TextInput,
-    TouchableOpacity,
-    AsyncStorage
+    TouchableOpacity
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
@@ -26,40 +25,42 @@ export default class HeaderNavbar extends Component {
         photo: ''
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.getUserInfo();
+    }
+    async getUserInfo () {
         try {
-            const fullname = await AsyncStorage.getItem('fullname');
-            const photo = await AsyncStorage.getItem('photo');
+            let json_info = await AsyncStorage.getItem('user_data');
+            let info = JSON.parse(json_info);
             this.setState({
-                name: fullname,
-                photo: photo
+                name: info.fullname,
+                photo: info.photo
             })
         } catch (err) {
-            console.log('err 1 : ', err)
+            console.log(err.message)
         }
     }
-
     render() {
-        const { imageAvatar, user_name } = this.state
+        const { imageAvatar, name, photo } = this.state
 
         return (
             <View style={styleScoped.container}>
                 <View style={styleScoped.leftSide}>
                     <TouchableOpacity style={styleScoped.avatar} onPress={() => { Actions.replace('MyProfile') }}>
                         {
-                            this.state.photo == '' || this.state.photo == null ?
+                            photo == '' || photo == null ?
                                 <Image
                                     source={imageAvatar}
                                     style={styleScoped.imageAvatar}
                                 />
                                 :
                                 <Image
-                                    source={{ uri: this.state.photo }}
+                                    source={{ uri: photo }}
                                     style={styleScoped.imageAvatar}
                                 />
                         }
                     </TouchableOpacity>
-                    <Text style={styleScoped.textName}>{this.state.name}</Text>
+                    <Text style={styleScoped.textName}>{name}</Text>
                 </View>
                 <View style={styleScoped.rightSide}>
                     <TouchableOpacity onPress={() => Actions.push('Search')}>

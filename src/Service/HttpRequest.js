@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { apiServer } from '../constant/util';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 class HttpRequest {
@@ -43,8 +43,8 @@ class HttpRequest {
     this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
 
-  get(methodName, data) {
-    return this.axiosInstance.get(methodName, {
+  get(url, data) {
+    return this.axiosInstance.get(url, {
       params: data
     })
   }
@@ -53,12 +53,12 @@ class HttpRequest {
     return this.axiosInstance.post(methodName, data)
   }
 
-  update(methodName, data) {
-    return this.axiosInstance.put(methodName, data)
+  update(url, data) {
+    return this.axiosInstance.put(url, data)
   }
 
-  delete(methodName, param, data) {
-    return this.axiosInstance.delete(methodName, {
+  delete(url, param, data) {
+    return this.axiosInstance.delete(url, {
       params: param,
       data: data
     })
@@ -76,6 +76,4 @@ class HttpRequest {
     return promise
   }
 }
-
-
 export default HttpRequest

@@ -4,6 +4,7 @@ import {
     SafeAreaView,
     StyleSheet,
     ScrollView,
+    Platform,
     View,
     Text,
     StatusBar,
@@ -11,104 +12,109 @@ import {
     TextInput,
     TouchableOpacity,
     KeyboardAvoidingView,
-    AsyncStorage
+    Alert
 } from 'react-native';
 import { apiServer } from '../../constant/util'
+import HttpRequest from '../../Service/HttpRequest'
 import axios from 'axios';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Actions } from 'react-native-router-flux'
+
+const http = new HttpRequest();
 export default class Login extends Component {
     constructor() {
         super();
-        this.state = { email: '', pass: '' }
+        this.state = { email: '', pass: '', statusSecureText: true, emailBorder: '#CADAFB', passwordBorder: '#CADAFB', defaultBorder: '#CADAFB', emailEnable: false, passwordEnable: false, disableLogin: true }
     }
 
-    callLogin = async () => {
+    componentDidMount () {
+        this.checkLogin();
+    }
+
+    async checkLogin() {
+        let token = await AsyncStorage.getItem('token');
+        
+        if(token) {
+            await this.callInfomation();
+        }
+        
+    }
+
+    async callLogin () {
+        if( this.state.email === '' || this.state.pass === '' ) {
+            Alert.alert('Please fill your user name and password.');
+            return false;
+        }
+
         const data = {
             "user_email": this.state.email,
             "user_password": this.state.pass,
             "authen_method": "local"
         }
-        // console.log(apiServer.url + '/api/backend/user/login',data)
-        axios.post(apiServer.url + '/api/backend/user/login', data)
-            .then((response) => {
-                if (response.data.status == "success") {
-                    if (response.data.token != "") {
-                        AsyncStorage.setItem('token', response.data.token);
-                        this.callInfomation(response.data.token)
-                    }
-                } else {
-                    alert("Wrong email or password.")
-                }
-            })
-            .catch((error) => {
-            })
-            .finally(function () {
-            });
 
+        let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
+        let {token, status} = loginRequest.data
+
+        if (status == "success") {
+            if (token != "") {
+                await AsyncStorage.setItem('token', token);
+                await this.callInfomation(token);
+            }
+        } else {
+            Alert.alert("Wrong email or password.");
+        }
     };
 
 
-    callInfomation = async (token) => {
-        console.log('come in ')
-        const data = {
-            "Token": token
+    callInfomation = async () => {
+        await http.autoSetTokenHeader();
+        let response = await http.post(apiServer.url + '/api/backend/user/information')
+        let {status, data} = response.data
+        if (status == "success") {
+            await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
+            await Actions.replace('Main');
+
+        } else {
+            Alert.alert('Can\'t login: issue about server response data please try again.')
         }
-        axios.post(apiServer.url + '/api/backend/user/information', data)
-            .then((response) => {
-
-
-                if (response.data.status == "success") {
-                    var name = ''
-                    var image = ''
-                    if (response.data.data.fullname == null){
-                        name = ''
-                    }else{
-                        name = response.data.data.fullname 
-                    }
-
-                    if (response.data.data.photo == null){
-                        image = ''
-                    }else{
-                        image = response.data.data.photo
-                    }
-                    AsyncStorage.setItem('user_type', response.data.data.user_type)
-                    AsyncStorage.setItem('user_role', response.data.data.user_role)
-                    AsyncStorage.setItem('fullname', name)
-                    AsyncStorage.setItem('photo', image)
-                    Actions.replace('Main')
-
-                } else {
-
-                }
-            })
-            .catch((error) => {
-            })
-            .finally(function () {
-            });
-
     };
     
     render() {
-        // on change text
-        onChangeTextEmail = async (value) => {
-            this.setState({
-                email: value
-            })
+        const emailValidate = async (value) => {
+            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (reg.test(value) === false) {
+                await this.setState({emailBorder: 'red', email: value.toLowerCase(), emailEnable: false })
+                await this.setState({disableLogin: true})
+            } else {
+                await this.setState({emailBorder: this.state.defaultBorder, email: value.toLowerCase(), emailEnable: true })
+                await loginCheck()
+            }
         }
 
-        onChangeTextPassword = async (value) => {
-            this.setState({
-                pass: value
-            })
+        const passwordValidate = async (value) => {
+            if (value.length <= 3) {
+                await this.setState({passwordBorder: 'red', pass: value, passwordEnable: false })
+                await this.setState({disableLogin: true})
+            } else {
+                await this.setState({passwordBorder: this.state.defaultBorder, pass: value, passwordEnable: true })
+                await loginCheck()
+            }
         }
+
+        const loginCheck = () => {
+            if(this.state.emailEnable && this.state.passwordEnable) {
+                this.setState({disableLogin: false})
+            }
+        }
+
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
-                <KeyboardAvoidingView behavior="position">
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{
                         marginTop: hp('8%'),
                         flexDirection: 'row',
@@ -117,39 +123,36 @@ export default class Login extends Component {
                     }}>
                         <View style={styleScoped.imageLogo}>
                             <Image
-                                source={require('../../assets/images/logo.png')}
+                                source={ require('../../assets/images/logo.png') }
                                 style={style.imageContain}
                             />
                         </View>
-
                     </View>
                     <View style={{ marginTop: hp('5%') }}>
                         <Text style={styleScoped.textWelcome}>Welcome</Text>
                     </View>
                     <View style={style.container}>
                         <View style={{ marginTop: hp('2%') }}>
-                            <View style={style.customInput}>
+                            <View style={{...style.customInput, borderColor: this.state.emailBorder}}>
                                 <TextInput
                                     value={this.state.email}
-                                    style={[style.input, { color: 'black' }]}
+                                    style={[style.input, { color: 'black', paddingVertical: 3, paddingHorizontal: 8 }]}
                                     placeholder="Email address"
                                     keyboardType='email-address'
-                                    onChangeText={(value) => {
-                                        onChangeTextEmail( value.toLowerCase() )
-                                    }}
+                                    onChangeText={ text => emailValidate(text) }
                                 />
                             </View>
                         </View>
                         <View style={{ marginTop: hp('1%') }}>
-                            <View style={style.customInput}>
+                            <View style={{...style.customInput, borderColor: this.state.passwordBorder, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
                                 <TextInput
-                                    style={[style.input, { color: 'black' }]}
+                                    value={this.state.pass}
+                                    style={[style.input, { color: 'black', width: wp(70) }]}
                                     placeholder="Password"
-                                    secureTextEntry={true}
-                                    onChangeText={(value) => {
-                                        onChangeTextPassword(value)
-                                    }}
+                                    secureTextEntry={this.state.statusSecureText}
+                                    onChangeText={ text => passwordValidate(text) }
                                 />
+                                <Icon color={this.state.statusSecureText ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={ () => this.setState({statusSecureText: this.state.statusSecureText?false:true }) } />
                             </View>
                         </View>
                         <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -166,10 +169,9 @@ export default class Login extends Component {
                         <View style={{ marginTop: hp('3%') }}>
                             <Button
                                 title="Login"
+                                disabled={ this.state.disableLogin }
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                                onPress={() =>
-                                    this.callLogin()
-                                }
+                                onPress={ () => this.callLogin() }
                             />
                         </View>
                         <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
@@ -200,8 +202,6 @@ export default class Login extends Component {
                                 <Text style={{ color: '#4267B2', textDecorationLine: 'underline', fontSize: hp('1.7%') }} >Register</Text>
                             </TouchableOpacity>
                         </View>
-
-
                     </View>
                     </KeyboardAvoidingView>
                 </SafeAreaView>

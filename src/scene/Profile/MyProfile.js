@@ -10,10 +10,9 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList,
-    AsyncStorage
+    FlatList
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
@@ -137,6 +136,11 @@ export default class MyProfile extends Component {
 
     };
 
+    async logout () {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('user_data');
+        await Actions.replace('Login');
+    }
 
     render() {
         return (
@@ -245,7 +249,7 @@ export default class MyProfile extends Component {
                                 title="Logout"
                                 titleStyle={{ color: fonts.color.primary }}
                                 buttonStyle={{ padding: hp('1%'), ...style.btnRounded, ...style.btnPrimaryOutline }}
-                                onPress={() => Actions.replace('Login')}
+                                onPress={ () => this.logout() }
                             />
                         </View>
 
