@@ -25,7 +25,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
-
 import { homeFeed } from '../Service/PostService'
 export default class Main extends Component {
     state = {
@@ -41,7 +40,7 @@ export default class Main extends Component {
         try {
             const user_type = await AsyncStorage.getItem('user_type');
             const user_role = await AsyncStorage.getItem('user_role');
-            this.setState({ user_type: user_type, user_role: user_role })
+            this.setState({ user_type, user_role })
             this.callHomeFeed()
         } catch (err) {
             console.log('Set token : ', err)

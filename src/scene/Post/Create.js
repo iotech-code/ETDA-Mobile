@@ -171,14 +171,20 @@ export default class CreatePost extends Component {
 
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                <Spinner
-                    visible={spinner}
-                />
+                <Spinner visible={spinner} />
                 <View style={{ ...style.navbar }}>
                     <TouchableOpacity onPress={() => Actions.pop()}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
-                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{this.props.type_value == 'detail' ? 'Detail Blog' : this.props.type_value == 'create' ? 'Create Blog' : 'Edit Blog'}</Text>
+                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>
+                        {
+                            this.props.type_value == 'detail'
+                                ? 'Detail Blog'
+                                : this.props.type_value == 'create'
+                                    ? 'Create Blog'
+                                    : 'Edit Blog'
+                        }
+                    </Text>
                     {this.props.type_value == 'detail' ? null
                         :
                         <TouchableOpacity onPress={() => {
@@ -249,28 +255,28 @@ export default class CreatePost extends Component {
 
                     <View style={{ ...style.divider }}></View>
                     <TouchableOpacity onPress={() => this.pickImage()}>
-                        {this.props.type_value == 'detail' ?
-                            null
-                            :
-                            <View style={{
-                                marginTop: hp('1%'),
-                                marginBottom: hp('1%'),
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                paddingHorizontal: hp('2%')
-                            }}>
-                                <Icon
-                                    name="camera"
-                                    style={{ marginRight: hp('2%') }}
-                                    color="#003764"
-                                    size={hp('3%')} />
-                                <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
+                        {
+                            this.props.type_value == 'detail' ?
+                                null
+                                :
+                                <View style={{
+                                    marginTop: hp('1%'),
+                                    marginBottom: hp('1%'),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingHorizontal: hp('2%')
+                                }}>
+                                    <Icon
+                                        name="camera"
+                                        style={{ marginRight: hp('2%') }}
+                                        color="#003764"
+                                        size={hp('3%')} />
+                                    <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
 
-                            </View>
+                                </View>
                         }
-
-
                     </TouchableOpacity>
+
                     <View style={{ ...style.divider }}></View>
 
                     <View style={{
@@ -282,32 +288,33 @@ export default class CreatePost extends Component {
                         <Icon name="tag" style={{ marginRight: hp('2%') }} color="#003764" size={hp('2.5%')} />
                         <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Tag</Text>
                     </View>
-                    {this.props.type_value == 'detail' ? null :
-                        <Fragment>
-                            <View style={{ ...style.flex__start, marginTop: hp('2%'), alignItems: 'center' }}>
-                                <View style={{ paddingHorizontal: hp('2%'), width: '80%' }}>
-                                    <TextInput
-                                        style={{ ...style.customInput }}
-                                        placeholder="Add tag by yourself…"
+                    {
+                        this.props.type_value == 'detail'
+                            ? null
+                            : <Fragment>
+                                <View style={{ ...style.flex__start, marginTop: hp('2%'), alignItems: 'center' }}>
+                                    <View style={{ paddingHorizontal: hp('2%'), width: '80%' }}>
+                                        <TextInput
+                                            style={{ ...style.customInput }}
+                                            placeholder="Add tag by yourself…"
+                                        />
+                                    </View>
+                                    <Button
+                                        title="Add Tag"
+                                        titleStyle={{ fontSize: hp('1.5%') }}
+                                        buttonStyle={{ ...style.btnPrimary }}
+                                        onPress={() => {
+
+                                        }}
                                     />
                                 </View>
-                                <Button
-                                    title="Add Tag"
-                                    titleStyle={{ fontSize: hp('1.5%') }}
-                                    buttonStyle={{ ...style.btnPrimary }}
-                                    onPress={() => {
 
-                                    }}
-                                />
-                            </View>
-
-                            <View style={{ paddingHorizontal: hp('2%') }}>
-                                <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
-                                    <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
+                                <View style={{ paddingHorizontal: hp('2%') }}>
+                                    <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
+                                        <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </Fragment>
-
+                            </Fragment>
                     }
 
 
@@ -331,13 +338,8 @@ export default class CreatePost extends Component {
                                             fontSize: hp('2%'),
                                             color: !el.selected ? fonts.color.primary : 'white'
                                         }}
-                                        buttonStyle={{
-                                            ...tagStyle,
-                                            margin: hp('0.5%')
-                                        }}
-                                        onPress={() => {
-                                            this.selectTag(index)
-                                        }}
+                                        buttonStyle={{ ...tagStyle, margin: hp('0.5%') }}
+                                        onPress={() => { this.selectTag(index) }}
                                         key={`tags_${index}`}
                                     />
                                 )
@@ -345,11 +347,7 @@ export default class CreatePost extends Component {
                         }
 
                     </View>
-
-
-
                 </View>
-
             </ScrollView>
         );
     }

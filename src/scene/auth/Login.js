@@ -70,7 +70,7 @@ export default class Login extends Component {
 
 
     callInfomation = async () => {
-        await http.autoSetTokenHeader();
+        await http.setTokenHeader();
         let response = await http.post(apiServer.url + '/api/backend/user/information')
         let {status, data} = response.data
         if (status == "success") {
