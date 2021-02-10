@@ -21,11 +21,13 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
 import { apiServer } from '../constant/util';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { homeFeed } from '../Service/PostService'
 export default class Main extends Component {
     state = {
         visibleSearch: false,
@@ -38,51 +40,39 @@ export default class Main extends Component {
 
     async componentDidMount() {
         try {
-            const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
             const user_role = await AsyncStorage.getItem('user_role');
-            this.setState({
-                user_type: user_type,
-                token: token,
-                user_role: user_role
-            })
-            this.callHomeFeed(token)
+            this.setState({ user_type: user_type, user_role: user_role })
+            this.callHomeFeed()
         } catch (err) {
-            console.log('err 1 : ', err)
+            console.log('Set token : ', err)
         }
     }
 
-    callHomeFeed = async (token) => {
+    async callHomeFeed() {
         this.setState({ isFetching: true })
-        axios.get(apiServer.url + '/api/backend/post/home-feed', {
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-            .then((response) => {
-                var i
-                var objectHomeFeed = {}
-                var list = []
-                for (i = 0; i < response.data.post_data.length; i++) {
-                    objectHomeFeed = {
-                        post_id: response.data.post_data[i].post_id,
-                        title: response.data.post_data[i].title,
-                        date: response.data.post_data[i].post_date,
-                        description: response.data.post_data[i].post_description,
-                        tags: response.data.post_data[i].tags,
-                        post_images: response.data.post_data[i].post_images,
-                        comment: response.data.post_data[i].comment_number,
-                        like: response.data.post_data[i].like,
-                    }
-                    list.push(objectHomeFeed)
+        try {
+            let { data } = await homeFeed();
+            let list_data = []
+            for (let index = 0; index < data.post_data.length; index++) {
+                const element = data.post_data[index];
+                let objectHomeFeed = {
+                    post_id: element.post_id,
+                    title: element.title,
+                    date: element.post_date,
+                    description: element.post_description,
+                    tags: element.tags,
+                    post_images: element.post_images,
+                    comment: element.comment_number,
+                    like: element.like,
                 }
-                this.setState({
-                    list_data: list
-                })
-                this.setState({ isFetching: false })
-            })
-
+                list_data.push(objectHomeFeed)
+            }
+            await this.setState({ list_data })
+        } catch (error) {
+            console.log("Main scene error : ", error)
+        }
+        this.setState({ isFetching: false })
     };
 
 
@@ -129,35 +119,34 @@ export default class Main extends Component {
                             : null
                         }
 
-
+                        {/* loading data */}
                         {
                             isFetching ?
                                 <ActivityIndicator color="#003764" style={{ marginTop: hp('27%') }} />
                                 : null
                         }
+                        {/* end loading data */}
 
 
-                        {/* show post */}
+                        {/*   show post  */}
                         {
+
                             this.state.list_data.map((item, index) => {
                                 return (
                                     <Post data={item} key={`post_${index}`}></Post>
                                 )
                             })
                         }
-
+                        {/* end  show post */}
                     </View>
-
-
-
                 </ScrollView>
+
                 <View style={{ backgroundColor: null }}>
                     {this.state.user_role == "Member" ?
                         <MenuFooterUser value={'home'}></MenuFooterUser>
                         :
                         <MenuFooter value={'home'}></MenuFooter>
                     }
-
                 </View>
             </View>
         );
