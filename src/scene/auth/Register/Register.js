@@ -17,14 +17,21 @@ import {
 
 import { Button, CheckBox, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import style from '../../../styles/base'
-import { Actions } from 'react-native-router-flux'
-import { colors } from '../../../constant/util'
+import style from '../../../styles/base';
+import { Actions } from 'react-native-router-flux';
+import { colors } from '../../../constant/util';
 export default class Register extends Component {
 
     constructor() {
         super();
-        this.state = { rEmail: '', rPass: '', rCPass: '', rPolicy: false, statusSecureText: true, statusSecureConfirmText: true }
+        this.state = { 
+            rEmail: '', 
+            rPass: '', 
+            rCPass: '', 
+            rPolicy: false, 
+            statusSecureText: true, 
+            statusSecureConfirmText: true 
+        }
     }
 
     render() {

@@ -30,11 +30,9 @@ export default class ForgetPassword extends Component {
     }
 
     callForgot = async () => {
-        console.log('come in ')
         const data = {
             "user_email": this.state.email
         }
-        console.log('come in ', data)
         axios.post(apiServer.url + '/api/backend/user/login', data)
             .then((response) => {
                 console.log('come in ', response)
@@ -44,11 +42,6 @@ export default class ForgetPassword extends Component {
 
                 }
             })
-            .catch((error) => {
-            })
-            .finally(function () {
-            });
-
     };
 
     render() {

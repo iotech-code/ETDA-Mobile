@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    ScrollView,
     Platform,
     View,
     Text,
@@ -16,18 +15,30 @@ import {
 } from 'react-native';
 import { apiServer } from '../../constant/util'
 import HttpRequest from '../../Service/HttpRequest'
-import axios from 'axios';
 import { Button, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Actions } from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 const http = new HttpRequest();
 export default class Login extends Component {
     constructor() {
         super();
-        this.state = { email: '', pass: '', statusSecureText: true, emailBorder: '#CADAFB', passwordBorder: '#CADAFB', defaultBorder: '#CADAFB', emailEnable: false, passwordEnable: false, disableLogin: true }
+        this.state = { 
+            email: '', 
+            pass: '', 
+            statusSecureText: true, 
+            emailBorder: '#CADAFB', 
+            passwordBorder: '#CADAFB', 
+            defaultBorder: '#CADAFB', 
+            emailEnable: false, 
+            passwordEnable: false, 
+            disableLogin: true,
+            spinner: false
+        }
     }
 
     componentDidMount () {
@@ -40,7 +51,6 @@ export default class Login extends Component {
         if(token) {
             await this.callInfomation();
         }
-        
     }
 
     async callLogin () {
@@ -54,6 +64,7 @@ export default class Login extends Component {
             "user_password": this.state.pass,
             "authen_method": "local"
         }
+        this.setState({ spinner: true });
 
         let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
         let {token, status} = loginRequest.data
@@ -65,9 +76,9 @@ export default class Login extends Component {
             }
         } else {
             Alert.alert("Wrong email or password.");
+            this.setState({ spinner: false });
         }
     };
-
 
     callInfomation = async () => {
         await http.autoSetTokenHeader();
@@ -75,41 +86,43 @@ export default class Login extends Component {
         let {status, data} = response.data
         if (status == "success") {
             await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
+            await this.setState({ spinner: false });
             await Actions.replace('Main');
-
         } else {
-            Alert.alert('Can\'t login: issue about server response data please try again.')
+            Alert.alert('Can\'t login: issue about server response data please try again.');
+            this.setState({ spinner: false });
         }
     };
+
+    emailValidate = async value => {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(value) === false) {
+            await this.setState({emailBorder: 'red', email: value.toLowerCase(), emailEnable: false })
+            await this.setState({disableLogin: true})
+        } else {
+            await this.setState({emailBorder: this.state.defaultBorder, email: value.toLowerCase(), emailEnable: true })
+            await this.loginCheck()
+        }
+    }
+
+    passwordValidate = async (value) => {
+        if (value.length <= 3) {
+            await this.setState({passwordBorder: 'red', pass: value, passwordEnable: false })
+            await this.setState({disableLogin: true})
+        } else {
+            await this.setState({passwordBorder: this.state.defaultBorder, pass: value, passwordEnable: true })
+            await this.loginCheck()
+        }
+    }
+
+    loginCheck = () => {
+        if(this.state.emailEnable && this.state.passwordEnable) {
+            this.setState({disableLogin: false})
+        }
+    }
     
     render() {
-        const emailValidate = async (value) => {
-            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (reg.test(value) === false) {
-                await this.setState({emailBorder: 'red', email: value.toLowerCase(), emailEnable: false })
-                await this.setState({disableLogin: true})
-            } else {
-                await this.setState({emailBorder: this.state.defaultBorder, email: value.toLowerCase(), emailEnable: true })
-                await loginCheck()
-            }
-        }
-
-        const passwordValidate = async (value) => {
-            if (value.length <= 3) {
-                await this.setState({passwordBorder: 'red', pass: value, passwordEnable: false })
-                await this.setState({disableLogin: true})
-            } else {
-                await this.setState({passwordBorder: this.state.defaultBorder, pass: value, passwordEnable: true })
-                await loginCheck()
-            }
-        }
-
-        const loginCheck = () => {
-            if(this.state.emailEnable && this.state.passwordEnable) {
-                this.setState({disableLogin: false})
-            }
-        }
-
+        const {spinner} = this.state;
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
@@ -121,6 +134,9 @@ export default class Login extends Component {
                         justifyContent: 'center',
                         ...style.container
                     }}>
+                        <Spinner
+                            visible={spinner}
+                        />
                         <View style={styleScoped.imageLogo}>
                             <Image
                                 source={ require('../../assets/images/logo.png') }
@@ -139,7 +155,7 @@ export default class Login extends Component {
                                     style={[style.input, { color: 'black', paddingVertical: 3, paddingHorizontal: 8 }]}
                                     placeholder="Email address"
                                     keyboardType='email-address'
-                                    onChangeText={ text => emailValidate(text) }
+                                    onChangeText={ text => this.emailValidate(text) }
                                 />
                             </View>
                         </View>
@@ -150,7 +166,7 @@ export default class Login extends Component {
                                     style={[style.input, { color: 'black', width: wp(70) }]}
                                     placeholder="Password"
                                     secureTextEntry={this.state.statusSecureText}
-                                    onChangeText={ text => passwordValidate(text) }
+                                    onChangeText={ text => this.passwordValidate(text) }
                                 />
                                 <Icon color={this.state.statusSecureText ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={ () => this.setState({statusSecureText: this.state.statusSecureText?false:true }) } />
                             </View>

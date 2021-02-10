@@ -60,10 +60,7 @@ export default class RegisterSuccess extends Component {
                         justifyContent: 'center',
                         ...style.container
                     }}>
-
                         <Icon name="check-circle" size={hp('30%')} color="#30D100" />
-
-
                     </View>
                     <View style={{ marginTop: hp('3%') }}>
                         <Text style={styleScoped.textWelcome}>Your registration has been submitted,</Text>
