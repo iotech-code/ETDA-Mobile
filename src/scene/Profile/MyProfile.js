@@ -18,7 +18,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 import { fonts } from '../../constant/util'
 import axios from 'axios';
 import { apiServer } from '../../constant/util';
@@ -54,106 +53,9 @@ export default class MyProfile extends Component {
             type: data.user_type, 
             name: data.fullname, 
             photo: data.photo,
-            userId: data.user_id
+            userId: data.userid
         });
     }
-
-
-    callInfomation = async (token) => {
-        const data = {
-            "Token": token
-        }
-        axios.post(apiServer.url + '/api/backend/user/information', data)
-            .then((response) => {
-                var phone = ''
-                var professional = ''
-                var position = ''
-                var organization = ''
-                var type = ''
-                var name = ''
-                var photo = ''
-                var userId = ''
-
-                if (response.data.status == "success") {
-                    if (response.data.data.mobile_number == null) {
-                        phone = ''
-                    } else {
-                        phone = response.data.data.mobile_number
-                    }
-
-
-                    if (response.data.data.professional == null) {
-                        professional = ''
-                    } else {
-                        professional = response.data.data.professional
-                    }
-
-
-                    if (response.data.data.position == null) {
-                        position = ''
-                    } else {
-                        position = response.data.data.position
-                    }
-
-
-                    if (response.data.data.organization == null) {
-                        organization = ''
-                    } else {
-                        organization = response.data.data.organization
-                    }
-
-
-                    if (response.data.data.type == null) {
-                        type = ''
-                    } else {
-                        type = response.data.data.type
-                    }
-
-
-                    if (response.data.data.name == null) {
-                        name = ''
-                    } else {
-                        name = response.data.data.name
-                    }
-
-                    if (response.data.data.photo == null) {
-                        photo = ''
-                    } else {
-                        photo = response.data.data.photo
-                    }
-
-                    if (response.data.data.userid == null) {
-                        userId = ''
-                    } else {
-                        userId = response.data.data.userid
-                    }
-
-                    this.setState({
-                        phone: phone,
-                        professional: professional,
-                        position: position,
-                        organization: organization,
-                        type: type,
-                        name: name,
-                        photo: photo,
-                        userId: userId
-                    })
-                    console.log(this.state)
-
-                    AsyncStorage.setItem('fullname', this.state.name)
-                    AsyncStorage.setItem('photo', this.state.photo)
-                    AsyncStorage.setItem('user_type', response.data.data.user_type)
-                    AsyncStorage.setItem('user_role', response.data.data.user_role)
-                } else {
-
-                }
-            })
-            .catch((error) => {
-            })
-            .finally(function () {
-            });
-
-    };
 
     async logout () {
         await AsyncStorage.removeItem('token');
@@ -206,7 +108,7 @@ export default class MyProfile extends Component {
                                 <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Contact me</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ {user_data.phone}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ {user_data.userId}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -245,18 +147,7 @@ export default class MyProfile extends Component {
                             <Button
                                 title="Edit Profile"
                                 buttonStyle={{ padding: hp('1%'), ...style.btnRounded, ...style.btnPrimary }}
-                                onPress={() => Actions.EditProfile(
-                                    {
-                                        'name': user_data.name,
-                                        'phone': user_data.phone,
-                                        'professional': user_data.professional,
-                                        'organization': this.state.organization,
-                                        'position': user_data.position,
-                                        'type': user_data.type,
-                                        'photo': user_data.photo,
-                                        'userId': user_data.userId
-                                    }
-                                )}
+                                onPress={() => Actions.EditProfile({user_data})}
                             />
                         </View>
                         <View style={{ marginTop: hp('2%') }}>

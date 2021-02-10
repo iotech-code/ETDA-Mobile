@@ -38,18 +38,19 @@ const options = {
 };
 
 export default class EditProfile extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props)
         this.state = {
-            token:'',
-            phone: '',
-            professional: '',
-            position: '',
-            organization: '',
-            type: '',
-            name: '',
-            photo: '',
-            userId: '',
+            userObject: {
+                phone: '',
+                professional: '',
+                position: '',
+                organization: '',
+                type: '',
+                name: '',
+                photo: '',
+                userId: '',
+            },
             visibleSearch: false,
             visibleChangeTypeOfUser: false,
             visibleModalPostandRead: false,
@@ -63,26 +64,16 @@ export default class EditProfile extends Component {
     }
 
 
-    async  componentDidMount() {
-        const { navigation } = this.props;
-        try {
-            const token = await AsyncStorage.getItem('token');
-            console.log('token 1 : ' , token)
-            this.setState({
-                token : token,
-                phone: navigation.getParam('phone', ''),
-                professional: navigation.getParam('professional', ''),
-                position: navigation.getParam('position', ''),
-                organization: navigation.getParam('organization', ''),
-                type: navigation.getParam('type', ''),
-                name: navigation.getParam('name', ''),
-                photo: navigation.getParam('photo', ''),
-                userId: navigation.getParam('userId', ''),
-            })
-        } catch (err) {
-            console.log('err 1 : ' ,err)
-        }
-       
+    componentDidMount() {
+        this.setUserObject();
+    }
+
+    async setUserObject () {
+        const {user_data} = await this.props;
+        
+        await this.setState({
+            userObject: {...user_data}
+        })
     }
 
     chooseImageFileRegister = () => {
@@ -335,7 +326,7 @@ export default class EditProfile extends Component {
         this.state.rExp.push(this.state.rExp2)
         this.state.rExp.push(this.state.rExp3)
         var image = []
-        if (this.state.photo == '' || this.state.photo == null){
+        if (this.state.photo === '' || this.state.photo === null){
             image = this.state.photo
         }else{
             image = ''
@@ -378,7 +369,7 @@ export default class EditProfile extends Component {
 
 
     render() {
-        const { navigation } = this.props;
+        const { userObject } = this.state.userObject;
 
         onChangeTextPhone = async (value) => {
             this.setState({
@@ -413,7 +404,7 @@ export default class EditProfile extends Component {
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Profile</Text>
                             <TouchableOpacity
-                                onPress={() => this.callEditProfile(this.state.token)}
+                                onPress={() => this.callEditProfile()}
                             >
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
                             </TouchableOpacity>
@@ -423,7 +414,7 @@ export default class EditProfile extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
-                                {this.state.photo == '' || this.state.photo == null ?
+                                {this.state.userObject.photo === '' || this.state.userObject.photo === null ?
                                 <Image source={this.state.dafault_avatar} style={{
                                     width: '100%',
                                     height: '100%',
@@ -432,7 +423,7 @@ export default class EditProfile extends Component {
                                 }} />
                                 :
                                 <Image source={{
-                                    uri: this.state.photo,
+                                    uri: this.state.userObject.photo,
                                   }} style={{
                                     width: '100%',
                                     height: '100%',
@@ -447,11 +438,11 @@ export default class EditProfile extends Component {
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
                                 <TextInput
-                                    value={this.state.name}
+                                    value={this.state.userObject.name}
                                     style={{ ...style.customInput, minWidth: '60%', marginTop: 5, borderWidth: 0 }}
                                     placeholder="Fullname"
                                     onChangeText={(value) => {
-                                        this.setState({name: value})
+                                        this.setState({userObject: { name: value } })
                                     }}
                                 />
                             </View>
@@ -470,7 +461,7 @@ export default class EditProfile extends Component {
                                 />
                                 <TextInput
                                     style={{ ...style.customInput, width: '80%' }}
-                                    placeholder={navigation.getParam('phone', '')}
+                                    placeholder={this.props.phone}
                                     keyboardType='number-pad'
                                     onChangeText={(value) => {
                                         onChangeTextPhone(value)
@@ -531,7 +522,7 @@ export default class EditProfile extends Component {
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.type == "read" ? "Read only" : "Read , Post_read"}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.userObject.type.toUpperCase()}</Text>
                                 <TouchableOpacity
                                     style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
                                     onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
@@ -551,11 +542,6 @@ export default class EditProfile extends Component {
                 {this.renderModalPostandRead()}
             </View >
         );
-
-
-
-
-
     }
 
 

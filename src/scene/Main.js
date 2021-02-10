@@ -11,6 +11,7 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
+    RefreshControl,
     ActivityIndicator
 } from 'react-native';
 
@@ -37,15 +38,20 @@ export default class Main extends Component {
     }
 
     async componentDidMount() {
-        try {
-            const user_type = await AsyncStorage.getItem('user_type');
-            const user_role = await AsyncStorage.getItem('user_role');
-            this.setState({ user_type, user_role })
-            this.callHomeFeed()
-        } catch (err) {
-            console.log('Set token : ', err)
-        }
+        await this.getUserInfo();
+        await this.callHomeFeed();
+        const [refreshing, setRefreshing] = React.useState(false);
     }
+
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+
+        this.setState({
+            user_type: user_data.user_type,
+            user_role: user_data.user_role
+        })
+    };
 
     async callHomeFeed() {
         this.setState({ isFetching: true })
@@ -81,9 +87,9 @@ export default class Main extends Component {
         })
     }
 
-
     render() {
         const { dataList, isFetching } = this.state
+        
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
@@ -104,7 +110,8 @@ export default class Main extends Component {
 
 
                         {/* section create post  */}
-                        {this.state.user_type == 'read,post_read' ?
+                        {
+                            this.state.user_type == 'read,post_read' &&
                             <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                 <Button
                                     title="Write New Blog"
@@ -118,7 +125,6 @@ export default class Main extends Component {
                                     onPress={() => this.createPost()}
                                 />
                             </View>
-                            : null
                         }
 
                         {/* loading data */}

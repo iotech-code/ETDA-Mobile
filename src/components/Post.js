@@ -51,15 +51,12 @@ export default class Post extends Component {
     }
 
     async componentDidMount() {
-        try {
-            this.setState({
-                token: await AsyncStorage.getItem('token'),
-                like: this.props.data.like
-            })
-        } catch (err) {
-            // handle errors
-        }
+        this.setState({
+            token: await AsyncStorage.getItem('token'),
+            like: this.props.data.like
+        })
     }
+    
     openOption() {
         this.RBSheet.open()
     }
