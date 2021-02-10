@@ -25,7 +25,7 @@ import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
 import { apiServer } from '../../constant/util';
 import ImageGrid from '../../components/ImageGrid'
-import { getTagsList } from '../../Service/PostService'
+import { getTagsList, createPost } from '../../Service/PostService'
 
 export default class CreatePost extends Component {
     constructor() {
@@ -87,38 +87,14 @@ export default class CreatePost extends Component {
     }
 
     async callCreatePost() {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+        try {
+            let { title, type, images, description, tag, addition } = this.state
+            let res = await createPost(title, type, images, description, tag, addition )
+            console.log('response' , response)
+        } catch (error) {
+
         }
 
-        const data = {
-            "post_title": this.state.title,
-            "post_type": this.state.type,
-            "post_images": this.state.images,
-            "post_description": this.state.description,
-            "post_tag": this.state.tag,
-            "post_addition_data": this.state.addition
-        }
-
-
-        console.log('post : ', this.state.images)
-
-        axios.post(apiServer.url + '/api/backend/post/create', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    Actions.MessageBoard()
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
 
     };
 
@@ -355,6 +331,7 @@ export default class CreatePost extends Component {
                                         onPress={() => {
                                             this.selectTag(index)
                                         }}
+                                        key={`tags_${index}`}
                                     />
                                 )
                             })

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { apiServer } from '../constant/util';
-import {AsyncStorage} from 'react-native';
+import { AsyncStorage } from 'react-native';
 
 
 class HttpRequest {
@@ -37,8 +37,9 @@ class HttpRequest {
     this.axiosInstance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   }
 
-  async autoSetTokenHeader(){
+  async autoSetTokenHeader() {
     const token = await AsyncStorage.getItem('token');
+    console.log(token)
     this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
 
@@ -48,7 +49,7 @@ class HttpRequest {
     })
   }
 
-  create(methodName, data) {
+  post(methodName, data) {
     return this.axiosInstance.post(methodName, data)
   }
 
