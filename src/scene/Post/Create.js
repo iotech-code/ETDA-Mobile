@@ -185,18 +185,6 @@ export default class CreatePost extends Component {
     }
 
 
-
-
-    onChangeTextTitle(value) {
-        this.setState({ title: value })
-    }
-
-    onChangeTextDescription(value) {
-        this.setState({
-            description: value
-        })
-    }
-
     render() {
         const { dataList, loadingImage, listTags } = this.state
 
