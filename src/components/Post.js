@@ -21,10 +21,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { fonts, apiServer } from '../constant/util';
 import axios from 'axios';
-import FbGrid from "react-native-fb-image-grid";
-import ImageView from 'react-native-image-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import ImageGrid from './ImageGrid'
 
 

@@ -11,7 +11,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
@@ -20,133 +21,132 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
 import { apiServer } from '../constant/util';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { homeFeed } from '../Service/PostService'
 export default class Main extends Component {
     state = {
         visibleSearch: false,
         user_type: '',
         token: '',
         list_data: [],
-        user_role: ''
+        user_role: '',
+        isFetching: false
     }
 
     async componentDidMount() {
         try {
-            const token = await AsyncStorage.getItem('token');
             const user_type = await AsyncStorage.getItem('user_type');
             const user_role = await AsyncStorage.getItem('user_role');
-            this.setState({
-                user_type: user_type,
-                token: token,
-                user_role: user_role
-            })
-            this.callHomeFeed(token)
+            this.setState({ user_type: user_type, user_role: user_role })
+            this.callHomeFeed()
         } catch (err) {
-            console.log('err 1 : ', err)
+            console.log('Set token : ', err)
         }
     }
 
-    callHomeFeed = async (token) => {
-        axios.get(apiServer.url + '/api/backend/post/home-feed', {
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-            .then((response) => {
-                var i
-                var objectHomeFeed = {}
-                var list = []
-                for (i = 0; i < response.data.post_data.length; i++) {
-                    objectHomeFeed = {
-                        post_id: response.data.post_data[i].post_id,
-                        title: response.data.post_data[i].title,
-                        date: response.data.post_data[i].post_date,
-                        description: response.data.post_data[i].post_description,
-                        tags: response.data.post_data[i].tags,
-                        post_images: response.data.post_data[i].post_images,
-                        comment: response.data.post_data[i].comment_number,
-                        like: response.data.post_data[i].like,
-                    }
-                    list.push(objectHomeFeed)
+    async callHomeFeed() {
+        this.setState({ isFetching: true })
+        try {
+            let { data } = await homeFeed();
+            let list_data = []
+            for (let index = 0; index < data.post_data.length; index++) {
+                const element = data.post_data[index];
+                let objectHomeFeed = {
+                    post_id: element.post_id,
+                    title: element.title,
+                    date: element.post_date,
+                    description: element.post_description,
+                    tags: element.tags,
+                    post_images: element.post_images,
+                    comment: element.comment_number,
+                    like: element.like,
                 }
-                this.setState({
-                    list_data: list
-                })
-            })
-
+                list_data.push(objectHomeFeed)
+            }
+            await this.setState({ list_data })
+        } catch (error) {
+            console.log("Main scene error : ", error)
+        }
+        this.setState({ isFetching: false })
     };
 
 
     render() {
-        const { dataList } = this.state
+        const { dataList, isFetching } = this.state
         return (
-            <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>
+            <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
-                    <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
+                    <View style={{ flex: 1, paddingBottom: hp('1%') }}>
                         {this.state.user_role == "Member" ?
                             <HeaderNavbar value={'member'}></HeaderNavbar>
                             :
                             <HeaderNavbar value={'admin'}></HeaderNavbar>
                         }
-                        <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                padding: hp('2%'),
-                                alignItems: 'center'
-                            }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
+
+                        <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
+                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
+                            <TouchableOpacity>
                                 <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                            </View>
-
-                            {/* section admin */}
-                            {this.state.user_type == 'read,post_read' ?
-                                <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                                    <Button
-                                        title="Write New Blog"
-                                        Outline={true}
-                                        titleStyle={{ color: '#003764', }}
-                                        buttonStyle={{
-                                            padding: hp('1%'),
-                                            ...style.btnPrimaryOutline,
-                                            ...style.btnRounded
-                                        }}
-                                        onPress={() => Actions.CreatePost({
-                                            'type_value': 'create', 'title': '',
-                                            'description': '',
-                                            'post_images': []
-                                        })}
-                                    />
-                                </View>
-                                :
-                                <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
-                            }
-                            <ScrollView style={{ marginBottom: 24 }}>
-                                {this.state.list_data.map((item, index) => {
-                                    return (
-                                        <Post data={item} key={`post_${index}`}></Post>
-                                    )
-                                }
-                                )}
-                            </ScrollView>
+                            </TouchableOpacity>
                         </View>
+
+
+                        {/* section create post  */}
+                        {this.state.user_type == 'read,post_read' ?
+                            <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                <Button
+                                    title="Write New Blog"
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded
+                                    }}
+                                    onPress={() => Actions.CreatePost({
+                                        'type_value': 'create', 'title': '',
+                                        'description': '',
+                                        'post_images': []
+                                    })}
+                                />
+                            </View>
+                            : null
+                        }
+
+                        {/* loading data */}
+                        {
+                            isFetching ?
+                                <ActivityIndicator color="#003764" style={{ marginTop: hp('27%') }} />
+                                : null
+                        }
+                        {/* end loading data */}
+
+
+                        {/*   show post  */}
+                        {
+
+                            this.state.list_data.map((item, index) => {
+                                return (
+                                    <Post data={item} key={`post_${index}`}></Post>
+                                )
+                            })
+                        }
+                        {/* end  show post */}
                     </View>
-
-
                 </ScrollView>
+
                 <View style={{ backgroundColor: null }}>
                     {this.state.user_role == "Member" ?
                         <MenuFooterUser value={'home'}></MenuFooterUser>
                         :
                         <MenuFooter value={'home'}></MenuFooter>
                     }
-
                 </View>
             </View>
         );
