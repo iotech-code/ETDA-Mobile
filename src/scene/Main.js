@@ -11,7 +11,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
@@ -31,7 +32,8 @@ export default class Main extends Component {
         user_type: '',
         token: '',
         list_data: [],
-        user_role: ''
+        user_role: '',
+        isFetching: false
     }
 
     async componentDidMount() {
@@ -51,6 +53,7 @@ export default class Main extends Component {
     }
 
     callHomeFeed = async (token) => {
+        this.setState({ isFetching: true })
         axios.get(apiServer.url + '/api/backend/post/home-feed', {
             headers: {
                 Accept: 'application/json',
@@ -77,66 +80,74 @@ export default class Main extends Component {
                 this.setState({
                     list_data: list
                 })
+                this.setState({ isFetching: false })
             })
 
     };
 
 
     render() {
-        const { dataList } = this.state
+        const { dataList, isFetching } = this.state
         return (
-            <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>
+            <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
-                    <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
+                    <View style={{ flex: 1, paddingBottom: hp('1%') }}>
                         {this.state.user_role == "Member" ?
                             <HeaderNavbar value={'member'}></HeaderNavbar>
                             :
                             <HeaderNavbar value={'admin'}></HeaderNavbar>
                         }
-                        <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                padding: hp('2%'),
-                                alignItems: 'center'
-                            }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
-                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                            </View>
 
-                            {/* section admin */}
-                            {this.state.user_type == 'read,post_read' ?
-                                <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                                    <Button
-                                        title="Write New Blog"
-                                        Outline={true}
-                                        titleStyle={{ color: '#003764', }}
-                                        buttonStyle={{
-                                            padding: hp('1%'),
-                                            ...style.btnPrimaryOutline,
-                                            ...style.btnRounded
-                                        }}
-                                        onPress={() => Actions.CreatePost({
-                                            'type_value': 'create', 'title': '',
-                                            'description': '',
-                                            'post_images': []
-                                        })}
-                                    />
-                                </View>
-                                :
-                                <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
-                            }
-                            <ScrollView style={{ marginBottom: 24 }}>
-                                {this.state.list_data.map((item, index) => {
-                                    return (
-                                        <Post data={item} key={`post_${index}`}></Post>
-                                    )
-                                }
-                                )}
-                            </ScrollView>
+                        <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
+                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
+                            <TouchableOpacity>
+                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            </TouchableOpacity>
                         </View>
+
+
+                        {/* section create post  */}
+                        {this.state.user_type == 'read,post_read' ?
+                            <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                <Button
+                                    title="Write New Blog"
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded
+                                    }}
+                                    onPress={() => Actions.CreatePost({
+                                        'type_value': 'create', 'title': '',
+                                        'description': '',
+                                        'post_images': []
+                                    })}
+                                />
+                            </View>
+                            : null
+                        }
+
+
+                        {
+                            isFetching ?
+                                <ActivityIndicator color="#003764" style={{ marginTop: hp('27%') }} />
+                                : null
+                        }
+
+
+                        {/* show post */}
+                        {
+                            this.state.list_data.map((item, index) => {
+                                return (
+                                    <Post data={item} key={`post_${index}`}></Post>
+                                )
+                            })
+                        }
+
                     </View>
+
 
 
                 </ScrollView>

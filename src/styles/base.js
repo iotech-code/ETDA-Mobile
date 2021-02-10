@@ -131,5 +131,19 @@ export default StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: hp('2%'),
         paddingBottom: hp('1%')
-    }
+    },
+
+    flex__start: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+    },
+    flex__end: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
+    space__between: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+
 })
