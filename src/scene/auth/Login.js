@@ -13,11 +13,11 @@ import {
     KeyboardAvoidingView,
     Alert
 } from 'react-native';
-import { apiServer } from '../../constant/util'
-import HttpRequest from '../../Service/HttpRequest'
+import { apiServer } from '../../constant/util';
+import HttpRequest from '../../Service/HttpRequest';
 import { Button, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import style from '../../styles/base'
+import style from '../../styles/base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Actions } from 'react-native-router-flux';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -65,25 +65,26 @@ export default class Login extends Component {
             "authen_method": "local"
         }
         this.setState({ spinner: true });
-
-        let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
-        let {token, status} = loginRequest.data
-
-        if (status == "success") {
-            if (token != "") {
-                await AsyncStorage.setItem('token', token);
-                await this.callInfomation(token);
+        try {
+            let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
+            let {token, status} = loginRequest.data;
+   
+            await AsyncStorage.setItem('token', token);
+            await this.callInfomation();
+        } catch (e) {
+            if(e.response.status === 401) {
+                Alert.alert("Wrong email or password.");
+                this.setState({ spinner: false });
             }
-        } else {
-            Alert.alert("Wrong email or password.");
-            this.setState({ spinner: false });
         }
+         
     };
 
     callInfomation = async () => {
         await http.setTokenHeader();
-        let response = await http.post(apiServer.url + '/api/backend/user/information')
-        let {status, data} = response.data
+        let response = await http.post(apiServer.url + '/api/backend/user/information');
+        let {status, data} = response.data;
+
         if (status == "success") {
             await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
             await this.setState({ spinner: false });
@@ -97,27 +98,27 @@ export default class Login extends Component {
     emailValidate = async value => {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (reg.test(value) === false) {
-            await this.setState({emailBorder: 'red', email: value.toLowerCase(), emailEnable: false })
-            await this.setState({disableLogin: true})
+            await this.setState({emailBorder: 'red', email: value.toLowerCase(), emailEnable: false });
+            await this.setState({disableLogin: true});
         } else {
-            await this.setState({emailBorder: this.state.defaultBorder, email: value.toLowerCase(), emailEnable: true })
-            await this.loginCheck()
+            await this.setState({emailBorder: this.state.defaultBorder, email: value.toLowerCase(), emailEnable: true });
+            await this.loginCheck();
         }
     }
 
     passwordValidate = async (value) => {
         if (value.length <= 3) {
-            await this.setState({passwordBorder: 'red', pass: value, passwordEnable: false })
-            await this.setState({disableLogin: true})
+            await this.setState({passwordBorder: 'red', pass: value, passwordEnable: false });
+            await this.setState({disableLogin: true});
         } else {
-            await this.setState({passwordBorder: this.state.defaultBorder, pass: value, passwordEnable: true })
-            await this.loginCheck()
+            await this.setState({passwordBorder: this.state.defaultBorder, pass: value, passwordEnable: true });
+            await this.loginCheck();
         }
     }
 
     loginCheck = () => {
         if(this.state.emailEnable && this.state.passwordEnable) {
-            this.setState({disableLogin: false})
+            this.setState({disableLogin: false});
         }
     }
     

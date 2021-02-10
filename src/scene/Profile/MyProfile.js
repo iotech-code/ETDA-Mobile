@@ -25,16 +25,37 @@ import { apiServer } from '../../constant/util';
 export default class MyProfile extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, phone: '', professional: '', position: '', organization: '', type: '', name: '', photo: '', userId: '' , dafault_avatar:require('../../assets/images/default_avatar.jpg') }
+        this.state = {
+            phone: '', 
+            professional: '', 
+            position: '', 
+            organization: '', 
+            type: '', 
+            name: '', 
+            photo: '', 
+            userId: '' , 
+            dafault_avatar:require('../../assets/images/default_avatar.jpg') 
+        }
     }
 
     async componentDidMount() {
-        try {
-            const token = await AsyncStorage.getItem('token')
-            this.callInfomation(token)
-        } catch (err) {
-            // handle errors
-        }
+        this.getUserInfo();
+    }
+
+    async getUserInfo () {
+        let json_data = await AsyncStorage.getItem('user_data');
+        let data = JSON.parse(json_data);
+
+        this.setState({
+            phone: data.mobile_number,
+            professional: data.professional, 
+            position: data.position, 
+            organization: data.organization, 
+            type: data.user_type, 
+            name: data.fullname, 
+            photo: data.photo,
+            userId: data.user_id
+        });
     }
 
 
@@ -52,8 +73,6 @@ export default class MyProfile extends Component {
                 var name = ''
                 var photo = ''
                 var userId = ''
-
-                console.log('type : ' , response.data)
 
                 if (response.data.status == "success") {
                     if (response.data.data.mobile_number == null) {
@@ -143,6 +162,7 @@ export default class MyProfile extends Component {
     }
 
     render() {
+        const user_data = this.state;
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -159,29 +179,24 @@ export default class MyProfile extends Component {
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
-                                {this.state.photo == null || this.state.photo == '' ?
-                                
-                                <Image source={this.state.dafault_avatar} style={{
+                                {user_data.photo == null || user_data.photo == '' ?
+                                <Image source={ user_data.dafault_avatar } style={{
                                     width: '100%',
                                     height: '100%',
                                     resizeMode: 'cover',
                                     borderRadius: 100
                                 }} />
-
                                 :
-
-                                <Image source={{ uri: this.state.photo}} style={{
+                                <Image source={{ uri: user_data.photo }} style={{
                                     width: '100%',
                                     height: '100%',
                                     resizeMode: 'cover',
                                     borderRadius: 100
                                 }} />
-
                             }
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
-                                <Text style={{ fontSize: hp('2%'), color: '#B5B5B5', fontWeight: '300' }}>{this.state.name}</Text>
+                                <Text style={{ fontSize: hp('2%')}}>{ user_data.name }</Text>
                             </View>
 
                         </View>
@@ -191,7 +206,7 @@ export default class MyProfile extends Component {
                                 <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Contact me</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ {this.state.phone}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ {user_data.phone}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -199,7 +214,7 @@ export default class MyProfile extends Component {
                                 <Icon name="lightbulb-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Professional</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.professional}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{user_data.professional}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -207,7 +222,7 @@ export default class MyProfile extends Component {
                                 <Icon name="domain" size={hp('3%')} color="#EE3397" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Organization</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.organization}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{user_data.organization}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -215,7 +230,7 @@ export default class MyProfile extends Component {
                                 <Icon name="bag-checked" size={hp('3%')} color="#427AA1" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Position</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.position}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{user_data.position}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -223,7 +238,7 @@ export default class MyProfile extends Component {
                                 <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {this.state.type == 'read' ? 'Read only' : 'Read , Post'} </Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {user_data.type.toUpperCase()} </Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -232,14 +247,14 @@ export default class MyProfile extends Component {
                                 buttonStyle={{ padding: hp('1%'), ...style.btnRounded, ...style.btnPrimary }}
                                 onPress={() => Actions.EditProfile(
                                     {
-                                        'name': this.state.name,
-                                        'phone': this.state.phone,
-                                        'professional': this.state.professional,
+                                        'name': user_data.name,
+                                        'phone': user_data.phone,
+                                        'professional': user_data.professional,
                                         'organization': this.state.organization,
-                                        'position': this.state.position,
-                                        'type': this.state.type,
-                                        'photo': this.state.photo,
-                                        'userId': this.state.userId
+                                        'position': user_data.position,
+                                        'type': user_data.type,
+                                        'photo': user_data.photo,
+                                        'userId': user_data.userId
                                     }
                                 )}
                             />
