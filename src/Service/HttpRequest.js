@@ -37,7 +37,7 @@ class HttpRequest {
     this.axiosInstance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   }
 
-  async autoSetTokenHeader() {
+  async setTokenHeader() {
     const token = await AsyncStorage.getItem('token');
     this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
