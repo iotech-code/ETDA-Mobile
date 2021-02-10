@@ -25,6 +25,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { apiServer } from '../../constant/util';
 import ImageGrid from '../../components/ImageGrid'
 import { getTagsList, createPost } from '../../Service/PostService'
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 export default class CreatePost extends Component {
     constructor() {
@@ -41,13 +43,13 @@ export default class CreatePost extends Component {
             postId: '',
             images: [],
             loadingImage: false,
-            listTags: []
+            listTags: [],
+            spinner: false
         }
     }
 
     async componentDidMount() {
         try {
-            console.log('data : ', this.props.title)
             const token = await AsyncStorage.getItem('token')
             this.setState({
                 token: token,
@@ -86,13 +88,16 @@ export default class CreatePost extends Component {
     }
 
     async callCreatePost() {
+        this.setState({ spinner: true })
         try {
             let { title, type, images, description, tag, addition } = this.state
-            let res = await createPost(title, type, images, description, tag, addition )
-            console.log('response' , response)
+            let res = await createPost(title, type, images, description, tag, addition)
+            console.log('response', res)
         } catch (error) {
-
+            console.log('Create post error : ', error)
         }
+        this.setState({ spinner: false })
+
 
 
     };
@@ -161,11 +166,14 @@ export default class CreatePost extends Component {
 
 
     render() {
-        const { dataList, loadingImage, listTags } = this.state
+        const { loadingImage, listTags, spinner } = this.state
 
 
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+                <Spinner
+                    visible={spinner}
+                />
                 <View style={{ ...style.navbar }}>
                     <TouchableOpacity onPress={() => Actions.pop()}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" />

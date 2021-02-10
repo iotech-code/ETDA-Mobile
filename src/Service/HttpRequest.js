@@ -39,7 +39,6 @@ class HttpRequest {
 
   async autoSetTokenHeader() {
     const token = await AsyncStorage.getItem('token');
-    console.log(token)
     this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
 
