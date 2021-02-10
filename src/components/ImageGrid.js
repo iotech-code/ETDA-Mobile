@@ -7,14 +7,13 @@ import {
     View,
     Text,
     StatusBar,
-    Image,
     TextInput,
     TouchableOpacity
 } from 'react-native';
 
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import { Image } from 'react-native-elements';
 
 
 

@@ -38,13 +38,14 @@ export default class CreatePost extends Component {
             type: 'blog',
             image: [],
             description: '',
-            tag: ["tag1", "tag2"],
-            addition: '',
+            tag: [],
+            addition: [],
             postId: '',
             images: [],
             loadingImage: false,
             listTags: [],
-            spinner: false
+            spinner: false,
+            loadingTags: false
         }
     }
 
@@ -64,6 +65,7 @@ export default class CreatePost extends Component {
     }
 
     async getListTag() {
+        this.setState({ loadingTags: true })
         try {
             let { data } = await getTagsList();
             for (let index = 0; index < data.post_data.length; index++) {
@@ -72,8 +74,9 @@ export default class CreatePost extends Component {
             }
             this.setState({ listTags: data.post_data })
         } catch (error) {
-
+            console.log('Get list tags error : ', error)
         }
+        this.setState({ loadingTags: false })
     }
 
     selectTag(indexTag) {
@@ -92,17 +95,11 @@ export default class CreatePost extends Component {
         try {
             let { title, type, images, description, tag, addition } = this.state
             let res = await createPost(title, type, images, description, tag, addition)
-            console.log('response', res)
         } catch (error) {
             console.log('Create post error : ', error)
         }
         this.setState({ spinner: false })
-
-
-
-    };
-
-
+    }
 
     async callUpdatePost(title, type, images, description, tags, addition, post_id) {
         const headers = {
@@ -161,14 +158,10 @@ export default class CreatePost extends Component {
             images: image_base64
         })
         this.setState({ loadingImage: false })
-
     }
 
-
     render() {
-        const { loadingImage, listTags, spinner } = this.state
-
-
+        const { loadingImage, listTags, spinner, loadingTags } = this.state
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <Spinner visible={spinner} />
@@ -242,8 +235,6 @@ export default class CreatePost extends Component {
                             : null
                     }
 
-
-
                     {this.state.image.length == 0 ? null :
 
                         <View style={{ maxHeight: hp('30%'), alignItems: 'center' }}>
@@ -251,9 +242,8 @@ export default class CreatePost extends Component {
                         </View>
                     }
 
-
-
                     <View style={{ ...style.divider }}></View>
+
                     <TouchableOpacity onPress={() => this.pickImage()}>
                         {
                             this.props.type_value == 'detail' ?
@@ -318,6 +308,13 @@ export default class CreatePost extends Component {
                     }
 
 
+                    {
+                        loadingTags ?
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: hp('2%') }}>
+                                <ActivityIndicator color="#003764" />
+                            </View>
+                            : null
+                    }
 
                     <View style={{
                         marginTop: hp('2%'),
@@ -328,12 +325,13 @@ export default class CreatePost extends Component {
                         flexWrap: 'wrap'
 
                     }}>
+
                         {
                             listTags.map((el, index) => {
                                 let tagStyle = el.selected ? style.btnPrimary : style.btnPrimaryOutline
                                 return (
                                     <Button
-                                        title="E-commerce"
+                                        title={el.tag}
                                         titleStyle={{
                                             fontSize: hp('2%'),
                                             color: !el.selected ? fonts.color.primary : 'white'
