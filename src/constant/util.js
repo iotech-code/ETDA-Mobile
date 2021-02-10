@@ -12,12 +12,12 @@ export const fonts = {
         secondary: '#B5B5B5'
     }
 }
-export const apiServer  = {
-    url: 'https://looks.etda.or.th'
-}
-// export const apiServer = {
-//     url: 'https://etda.amn-corporation.com'
+// export const apiServer  = {
+//     url: 'https://looks.etda.or.th'
 // }
+export const apiServer = {
+    url: 'https://etda.amn-corporation.com'
+}
 
 export const refreshToken = async () => {
     token = await AsyncStorage.getItem('token')
