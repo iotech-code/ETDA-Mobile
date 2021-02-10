@@ -31,3 +31,26 @@ export const createPost = async (
     };
     return await http.post(`/api/backend/post/create`, formData);
 };
+
+export const updatePost = async (
+    post_title,
+    post_type,
+    post_images,
+    post_description,
+    post_tag,
+    post_addition_data,
+    post_id
+) => {
+
+    await http.setTokenHeader()
+    let formData = {
+        post_title,
+        post_type,
+        post_images,
+        post_description,
+        post_tag,
+        post_addition_data,
+    };
+    return await http.post(`/api/backend/post/update/${post_id}` , formData)
+
+}
