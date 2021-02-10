@@ -25,7 +25,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
-import { apiServer } from '../constant/util';
+
 import { homeFeed } from '../Service/PostService'
 export default class Main extends Component {
     state = {
@@ -74,6 +74,14 @@ export default class Main extends Component {
         this.setState({ isFetching: false })
     };
 
+    createPost() {
+        Actions.CreatePost({
+            'type_value': 'create', 'title': '',
+            'description': '',
+            'post_images': []
+        })
+    }
+
 
     render() {
         const { dataList, isFetching } = this.state
@@ -108,11 +116,7 @@ export default class Main extends Component {
                                         ...style.btnPrimaryOutline,
                                         ...style.btnRounded
                                     }}
-                                    onPress={() => Actions.CreatePost({
-                                        'type_value': 'create', 'title': '',
-                                        'description': '',
-                                        'post_images': []
-                                    })}
+                                    onPress={() => this.createPost()}
                                 />
                             </View>
                             : null
