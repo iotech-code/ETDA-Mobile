@@ -71,7 +71,7 @@ export default class Comment extends Component {
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: hp('1%') }}>
                         <TouchableOpacity onPress={() => onPress( this.props.data.Reply_to.User_id)}>
-                            <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Replay</Text>
+                            <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Reply</Text>
                         </TouchableOpacity>
                     </View>
 

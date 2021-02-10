@@ -10,10 +10,9 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    Platform,
-    AsyncStorage
+    Platform
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, ListItem } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'

@@ -11,10 +11,11 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    AsyncStorage,
     ActivityIndicator
 } from 'react-native';
+
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
@@ -25,8 +26,6 @@ import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
 import { apiServer } from '../constant/util';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { homeFeed } from '../Service/PostService'
 export default class Main extends Component {
     state = {

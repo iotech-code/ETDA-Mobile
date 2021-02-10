@@ -11,9 +11,9 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    Platform,
-    AsyncStorage
+    Platform
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
