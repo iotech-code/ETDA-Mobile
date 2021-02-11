@@ -56,7 +56,7 @@ export default class Post extends Component {
             like: this.props.data.like
         })
     }
-    
+
     openOption() {
         this.RBSheet.open()
     }
@@ -290,7 +290,7 @@ export default class Post extends Component {
 
     };
 
-    seePostDetai(){
+    seePostDetai() {
         Actions.PostDetail({
             'user_image': '',
             'user_name': '',
@@ -307,7 +307,7 @@ export default class Post extends Component {
     }
 
     render() {
-    
+
         let { post_images } = this.props.data
         let image_viewer = []
         for (let index = 0; index < post_images.length; index++) {
@@ -329,12 +329,11 @@ export default class Post extends Component {
                 marginBottom: hp('2%')
             }}>
                 <TouchableOpacity
-                    onPress={() => {this.seePostDetai()}}
+                    onPress={() => { this.seePostDetai() }}
                     style={{ paddingHorizontal: hp('2%') }}
                 >
                     <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        ...style.space__between,
                         alignItems: 'center'
                     }}>
                         <Text style={{ fontSize: hp('2%'), }}>{this.props.data.title}</Text>
@@ -361,24 +360,17 @@ export default class Post extends Component {
                         <ImageGrid data={post_images} />
                     </View>
                     <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
-                    <View style={{
-                        marginTop: hp('2%'),
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center'
-                    }}>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.like}</Text>
-                        <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                        <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.comment}</Text>
-                    </View>
                 </TouchableOpacity>
 
                 <View style={{ ...style.sectionSocial }}>
-                    <TouchableOpacity onPress={() => this.callPostLike(this.props.data.post_id)}>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
+                    <TouchableOpacity style={style.flex__start} onPress={() => this.callPostLike(this.props.data.post_id)}>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.like}</Text>
                     </TouchableOpacity>
-                    <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
+                    <TouchableOpacity style={{...style.flex__start , marginRight:hp('2%')}}>
+                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
+                        <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.comment}</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
