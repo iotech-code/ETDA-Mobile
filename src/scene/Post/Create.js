@@ -10,7 +10,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
@@ -33,10 +34,10 @@ export default class CreatePost extends Component {
         this.state = {
             visibleSearch: false,
             token: '',
-            title: '',
+            title: null,
             type: 'blog',
             image: [],
-            description: '',
+            description: null,
             tag: [],
             addition: {
                 "event_date": "",
@@ -100,15 +101,32 @@ export default class CreatePost extends Component {
         this.setState({ tag: listTagSelected })
     }
 
+    validateFrom() {
+        let pass = true
+        let { title, description } = this.state
+        if (!title) {
+            Alert.alert('Please enter your topic')
+            pass = false
+        }
+        else if (!description) {
+            Alert.alert('Please enter your description')
+            pass = false
+        }
+        return pass
+    }
+
     async callCreatePost() {
         this.setState({ spinner: true })
         try {
             let { title, type, images, description, tag, addition } = this.state
-            let res = await createPost(title, type, images, description, tag, addition)
-            let { status } = res.data
-            if (status == 'success') {
-                Actions.replace('Main')
+            if (this.validateFrom()) {
+                let res = await createPost(title, type, images, description, tag, addition)
+                let { status } = res.data
+                if (status == 'success') {
+                    Actions.replace('Main')
+                }
             }
+
         } catch (error) {
             console.log('Create post error : ', error)
         }
@@ -191,7 +209,7 @@ export default class CreatePost extends Component {
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <Spinner visible={spinner} />
                 <View style={{ ...style.navbar }}>
-                    <TouchableOpacity onPress={() => Actions.pop()}>
+                    <TouchableOpacity onPress={() => Actions.replace('Main')}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>
