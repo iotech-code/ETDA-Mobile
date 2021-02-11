@@ -203,6 +203,21 @@ export default class CreatePost extends Component {
         this.setState({ listTags: result })
     }
 
+    createPost () {
+        if (this.props.type_value == 'create') {
+            this.callCreatePost()
+        } else {
+            this.callUpdatePost(this.state.title,
+                'blog',
+                this.state.images,
+                this.state.description,
+                this.state.tag,
+                this.state.addition,
+                this.props.data.post_id,
+            )
+        }
+    }
+
     render() {
         const { loadingImage, listTags, spinner, loadingTags } = this.state
         return (
@@ -223,21 +238,7 @@ export default class CreatePost extends Component {
                     </Text>
                     {this.props.type_value == 'detail' ? null
                         :
-                        <TouchableOpacity onPress={() => {
-                            if (this.props.type_value == 'create') {
-                                this.callCreatePost()
-                            } else {
-                                this.callUpdatePost(this.state.title,
-                                    'blog',
-                                    this.state.images,
-                                    this.state.description,
-                                    this.state.tag,
-                                    this.state.addition,
-                                    this.props.data.post_id,
-                                )
-                            }
-                        }
-                        }>
+                        <TouchableOpacity onPress={() => this.createPost() }>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
                         </TouchableOpacity>
                     }

@@ -19,6 +19,9 @@ export const apiServer = {
     url: 'https://etda.amn-corporation.com'
 }
 
+export const configs = {
+    privacy: 'https://www.etda.or.th/th/privacy/term-of-use.aspx'
+}
 export const refreshToken = async () => {
     token = await AsyncStorage.getItem('token')
     newToken = await getUserInfo(token) !== true ? getRefreshToken(token) : token

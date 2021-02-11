@@ -25,19 +25,19 @@ export default class MyProfile extends Component {
     constructor() {
         super();
         this.state = {
-            phone: '', 
+            mobile_number: '', 
             professional: '', 
             position: '', 
             organization: '', 
-            type: '', 
-            name: '', 
+            user_type: '', 
+            fullname: '', 
             photo: '', 
-            userId: '' , 
+            userid: '' , 
             dafault_avatar:require('../../assets/images/default_avatar.jpg') 
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.getUserInfo();
     }
 
@@ -46,21 +46,21 @@ export default class MyProfile extends Component {
         let data = JSON.parse(json_data);
 
         this.setState({
-            phone: data.mobile_number,
+            mobile_number: data.mobile_number,
             professional: data.professional, 
             position: data.position, 
             organization: data.organization, 
-            type: data.user_type, 
-            name: data.fullname, 
+            user_type: data.user_type, 
+            fullname: data.fullname, 
             photo: data.photo,
-            userId: data.userid
+            userid: data.userid
         });
     }
 
     async logout () {
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('user_data');
-        await Actions.replace('Login');
+        Actions.replace('Login');
     }
 
     render() {
@@ -98,7 +98,7 @@ export default class MyProfile extends Component {
                             }
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2%')}}>{ user_data.name }</Text>
+                                <Text style={{ fontSize: hp('2%')}}>{ user_data.fullname }</Text>
                             </View>
 
                         </View>
@@ -108,7 +108,7 @@ export default class MyProfile extends Component {
                                 <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Contact me</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ {user_data.userId}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ {user_data.mobile_number}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -140,7 +140,7 @@ export default class MyProfile extends Component {
                                 <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {user_data.type.toUpperCase()} </Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {user_data.user_type} </Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -168,30 +168,6 @@ export default class MyProfile extends Component {
 };
 
 const styleScoped = StyleSheet.create({
-    btnImageProfile: {
-        // padding: hp('1%'),
-        width: hp('4%'),
-        height: hp('4%'),
-        borderRadius: 100,
-        // borderWidth: 1,
-        // borderColor: 'black',
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundColor: '#003764',
-        position: 'absolute',
-        right: 2,
-        bottom: 8,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.32,
-        shadowRadius: 5.46,
-
-        elevation: 9,
-    },
 });
 
 

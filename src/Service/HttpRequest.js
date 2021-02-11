@@ -55,6 +55,10 @@ class HttpRequest {
     return this.axiosInstance.post(methodName, data)
   }
 
+  put(methodName, data) {
+    return this.axiosInstance.put(methodName, data)
+  }
+
   update(url, data) {
     return this.axiosInstance.put(url, data)
   }

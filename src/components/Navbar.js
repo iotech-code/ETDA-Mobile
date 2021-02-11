@@ -32,6 +32,7 @@ export default class HeaderNavbar extends Component {
         try {
             let json_info = await AsyncStorage.getItem('user_data');
             let info = JSON.parse(json_info);
+
             this.setState({
                 name: info.fullname,
                 photo: info.photo

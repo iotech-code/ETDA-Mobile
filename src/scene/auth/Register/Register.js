@@ -9,6 +9,7 @@ import {
     StatusBar,
     Image,
     TouchableOpacity,
+    Platform,
     TextInput,
     Alert,
     KeyboardAvoidingView,
@@ -19,7 +20,7 @@ import { Button, CheckBox, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../../styles/base';
 import { Actions } from 'react-native-router-flux';
-import { colors } from '../../../constant/util';
+import { colors, configs } from '../../../constant/util';
 export default class Register extends Component {
 
     constructor() {
@@ -30,34 +31,76 @@ export default class Register extends Component {
             rCPass: '', 
             rPolicy: false, 
             statusSecureText: true, 
-            statusSecureConfirmText: true 
+            statusSecureConfirmText: true,
+            disable: true,
+            emailBorder: '#CADAFB',
+            passwordBorder: '#CADAFB',
+            passwordConfirmBorder: '#CADAFB',
+            defaultBorder: '#CADAFB'
         }
     }
 
-    render() {
-        const nextStep = () => {
-            if (this.state.rEmail === '') {
-                Alert.alert('Please fill your email address.')
-                return false
-            }
-            if( this.state.rPass !== this.state.rCPass ) {
-                Alert.alert('Password and confirm password does not match!')
-                return false
-            }
-            if (!this.state.rPolicy) {
-                Alert.alert('Please agree term and condition before continue.')
-                return false
-            } else {
-
-            }
-            Actions.push('ChooseUserType', { 'email': this.state.rEmail, 'password': this.state.rPass, 'accept_term': 'active'})
+    async nextStep () {
+        if (this.state.rEmail === '') {
+            Alert.alert('Please fill your email address.')
+            return false
         }
+        if( this.state.rPass !== this.state.rCPass ) {
+            Alert.alert('Password and confirm password does not match!')
+            return false
+        }
+        if (!this.state.rPolicy) {
+            Alert.alert('Please agree term and condition before continue.')
+            return false
+        }
+        Actions.push('ChooseUserType', { 'email': this.state.rEmail, 'password': this.state.rPass})
+    }
 
+    async emailValidate (value) {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        
+        if (reg.test(value) === false) {
+            await this.setState({emailBorder: 'red', rEmail: value.toLowerCase() });
+        } else {
+            await this.setState({emailBorder: this.state.defaultBorder, rEmail: value.toLowerCase() });
+            this.validate();
+        }
+    }
+
+    async passwordValidate (value) {
+        if (value.length <= 3) {
+            await this.setState({passwordBorder: 'red', rPass: value });
+        } else {
+            await this.setState({passwordBorder: this.state.defaultBorder, rPass: value });
+            await this.validate();
+        }
+    }
+    async passwordConfirmValidate (value) {
+        if (value.length <= 3) {
+            await this.setState({passwordConfirmBorder: 'red', rCPass: value });
+        } else {
+            await this.setState({passwordConfirmBorder: this.state.defaultBorder, rCPass: value });
+            await this.validate();
+        }
+    }
+
+    async checkboxValidate() {
+        await this.setState({rPolicy: !this.state.rPolicy});
+        await this.validate();
+    }
+    validate () {
+        if ( this.state.rEmail === '' || this.state.rPass !== this.state.rCPass || !this.state.rPolicy ) {
+            return false
+        }
+        this.setState({ disable: false });
+    }
+
+    render() {
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
-                <KeyboardAvoidingView behavior="position">
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : "height"}>
                     <ScrollView>
                         <View style={{
                             marginTop: hp('3%'),
@@ -68,47 +111,45 @@ export default class Register extends Component {
                             <View style={styleScoped.imageLogo}>
                                 <Image
                                     source={require('../../../assets/images/logo.png')}
-                                    style={style.imageContain}
+                                    style={ style.imageContain }
                                 />
                             </View>
-
                         </View>
                         <View style={{ marginTop: hp('3%') }}>
                             <Text style={styleScoped.textWelcome}>Register</Text>
                         </View>
                         <View style={style.container}>
                             <View style={{ marginTop: hp('3%') }}>
-                                <View style={style.customInput}>
+                                <View style={{...style.customInput, borderColor: this.state.emailBorder}}>
                                     <TextInput
                                         value={this.state.rEmail}
                                         style={[style.input, { color: 'black', width: wp(81), paddingVertical: 3, paddingHorizontal: 10 }]}
                                         keyboardType='email-address'
                                         placeholder="Email address"
-                                        onChangeText={ value =>  this.setState({ rEmail: value.toLowerCase() }) }
+                                        onChangeText={ value =>  this.emailValidate(value) }
                                     />
                                 </View>
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
-                                <View style={{...style.customInput, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                                <View style={{...style.customInput, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row', borderColor: this.state.passwordBorder}}>
                                     <TextInput
                                         style={[style.input, { color: 'black', width: wp(70) }]}
                                         value={this.state.rPass}
                                         placeholder="Password"
                                         secureTextEntry={this.state.statusSecureText}
-                                        onChangeText={ value =>  this.setState({ rPass: value.toLowerCase() }) }
+                                        onChangeText={ value =>  this.passwordValidate(value) }
                                     />
                                     <Icon color={this.state.statusSecureText ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={ () => this.setState({statusSecureText: this.state.statusSecureText?false:true }) } />
-
                                 </View>
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
-                                <View style={{...style.customInput, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                                <View style={{...style.customInput, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row', borderColor: this.state.passwordConfirmBorder}}>
                                     <TextInput
                                         style={[style.input, { color: 'black', width: wp(70) }]}
                                         value={this.state.rCPass}
                                         placeholder="Confirm Password"
                                         secureTextEntry={this.state.statusSecureConfirmText}
-                                        onChangeText={ value =>  this.setState({ rCPass: value.toLowerCase() }) }
+                                        onChangeText={ value =>  this.passwordConfirmValidate(value) }
                                     />
                                     <Icon color={this.state.statusSecureConfirmText ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={() => this.setState({statusSecureConfirmText: this.state.statusSecureConfirmText?false:true })} />
                                 </View>
@@ -119,12 +160,12 @@ export default class Register extends Component {
                                     title='To continue, you agree to ETDA app’s'
                                     checked={this.state.rPolicy}
                                     containerStyle={{ borderWidth: 0, backgroundColor: '#fff' }}
-                                    onPress={() => this.setState({rPolicy: !this.state.rPolicy})}
+                                    onPress={ () => this.checkboxValidate() }
                                     />
                                 </View>
 
                                 <TouchableOpacity
-                                onPress={() => Linking.openURL("https://www.etda.or.th/th/privacy/term-of-use.aspx")} >
+                                    onPress={() => Linking.openURL( configs.privacy )} >
                                     <Text
                                     style={{
                                         marginTop: hp('1%'),
@@ -137,9 +178,10 @@ export default class Register extends Component {
                             </View>
                             <View style={{ marginTop: hp('3%') }}>
                                 <Button
+                                    disabled={this.state.disable}
                                     title="Continue"
                                     buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                                    onPress={ () => nextStep() }
+                                    onPress={ () => this.nextStep() }
                                 />
                             </View>
                             <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>

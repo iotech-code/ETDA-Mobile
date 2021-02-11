@@ -150,3 +150,12 @@ react-native run-android
 
 # update วันที่ 9/02/2021
     ให้ npm install ใหม่ แล้ว react-native link และ pod install ใหม่ด้วยนะครับ
+
+# update 11/02/2021
+- create post
+- register process
+- edit profile
+- clean data flow
+- sort
+- notification navbar
+- validate on register, forgot flow

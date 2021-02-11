@@ -73,7 +73,7 @@ export default class Main extends Component {
                 }
                 list_data.push(objectHomeFeed)
             }
-            await this.setState({ list_data })
+            await this.setState({ list_data });
         } catch (error) {
             console.log("Main scene error : ", error)
         }
@@ -86,6 +86,10 @@ export default class Main extends Component {
             'description': '',
             'post_images': []
         })
+    }
+
+    sortFeed(feed) {
+        this.setState({list_data: feed.reverse() });
     }
 
     render() {
@@ -105,7 +109,7 @@ export default class Main extends Component {
 
                         <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.sortFeed(this.state.list_data) }>
                                 <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                             </TouchableOpacity>
                         </View>

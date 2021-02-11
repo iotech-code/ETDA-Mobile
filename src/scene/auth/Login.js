@@ -129,7 +129,7 @@ export default class Login extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : "height"}>
                     <View style={{
                         marginTop: hp('8%'),
                         flexDirection: 'row',

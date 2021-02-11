@@ -1,65 +1,55 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
+    Platform,
     StyleSheet,
+    KeyboardAvoidingView,
     ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
     TextInput,
-    TouchableOpacity,
-    FlatList
+    TouchableOpacity
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet, Overlay } from 'react-native-elements';
+import HttpRequest from '../../Service/HttpRequest';
+import { Button, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
-import { fonts, colors, apiServer } from '../../constant/util'
+import { colors, apiServer } from '../../constant/util'
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const http = new HttpRequest();
 
 const options = {
-    // title: 'Select Avatar',
-    // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+    title: 'Select Avatar',
     quality: 1.0,
-    maxWidth: 1400,
-    maxHeight: 1400,
     storageOptions: {
         skipBackup: true,
         path: 'images',
-    },
+    }
 };
 
 export default class EditProfile extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            userObject: {
-                phone: '',
-                professional: '',
-                position: '',
-                organization: '',
-                type: '',
-                name: '',
-                photo: '',
-                userId: '',
-            },
+            userObject: {},
+            updatePhoto: false,
             visibleSearch: false,
             visibleChangeTypeOfUser: false,
             visibleModalPostandRead: false,
-            rReason: '', 
-            rExp: [], 
-            rExp1: '', 
-            rExp2: '', 
-            rExp3: '',
-            dafault_avatar:require('../../assets/images/default_avatar.jpg')
+            rReason: '',
+            rExp: {
+                exp1: '',
+                exp2: '',
+                exp3: ''
+            },
+            dafault_avatar: require('../../assets/images/default_avatar.jpg')
         }
     }
 
@@ -70,16 +60,14 @@ export default class EditProfile extends Component {
 
     async setUserObject () {
         const {user_data} = await this.props;
-        
         await this.setState({
             userObject: {...user_data}
-        })
+        });
     }
 
     chooseImageFileRegister = () => {
         ImagePicker.showImagePicker(options, (response) => {
-           // console.log('Response = ', response);
-
+            
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -87,15 +75,18 @@ export default class EditProfile extends Component {
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
-                console.log('data image : ' , response ) 
-                var image = 'data:image/jpeg;base64,' + response.data
+                let image = 'data:image/jpeg;base64,' + response.data
                 this.setState({
-                    photo : image
-                })
-              //  callDeleting(response.uri, token, "test1.jpg")
+                updatePhoto: true,
+                userObject: {
+                        ...this.state.userObject,
+                        photo: image
+                    }
+                });
             }
         });
-    };
+        
+    }
 
 
     continueTypeOfUser(type ) {
@@ -105,36 +96,12 @@ export default class EditProfile extends Component {
             this.setState({ visibleModalPostandRead: true })
         }
         this.setState({ visibleChangeTypeOfUser: false })
-       
     }
 
     renderModalPostandRead() {
-        onChangeTextReason = async (value) => {
-            this.setState({
-                rReason: value
-            })
-        }
-
-        onChangeTextExp1 = async (value) => {
-            this.setState({
-                rExp1: value
-            })
-        }
-
-
-        onChangeTextExp2 = async (value) => {
-            this.setState({
-                rExp2: value
-            })
-        }
-
-        onChangeTextExp3 = async (value) => {
-            this.setState({
-                rExp3: value
-            })
-        }
         const { visibleModalPostandRead } = this.state
         return (
+            <View>
             <Overlay
                 isVisible={visibleModalPostandRead}
                 overlayStyle={{
@@ -247,12 +214,14 @@ export default class EditProfile extends Component {
                     />
                 </View>
             </Overlay>
+            </View>
         )
     }
 
     renderChangeTypeOfUser() {
         const { visibleChangeTypeOfUser } = this.state
         return (
+            <View>
             <Overlay
                 isVisible={visibleChangeTypeOfUser}
                 onBackdropPress={() => this.setState({ visibleChangeTypeOfUser: false })}
@@ -318,84 +287,44 @@ export default class EditProfile extends Component {
                 </View>
 
             </Overlay>
+            </View>
         )
     }
 
-    callEditProfile = async (token) => {
-        this.state.rExp.push(this.state.rExp1)
-        this.state.rExp.push(this.state.rExp2)
-        this.state.rExp.push(this.state.rExp3)
-        var image = []
-        if (this.state.photo === '' || this.state.photo === null){
-            image = this.state.photo
-        }else{
-            image = ''
-        }
-
-        const data = {
-            "user_id": this.state.userId,
-            "user_fullname": this.state.name,
-            "user_photo": image,
-            "mobile_number": this.state.phone,
-            "organization": this.state.organization,
-            "position": this.state.position,
-            "professional": this.state.professional,
-            "user_rq_type": this.state.type,
-            "rq_reason": this.state.rReason,
-            "rq_exp": this.state.rExp
-        }
-
-        axios.put(apiServer.url + '/api/backend/user/update/' + this.props.userId, data,{
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
+    callEditProfile = async () => {
+        let {userObject} = this.state;
+        let data = {
+            "user_id": userObject.userid,
+            "user_fullname": userObject.fullname,
+            "user_photo": this.state.updatePhoto ? userObject.photo : '',
+            "mobile_number": userObject.mobile_number,
+            "organization": userObject.organization,
+            "position": userObject.position,
+            "professional": userObject.professional,
+            "user_rq_type": userObject.user_type,
+            "rq_reason": userObject.rReason,
+            "rq_exp": {
+                "exp1": this.state.rExp.exp1,
+                "exp2": this.state.rExp.exp2,
+                "exp3": this.state.rExp.exp3
             }
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    console.log(response.data)
-                    Actions.MyProfile()
-                } else {
+        }
 
-                }
-            })
-            .catch((error) => {
-                console.log('error 1 : ', error)
-            })
-            .finally(function () {
-            });
+        await http.setTokenHeader();
+        let update = await http.put(apiServer.url + '/api/backend/user/update/' + userObject.userid, data);
+        let {status} = await update.data;
 
+        if (status == "success") {
+            await AsyncStorage.setItem('user_data', JSON.stringify( userObject ) );
+            await Actions.MyProfile();
+        } else {
+            alert('Update fail.');
+        }
     };
 
-
     render() {
-        const { userObject } = this.state.userObject;
+        const { userObject } = this.state;
 
-        onChangeTextPhone = async (value) => {
-            this.setState({
-                phone: value
-            })
-        }
-
-        onChangeTextOrganization = async (value) => {
-            this.setState({
-                organization: value
-            })
-        }
-
-
-        onChangeTextPosition = async (value) => {
-            this.setState({
-                position: value
-            })
-        }
-
-
-        onChangeTextProfessional = async (value) => {
-            this.setState({
-                professional: value
-            })
-        }
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -411,6 +340,7 @@ export default class EditProfile extends Component {
                         </View>
                     </View>
                     <View style={{ ...style.container }}>
+                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : "height"}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
@@ -423,7 +353,7 @@ export default class EditProfile extends Component {
                                 }} />
                                 :
                                 <Image source={{
-                                    uri: this.state.userObject.photo,
+                                    uri: userObject.photo,
                                   }} style={{
                                     width: '100%',
                                     height: '100%',
@@ -431,19 +361,17 @@ export default class EditProfile extends Component {
                                     borderRadius: 100
                                 }} />
                             }
-                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}  onPress={() => {this.chooseImageFileRegister()}}>
+                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}  onPress={ () => this.chooseImageFileRegister() }>
                                     <IconFonAwesome name="pencil" size={hp('2%')} color="white" />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
                                 <TextInput
-                                    value={this.state.userObject.name}
+                                    value={userObject.fullname}
                                     style={{ ...style.customInput, minWidth: '60%', marginTop: 5, borderWidth: 0 }}
                                     placeholder="Fullname"
-                                    onChangeText={(value) => {
-                                        this.setState({userObject: { name: value } })
-                                    }}
+                                    onChangeText={ (value) => this.setState({userObject: { ...userObject, fullname: value } }) }
                                 />
                             </View>
 
@@ -461,14 +389,12 @@ export default class EditProfile extends Component {
                                 />
                                 <TextInput
                                     style={{ ...style.customInput, width: '80%' }}
-                                    placeholder={this.props.phone}
+                                    placeholder={this.props.mobile_number}
                                     keyboardType='number-pad'
-                                    onChangeText={(value) => {
-                                        onChangeTextPhone(value)
-                                    }}
+                                    value={userObject.mobile_number}
+                                    onChangeText={ (value) => this.setState({userObject: { ...userObject, mobile_number: value } }) }
                                 />
                             </View>
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ 099-999-9999</Text> */}
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -478,12 +404,9 @@ export default class EditProfile extends Component {
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder={this.state.professional}
-                                onChangeText={(value) => {
-                                    onChangeTextProfessional(value)
-                                }}
+                                value={userObject.professional}
+                                onChangeText={ (value) => this.setState({userObject: { ...userObject, professional: value } }) }
                             />
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Digital Identity</Text> */}
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -493,12 +416,9 @@ export default class EditProfile extends Component {
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder={this.state.organization}
-                                onChangeText={(value) => {
-                                    onChangeTextOrganization(value)
-                                }}
+                                value={userObject.organization}
+                                onChangeText={ (value) => this.setState({userObject: { ...userObject, organization: value } }) }
                             />
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Data Guardian</Text> */}
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -508,12 +428,9 @@ export default class EditProfile extends Component {
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder={this.state.position}
-                                onChangeText={(value) => {
-                                    onChangeTextPosition(value)
-                                }}
+                                value={userObject.position}
+                                onChangeText={ (value) => this.setState({userObject: { ...userObject, position: value } }) }
                             />
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Software engineer</Text> */}
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -522,7 +439,7 @@ export default class EditProfile extends Component {
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.userObject.type.toUpperCase()}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{ userObject.user_type }</Text>
                                 <TouchableOpacity
                                     style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
                                     onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
@@ -535,7 +452,7 @@ export default class EditProfile extends Component {
                         <View style={{ marginTop: hp('2%') }}>
                             <Text style={{ fontSize: hp('1.7%'), width: '70%', color: '#707070' }}>*If you want to change permission to post. You can request to admin.</Text>
                         </View>
-
+                    </KeyboardAvoidingView>
                     </View>
                 </ScrollView>
                 {this.renderChangeTypeOfUser()}
@@ -549,12 +466,9 @@ export default class EditProfile extends Component {
 
 const styleScoped = StyleSheet.create({
     btnImageProfile: {
-        // padding: hp('1%'),
         width: hp('4%'),
         height: hp('4%'),
         borderRadius: 100,
-        // borderWidth: 1,
-        // borderColor: 'black',
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',

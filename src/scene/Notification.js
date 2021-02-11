@@ -86,7 +86,15 @@ export default class Notification extends Component {
                     ...style.marginHeaderStatusBar,
                     backgroundColor: '#F9FCFF'
                 }}>
-                <HeaderNavbar value={'admin'}></HeaderNavbar>
+                <View style={{ ...style.navbar }}>
+                    <TouchableOpacity onPress={() => Actions.replace('Main')}>
+                        <Icon name="chevron-left" size={hp('3%')} color="white" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>
+                        Notifications
+                    </Text>
+                    <View></View>
+                </View>
                 <View
                     style={{
                         ...style.container,
