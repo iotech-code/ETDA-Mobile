@@ -25,7 +25,10 @@ export default class ForgetPassword extends Component {
     constructor(props) {
         super();
         this.state = {
-            email: ''
+            email: '',
+            border: '#CADAFB',
+            defaultBorder: '#CADAFB',
+            disableSend: true
         }
     }
 
@@ -44,12 +47,17 @@ export default class ForgetPassword extends Component {
             })
     };
 
-    render() {
-        onChangeTextEmail = async (value) => {
-            this.setState({
-                email: value
-            })
+    async emailValidate (value) {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(value) === false) {
+            await this.setState({border: 'red', email: value, disableSend: true });
+        } else {
+            await this.setState({border: this.state.defaultBorder, email: value, disableSend: false });
         }
+    }
+
+    render() {
+
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
@@ -74,12 +82,10 @@ export default class ForgetPassword extends Component {
                             <View style={{ ...style.customInput }}>
                                 <TextInput
                                     value={this.state.email}
-                                    style={style.input}
+                                    style={{ ...style.input, borderColor: this.state.border }}
                                     placeholder="Email address"
                                     keyboardType='email-address'
-                                    onChangeText={(value) => {
-                                        onChangeTextEmail(value.toLowerCase())
-                                    }}
+                                    onChangeText={ value => this.emailValidate( value.toLowerCase() ) }
                                 />
                             </View>
 
@@ -87,6 +93,7 @@ export default class ForgetPassword extends Component {
                         <View style={{ marginTop: hp('3%') }}>
                             <Button
                                 title="Send Email"
+                                disabled={ this.state.disableSend }
                                 buttonStyle={{
                                     padding: hp('1.5%'),
                                     ...style.btnRounded,

@@ -62,7 +62,8 @@ export default class Login extends Component {
         const data = {
             "user_email": this.state.email,
             "user_password": this.state.pass,
-            "authen_method": "local"
+            "authen_method": "local",
+            "device": Platform.OS
         }
         this.setState({ spinner: true });
         try {
