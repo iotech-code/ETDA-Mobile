@@ -20,6 +20,7 @@ export const createPost = async (
     post_tag,
     post_addition_data,
 ) => {
+    // post_addition_data.post_to_etda = true
     await http.setTokenHeader();
     let formData = {
         post_title,
@@ -29,6 +30,7 @@ export const createPost = async (
         post_tag,
         post_addition_data,
     };
+    console.log(formData)
     return await http.post(`/api/backend/post/create`, formData);
 };
 
@@ -51,6 +53,6 @@ export const updatePost = async (
         post_tag,
         post_addition_data,
     };
-    return await http.post(`/api/backend/post/update/${post_id}` , formData)
+    return await http.post(`/api/backend/post/update/${post_id}`, formData)
 
 }

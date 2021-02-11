@@ -38,9 +38,10 @@ export default class Main extends Component {
     }
 
     async componentDidMount() {
+
         await this.getUserInfo();
         await this.callHomeFeed();
-        const [refreshing, setRefreshing] = React.useState(false);
+        // const [refreshing, setRefreshing] = React.useState(false);
     }
 
     async getUserInfo() {
@@ -80,7 +81,7 @@ export default class Main extends Component {
     };
 
     createPost() {
-        Actions.CreatePost({
+        Actions.replace('CreatePost', {
             'type_value': 'create', 'title': '',
             'description': '',
             'post_images': []
@@ -88,17 +89,18 @@ export default class Main extends Component {
     }
 
     render() {
-        const { dataList, isFetching } = this.state
-        
+        const { isFetching, user_type, user_role } = this.state
+
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
                     <View style={{ flex: 1, paddingBottom: hp('1%') }}>
-                        {this.state.user_role == "Member" ?
-                            <HeaderNavbar value={'member'}></HeaderNavbar>
-                            :
-                            <HeaderNavbar value={'admin'}></HeaderNavbar>
+                        {
+                            user_role == "Member" ?
+                                <HeaderNavbar value={'member'}></HeaderNavbar>
+                                :
+                                <HeaderNavbar value={'admin'}></HeaderNavbar>
                         }
 
                         <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
@@ -111,7 +113,7 @@ export default class Main extends Component {
 
                         {/* section create post  */}
                         {
-                            this.state.user_type == 'read,post_read' &&
+                            user_type == 'read,post_read' &&
                             <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                 <Button
                                     title="Write New Blog"

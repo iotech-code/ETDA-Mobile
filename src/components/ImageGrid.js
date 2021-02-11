@@ -8,7 +8,8 @@ import {
     Text,
     StatusBar,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
 
 
@@ -43,12 +44,20 @@ export default class ImageGrid extends Component {
         return (
             <View style={style.warpper}>
                 {
-                    data.map((el,index) => {
+                    data.map((el, index) => {
                         return (
-                            <View style={{ height: width == '100%' ? hp('23%') : hp('10%'), width: width, margin: 1 }}>
+                            <View
+                                style={{
+                                    height: width == '100%' ? hp('23%') : hp('10%'),
+                                    width: width,
+                                    margin: 1
+                                }}
+                                key={`Image_${index}`}
+                            >
                                 <Image
                                     source={{ uri: el }}
                                     style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+                                    PlaceholderContent={<ActivityIndicator color="white" />}
                                 />
                             </View>
                         )

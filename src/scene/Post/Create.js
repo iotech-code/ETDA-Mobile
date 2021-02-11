@@ -1,4 +1,3 @@
-
 import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
@@ -39,11 +38,16 @@ export default class CreatePost extends Component {
             image: [],
             description: '',
             tag: [],
-            addition: [],
+            addition: {
+                "event_date": "",
+                "event_schedule": [],
+                "post_to_etda": true
+            },
             postId: '',
             images: [],
             loadingImage: false,
             listTags: [],
+            originalTag: [],
             spinner: false,
             loadingTags: false
         }
@@ -73,6 +77,7 @@ export default class CreatePost extends Component {
                 element.selected = false
             }
             this.setState({ listTags: data.post_data })
+            this.setState({ originalTag: data.post_data })
         } catch (error) {
             console.log('Get list tags error : ', error)
         }
@@ -80,14 +85,19 @@ export default class CreatePost extends Component {
     }
 
     selectTag(indexTag) {
-        let { listTags } = this.state
-        for (let index = 0; index < listTags.length; index++) {
-            const element = listTags[index];
+        let { originalTag } = this.state
+        let listTagSelected = []
+        for (let index = 0; index < originalTag.length; index++) {
+            const element = originalTag[index];
             if (index == indexTag) {
                 element.selected = element.selected ? false : true
             }
+            if (element.selected) {
+                listTagSelected.push(element.tag)
+            }
         }
-        this.setState({ listTags })
+        this.setState({ originalTag })
+        this.setState({ tag: listTagSelected })
     }
 
     async callCreatePost() {
@@ -95,6 +105,10 @@ export default class CreatePost extends Component {
         try {
             let { title, type, images, description, tag, addition } = this.state
             let res = await createPost(title, type, images, description, tag, addition)
+            let { status } = res.data
+            if (status == 'success') {
+                Actions.replace('Main')
+            }
         } catch (error) {
             console.log('Create post error : ', error)
         }
@@ -158,6 +172,17 @@ export default class CreatePost extends Component {
             images: image_base64
         })
         this.setState({ loadingImage: false })
+    }
+
+    searchTags(text) {
+        let { originalTag } = this.state
+        let result = originalTag.filter((option) => {
+            return option.tag
+                .toString()
+                .toLowerCase()
+                .indexOf(text.toLowerCase()) >= 0
+        })
+        this.setState({ listTags: result })
     }
 
     render() {
@@ -282,20 +307,11 @@ export default class CreatePost extends Component {
                         this.props.type_value == 'detail'
                             ? null
                             : <Fragment>
-                                <View style={{ ...style.flex__start, marginTop: hp('2%'), alignItems: 'center' }}>
-                                    <View style={{ paddingHorizontal: hp('2%'), width: '80%' }}>
-                                        <TextInput
-                                            style={{ ...style.customInput }}
-                                            placeholder="Add tag by yourself…"
-                                        />
-                                    </View>
-                                    <Button
-                                        title="Add Tag"
-                                        titleStyle={{ fontSize: hp('1.5%') }}
-                                        buttonStyle={{ ...style.btnPrimary }}
-                                        onPress={() => {
-
-                                        }}
+                                <View style={{ paddingHorizontal: hp('2%'), marginTop: hp('2%') }}>
+                                    <TextInput
+                                        style={{ ...style.customInput }}
+                                        placeholder="Search tags"
+                                        onChangeText={(text) => this.searchTags(text)}
                                     />
                                 </View>
 
