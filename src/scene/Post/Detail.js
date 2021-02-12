@@ -22,149 +22,71 @@ import Comment from '../../components/Comment'
 import { fonts, apiServer } from '../../constant/util'
 import axios from 'axios';
 import { KeyboardAvoidingView } from 'react-native';
-
+import { getListCommentPost, createCommentPost } from '../../Service/PostService'
+import ImageGrid from '../../components/ImageGrid'
 export default class EventDetail extends Component {
-    state = {
-        visibleSearch: false,
-        data: {
-            title: 'E-commerce new gen By ETDA official',
-            time: '11/11/2020  3:30 pm',
-            detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur',
-            image: require('../../assets/images/post_1.png')
-        },
-        socail: {
-
-        },
-        comment: '',
-        post_id: 0,
-        reply_to: 0
-    }
-
-
-
-
-
 
     constructor(props) {
         super(props)
         this.state = {
             visibleSearch: false,
-            data: {
-                title: 'E-commerce new gen By ETDA official',
-                time: '11/11/2020  3:30 pm',
-                detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur',
-                image: require('../../assets/images/post_1.png')
-            },
             token: '',
             post_id: 0,
             list_comment: [],
             default_avatar: require('../../assets/images/default_avatar.jpg'),
+            reply_to: null,
+            comment: null
         }
     }
-
-
     async componentDidMount() {
+        const { post_id } = this.props.data
+        await this.setState({ post_id })
+        this.callGetComment(post_id)
+    }
+    async callGetComment(post_id) {
+
         try {
-            const token = await AsyncStorage.getItem('token')
-            const post_id = await AsyncStorage.getItem('post_id')
-            this.setState({
-                token: token,
-                post_id: post_id
-            })
-
-            this.callGetComment(post_id)
-
-        } catch (err) {
-            // handle errors
+            let response = await getListCommentPost({ post_id })
+            this.setState({ list_comment: response.data.comments })
+        } catch (error) {
+            console.log('Get list comment error : ', error)
         }
+
+    };
+    async createComment() {
+        try {
+            const { post_id, reply_to, comment } = this.state
+            let res = await createCommentPost(post_id, reply_to, comment)
+            let { status } = res.data
+            console.log(status)
+            if (status == "success") {
+                await this.callGetComment(post_id)
+                this.setState({ comment: '' })
+            }
+        } catch (error) {
+            console.log('Create comment error : ', error)
+        }
+    };
+    onPressButtonChildren(data) {
+        this.setState({ reply_to: data })
     }
 
+    showImage(index) {
 
-    callGetComment = async (post_id) => {
-        const data = {
-            "post_id": post_id
-        }
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/get-comment', data, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    this.setState({
-                        list_comment: response.data.comments
-                    })
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
-
-
-    callPostComment = async () => {
-        const data = {
-            "post_id": this.state.post_id,
-            "reply_to": this.state.reply_to,
-            "message": this.state.comment
-        }
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/comment', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    this.callGetComment(this.state.post_id)
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
-
-
-    onPressButtonChildren(data) {
-        this.setState({
-            reply_to: data
-        })
-        console.log(data)
     }
 
 
     render() {
-        const { data, default_avatar } = this.state
-        const { navigation } = this.props;
-
-        onChangeTextComment = async (value) => {
-            this.setState({
-                comment: value
-            })
-        }
-
+        const { author, post_date, tags, post_description, post_images, like } = this.props.data;
+        const { default_avatar, list_comment, comment } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
 
                     <View style={{
-                        ...styleScoped.shadowCard, backgroundColor: 'white', paddingBottom: hp('2%'),
+                        ...styleScoped.shadowCard,
+                        backgroundColor: 'white',
+                        paddingBottom: hp('2%'),
                         marginBottom: hp('2%'),
                     }}>
                         <View style={{ ...style.navbar }}>
@@ -173,8 +95,7 @@ export default class EventDetail extends Component {
                             <View></View>
                         </View>
                         <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
+                            ...style.space__between,
                             alignItems: 'center',
                             paddingHorizontal: hp('2%'),
                             marginTop: hp('2%')
@@ -185,26 +106,20 @@ export default class EventDetail extends Component {
                                     width: hp('7%'),
                                     marginRight: hp('1%')
                                 }}>
-                                    <Image source={navigation.getParam('user_image') ? { uri: navigation.getParam('user_image') } : default_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+                                    <Image source={!author.photo ? default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                                 </View>
                                 <View >
-                                    <Text style={{ fontSize: hp('2%') }}>{navigation.getParam('user_name', '')}</Text>
-                                    {/* <Text style={{ fontSize: hp('2%') }}>By ETDA official</Text> */}
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{navigation.getParam('user_date', '')}</Text>
+                                    <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
+                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{post_date}</Text>
                                 </View>
                             </View>
                         </View>
 
 
                         <View style={style.container}>
-                            <View style={{ marginTop: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-                                {/* <Button
-                                    title="E-commerce"
-                                    titleStyle={{ fontSize: hp('1.5%') }}
-                                    buttonStyle={{ ...style.btnTagPrimary }}
-                                /> */}
+                            <View style={{ marginTop: hp('2%'), ...style.flex__start, alignItems: 'center', flexWrap: 'wrap' }}>
                                 {
-                                    navigation.getParam('user_tags', '').map((item, index) => {
+                                    tags.map((item, index) => {
                                         return (
                                             <Button
                                                 title={item}
@@ -219,55 +134,43 @@ export default class EventDetail extends Component {
 
 
                             <View style={{ height: hp('24%'), width: '100%', marginTop: hp('1%') }}>
-                                <Image source={{ uri: navigation.getParam('user_images', '') }} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
+                                <ImageGrid data={post_images} getIndexImage={true} onPressImage={(index) => this.showImage(index)} />
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
                                 <Text style={{ fontSize: hp('1.8%') }}>
-                                    {navigation.getParam('user_description', '')}
+                                    {post_description}
                                 </Text>
                             </View>
 
-                            <View style={{
-                                marginTop: hp('2%'),
-                                flexDirection: 'row',
-                                justifyContent: 'flex-start',
-                                alignItems: 'center'
-                            }}>
-                                <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}> {navigation.getParam('user_like', '')}</Text>
-                                <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                                <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{navigation.getParam('user_comment', '')}</Text>
-                            </View>
                         </View>
 
                         <View style={{
+                            ...style.flex__start,
                             marginTop: hp('2%'),
                             paddingTop: hp('1.5%'),
                             borderTopWidth: 1,
                             borderTopColor: '#B5B5B5',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
                             alignItems: 'center',
                             paddingHorizontal: hp('2%'),
                         }}>
-                            <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
-                            <Text style={{ fontSize: hp('2%'), fontWeight: '300', color: '#707070' }}>{this.state.list_comment.length} comments</Text>
+                            <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                            <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            <Text style={{ color: '#B5B5B5' }}>{list_comment.length}  comments</Text>
                         </View>
                     </View>
 
 
                     {/* comment */}
                     <ScrollView style={{ marginBottom: 24 }}>
-                        {this.state.list_comment.map((item, index) => {
-                            return (
-                                <Comment data={item} fnPressButton={this.onPressButtonChildren.bind(this)}></Comment>
-                            )
+                        {
+                            list_comment.map((item, index) => {
+                                return (
+                                    <Comment data={item} fnPressButton={this.onPressButtonChildren.bind(this)}></Comment>
+                                )
+                            })
                         }
-                        )}
                     </ScrollView>
-                    {/* <View style={{ ...style.container }}>
-                       
-                    </View> */}
                 </ScrollView>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{ ...styleScoped.warpperComment }}>
@@ -278,14 +181,14 @@ export default class EventDetail extends Component {
                             <TextInput
                                 placeholder="Comment here"
                                 style={{ padding: 0, fontSize: hp('2%') }}
-                                onChangeText={(value) => {
-                                    onChangeTextComment(value)
-                                }}>
+                                value={comment}
+                                onChangeText={(comment) => this.setState({ comment })} >
                             </TextInput>
                         </View>
                         <Button
                             title="send"
-                            buttonStyle={{...style.btnPrimary }}
+                            buttonStyle={{ ...style.btnPrimary }}
+                            onPress={() => this.createComment()}
                         />
 
                     </View>
@@ -311,22 +214,7 @@ const styleScoped = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         width: '70%',
-        marginRight:hp('1%')
-    },
-    imageLogo: {
-        height: hp('15%'),
-        width: hp('23%')
-    },
-    textWelcome: {
-        textAlign: 'center',
-        fontSize: hp('2%'),
-        color: '#003764'
-    },
-    inputCustom: {
-        height: hp('5%'),
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: hp('1%')
+        marginRight: hp('1%')
     },
     shadowCard: {
         shadowColor: "#000",
@@ -337,17 +225,6 @@ const styleScoped = StyleSheet.create({
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
         elevation: 4,
-    },
-    sectionSocial: {
-        marginTop: hp('2%'),
-        paddingTop: hp('2.5%'),
-        borderTopWidth: 0.5,
-        borderTopColor: '#B5B5B5',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingHorizontal: hp('2%'),
-        paddingBottom: hp('1%')
     }
 });
 
