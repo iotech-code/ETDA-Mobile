@@ -36,5 +36,4 @@ export const createPost = async (
 export const updatePost = async (params) => {
     await http.setTokenHeader()
     return await http.put(`/api/backend/post/update/${params.post_id}`, params)
-
 }

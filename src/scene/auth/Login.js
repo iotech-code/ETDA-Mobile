@@ -23,11 +23,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Actions } from 'react-native-router-flux';
 import Spinner from 'react-native-loading-spinner-overlay';
 // import LineLogin from 'react-native-line-sdk'
+import { 
+    LoginManager,
+    AccessToken,
+    GraphRequest,
+    GraphRequestManager, } from "react-native-fbsdk";
 
 const http = new HttpRequest();
 export default class Login extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { 
             email: '', 
             pass: '', 
@@ -40,6 +45,7 @@ export default class Login extends Component {
             disableLogin: true,
             spinner: false
         }
+        this.socialSignIn = this.socialSignIn.bind(this);
     }
 
     componentDidMount () {
@@ -58,6 +64,54 @@ export default class Login extends Component {
         // } catch (error) {
         //     console.log(error.response.response)
         // }
+    }
+
+    async socialSignIn(error, result) {
+        const data = {
+            "user_email": result.id,
+            "user_password": result.id,
+            "authen_method": 'local',
+            "device": Platform.OS
+        }
+
+        if (error) {
+            console.log('Error fetching data: ' + error.toString());
+            return false;
+        }
+
+        try {
+            let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
+            let {token} = loginRequest.data;
+            console.log(loginRequest)
+            await AsyncStorage.setItem('token', token);
+            await this.callInfomation();
+   
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async facebookLogin () {
+        const LoginRequest = await LoginManager.logInWithPermissions(["public_profile"])
+        if (LoginRequest.isCancelled) {
+            console.log("Login cancelled");
+          } else {
+              const getAccessToken = await AccessToken.getCurrentAccessToken()
+              const fbToken = await getAccessToken.accessToken.toString();
+              const profileRequest = await new GraphRequest( 
+                  '/me', 
+                  {
+                      accessToken: fbToken, 
+                      parameters: {
+                          fields: {
+                              string: 'email, id, name,  first_name, last_name',
+                          }
+                      }
+                  }, 
+                  this.socialSignIn
+              );
+              new GraphRequestManager().addRequest(profileRequest).start();
+        }
     }
 
     async checkLogin() {
@@ -246,6 +300,7 @@ export default class Login extends Component {
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
+                                onPress={ () => this.facebookLogin() }
                                 title="Continue with Facebook"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnFacebook, ...style.btnRounded }}
                             />

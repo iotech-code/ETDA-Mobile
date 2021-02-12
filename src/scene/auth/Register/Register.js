@@ -20,7 +20,12 @@ import { Button, CheckBox, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../../styles/base';
 import { Actions } from 'react-native-router-flux';
-import { colors, configs } from '../../../constant/util';
+import { configs } from '../../../constant/util';
+import { 
+    LoginManager,
+    AccessToken,
+    GraphRequest,
+    GraphRequestManager, } from "react-native-fbsdk";
 export default class Register extends Component {
 
     constructor() {
@@ -37,6 +42,37 @@ export default class Register extends Component {
             passwordBorder: '#CADAFB',
             passwordConfirmBorder: '#CADAFB',
             defaultBorder: '#CADAFB'
+        }
+    }
+
+    async socialRegister(error, result) {
+        if (error) {
+            console.log('Error fetching data: ' + error.toString());
+            return false;
+        }
+        Actions.push('ChooseUserType', { 'email': result.id, 'password': result.id})
+    }
+
+    async facebookLogin () {
+        const LoginRequest = await LoginManager.logInWithPermissions(["public_profile"])
+        if (LoginRequest.isCancelled) {
+            console.log("Login cancelled");
+          } else {
+              const getAccessToken = await AccessToken.getCurrentAccessToken()
+              const fbToken = await getAccessToken.accessToken.toString();
+              const profileRequest = await new GraphRequest( 
+                  '/me', 
+                  {
+                      accessToken: fbToken, 
+                      parameters: {
+                          fields: {
+                              string: 'email, id, name,  first_name, last_name',
+                          }
+                      }
+                  }, 
+                  this.socialRegister
+              );
+              new GraphRequestManager().addRequest(profileRequest).start();
         }
     }
 
@@ -196,6 +232,7 @@ export default class Register extends Component {
                             <View style={{ marginTop: hp('2%') }}>
                                 <Button
                                     title="Continue with Facebook"
+                                    onPress={ () => this.facebookLogin() }
                                     buttonStyle={{ padding: hp('1.5%'), ...style.btnFacebook, ...style.btnRounded }}
                                 />
                             </View>

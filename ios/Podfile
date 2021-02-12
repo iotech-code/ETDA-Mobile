@@ -24,6 +24,8 @@ target 'LOOKs' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
   target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing
