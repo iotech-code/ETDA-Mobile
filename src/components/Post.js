@@ -173,11 +173,13 @@ export default class Post extends Component {
                     ...styleScoped.listMore
                 }}
                     onPress={() => {
-                        Actions.CreatePost({
+                        Actions.replace('CreatePost',{
                             'type_value': 'edit',
                             'title': this.props.data.title,
-                            'description': this.props.data.detail,
-                            'post_images': this.props.data.post_images
+                            'description': this.props.data.description,
+                            'post_images': this.props.data.post_images,
+                            'post_tag':this.props.data.tags,
+                            'post_id':this.props.data.post_id
                         })
                         this.setState({ visibleBottomSheet: false }),
                             this.RBSheet.close()
@@ -210,8 +212,8 @@ export default class Post extends Component {
 
 
     callDeletePost = async (post_id) => {
-        this.setState({ visibleBottomSheet: false }),
-            this.RBSheet.close()
+        this.setState({ visibleBottomSheet: false })
+        this.RBSheet.close()
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token
@@ -356,10 +358,14 @@ export default class Post extends Component {
                             })
                         }
                     </View>
-                    <View style={{ maxHeight: hp('23%'), marginTop: hp('1%') }}>
+                    <View style={{ maxHeight: hp('23%'), marginVertical: hp('1%') }}>
                         <ImageGrid data={post_images} />
                     </View>
-                    <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
+                    <Text
+                     style={{ fontSize: hp('2%'), fontWeight: '300' }}
+                     numberOfLines={4}
+                     ellipsizeMode="tail"
+                     >{this.props.data.description}</Text>
                 </TouchableOpacity>
 
                 <View style={{ ...style.sectionSocial }}>
@@ -367,7 +373,7 @@ export default class Post extends Component {
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
                         <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.like}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{...style.flex__start , marginRight:hp('2%')}}>
+                    <TouchableOpacity style={{ ...style.flex__start, marginRight: hp('2%') }}>
                         <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
                         <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.comment}</Text>
                     </TouchableOpacity>
