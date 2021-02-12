@@ -23,6 +23,7 @@
 		447C9B56672C496BB6E9E855 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F03AF9D1CDAF4E4ABC583138 /* EvilIcons.ttf */; };
 		4FE17665C1C645D4B4A8E906 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F40D3897255B432D9DAFBE21 /* FontAwesome.ttf */; };
 		518D0CF205E24E2EAE576CEF /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD8A952EBDF94FAE80AEB6D1 /* Feather.ttf */; };
+		5D25CD0C25D73AB2005CD7DC /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D25CD0B25D73AB2005CD7DC /* File.swift */; };
 		60915AF83DD0488CB6B342CA /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 075C261F5FD543D3BE7AEBC0 /* Ionicons.ttf */; };
 		66A98C52D76EB5883A58DEFD /* libPods-LOOKs-LOOKsTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6285DE000B1B49721ABA1E32 /* libPods-LOOKs-LOOKsTests.a */; };
 		792475DE2FDA4AB7AF54C043 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F14F2E0C0D147489D8981D8 /* FontAwesome5_Brands.ttf */; };
@@ -80,6 +81,12 @@
 		4B2AD437CB05BC2226014D06 /* libPods-LOOKs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LOOKs.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E73CED95D3E474F987AEB33 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		5303216E961747EE85610D8A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		5D25CCFD25D72AAA005CD7DC /* libFBSDKLoginKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKLoginKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D25CD0425D737E5005CD7DC /* libFBSDKLoginKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKLoginKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D25CD0625D737F0005CD7DC /* libFBSDKShareKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKShareKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D25CD0825D73865005CD7DC /* libFBSDKCoreKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKCoreKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D25CD0A25D73AB1005CD7DC /* LOOKs-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LOOKs-Bridging-Header.h"; sourceTree = "<group>"; };
+		5D25CD0B25D73AB2005CD7DC /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		6285DE000B1B49721ABA1E32 /* libPods-LOOKs-LOOKsTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LOOKs-LOOKsTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A63806B38AE4B29A1521680 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		729B2A6BB2134B81A580A128 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -173,6 +180,10 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5D25CD0825D73865005CD7DC /* libFBSDKCoreKit.a */,
+				5D25CD0625D737F0005CD7DC /* libFBSDKShareKit.a */,
+				5D25CD0425D737E5005CD7DC /* libFBSDKLoginKit.a */,
+				5D25CCFD25D72AAA005CD7DC /* libFBSDKLoginKit.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				4B2AD437CB05BC2226014D06 /* libPods-LOOKs.a */,
@@ -202,6 +213,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				5D25CD0B25D73AB2005CD7DC /* File.swift */,
 				13B07FAE1A68108700A75B9A /* LOOKs */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* LOOKsTests */,
@@ -210,6 +222,7 @@
 				BCE0FDAC772C8D124BADCDF8 /* Pods */,
 				DBFE6EDBC15842F5BFFBC28F /* Resources */,
 				5D101B8125D706B200992B59 /* Recovered References */,
+				5D25CD0A25D73AB1005CD7DC /* LOOKs-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -305,6 +318,8 @@
 			dependencies = (
 			);
 			name = LOOKs;
+			packageProductDependencies = (
+			);
 			productName = ETDA_Mobile;
 			productReference = 13B07F961A680F5B00A75B9A /* LOOKs.app */;
 			productType = "com.apple.product-type.application";
@@ -361,7 +376,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1230;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -385,6 +400,8 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -730,6 +747,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				5D25CD0C25D73AB2005CD7DC /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -771,6 +789,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8E2CDA04A9FF2C387A4FD89E /* Pods-LOOKs-LOOKsTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -802,6 +821,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A59EE6CBB8F5BA76F4F78F0C /* Pods-LOOKs-LOOKsTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				HEADER_SEARCH_PATHS = (
@@ -851,6 +871,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.etda.looks;
 				PRODUCT_NAME = LOOKs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "LOOKs-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -882,6 +903,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.etda.looks;
 				PRODUCT_NAME = LOOKs;
 				PROVISIONING_PROFILE_SPECIFIER = LOOKs;
+				SWIFT_OBJC_BRIDGING_HEADER = "LOOKs-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
