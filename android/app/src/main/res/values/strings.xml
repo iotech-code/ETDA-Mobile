@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LOOKs</string>
+    <string name="line_channel_id" translatable="false">1655665695</string>
 </resources>

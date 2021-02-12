@@ -101,7 +101,7 @@ export default class EditProfile extends Component {
     renderModalPostandRead() {
         const { visibleModalPostandRead } = this.state
         return (
-            <View>
+            <>
             <Overlay
                 isVisible={visibleModalPostandRead}
                 overlayStyle={{
@@ -214,7 +214,7 @@ export default class EditProfile extends Component {
                     />
                 </View>
             </Overlay>
-            </View>
+            </>
         )
     }
 
@@ -340,7 +340,7 @@ export default class EditProfile extends Component {
                         </View>
                     </View>
                     <View style={{ ...style.container }}>
-                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : "height"}>
+                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
