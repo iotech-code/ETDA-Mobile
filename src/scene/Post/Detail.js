@@ -172,7 +172,7 @@ export default class EventDetail extends Component {
                         }
                     </ScrollView>
                 </ScrollView>
-                <KeyboardAvoidingView behavior="position">
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{ ...styleScoped.warpperComment }}>
                         <TouchableOpacity>
                             <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />

@@ -69,7 +69,7 @@ export default class Post extends Component {
                     paddingHorizontal: hp('2%')
                 }}
             >
-                <KeyboardAvoidingView behavior="position">
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{
                         borderBottomColor: '#707070',
                         borderBottomWidth: 1,

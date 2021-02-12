@@ -100,7 +100,7 @@ export default class Register extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : "height"}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <ScrollView>
                         <View style={{
                             marginTop: hp('3%'),
@@ -206,7 +206,7 @@ export default class Register extends Component {
                                 />
                             </View>
 
-                            <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'center' }}>
+                            <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'center', marginBottom: 20 }}>
                                 <Text style={{ color: '#707070', fontSize: hp('1.7%'), marginRight: hp('1%') }}>Do have an account?</Text>
                                 <TouchableOpacity onPress={() => Actions.Login()}>
                                     <Text style={{ color: '#4267B2', textDecorationLine: 'underline', fontSize: hp('1.7%') }} >Login</Text>

@@ -76,7 +76,7 @@ export default class ChooseUserType extends Component {
                     borderRadius: 5
                 }}
             >
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : "height"}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <ScrollView>
                         <View style={{
                             borderBottomColor: '#707070',

@@ -9,6 +9,7 @@ import {
     StatusBar,
     Image,
     TextInput,
+    ScrollView,
     TouchableOpacity,
     KeyboardAvoidingView,
     Alert
@@ -21,7 +22,7 @@ import style from '../../styles/base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Actions } from 'react-native-router-flux';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+// import LineLogin from 'react-native-line-sdk'
 
 const http = new HttpRequest();
 export default class Login extends Component {
@@ -45,11 +46,48 @@ export default class Login extends Component {
         this.checkLogin();
     }
 
+    async LingLogin () {
+        // try {
+
+        //     await LineLogin.login()
+        //     .then((user) => {
+        //       console.log(user.profile.displayName)
+        //     })
+        //     // console.log(loginResult)
+            
+        // } catch (error) {
+        //     console.log(error.response.response)
+        // }
+    }
+
     async checkLogin() {
         let token = await AsyncStorage.getItem('token');
         
         if(token) {
-            await this.callInfomation();
+            await this.refreshToken();
+        }
+    }
+
+    async refreshToken() {
+        try {
+            await http.setTokenHeader();
+            let getInfo = await http.post(apiServer.url + '/api/backend/user/information');
+            let {status, data} = getInfo.data;
+
+            if(status == 'success') {
+                await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
+                await this.setState({ spinner: false });
+                await Actions.replace('Main');
+            } else {
+                let refreshing = await http.post(apiServer.url + '/api/backend/user/refresh-token');
+                let {status, token} = await refreshing.data;
+                if(status == 'success') {
+                    await AsyncStorage.setItem('token', token);
+                    await this.callInfomation();
+                }
+            }
+        } catch (e) {
+            this.setState({ spinner: false });
         }
     }
 
@@ -65,6 +103,7 @@ export default class Login extends Component {
             "authen_method": "local",
             "device": Platform.OS
         }
+
         this.setState({ spinner: true });
         try {
             let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
@@ -82,16 +121,18 @@ export default class Login extends Component {
     };
 
     callInfomation = async () => {
-        await http.setTokenHeader();
-        let response = await http.post(apiServer.url + '/api/backend/user/information');
-        let {status, data} = response.data;
+        try{
+            await http.setTokenHeader();
+            let response = await http.post(apiServer.url + '/api/backend/user/information');
+            let {status, data} = response.data;
 
-        if (status == "success") {
-            await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
-            await this.setState({ spinner: false });
-            await Actions.replace('Main');
-        } else {
-            Alert.alert('Can\'t login: issue about server response data please try again.');
+            if (status == "success") {
+                await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
+                await this.setState({ spinner: false });
+                await Actions.replace('Main');
+            }
+        
+        }  catch(e) {
             this.setState({ spinner: false });
         }
     };
@@ -129,7 +170,8 @@ export default class Login extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
                 <SafeAreaView>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "position" : "height"}>
+                <ScrollView>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{
                         marginTop: hp('8%'),
                         flexDirection: 'row',
@@ -198,6 +240,7 @@ export default class Login extends Component {
                         <View style={{ marginTop: hp('4%') }}>
                             <Button
                                 title="Continue with Line"
+                                onPress={ () => this.LingLogin() }
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnLine, ...style.btnRounded }}
                             />
                         </View>
@@ -222,6 +265,7 @@ export default class Login extends Component {
                         </View>
                     </View>
                     </KeyboardAvoidingView>
+                    </ScrollView>
                 </SafeAreaView>
             </View>
         );

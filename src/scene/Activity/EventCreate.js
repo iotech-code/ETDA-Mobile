@@ -182,7 +182,7 @@ export default class EventCreate extends Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', marginBottom: hp('3%') }}>
-                    <KeyboardAvoidingView behavior="position">
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ ...style.navbar }}>
                             <TouchableOpacity onPress={() => Actions.pop()}>
                                 <Icon name="chevron-left" size={hp('3%')} color="white" />
