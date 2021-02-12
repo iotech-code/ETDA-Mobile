@@ -358,10 +358,14 @@ export default class Post extends Component {
                             })
                         }
                     </View>
-                    <View style={{ maxHeight: hp('23%'), marginTop: hp('1%') }}>
+                    <View style={{ maxHeight: hp('23%'), marginVertical: hp('1%') }}>
                         <ImageGrid data={post_images} />
                     </View>
-                    <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
+                    <Text
+                     style={{ fontSize: hp('2%'), fontWeight: '300' }}
+                     numberOfLines={4}
+                     ellipsizeMode="tail"
+                     >{this.props.data.description}</Text>
                 </TouchableOpacity>
 
                 <View style={{ ...style.sectionSocial }}>
