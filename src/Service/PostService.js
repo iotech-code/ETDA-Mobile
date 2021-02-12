@@ -38,3 +38,14 @@ export const updatePost = async (params) => {
     return await http.put(`/api/backend/post/update/${params.post_id}`, params)
 
 }
+
+
+export const getListCommentPost = async (params) => {
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/get-comment', params)
+}
+
+export const createCommentPost = async (post_id, reply_to, message) => {
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/comment', { post_id, reply_to, message })
+}

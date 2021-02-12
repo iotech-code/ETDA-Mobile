@@ -22,20 +22,15 @@ import { fonts, apiServer } from '../constant/util'
 
 export default class Comment extends Component {
     state = {
-        data: {
-            avatar: require('../assets/images/avatar2.png'),
-            name: 'John',
-            time: '2 minutes ago',
-            detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod '
-        }
+        default_avatar: require('../assets/images/default_avatar.jpg'),
+    }
 
+    replyCommentTo(reply_to) {
+        this.props.fnPressButton(reply_to)
     }
     render() {
-        const { data } = this.state
-
-        const onPress = (reply_to) =>  {
-           this.props.fnPressButton(reply_to)
-        }
+        const { User, Message, create_date, Reply_to } = this.props.data
+        const { default_avatar } = this.state
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -56,21 +51,25 @@ export default class Comment extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={{ uri: this.props.data.User.Photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image
+                                    source={!User.Photo ? default_avatar : { uri: User.Photo }}
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }}
+
+                                />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{this.props.data.User.Fullname}</Text>
-                                <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>{this.props.data.create_date}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{User.Fullname}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>{create_date}</Text>
                             </View>
                         </View>
                     </View>
 
 
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginVertical: hp('1.5%') }} >
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300'  }}>{this.props.data.Message}</Text>
+                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{Message}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: hp('1%') }}>
-                        <TouchableOpacity onPress={() => onPress( this.props.data.Reply_to.User_id)}>
+                        <TouchableOpacity onPress={() => this.replyCommentTo(Reply_to.User_id)}>
                             <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Reply</Text>
                         </TouchableOpacity>
                     </View>

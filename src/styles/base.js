@@ -124,7 +124,7 @@ export default StyleSheet.create({
     sectionSocial: {
         marginTop: hp('2%'),
         paddingTop: hp('2.5%'),
-        borderTopWidth: 1,
+        borderTopWidth: 0.5,
         borderTopColor: '#B5B5B5',
         flexDirection: 'row',
         justifyContent: 'flex-start',

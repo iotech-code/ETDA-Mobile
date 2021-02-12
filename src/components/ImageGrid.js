@@ -1,13 +1,8 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
-    Text,
-    StatusBar,
-    TextInput,
     TouchableOpacity,
     ActivityIndicator
 } from 'react-native';
@@ -23,7 +18,10 @@ export default class ImageGrid extends Component {
         img: [{}, {}, {}],
 
     }
-
+    onPressImage(index) {
+        const { getIndexImage } = this.props
+        getIndexImage ? this.props.onPressImage(index) : null
+    }
     render() {
         const { data } = this.props
         let width = '0%'
@@ -54,11 +52,15 @@ export default class ImageGrid extends Component {
                                 }}
                                 key={`Image_${index}`}
                             >
-                                <Image
-                                    source={{ uri: el }}
-                                    style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
-                                    PlaceholderContent={<ActivityIndicator color="white" />}
-                                />
+
+                                <TouchableOpacity onPress={() => this.onPressImage(index)}>
+                                    <Image
+                                        source={{ uri: el }}
+                                        style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+                                        PlaceholderContent={<ActivityIndicator color="white" />}
+                                    />
+                                </TouchableOpacity>
+
                             </View>
                         )
                     })
