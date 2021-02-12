@@ -14,7 +14,7 @@ class HttpRequest {
 
     this.axiosInstance.interceptors.request.use(function (config) {
       // Do something before request is sent
-      console.log(`Request ${config.url} : `, config)
+      // console.log(`Request ${config.url} : `, config)
       return config
     }, function (error) {
       // Do something with request error
@@ -24,10 +24,10 @@ class HttpRequest {
     // Add a response interceptor
     this.axiosInstance.interceptors.response.use(function (response) {
       // Do something with response data
-      console.log(`Result ${response.config.url} : `, response)
+      // console.log(`Result ${response.config.url} : `, response)
       return response
     }, function (error) {
-      console.log(`error ${response.config.url} : `, error)
+      // console.log(`error ${response.config.url} : `, error)
       // Do something with response error
       return Promise.reject(error)
     })

@@ -24,7 +24,7 @@ import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
 import { apiServer } from '../../constant/util';
 import ImageGrid from '../../components/ImageGrid'
-import { getTagsList, createPost } from '../../Service/PostService'
+import { getTagsList, createPost, updatePost } from '../../Service/PostService'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
@@ -39,6 +39,7 @@ export default class CreatePost extends Component {
             image: [],
             description: null,
             tag: [],
+            editTag: false,
             addition: {
                 "event_date": "",
                 "event_schedule": [],
@@ -57,12 +58,15 @@ export default class CreatePost extends Component {
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token')
-            this.setState({
+            let { title, description, post_images, post_tag } = this.props
+            await this.setState({
                 token: token,
-                title: this.props.title,
-                description: this.props.description,
-                image: this.props.post_images
+                title: title,
+                description: description,
+                image: post_images,
+                tag: post_tag
             })
+            console.log('props', this.props)
             this.getListTag();
         } catch (err) {
             // handle errors
@@ -75,7 +79,10 @@ export default class CreatePost extends Component {
             let { data } = await getTagsList();
             for (let index = 0; index < data.post_data.length; index++) {
                 const element = data.post_data[index];
-                element.selected = false
+                let result = await this.state.tag.find(el => {
+                    return el == element.tag
+                })
+                element.selected = result ? true : false
             }
             this.setState({ listTags: data.post_data })
             this.setState({ originalTag: data.post_data })
@@ -88,6 +95,9 @@ export default class CreatePost extends Component {
     selectTag(indexTag) {
         let { originalTag } = this.state
         let listTagSelected = []
+        if (indexTag) {
+            this.setState({ editTag: true })
+        }
         for (let index = 0; index < originalTag.length; index++) {
             const element = originalTag[index];
             if (index == indexTag) {
@@ -134,37 +144,50 @@ export default class CreatePost extends Component {
     }
 
     async callUpdatePost(title, type, images, description, tags, addition, post_id) {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+        this.setState({ spinner: true })
+        try {
+            const data = {
+                "post_title": title,
+                "post_type": type,
+                "post_images": images,
+                "post_description": description,
+                "post_tag": tags,
+                "post_addition_data": addition,
+                "post_id": post_id
+            }
+            console.log('data', data)
+            let result = await updatePost(data)
+            console.log('result', result)
+        } catch (error) {
+            console.log('Update post error : ', error)
         }
-
-        const data = {
-            "post_title": title,
-            "post_type": type,
-            "post_images": images,
-            "post_description": description,
-            "post_tag": tags,
-            "post_addition_data": addition
-        }
+        this.setState({ spinner: false })
 
 
-        axios.put(apiServer.url + '/api/backend/post/update/' + post_id, data, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    Actions.MessageBoard()
-                } else {
+        // const headers = {
+        //     'Content-Type': 'application/json',
+        //     'Authorization': 'Bearer ' + this.state.token
+        // }
 
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
+
+
+
+        // axios.put(apiServer.url + '/api/backend/post/update/' + post_id, data, {
+        //     headers
+        // })
+        //     .then((response) => {
+        //         console.log('data : ', response.data)
+        //         if (response.data.status == "success") {
+        //             Actions.MessageBoard()
+        //         } else {
+
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.log('data : ', error)
+        //     })
+        //     .finally(function () {
+        //     });
 
     };
 
@@ -203,17 +226,20 @@ export default class CreatePost extends Component {
         this.setState({ listTags: result })
     }
 
-    createPost () {
+    createPost() {
+
         if (this.props.type_value == 'create') {
             this.callCreatePost()
         } else {
-            this.callUpdatePost(this.state.title,
+            const { title, image, images, description, tag, addition ,editTag } = this.state
+            this.callUpdatePost(
+                title,
                 'blog',
-                this.state.images,
-                this.state.description,
-                this.state.tag,
-                this.state.addition,
-                this.props.data.post_id,
+                images,
+                description,
+                editTag ?  tag : [],
+                addition,
+                this.props.post_id,
             )
         }
     }
@@ -238,7 +264,7 @@ export default class CreatePost extends Component {
                     </Text>
                     {this.props.type_value == 'detail' ? null
                         :
-                        <TouchableOpacity onPress={() => this.createPost() }>
+                        <TouchableOpacity onPress={() => this.createPost()}>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
                         </TouchableOpacity>
                     }
