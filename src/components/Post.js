@@ -36,6 +36,7 @@ export default class Post extends Component {
                 detail: '',
                 tag: []
             },
+            default_avatar: require('../assets/images/default_avatar.jpg'),
             visibleBottomSheet: false,
             visibleModalReport: false,
             like: 0
@@ -216,11 +217,6 @@ export default class Post extends Component {
                     Actions.refresh();
                 }
             })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
 
     };
 
@@ -295,7 +291,8 @@ export default class Post extends Component {
             post_images, tags,
             post_id,
             like,
-            comment_number
+            comment_number,
+            author
         } = this.props.data
 
         return (
@@ -313,12 +310,25 @@ export default class Post extends Component {
                         ...style.space__between,
                         alignItems: 'center'
                     }}>
-                        <Text style={{ fontSize: hp('2%'), }}>{title}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{
+                                height: hp('7%'),
+                                width: hp('7%'),
+                                marginRight: hp('1%')
+                            }}>
+                                <Image source={!author.photo ? this.state.default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+                            </View>
+                            <View >
+                                <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{post_date}</Text>
+                            </View>
+                        </View>
                         <TouchableOpacity onPress={() => this.openOption()}>
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text>
+                    
+                    {/* <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text> */}
                     <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
                             tags.map((item, index) => {

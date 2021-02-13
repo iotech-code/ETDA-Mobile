@@ -14,7 +14,7 @@ import {
     KeyboardAvoidingView,
     Alert
 } from 'react-native';
-import { apiServer } from '../../constant/util';
+import { apiServer, configs } from '../../constant/util';
 import HttpRequest from '../../Service/HttpRequest';
 import { Button, Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -28,6 +28,9 @@ import {
     AccessToken,
     GraphRequest,
     GraphRequestManager, } from "react-native-fbsdk";
+import {
+    GoogleSignin,
+    statusCodes } from '@react-native-community/google-signin';
 
 const http = new HttpRequest();
 export default class Login extends Component {
@@ -50,6 +53,12 @@ export default class Login extends Component {
 
     componentDidMount () {
         this.checkLogin();
+        GoogleSignin.configure({
+            webClientId: configs.firebaseWebClientID, // client ID of type WEB for your server(needed to verify user ID and offline access)
+            offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+            forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+            accountName: '', // [Android] specifies an account name on the device that should be used
+        });
     }
 
     async LingLogin () {
@@ -66,13 +75,35 @@ export default class Login extends Component {
         // }
     }
 
+    async GoogleLogin () {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const info = await GoogleSignin.signIn();
+            const {user} = info
+            // console.warn({userInfo: user});
+            // setUserInfo(info);
+            this.socialSignIn(false, user);
+          } catch (error) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+              // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+              // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+              // play services not available or outdated
+            } else {
+              // some other error happened
+            }
+          }
+    }
+
     async socialSignIn(error, result) {
         const data = {
-            "user_email": result.id,
-            "user_password": result.id,
+            "user_email": (result.email === undefined) ? result.id : result.email,
+            "user_password": (result.email === undefined) ? result.id : '',
             "authen_method": 'local',
             "device": Platform.OS
         }
+        console.log(data)
 
         if (error) {
             console.log('Error fetching data: ' + error.toString());
@@ -307,6 +338,7 @@ export default class Login extends Component {
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
+                                onPress={ () => this.GoogleLogin() }
                                 title="Continue with Google"
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnGoogle, ...style.btnRounded }}
                             />

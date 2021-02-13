@@ -36,15 +36,16 @@ export default class MessageBoard extends Component {
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token');
-            const user_type = await AsyncStorage.getItem('user_type');
-            const user_role = await AsyncStorage.getItem('user_role');
+            const user = await AsyncStorage.getItem('user_data');
+            const {user_type, user_role, fullname} = JSON.parse(user);
 
             this.setState({
                 user_type: user_type,
                 token : token,
                 user_role : user_role
             })
-            this.callCommunityFeed(token)
+            
+            this.callCommunityFeed(token);
 
         } catch (err) {
             console.log('err : ', err)
@@ -71,30 +72,27 @@ export default class MessageBoard extends Component {
                 var i  
                 var objectFeed = {}
                 var list = []
-                for (i = 0 ; i < response.data.post_data.length ; i++){
+                const {post_data} = response.data;
+                console.log(response.data)
+                for (i = 0 ; i < post_data.length ; i++){
                     objectFeed = {
-                        post_id : response.data.post_data[i].post_id,
-                        title : response.data.post_data[i].title,
-                        date : response.data.post_data[i].post_date,
-                        description : response.data.post_data[i].post_description,
-                        tags : response.data.post_data[i].tags,
-                        post_images : response.data.post_data[i].post_images,
-                        comment :  response.data.post_data[i].comment_number,
-                        like :  response.data.post_data[i].like,
-                        user_name : '',
-                        user_image : ''
+                        post_id : post_data[i].post_id,
+                        title : post_data[i].title,
+                        date : post_data[i].post_date,
+                        description : post_data[i].post_description,
+                        tags : post_data[i].tags,
+                        post_images : post_data[i].post_images,
+                        comment :  post_data[i].comment_number,
+                        like :  post_data[i].like,
+                        user_name : post_data[i].author.fullname,
+                        user_image : post_data[i].author.photo
                     }
                     list.push(objectFeed)
-                    this.setState({
-                        list_data : list
-                    })
                 }
+                this.setState({
+                    list_data : list
+                })
             })
-            .catch((error) => {
-                console.log('e 2 : ' ,error)
-            })
-            .finally(function () {
-            });
 
     };
 
@@ -126,16 +124,11 @@ export default class MessageBoard extends Component {
                         user_image : ''
                     }
                     list.push(objectFeed)
-                    this.setState({
-                        list_data : list
-                    })
                 }
+                this.setState({
+                    list_data : list
+                })
             })
-            .catch((error) => {
-                console.log('e 1 : ' ,error)
-            })
-            .finally(function () {
-            });
 
     };
 
@@ -233,10 +226,10 @@ export default class MessageBoard extends Component {
                     </View>
                 </ScrollView>
                 {this.state.user_role == "Member" ? 
-                         <MenuFooterUser value={'message'}></MenuFooterUser>
-                        :
-                        <MenuFooter value={'message'}></MenuFooter>
-                    }
+                    <MenuFooterUser value={'message'}></MenuFooterUser>
+                    :
+                    <MenuFooter value={'message'}></MenuFooter>
+                }
                 {/* <MenuFooter></MenuFooter> */}
             </View>
         );

@@ -19,5 +19,6 @@ export const apiServer = {
 }
 
 export const configs = {
-    privacy: 'https://www.etda.or.th/th/privacy/term-of-use.aspx'
+    privacy: 'https://www.etda.or.th/th/privacy/term-of-use.aspx',
+    firebaseWebClientID: '643227393258-4eqvgn0qm2h4ohtt364jtqb7b31dcu5k.apps.googleusercontent.com'
 }

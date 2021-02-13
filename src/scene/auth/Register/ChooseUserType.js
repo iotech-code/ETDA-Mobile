@@ -105,7 +105,7 @@ export default class ChooseUserType extends Component {
 
                         <View style={{ ...style.customInput, height: hp('15%') }}>
                             <TextInput
-                                style={{ fontSize: hp('2%'), padding: 0, height: 115 }}
+                                style={{ fontSize: hp('2%'), padding: 0,  }}
                                 placeholder="Enter your reason…"
                                 multiline={true}
                                 value={this.state.rReason}

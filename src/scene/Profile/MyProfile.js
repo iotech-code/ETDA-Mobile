@@ -72,7 +72,7 @@ export default class MyProfile extends Component {
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('Main')} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>My Profile</Text>
-                            <TouchableOpacity onPress={() => Actions.replace('ProfileSetting')}>
+                            <TouchableOpacity onPress={() => Actions.push('ProfileSetting')}>
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Setting</Text>
                             </TouchableOpacity>
                         </View>

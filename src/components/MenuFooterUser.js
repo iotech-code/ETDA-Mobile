@@ -1,24 +1,16 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
-    TextInput,
     TouchableOpacity,
     Platform
 } from 'react-native';
 
-import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IconMaterail from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { colors, fonts, apiServer } from '../constant/util';
 

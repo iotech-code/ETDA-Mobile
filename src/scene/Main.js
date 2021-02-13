@@ -15,7 +15,6 @@ import {
     ActivityIndicator
 } from 'react-native';
 
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -70,6 +69,7 @@ export default class Main extends Component {
                     post_images: element.post_images,
                     comment: element.comment_number,
                     like: element.like,
+                    autor: element.author
                 }
                 list_data.push(objectHomeFeed)
             }
@@ -117,7 +117,7 @@ export default class Main extends Component {
 
                         {/* section create post  */}
                         {
-                            user_type == 'read,post_read' &&
+                            user_role !== 'Member' &&
                             <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                 <Button
                                     title="Write New Blog"

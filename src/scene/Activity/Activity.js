@@ -32,12 +32,12 @@ export default class Activity extends Component {
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token');
-            const user_type = await AsyncStorage.getItem('user_type');
-            const user_role = await AsyncStorage.getItem('user_role');
+            const user = await AsyncStorage.getItem('user_data');
+            const user_data = JSON.parse(user);
             this.setState({
-                user_type: user_type,
+                user_type: user_data.user_type,
                 token : token,
-                user_role : user_role
+                user_role : user_data.user_role
             })
             this.callCommunityFeed(token)
         } catch (err) {

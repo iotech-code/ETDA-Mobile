@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "643227393258",
+    "project_id": "etda-authen",
+    "storage_bucket": "etda-authen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643227393258:android:eb57660d10b12f77c80b93",
+        "android_client_info": {
+          "package_name": "com.etda_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643227393258-09um7vu5tbu4olibaep9hj8fl2c0i8fg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.etda_mobile",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "643227393258-4eqvgn0qm2h4ohtt364jtqb7b31dcu5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGg6fkg2fsONJpnizb6qT6QsFySVolX74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643227393258-4eqvgn0qm2h4ohtt364jtqb7b31dcu5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

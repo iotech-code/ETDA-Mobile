@@ -27,6 +27,12 @@ target 'LOOKs' do
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
   
   # pod 'FBSDKLoginKit'
+  pod 'GoogleSignIn', '~> 5.0.2'
+
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-community/google-signin'
+
+  # add pods for desired Firebase products
+  # https://firebase.google.com/docs/ios/setup#available-pods
 
   target 'LOOKsTests' do
     inherit! :complete
