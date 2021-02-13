@@ -281,7 +281,7 @@ export default class Post extends Component {
 
     };
 
-    seePostDetai() {
+    postView() {
         Actions.PostDetail({ data: { ...this.props.data } })
         // AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
     }
@@ -306,7 +306,7 @@ export default class Post extends Component {
                 marginBottom: hp('2%')
             }}>
                 <TouchableOpacity
-                    onPress={() => { this.seePostDetai() }}
+                    onPress={() => { this.postView() }}
                     style={{ paddingHorizontal: hp('2%') }}
                 >
                     <View style={{

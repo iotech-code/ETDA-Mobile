@@ -58,7 +58,6 @@ export default class Main extends Component {
         this.setState({ isFetching: true })
         try {
             let { data } = await homeFeed();
-            console.log('data home feed : ', data)
             let list_data = []
             for (let index = 0; index < data.post_data.length; index++) {
                 const element = data.post_data[index];

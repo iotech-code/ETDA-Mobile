@@ -77,12 +77,12 @@ export default class EventDetail extends Component {
 
 
     render() {
-        const { author, post_date, tags, post_description, post_images, like } = this.props.data;
+        const { author, post_date, tags, post_description, post_images, like, title } = this.props.data;
         const { default_avatar, list_comment, comment } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
-
+ 
                     <View style={{
                         ...styleScoped.shadowCard,
                         backgroundColor: 'white',
@@ -91,7 +91,7 @@ export default class EventDetail extends Component {
                     }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Blog Detail</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}  numberOfLines={1}>{title}</Text>
                             <View></View>
                         </View>
                         <View style={{
@@ -117,7 +117,8 @@ export default class EventDetail extends Component {
 
 
                         <View style={style.container}>
-                            <View style={{ marginTop: hp('2%'), ...style.flex__start, alignItems: 'center', flexWrap: 'wrap' }}>
+                            <Text style={{ fontSize: hp('2.2%'), color: '#333', marginTop: 20, fontWeight: 'bold' }}>{title}</Text>
+                            <View style={{ marginTop: hp('1%'), ...style.flex__start, alignItems: 'center', flexWrap: 'wrap' }}>
                                 {
                                     tags.map((item, index) => {
                                         return (
@@ -166,7 +167,7 @@ export default class EventDetail extends Component {
                         {
                             list_comment.map((item, index) => {
                                 return (
-                                    <Comment data={item} fnPressButton={this.onPressButtonChildren.bind(this)}></Comment>
+                                    <Comment data={item}  key={`comment_${index}`} fnPressButton={() => this.onPressButtonChildren.bind(this)}></Comment>
                                 )
                             })
                         }
