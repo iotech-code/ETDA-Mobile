@@ -23,7 +23,7 @@ import { fonts, apiServer } from '../constant/util';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
-import { actionLikePost, actionDeletePost } from '../Service/PostService'
+import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
 
 
 export default class Post extends Component {
@@ -41,16 +41,19 @@ export default class Post extends Component {
             visibleBottomSheet: false,
             visibleModalReport: false,
             is_like: 0,
-            like_count: 0
+            like_count: 0,
+            is_follow: 0
         }
     }
 
     async componentDidMount() {
-        let { is_like, like } = this.props.data
+        let { is_like, like, is_follow } = this.props.data
+        // console.log(this.props.data)
         this.setState({
             token: await AsyncStorage.getItem('token'),
             is_like: is_like,
-            like_count: like
+            like_count: like,
+            is_follow: is_follow
         })
     }
 
@@ -136,7 +139,7 @@ export default class Post extends Component {
     }
 
     renderBottomSheet() {
-        const { visibleBottomSheet } = this.state
+        const { visibleBottomSheet, is_follow } = this.state
         return (
             <RBSheet
                 ref={ref => {
@@ -159,7 +162,10 @@ export default class Post extends Component {
                 }}
                     onPress={() => this.callPostFollow(this.props.data.post_id)}
                 >
-                    <Icon name="heart-outline" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
+                    <Icon
+                        name={is_follow ? "heart" : 'heart-outline'}
+                        size={hp('3%')} color={is_follow ? "#FF0066" : '#707070'}
+                        style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
@@ -214,7 +220,6 @@ export default class Post extends Component {
             if (status == 'success') {
                 this.props.onPostUpdate()
             }
-            console.log('response delete post : ', response)
         } catch (error) {
             console.log('Delete post error : ', error)
         }
@@ -231,41 +236,28 @@ export default class Post extends Component {
                     like_count: is_like ? like_count - 1 : like_count + 1
                 })
             }
-            console.log('Like response : ', response)
         } catch (error) {
             console.log('Like post error : ', error)
         }
     };
 
 
-    callPostFollow = async (post_id) => {
+    async callPostFollow(post_id) {
         this.setState({ visibleBottomSheet: false })
         this.RBSheet.close()
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+        try {
+            let { is_follow } = this.state
+            let response = await actionFollowPost({ post_id })
+            console.log(response)
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_follow: is_follow ? 0 : 1,
+                })
+            }
+        } catch (error) {
+            console.log('Follow post error : ', error)
         }
-
-        const data = {
-            "post_id": post_id
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/follow', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
     };
 
     postView() {
@@ -321,7 +313,7 @@ export default class Post extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    {/* <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text> */}
+                    <Text style={{ fontSize: hp('2%'), fontWeight: '400', marginTop: hp('2%') }} >{title}</Text>
                     <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
                             tags.map((item, index) => {
