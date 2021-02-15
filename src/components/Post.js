@@ -23,7 +23,7 @@ import { fonts, apiServer } from '../constant/util';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
-import { actionLikePost } from '../Service/PostService'
+import { actionLikePost, actionDeletePost } from '../Service/PostService'
 
 
 export default class Post extends Component {
@@ -205,23 +205,19 @@ export default class Post extends Component {
     }
 
 
-    callDeletePost = async (post_id) => {
+    async callDeletePost(post_id) {
         this.setState({ visibleBottomSheet: false })
         this.RBSheet.close()
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+        try {
+            let response = await actionDeletePost(post_id)
+            let { status } = response.data
+            if (status == 'success') {
+                this.props.onPostUpdate()
+            }
+            console.log('response delete post : ', response)
+        } catch (error) {
+            console.log('Delete post error : ', error)
         }
-
-        axios.delete(apiServer.url + '/api/backend/post/delete/' + post_id, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    Actions.refresh();
-                }
-            })
-
     };
 
     async callPostLike(post_id) {
@@ -235,6 +231,7 @@ export default class Post extends Component {
                     like_count: is_like ? like_count - 1 : like_count + 1
                 })
             }
+            console.log('Like response : ', response)
         } catch (error) {
             console.log('Like post error : ', error)
         }
@@ -242,8 +239,8 @@ export default class Post extends Component {
 
 
     callPostFollow = async (post_id) => {
-        this.setState({ visibleBottomSheet: false }),
-            this.RBSheet.close()
+        this.setState({ visibleBottomSheet: false })
+        this.RBSheet.close()
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + this.state.token

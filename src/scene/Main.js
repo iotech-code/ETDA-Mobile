@@ -57,22 +57,6 @@ export default class Main extends Component {
         this.setState({ isFetching: true })
         try {
             let { data } = await homeFeed();
-            let list_data = []
-            for (let index = 0; index < data.post_data.length; index++) {
-                const element = data.post_data[index];
-                let objectHomeFeed = {
-                    post_id: element.post_id,
-                    title: element.title,
-                    date: element.post_date,
-                    description: element.post_description,
-                    tags: element.tags,
-                    post_images: element.post_images,
-                    comment: element.comment_number,
-                    like: element.like,
-                    autor: element.author
-                }
-                list_data.push(objectHomeFeed)
-            }
             await this.setState({ list_data: data.post_data });
         } catch (error) {
             console.log("Main scene error : ", error)
@@ -147,7 +131,7 @@ export default class Main extends Component {
 
                             this.state.list_data.map((item, index) => {
                                 return (
-                                    <Post data={item} key={`post_${index}`}></Post>
+                                    <Post data={item} key={`post_${index}`} onPostUpdate={()=>this.callHomeFeed()}></Post>
                                 )
                             })
                         }

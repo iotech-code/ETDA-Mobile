@@ -81,5 +81,5 @@ export const actionJoinPost = async (params) => {
 
 export const actionDeletePost = async (post_id) => {
     await http.setTokenHeader()
-    return await http.post(`/api/backend/post/delete/${post_id}`, params)
+    return await http.delete(`/api/backend/post/delete/${post_id}`)
 }
