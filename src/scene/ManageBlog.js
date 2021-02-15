@@ -97,9 +97,6 @@ export default class ManageBlog extends Component {
         }
     }
 
-
-
-
     async callApproveList() {
         this.setState({ loadingList: true })
         try {
@@ -198,6 +195,7 @@ export default class ManageBlog extends Component {
                                     list_data.map((item, index) => {
                                         return (
                                             <BlogManager
+                                                key={`blogManager_${index}`}
                                                 data={item}
                                                 onPressSelectBox={(i) => this.updatePostSelected(i)}></BlogManager>
                                         )

@@ -23,6 +23,7 @@ import { fonts, apiServer } from '../constant/util';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
+import { actionLikePost } from '../Service/PostService'
 
 
 export default class Post extends Component {
@@ -39,14 +40,17 @@ export default class Post extends Component {
             default_avatar: require('../assets/images/default_avatar.jpg'),
             visibleBottomSheet: false,
             visibleModalReport: false,
-            like: 0
+            is_like: 0,
+            like_count: 0
         }
     }
 
     async componentDidMount() {
+        let { is_like, like } = this.props.data
         this.setState({
             token: await AsyncStorage.getItem('token'),
-            like: this.props.data.like
+            is_like: is_like,
+            like_count: like
         })
     }
 
@@ -220,30 +224,20 @@ export default class Post extends Component {
 
     };
 
-    callPostLike = async (post_id) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+    async callPostLike(post_id) {
+        try {
+            let { is_like, like_count } = this.state
+            let response = await actionLikePost({ post_id })
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_like: is_like ? 0 : 1,
+                    like_count: is_like ? like_count - 1 : like_count + 1
+                })
+            }
+        } catch (error) {
+            console.log('Like post error : ', error)
         }
-
-        const data = {
-            "post_id": post_id
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/like', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    var like_result = this.state.like + 1
-
-                    this.setState({
-                        like: like_result
-                    })
-
-                    console.log('data success post like : ', response.data)
-                }
-            })
     };
 
 
@@ -292,8 +286,10 @@ export default class Post extends Component {
             post_id,
             like,
             comment_number,
-            author
+            author,
         } = this.props.data
+
+        let { is_like, like_count } = this.state
 
         return (
             <View style={{
@@ -327,7 +323,7 @@ export default class Post extends Component {
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-                    
+
                     {/* <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text> */}
                     <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
@@ -355,8 +351,8 @@ export default class Post extends Component {
 
                 <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity style={style.flex__start} onPress={() => this.callPostLike(post_id)}>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{like}</Text>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{like_count}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ ...style.flex__start, marginRight: hp('2%') }}>
                         <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />

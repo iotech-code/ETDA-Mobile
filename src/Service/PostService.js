@@ -60,3 +60,9 @@ export const approvePost = async (params) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/approve', params)
 }
+
+export const actionLikePost = async (params) =>{
+    // params is post_id of action like post. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/like',params)
+}
