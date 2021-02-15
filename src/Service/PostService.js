@@ -48,3 +48,15 @@ export const createCommentPost = async (post_id, reply_to, message) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/comment', { post_id, reply_to, message })
 }
+
+
+export const getListApprove = async () => {
+    await http.setTokenHeader()
+    return await http.get('/api/backend/post/approve-list')
+}
+
+export const approvePost = async (params) => {
+    // params is  post_id in array such {post_id: [1,2,4]}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/approve', params)
+}

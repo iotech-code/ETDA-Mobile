@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
-    TextInput,
     TouchableOpacity,
-    FlatList,
-    KeyboardAvoidingView
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet } from 'react-native-elements';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -22,10 +15,10 @@ import style from '../styles/base';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconMaterail from 'react-native-vector-icons/MaterialIcons';
-import axios from 'axios';
-import HeaderNavbar from '../components/Navbar';
 import { Fragment } from 'react';
-import { apiServer } from '../constant/util';
+import HttpRequest from '../Service/HttpRequest'
+
+const http = new HttpRequest();
 export default class Notification extends Component {
     constructor(props) {
         super(props);
@@ -76,6 +69,20 @@ export default class Notification extends Component {
             ]
         }
     }
+    componentDidMount() {
+        this.getListNotification();
+    }
+
+    async getListNotification() {
+        try {
+            await http.setTokenHeader();
+            let respons = await http.get('/api/backend/noti/noti-list')
+            console.log('',respons)
+        } catch (error) {
+            console.log('Error list Notification : ',error)
+        }
+
+    }
 
     render() {
         const { dataEvent, dataNoti } = this.state
@@ -103,8 +110,8 @@ export default class Notification extends Component {
                         paddingBottom: hp('2%'),
                         ...styleScoped.shadowCard
                     }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                    <View style={{ ...style.space__between }}>
+                        <View style={{ ...style.flex__start }}>
                             <Icon
                                 name="calendar"
                                 size={hp('2.5%')}

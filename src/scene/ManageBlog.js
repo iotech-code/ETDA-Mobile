@@ -11,7 +11,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    Platform
+    Platform,
+    ActivityIndicator
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -21,18 +22,23 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import MenuFooter from '../components/MenuFooter'
 import BlogManager from '../components/ManageBlog'
 import { fonts, apiServer } from '../constant/util';
-
+import { getListApprove, approvePost } from '../Service/PostService'
 export default class ManageBlog extends Component {
     state = {
         visibleSearch: false,
-        user_type: '' , token : '' , user_role : '',
-        list_data : [],
+        user_type: '',
+        token: '',
+        user_role: '',
+        list_data: [],
+        showMangeBlogControl: false,
+        loadingList: false,
+        count_selected: 0,
+        selectAll: false
     }
-    
+
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -40,8 +46,8 @@ export default class ManageBlog extends Component {
             const user_role = await AsyncStorage.getItem('user_role');
             this.setState({
                 user_type: user_type,
-                token : token,
-                user_role : user_role
+                token: token,
+                user_role: user_role
             })
             this.callApproveList(token)
         } catch (err) {
@@ -50,86 +56,112 @@ export default class ManageBlog extends Component {
     }
 
 
-    callPostApprove = async (token) => {
-        console.log('token : ' , token)
+    async callPostApprove() {
 
-        const data = {
-            "post_id": [],
-        }
-
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-
-        axios.post(apiServer.url + '/api/backend/post/approve', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success"){
-                    this.callApproveList(token)
-                }else{
-
+        try {
+            const { list_data } = this.state
+            let post_id = []
+            for (let index = 0; index < list_data.length; index++) {
+                const element = list_data[index];
+                if (element.selected) {
+                    post_id.push(element.post_id)
                 }
-            })
-            .catch((error) => {
-                console.log('error : ' , error)
-            })
-            .finally(function () {
-            });
-
-    };
-
-
-    callApproveList = async (token) => {
-        console.log('token : ' , token)
-        axios.get(apiServer.url + '/api/backend/post/approve-list',{
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
             }
-        })
-            .then((response) => {
-                console.log('response : ' , response)
-                var i  
-                var objectHomeFeed = {}
-                var list = []
-                for (i = 0 ; i < response.data.post_data.length ; i++){
-                    objectHomeFeed = {
-                        post_id : response.data.post_data[i].post_id,
-                        title : response.data.post_data[i].title,
-                        date : response.data.post_data[i].post_date,
-                        description : response.data.post_data[i].post_description,
-                        tags : response.data.post_data[i].tags,
-                        post_images :  response.data.post_data[i].post_images
-                    }
-                    list.push(objectHomeFeed)
-                }
-                console.log('list detail : ' , list.length)
-                this.setState({
-                    list_data : list
-                })
-            })
-            .catch((error) => {
-                console.log('error : ' , error)
-            })
-            .finally(function () {
-            });
-
+            let respons = await approvePost({ post_id })
+            let { status } = respons.data
+            if (status == 'success') {
+                await this.setState({ list_data: [] })
+                await this.setState({ count_selected: 0 })
+                this.callApproveList()
+            }
+        } catch (error) {
+            console.log('Approve post  error : ', error)
+        }
     };
+
+    async callPostReject() {
+        try {
+            const { list_data } = this.state
+            let post_id = []
+            for (let index = 0; index < list_data.length; index++) {
+                const element = list_data[index];
+                if (element.selected) {
+                    post_id.push(element.post_id)
+                }
+            }
+            await this.setState({ list_data: [] })
+            await this.setState({ count_selected: 0 })
+            this.callApproveList()
+        } catch (error) {
+            console.log('Reject post is error : ', error)
+        }
+    }
+
+
+
+
+    async callApproveList() {
+        this.setState({ loadingList: true })
+        try {
+            let respons = await getListApprove();
+            let { post_data } = respons.data
+            for (let index = 0; index < post_data.length; index++) {
+                const element = post_data[index];
+                element.selected = false
+            }
+            await this.setState({ list_data: post_data })
+        } catch (error) {
+            console.log('Get list approve error : ', error)
+        }
+        this.setState({ loadingList: false })
+    };
+
+    async selectAll() {
+        await this.setState({ selectAll: this.state.selectAll || this.state.count_selected > 0 ? false : true })
+        let { list_data, selectAll } = this.state
+        for (let index = 0; index < list_data.length; index++) {
+            const element = list_data[index];
+            element.selected = selectAll
+        }
+        await this.setState({ list_data })
+        await this.setState({ count_selected: selectAll ?  list_data.length : 0 })
+    }
+
+    async updatePostSelected(id) {
+        let { list_data, count_selected } = this.state
+        for (let index = 0; index < list_data.length; index++) {
+            const element = list_data[index];
+            if (element.post_id == id) {
+                element.selected = element.selected ? false : true
+                count_selected = element.selected ? count_selected + 1 : count_selected - 1
+            }
+        }
+        await this.setState({ list_data })
+        await this.setState({ count_selected })
+    }
+
+    async cancleSelected() {
+        let { list_data } = this.state
+        for (let index = 0; index < list_data.length; index++) {
+            const element = list_data[index];
+            element.selected = false
+        }
+        await this.setState({ list_data })
+        await this.setState({ count_selected: 0 })
+    }
+
     render() {
-        const { dataList } = this.state
+        const { list_data, count_selected, loadingList, selectAll } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
                 <ScrollView>
                     <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                    {this.state.user_role == "Member" ? 
-                    <HeaderNavbar  value={'member'}></HeaderNavbar>
-                    :
-                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
-                    }
+                        {this.state.user_role == "Member" ?
+                            <HeaderNavbar value={'member'}></HeaderNavbar>
+                            :
+                            <HeaderNavbar value={'admin'}></HeaderNavbar>
+                        }
                         <View style={{ backgroundColor: '#F9FCFF', }}>
                             <View style={{
                                 flexDirection: 'row',
@@ -150,56 +182,80 @@ export default class ManageBlog extends Component {
                             }}>
                                 <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Waiting for publish({this.state.list_data.length})</Text>
                                 <Button
-                                    title="Select all"
+                                    title={selectAll || count_selected == 0 ? "Select all" : "Un Select all"}
                                     titleStyle={{ fontSize: hp('1.5%'), fontWeight: '300', padding: hp('1%') }}
                                     buttonStyle={{ ...style.btnTagPrimary, padding: hp('1%') }}
+                                    onPress={() => this.selectAll()}
                                 />
                             </View>
-
+                            {
+                                loadingList ?
+                                    <ActivityIndicator color="#003764" style={{ marginTop: hp('27%') }} />
+                                    : null
+                            }
                             <ScrollView >
-                                {this.state.list_data.map((item, index) => {
-                                return (
-                                    <BlogManager data={item}></BlogManager>
-                                    )}
-                                )}
+                                {
+                                    list_data.map((item, index) => {
+                                        return (
+                                            <BlogManager
+                                                data={item}
+                                                onPressSelectBox={(i) => this.updatePostSelected(i)}></BlogManager>
+                                        )
+                                    })
+                                }
                             </ScrollView>
+
 
                         </View>
                     </View>
                 </ScrollView>
-                <View style={{ ...styleScoped.containerSelectOption }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={{ fontSize: hp('2%'), color: fonts.color.primary, }}>Cancle</Text>
-                        <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Blog selected(1)</Text>
-                        <Text></Text>
-                    </View>
-                    <View style={{ marginTop: hp('1%') }}>
-                        <Button
-                            title="Publish"
-                            buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                        />
-                    </View>
-                    <View style={{ marginTop: hp('1%') }}>
-                        <Button
-                            title="Reject"
-                            Outline={true}
-                            titleStyle={{ color: fonts.color.primary }}
-                            buttonStyle={{
-                                padding: hp('1.5%'),
-                                ...style.btnPrimaryOutline,
-                                ...style.btnRounded
-                            }}
-                        />
-                    </View>
-                </View>
-           
-                {this.state.user_role == "Member" ? 
-                         <MenuFooterUser value={'home'}></MenuFooterUser>
-                        :
-                        <MenuFooter value={'manage'}></MenuFooter>
-                    }
+
+                {count_selected > 0 && this.renderManageBlgControl()}
+
+
+
+                {this.state.user_role == "Member" ?
+                    <MenuFooterUser value={'home'}></MenuFooterUser>
+                    :
+                    <MenuFooter value={'manage'}></MenuFooter>
+                }
             </View>
         );
+    }
+
+    renderManageBlgControl() {
+        const { count_selected } = this.state
+        return (
+            <View style={{ ...styleScoped.containerSelectOption }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TouchableOpacity onPress={() => this.cancleSelected()}>
+                        <Text style={{ fontSize: hp('2%'), color: fonts.color.primary, }}>Cancle</Text>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Blog selected({count_selected})</Text>
+                    <Text></Text>
+                </View>
+                <View style={{ marginTop: hp('1%') }}>
+                    <Button
+                        title="Publish"
+                        buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
+                        onPress={() => this.callPostApprove()}
+                    />
+                </View>
+                <View style={{ marginTop: hp('1%') }}>
+                    <Button
+                        title="Reject"
+                        Outline={true}
+                        titleStyle={{ color: fonts.color.primary }}
+                        buttonStyle={{
+                            padding: hp('1.5%'),
+                            ...style.btnPrimaryOutline,
+                            ...style.btnRounded
+                        }}
+                        onPress={() => this.callPostReject()}
+                    />
+                </View>
+            </View>
+        )
     }
 };
 
@@ -217,6 +273,7 @@ const styleScoped = StyleSheet.create({
         shadowOpacity: 0.34,
         shadowRadius: 6.27,
         elevation: 10,
+        top: -4
     }
 });
 
