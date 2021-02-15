@@ -29,12 +29,15 @@ import {
 import {
     GoogleSignin,
     statusCodes } from '@react-native-community/google-signin';
+import Line from '@xmartlabs/react-native-line'
+
 export default class Register extends Component {
 
     constructor() {
         super();
         this.state = { 
             rEmail: '', 
+            fullname: '',
             rPass: '', 
             rCPass: '', 
             rPolicy: false, 
@@ -57,14 +60,25 @@ export default class Register extends Component {
         });
     }
 
+    async LineAuthen () {
+        try{
+            const result = await Line.login({
+                scopes: ['profile'],
+                botPrompt: 'normal'
+            })
+            const {userProfile} = result
+            await Actions.push('ChooseUserType', { 'email': userProfile.userID, 'password': '', 'source': 'line' })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     async GoogleLogin () {
         try {
             await GoogleSignin.hasPlayServices();
             const info = await GoogleSignin.signIn();
             const {user} = info
-            // console.log({userInfo: user});
-            // await setUserInfo(info);
-            await Actions.push('ChooseUserType', { 'email': user.email, 'password': '' })
+            await Actions.push('ChooseUserType', { 'email': user.email, 'password': '', 'source': 'google' })
           } catch (error) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
               // user cancelled the login flow
@@ -78,13 +92,12 @@ export default class Register extends Component {
           }
     }
 
-    async socialRegister(error, result) {
-        console.log(result)
+    async facebookRegister(error, result) {
         if (error) {
             console.log('Error fetching data: ' + error.toString());
             return false;
         }
-        Actions.push('ChooseUserType', { 'email': result.id, 'password': result.id})
+        Actions.push('ChooseUserType', { 'email': result.id, 'password': '', 'source': 'facebook' })
     }
 
     async facebookLogin () {
@@ -104,7 +117,7 @@ export default class Register extends Component {
                           }
                       }
                   }, 
-                  this.socialRegister
+                  this.facebookRegister
               );
               new GraphRequestManager().addRequest(profileRequest).start();
         }
@@ -123,7 +136,7 @@ export default class Register extends Component {
             Alert.alert('Please agree term and condition before continue.')
             return false
         }
-        Actions.push('ChooseUserType', { 'email': this.state.rEmail, 'password': this.state.rPass})
+        Actions.push('ChooseUserType', { 'email': this.state.rEmail, 'password': this.state.rPass, 'fullname': this.state.fullname, 'source': 'local'})
     }
 
     async emailValidate (value) {
@@ -158,6 +171,7 @@ export default class Register extends Component {
         await this.setState({rPolicy: !this.state.rPolicy});
         await this.validate();
     }
+
     validate () {
         if ( this.state.rEmail === '' || this.state.rPass !== this.state.rCPass || !this.state.rPolicy ) {
             return false
@@ -197,6 +211,16 @@ export default class Register extends Component {
                                         keyboardType='email-address'
                                         placeholder="Email address"
                                         onChangeText={ value =>  this.emailValidate(value) }
+                                    />
+                                </View>
+                            </View>
+                            <View style={{ marginTop: hp('1%') }}>
+                                <View style={{...style.customInput, borderColor: this.state.emailBorder}}>
+                                    <TextInput
+                                        value={this.state.fullname}
+                                        style={[style.input, { color: 'black', width: wp(81), paddingVertical: 3, paddingHorizontal: 10 }]}
+                                        placeholder="Firstname Lastname"
+                                        onChangeText={ value =>  this.setState({fullname: value}) }
                                     />
                                 </View>
                             </View>
@@ -259,6 +283,7 @@ export default class Register extends Component {
                             </View>
                             <View style={{ marginTop: hp('4%') }}>
                                 <Button
+                                    onPress={()=>this.LineAuthen()}
                                     title="Continue with Line"
                                     buttonStyle={{ padding: hp('1.5%'), ...style.btnLine, ...style.btnRounded }}
                                 />

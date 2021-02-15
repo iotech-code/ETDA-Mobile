@@ -23,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Actions } from 'react-native-router-flux';
 import Spinner from 'react-native-loading-spinner-overlay';
 // import LineLogin from 'react-native-line-sdk'
+import Line from '@xmartlabs/react-native-line'
 import { 
     LoginManager,
     AccessToken,
@@ -61,49 +62,14 @@ export default class Login extends Component {
         });
     }
 
-    async LingLogin () {
-        // try {
-
-        //     await LineLogin.login()
-        //     .then((user) => {
-        //       console.log(user.profile.displayName)
-        //     })
-        //     // console.log(loginResult)
-            
-        // } catch (error) {
-        //     console.log(error.response.response)
-        // }
-    }
-
-    async GoogleLogin () {
-        try {
-            await GoogleSignin.hasPlayServices();
-            const info = await GoogleSignin.signIn();
-            const {user} = info
-            // console.warn({userInfo: user});
-            // setUserInfo(info);
-            this.socialSignIn(false, user);
-          } catch (error) {
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-              // user cancelled the login flow
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-              // operation (e.g. sign in) is in progress already
-            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-              // play services not available or outdated
-            } else {
-              // some other error happened
-            }
-          }
-    }
 
     async socialSignIn(error, result) {
         const data = {
-            "user_email": (result.email === undefined) ? result.id : result.email,
-            "user_password": (result.email === undefined) ? result.id : '',
-            "authen_method": 'local',
+            "user_email": result.id,
+            "user_password": '',
+            "authen_method": result.authen_method ? result.authen_method : 'facebook',
             "device": Platform.OS
         }
-        console.log(data)
 
         if (error) {
             console.log('Error fetching data: ' + error.toString());
@@ -120,6 +86,46 @@ export default class Login extends Component {
         } catch (e) {
             console.log(e)
         }
+    }
+
+    async LineAuthen () {
+        try{
+            const result = await Line.login({
+                scopes: ['profile'],
+                botPrompt: 'normal'
+            })
+            const {userProfile} = result
+            const loginInfo = {
+                id: userProfile.userID,
+                authen_method: 'line'
+            }
+            this.socialSignIn(false, loginInfo);
+        } catch(e) {
+            console.log(e)
+        }
+    }
+
+    async GoogleLogin () {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const info = await GoogleSignin.signIn();
+            const {user} = info
+            const loginInfo = {
+                id: user.id,
+                authen_method: 'google'
+            }
+            this.socialSignIn(false, loginInfo);
+          } catch (error) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+              // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+              // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+              // play services not available or outdated
+            } else {
+              // some other error happened
+            }
+          }
     }
 
     async facebookLogin () {
@@ -325,7 +331,7 @@ export default class Login extends Component {
                         <View style={{ marginTop: hp('4%') }}>
                             <Button
                                 title="Continue with Line"
-                                onPress={ () => this.LingLogin() }
+                                onPress={ () => this.LineAuthen() }
                                 buttonStyle={{ padding: hp('1.5%'), ...style.btnLine, ...style.btnRounded }}
                             />
                         </View>
