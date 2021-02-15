@@ -159,7 +159,7 @@ export default class Post extends Component {
                 }}
                     onPress={() => this.callPostFollow(this.props.data.post_id)}
                 >
-                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
+                    <Icon name="heart-outline" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>

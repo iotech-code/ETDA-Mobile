@@ -128,9 +128,6 @@ export default class Activity extends Component {
                             </View>
                         </View>
 
-
-
-
                     </View>
                 </ScrollView>
                 <MenuFooterUser></MenuFooterUser>

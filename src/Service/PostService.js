@@ -61,8 +61,25 @@ export const approvePost = async (params) => {
     return await http.post('/api/backend/post/approve', params)
 }
 
-export const actionLikePost = async (params) =>{
+export const actionLikePost = async (params) => {
     // params is post_id of action like post. Example => {post_id:1}
     await http.setTokenHeader()
-    return await http.post('/api/backend/post/like',params)
+    return await http.post('/api/backend/post/like', params)
+}
+
+export const actionFollowPost = async (params) => {
+    // params is post_id of action like post. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/follow', params)
+}
+
+export const actionJoinPost = async (params) => {
+    // params is post_id of action like post. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/join', params)
+}
+
+export const actionDeletePost = async (post_id) => {
+    await http.setTokenHeader()
+    return await http.post(`/api/backend/post/delete/${post_id}`, params)
 }
