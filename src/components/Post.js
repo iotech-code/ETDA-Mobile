@@ -308,8 +308,8 @@ export default class Post extends Component {
                     }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <View style={{
-                                height: hp('7%'),
-                                width: hp('7%'),
+                                height: hp('5%'),
+                                width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
                                 <Image source={!author.photo ? this.state.default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
