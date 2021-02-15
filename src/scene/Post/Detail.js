@@ -12,18 +12,17 @@ import {
     TouchableOpacity,
     FlatList
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
-import { fonts, apiServer } from '../../constant/util'
-import axios from 'axios';
+import { fonts } from '../../constant/util'
 import { KeyboardAvoidingView } from 'react-native';
 import { getListCommentPost, createCommentPost } from '../../Service/PostService'
 import ImageGrid from '../../components/ImageGrid'
+import ImageView from 'react-native-image-view';
 export default class EventDetail extends Component {
 
     constructor(props) {
@@ -35,7 +34,9 @@ export default class EventDetail extends Component {
             list_comment: [],
             default_avatar: require('../../assets/images/default_avatar.jpg'),
             reply_to: null,
-            comment: null
+            comment: null,
+            indeximageView: 0,
+            isImageViewVisible: false
         }
     }
     async componentDidMount() {
@@ -72,17 +73,32 @@ export default class EventDetail extends Component {
     }
 
     showImage(index) {
-
+        this.setState({
+            indeximageView: index,
+            isImageViewVisible: true
+        })
     }
 
 
     render() {
         const { author, post_date, tags, post_description, post_images, like, title } = this.props.data;
-        const { default_avatar, list_comment, comment } = this.state
+        const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible } = this.state
+        let imageForView = []
+        for (let index = 0; index < post_images.length; index++) {
+            const element = post_images[index];
+            let objImage = {
+                source: {
+                    uri: element,
+                },
+                width: 806,
+                height: 720,
+            }
+            imageForView.push(objImage)
+        }
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
- 
+
                     <View style={{
                         ...styleScoped.shadowCard,
                         backgroundColor: 'white',
@@ -91,7 +107,7 @@ export default class EventDetail extends Component {
                     }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}  numberOfLines={1}>{title}</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }} numberOfLines={1}>{title}</Text>
                             <View></View>
                         </View>
                         <View style={{
@@ -134,8 +150,17 @@ export default class EventDetail extends Component {
                             </View>
 
 
-                            <View style={{ height: hp('24%'), width: '100%', marginTop: hp('1%') }}>
-                                <ImageGrid data={post_images} getIndexImage={true} onPressImage={(index) => this.showImage(index)} />
+                            <View style={{ maxHeight: hp('24%'), width: '100%', marginTop: hp('1%') }}>
+                                <ImageGrid
+                                    data={post_images}
+                                    getIndexImage={true}
+                                    onPressImage={(index) => this.showImage(index)} />
+                                <ImageView
+                                    images={imageForView}
+                                    imageIndex={indeximageView}
+                                    isVisible={isImageViewVisible}
+                                    onClose={() => this.setState({ isImageViewVisible: false })}
+                                />
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
                                 <Text style={{ fontSize: hp('1.8%') }}>
@@ -167,7 +192,7 @@ export default class EventDetail extends Component {
                         {
                             list_comment.map((item, index) => {
                                 return (
-                                    <Comment data={item}  key={`comment_${index}`} fnPressButton={() => this.onPressButtonChildren.bind(this)}></Comment>
+                                    <Comment data={item} key={`comment_${index}`} fnPressButton={() => this.onPressButtonChildren.bind(this)}></Comment>
                                 )
                             })
                         }

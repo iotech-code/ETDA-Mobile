@@ -23,6 +23,7 @@ import { fonts, apiServer } from '../constant/util';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
+import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
 
 
 export default class Post extends Component {
@@ -39,14 +40,20 @@ export default class Post extends Component {
             default_avatar: require('../assets/images/default_avatar.jpg'),
             visibleBottomSheet: false,
             visibleModalReport: false,
-            like: 0
+            is_like: 0,
+            like_count: 0,
+            is_follow: 0
         }
     }
 
     async componentDidMount() {
+        let { is_like, like, is_follow } = this.props.data
+        // console.log(this.props.data)
         this.setState({
             token: await AsyncStorage.getItem('token'),
-            like: this.props.data.like
+            is_like: is_like,
+            like_count: like,
+            is_follow: is_follow
         })
     }
 
@@ -132,7 +139,7 @@ export default class Post extends Component {
     }
 
     renderBottomSheet() {
-        const { visibleBottomSheet } = this.state
+        const { visibleBottomSheet, is_follow } = this.state
         return (
             <RBSheet
                 ref={ref => {
@@ -155,7 +162,10 @@ export default class Post extends Component {
                 }}
                     onPress={() => this.callPostFollow(this.props.data.post_id)}
                 >
-                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
+                    <Icon
+                        name={is_follow ? "heart" : 'heart-outline'}
+                        size={hp('3%')} color={is_follow ? "#FF0066" : '#707070'}
+                        style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
@@ -201,80 +211,53 @@ export default class Post extends Component {
     }
 
 
-    callDeletePost = async (post_id) => {
+    async callDeletePost(post_id) {
         this.setState({ visibleBottomSheet: false })
         this.RBSheet.close()
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+        try {
+            let response = await actionDeletePost(post_id)
+            let { status } = response.data
+            if (status == 'success') {
+                this.props.onPostUpdate()
+            }
+        } catch (error) {
+            console.log('Delete post error : ', error)
         }
-
-        axios.delete(apiServer.url + '/api/backend/post/delete/' + post_id, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    Actions.refresh();
-                }
-            })
-
     };
 
-    callPostLike = async (post_id) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+    async callPostLike(post_id) {
+        try {
+            let { is_like, like_count } = this.state
+            let response = await actionLikePost({ post_id })
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_like: is_like ? 0 : 1,
+                    like_count: is_like ? like_count - 1 : like_count + 1
+                })
+            }
+        } catch (error) {
+            console.log('Like post error : ', error)
         }
-
-        const data = {
-            "post_id": post_id
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/like', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    var like_result = this.state.like + 1
-
-                    this.setState({
-                        like: like_result
-                    })
-
-                    console.log('data success post like : ', response.data)
-                }
-            })
     };
 
 
-    callPostFollow = async (post_id) => {
-        this.setState({ visibleBottomSheet: false }),
-            this.RBSheet.close()
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+    async callPostFollow(post_id) {
+        this.setState({ visibleBottomSheet: false })
+        this.RBSheet.close()
+        try {
+            let { is_follow } = this.state
+            let response = await actionFollowPost({ post_id })
+            console.log(response)
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_follow: is_follow ? 0 : 1,
+                })
+            }
+        } catch (error) {
+            console.log('Follow post error : ', error)
         }
-
-        const data = {
-            "post_id": post_id
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/follow', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
     };
 
     postView() {
@@ -292,8 +275,10 @@ export default class Post extends Component {
             post_id,
             like,
             comment_number,
-            author
+            author,
         } = this.props.data
+
+        let { is_like, like_count } = this.state
 
         return (
             <View style={{
@@ -312,8 +297,8 @@ export default class Post extends Component {
                     }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <View style={{
-                                height: hp('7%'),
-                                width: hp('7%'),
+                                height: hp('5%'),
+                                width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
                                 <Image source={!author.photo ? this.state.default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
@@ -327,8 +312,8 @@ export default class Post extends Component {
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-                    
-                    {/* <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text> */}
+
+                    <Text style={{ fontSize: hp('2%'), fontWeight: '400', marginTop: hp('2%') }} >{title}</Text>
                     <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
                             tags.map((item, index) => {
@@ -355,8 +340,8 @@ export default class Post extends Component {
 
                 <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity style={style.flex__start} onPress={() => this.callPostLike(post_id)}>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{like}</Text>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{like_count}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ ...style.flex__start, marginRight: hp('2%') }}>
                         <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />

@@ -48,3 +48,38 @@ export const createCommentPost = async (post_id, reply_to, message) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/comment', { post_id, reply_to, message })
 }
+
+
+export const getListApprove = async () => {
+    await http.setTokenHeader()
+    return await http.get('/api/backend/post/approve-list')
+}
+
+export const approvePost = async (params) => {
+    // params is  post_id in array such {post_id: [1,2,4]}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/approve', params)
+}
+
+export const actionLikePost = async (params) => {
+    // params is post_id of action like post. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/like', params)
+}
+
+export const actionFollowPost = async (params) => {
+    // params is post_id of action like post. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/follow', params)
+}
+
+export const actionJoinPost = async (params) => {
+    // params is post_id of action like post. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/join', params)
+}
+
+export const actionDeletePost = async (post_id) => {
+    await http.setTokenHeader()
+    return await http.delete(`/api/backend/post/delete/${post_id}`)
+}
