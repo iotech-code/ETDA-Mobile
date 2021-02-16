@@ -260,7 +260,7 @@ export default class MessagsPost extends Component {
                             </View>
                             <View >
                                 <Text style={{ fontSize: hp('2%'), }}>{this.props.data.user_name}</Text>
-                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
+                                <Text style={{ fontSize: hp('1.2%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
                             </View>
                         </View>
                         <TouchableOpacity onPress={() => this.openOption()} >

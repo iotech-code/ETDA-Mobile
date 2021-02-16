@@ -311,7 +311,7 @@ export default class Post extends Component {
                             </View>
                             <View >
                                 <Text style={{ fontSize: hp('2%') }}>{this.props.page == 'main' ? 'ETDA' : author.full_name}</Text>
-                                <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{post_date}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary, fontSize: 12 }}>{post_date}</Text>
                             </View>
                         </View>
                         <TouchableOpacity onPress={() => this.openOption()}>
