@@ -13,17 +13,16 @@ import {
     FlatList
 } from 'react-native';
 
-import { Button, BottomSheet } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
-import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooterUser from '../../components/MenuFooter'
 import EventPost from '../../components/EventPost'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
-import { apiServer } from '../../constant/util';
-
+import { homeFeed } from '../../Service/PostService'
+import moment from 'moment'
 LocaleConfig.locales['en'] = {
     formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
     monthNames: [
@@ -49,9 +48,43 @@ LocaleConfig.defaultLocale = 'en';
 
 export default class Activity extends Component {
     state = {
-        visibleSearch: false
+        visibleSearch: false,
+        eventList: [],
+        markedDates: null
     }
+
+    componentDidMount() {
+        this.onGetEventList();
+    }
+
+    async onGetEventList() {
+        try {
+            let res = await homeFeed();
+            let { post_data } = res.data
+            let event = []
+            let markedDates = {}
+            for (let index = 0; index < post_data.length; index++) {
+                const element = post_data[index];
+                if (element.post_type == 'event') {
+                    event.push(element)
+                    if (element.post_addition_data.event_date) {
+                        let data = new Date(element.post_addition_data.event_date)
+                        let aa = moment(data).format('YYYY-MM-DD')
+                        console.log(aa)
+                        markedDates['2021-02-17'] = {marked: true}
+                    }
+                }
+            }
+            this.setState({markedDates})
+            this.setState({ eventList: event })
+        } catch (error) {
+            console.log('Get list Event error : ', error)
+        }
+    }
+
+
     render() {
+        const { eventList , markedDates } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -96,15 +129,7 @@ export default class Activity extends Component {
                         <View style={style.container}>
                             <Calendar
                                 markingType={'period'}
-                                markedDates={{
-                                    '2021-01-15': { marked: true, dotColor: '#50cebb' },
-                                    '2021-01-16': { marked: true, dotColor: '#50cebb' },
-                                    '2021-01-21': { startingDay: true, color: '#50cebb', textColor: 'white' },
-                                    '2021-01-22': { color: '#70d7c7', textColor: 'white' },
-                                    '2021-01-23': { color: '#70d7c7', textColor: 'white', marked: true, dotColor: 'white' },
-                                    '2021-01-24': { color: '#70d7c7', textColor: 'white' },
-                                    '2021-01-25': { endingDay: true, color: '#50cebb', textColor: 'white' },
-                                }}
+                                markedDates={markedDates}
                             />
 
                         </View>
@@ -116,15 +141,20 @@ export default class Activity extends Component {
                                 <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>My events(1)</Text>
                             </View>
                             <View style={{ marginTop: hp('2%') }}>
-                                <EventPost></EventPost>
+                                {/* <EventPost></EventPost> */}
                             </View>
 
                             <View style={{ ...style.container, marginTop: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>All events(2)</Text>
                             </View>
                             <View style={{ marginTop: hp('2%') }}>
-                                <EventPost></EventPost>
-                                <EventPost></EventPost>
+                                {
+                                    eventList.map((el, index) => {
+                                        return (
+                                            <EventPost key={`EventList_${index}`} data={el}></EventPost>
+                                        )
+                                    })
+                                }
                             </View>
                         </View>
 

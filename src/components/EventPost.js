@@ -13,13 +13,13 @@ import {
     Platform
 } from 'react-native';
 
-import { Button, ListItem } from 'react-native-elements';
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { apiServer } from '../constant/util';
+
 
 export default class MessagsPost extends Component {
 
@@ -28,7 +28,8 @@ export default class MessagsPost extends Component {
     }
 
     state = {
-        visibleBottomSheet: false
+        visibleBottomSheet: false,
+        default_avatar: require('../assets/images/default_avatar.jpg')
     }
 
     openOption() {
@@ -41,13 +42,14 @@ export default class MessagsPost extends Component {
 
     }
 
-    onEdit(){
+    onEdit() {
         this.RBSheet.close()
         Actions.push('EventEdit')
     }
 
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
+
         return (
             <RBSheet
                 ref={ref => {
@@ -79,13 +81,13 @@ export default class MessagsPost extends Component {
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 {/* section admin */}
-                <TouchableOpacity style={{...styleScoped.listMore}} onPress={()=>this.onEdit()}>
+                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onEdit()}>
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit Event</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
 
-                <TouchableOpacity style={{ ...styleScoped.listMore}}>
+                <TouchableOpacity style={{ ...styleScoped.listMore }}>
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete Event</Text>
                 </TouchableOpacity>
@@ -97,6 +99,9 @@ export default class MessagsPost extends Component {
         )
     }
     render() {
+        console.log(this.props.data)
+        const { default_avatar } = this.state
+        const { author, title, post_description, post_addition_data } = this.props.data
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -116,10 +121,12 @@ export default class MessagsPost extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={require('../assets/images/avatar2.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image
+                                    source={author.photo ? { uri: author.photo } : default_avatar}
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), }}>Name</Text>
+                                <Text style={{ fontSize: hp('2%'), }}>{author.full_name}</Text>
                             </View>
                         </View>
                         <TouchableOpacity onPress={() => this.openOption()} >
@@ -129,23 +136,23 @@ export default class MessagsPost extends Component {
 
 
                     <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.EventDetail()}>
-                        <Text style={{ fontSize: hp('2%') }}>Event Topic</Text>
-                        <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>10/11/2020</Text>
+                        <Text style={{ fontSize: hp('2%') }}>{title}</Text>
+                        <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{post_addition_data.event_date}</Text>
+                        {
+                            post_addition_data.event_schedule ?
+                                post_addition_data.event_schedule.map((el, index) => {
+                                    return (
+                                        <View style={{ ...style.flex__start, marginTop: hp('1%') }} key={`event_schedule__${index}`}>
+                                            <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>{el.time}</Text>
+                                            <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
+                                        </View>
+                                    )
+                                })
+                                : null
+                        }
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
-                            <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>10:00 am</Text>
-                            <Text style={{ fontSize: hp('2%') }}>Start event</Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
-                            <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>10:00 am</Text>
-                            <Text style={{ fontSize: hp('2%') }}>Start event</Text>
-                        </View>
                     </TouchableOpacity>
-
-
                 </View>
-
 
                 <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity>

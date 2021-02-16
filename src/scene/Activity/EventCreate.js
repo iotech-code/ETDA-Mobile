@@ -23,7 +23,7 @@ import { fonts } from '../../constant/util';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Fragment } from 'react';
 import moment from 'moment'
-
+import { createPost } from '../../Service/PostService'
 
 export default class EventCreate extends Component {
     state = {
@@ -104,6 +104,25 @@ export default class EventCreate extends Component {
         await this.setState({ showTimePicker: true })
     }
 
+    async onCreateEvent() {
+        try {
+            let { topic, detail, post_to_feed, schedule, date_event } = this.state
+            let post_addition_data = {
+                event_date: date_event,
+                event_schedule: schedule,
+                post_to_etda: post_to_feed
+            }
+            let response = await createPost(topic, 'event', [], detail, [], post_addition_data)
+            let {status } =response.data
+            if(status == 'success'){
+                Actions.replace('Event')
+            }
+            console.log('response create : ', response)
+        } catch (error) {
+            console.log('Create event error : ', error)
+        }
+    }
+
 
     renderTimeOverlay() {
         const { showTimePicker, timepicker } = this.state
@@ -182,7 +201,7 @@ export default class EventCreate extends Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', marginBottom: hp('3%') }}>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ ...style.navbar }}>
                             <TouchableOpacity onPress={() => Actions.pop()}>
                                 <Icon name="chevron-left" size={hp('3%')} color="white" />
@@ -302,7 +321,7 @@ export default class EventCreate extends Component {
                                         ...style.btnPrimary,
                                         ...style.btnRounded
                                     }}
-                                    onPress={() => Actions.push('EventCreate')}
+                                    onPress={() => this.onCreateEvent()}
                                 />
                             </View>
                         </View>

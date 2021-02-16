@@ -197,6 +197,7 @@ export default class EventDetail extends Component {
                             })
                         }
                     </ScrollView>
+                    {/* end comment */}
                 </ScrollView>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{ ...styleScoped.warpperComment }}>
