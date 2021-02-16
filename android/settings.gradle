@@ -1,4 +1,6 @@
 rootProject.name = 'ETDA_Mobile'
+include ':react-native-image-base64'
+project(':react-native-image-base64').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-base64/android')
 include ':@xmartlabs_react-native-line'
 project(':@xmartlabs_react-native-line').projectDir = new File(rootProject.projectDir, '../node_modules/@xmartlabs/react-native-line/android')
 include ':react-native-line-sdk'

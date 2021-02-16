@@ -33,6 +33,8 @@ target 'LOOKs' do
 
   pod 'RNLine', :path => '../node_modules/@xmartlabs/react-native-line'
 
+  pod 'react-native-image-base64', :path => '../node_modules/react-native-image-base64'
+
   target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing

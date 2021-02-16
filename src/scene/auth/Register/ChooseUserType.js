@@ -261,7 +261,7 @@ export default class ChooseUserType extends Component {
         const data = {
             "user_email": this.props.email,
             "user_password": this.props.password,
-            "user_fullname": this.props.fullname,
+            "name": this.props.fullname,
             "user_rq_type": this.state.rType,
             "rq_reason": this.state.rReason,
             "rq_exp": {
@@ -272,7 +272,8 @@ export default class ChooseUserType extends Component {
             "accept_term": 'yes',
             "authen_method": this.props.source
         }
-
+        console.log(data)
+        return false;
         let registerReq = await http.post(apiServer.url + '/api/backend/user/register', data);
         let { status } = await registerReq.data;
        

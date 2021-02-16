@@ -18,11 +18,12 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-import ImagePicker from 'react-native-image-picker';
+// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import { colors, apiServer } from '../../constant/util'
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import ImgToBase64 from 'react-native-image-base64';
 const http = new HttpRequest();
 
 const options = {
@@ -39,6 +40,7 @@ export default class EditProfile extends Component {
         super(props)
         this.state = {
             userObject: {},
+            ImagePath: '',
             updatePhoto: false,
             visibleSearch: false,
             visibleChangeTypeOfUser: false,
@@ -65,27 +67,26 @@ export default class EditProfile extends Component {
         });
     }
 
-    chooseImageFileRegister = () => {
-        ImagePicker.showImagePicker(options, (response) => {
-            
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            } else {
-                let image = 'data:image/jpeg;base64,' + response.data
-                this.setState({
+    chooseImageFileRegister = async () => {
+        const imageFile = await ImagePicker.openPicker({
+            width: 400,
+            height: 400,
+            cropping: true
+        });
+        this.setState({
+            ImagePath: imageFile.path
+        });
+        ImgToBase64.getBase64String(imageFile.path)
+        .then(encodedImage => {
+            const imageData = 'data:image/jpeg;base64,' + encodedImage;
+            this.setState({
                 updatePhoto: true,
                 userObject: {
                         ...this.state.userObject,
-                        photo: image
+                        photo: imageData
                     }
-                });
-            }
-        });
-        
+            });
+        })
     }
 
 
@@ -315,6 +316,12 @@ export default class EditProfile extends Component {
         let {status} = await update.data;
 
         if (status == "success") {
+            await this.setState({
+                userObject: {
+                        ...this.state.userObject,
+                        photo: this.state.ImagePath
+                    }
+            });
             await AsyncStorage.setItem('user_data', JSON.stringify( userObject ) );
             await Actions.MyProfile();
         } else {

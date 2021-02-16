@@ -216,7 +216,7 @@ export default class Login extends Component {
             await http.setTokenHeader();
             let response = await http.post(apiServer.url + '/api/backend/user/information');
             let {status, data} = response.data;
-
+            console.log("Information", data)
             if (status == "success") {
                 await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
                 await this.setState({ spinner: false });

@@ -1,26 +1,21 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
-    TextInput,
     TouchableOpacity,
-    FlatList
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { fonts } from '../../constant/util'
-import axios from 'axios';
-import { apiServer } from '../../constant/util';
+
 export default class MyProfile extends Component {
     constructor() {
         super();
@@ -44,7 +39,7 @@ export default class MyProfile extends Component {
     async getUserInfo () {
         let json_data = await AsyncStorage.getItem('user_data');
         let data = JSON.parse(json_data);
-
+        console.log(data)
         this.setState({
             mobile_number: data.mobile_number,
             professional: data.professional, 

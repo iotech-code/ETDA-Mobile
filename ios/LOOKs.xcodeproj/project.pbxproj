@@ -532,6 +532,7 @@
 				"${BUILT_PRODUCTS_DIR}/Folly/folly.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/LineSDKSwift/LineSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/RCTTypeSafety/RCTTypeSafety.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCAsyncStorage/RNCAsyncStorage.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCCheckbox/RNCCheckbox.framework",
@@ -561,6 +562,7 @@
 				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-fbsdk/react_native_fbsdk.framework",
+				"${BUILT_PRODUCTS_DIR}/react-native-image-base64/react_native_image_base64.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-image-picker/react_native_image_picker.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-safe-area-context/react_native_safe_area_context.framework",
 			);
@@ -605,6 +607,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_fbsdk.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_image_base64.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_image_picker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_safe_area_context.framework",
 			);
@@ -703,6 +706,7 @@
 				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-fbsdk/react_native_fbsdk.framework",
+				"${BUILT_PRODUCTS_DIR}/react-native-image-base64/react_native_image_base64.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-image-picker/react_native_image_picker.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-safe-area-context/react_native_safe_area_context.framework",
 			);
@@ -747,6 +751,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_fbsdk.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_image_base64.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_image_picker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_safe_area_context.framework",
 			);
