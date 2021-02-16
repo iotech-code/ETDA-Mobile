@@ -65,9 +65,12 @@ export default class Login extends Component {
 
     async socialSignIn(error, result) {
         const data = {
-            "user_email": result.id,
-            "user_password": '',
-            "authen_method": result.authen_method ? result.authen_method : 'facebook',
+            "user_email" : '',
+            "user_password" : "",
+            "authen_method" : result.authen_method ? result.authen_method : 'facebook',
+            "google_id" : result.authen_method == 'google' && result.id,
+            "facebook_id" : !result.authen_method && result.id,
+            "line_id" : result.authen_method == 'line' && result.id,
             "device": Platform.OS
         }
 
@@ -187,11 +190,14 @@ export default class Login extends Component {
             Alert.alert('Please fill your user name and password.');
             return false;
         }
-
+        
         const data = {
-            "user_email": this.state.email,
-            "user_password": this.state.pass,
-            "authen_method": "local",
+            "user_email" : this.state.email,
+            "user_password" : this.state.pass,
+            "authen_method" : 'local',
+            "google_id" : '',
+            "facebook_id" : '',
+            "line_id" : '',
             "device": Platform.OS
         }
 

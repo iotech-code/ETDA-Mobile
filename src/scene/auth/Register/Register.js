@@ -67,7 +67,17 @@ export default class Register extends Component {
                 botPrompt: 'normal'
             })
             const {userProfile} = result
-            await Actions.push('ChooseUserType', { 'email': userProfile.userID, 'password': '', 'source': 'line' })
+
+            const userInfo = {
+                'email': userProfile.userID, 
+                'password': '',
+                'source': 'line',
+                'fullname': userProfile.displayName 
+            }
+
+            // console.log(userInfo)
+            
+            await Actions.push('ChooseUserType', userInfo)
         } catch (e) {
             console.log(e)
         }
@@ -78,7 +88,15 @@ export default class Register extends Component {
             await GoogleSignin.hasPlayServices();
             const info = await GoogleSignin.signIn();
             const {user} = info
-            await Actions.push('ChooseUserType', { 'email': user.email, 'password': '', 'source': 'google' })
+
+            const userInfo = {
+                'email': user.id, 
+                'password': '',
+                'source': 'google',
+                'fullname': user.givenName 
+            }
+            // console.log(userInfo)
+            await Actions.push('ChooseUserType', userInfo)
           } catch (error) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
               // user cancelled the login flow
@@ -97,7 +115,15 @@ export default class Register extends Component {
             console.log('Error fetching data: ' + error.toString());
             return false;
         }
-        Actions.push('ChooseUserType', { 'email': result.id, 'password': '', 'source': 'facebook' })
+
+        const userInfo = {
+            'email': result.id, 
+            'password': '', 
+            'source': 'facebook', 
+            'fullname': result.name 
+        }
+        // console.log(userInfo)
+        Actions.push('ChooseUserType', userInfo)
     }
 
     async facebookLogin () {
@@ -136,7 +162,14 @@ export default class Register extends Component {
             Alert.alert('Please agree term and condition before continue.')
             return false
         }
-        Actions.push('ChooseUserType', { 'email': this.state.rEmail, 'password': this.state.rPass, 'fullname': this.state.fullname, 'source': 'local'})
+        const userInfo = { 
+            'email': this.state.rEmail, 
+            'password': this.state.rPass, 
+            'fullname': this.state.fullname, 
+            'source': 'local'
+        }
+        // console.log(userInfo)
+        Actions.push('ChooseUserType', userInfo)
     }
 
     async emailValidate (value) {
@@ -215,11 +248,11 @@ export default class Register extends Component {
                                 </View>
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
-                                <View style={{...style.customInput, borderColor: this.state.emailBorder}}>
+                                <View style={{...style.customInput, borderColor: this.state.defaultBorder}}>
                                     <TextInput
                                         value={this.state.fullname}
                                         style={[style.input, { color: 'black', width: wp(81), paddingVertical: 3, paddingHorizontal: 10 }]}
-                                        placeholder="Firstname Lastname"
+                                        placeholder="Name"
                                         onChangeText={ value =>  this.setState({fullname: value}) }
                                     />
                                 </View>

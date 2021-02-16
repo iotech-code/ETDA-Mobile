@@ -259,21 +259,24 @@ export default class ChooseUserType extends Component {
 
     callRegister = async () => {
         const data = {
-            "user_email": this.props.email,
-            "user_password": this.props.password,
+            "user_email" : (this.props.source == 'local') ? this.props.email : '',
+            "user_password" : this.props.password,
             "name": this.props.fullname,
-            "user_rq_type": this.state.rType,
-            "rq_reason": this.state.rReason,
+            "user_rq_type" : this.state.rType,
+            "google_id" : (this.props.source == 'google') ? this.props.email : '',
+            "facebook_id" : (this.props.source == 'facebook') ? this.props.email : '',
+            "line_id" : (this.props.source == 'line') ? this.props.email : '',
+            "rq_reason" : this.state.rReason,
+            "authen_method": this.props.source,
             "rq_exp": {
                 "exp1": this.state.rExp.exp1,
                 "exp2": this.state.rExp.exp2,
                 "exp3": this.state.rExp.exp3
             },
-            "accept_term": 'yes',
-            "authen_method": this.props.source
+            "accept_term" : "yes"
         }
-        console.log(data)
-        return false;
+        // console.log(JSON.stringify(data))
+        // return false;
         let registerReq = await http.post(apiServer.url + '/api/backend/user/register', data);
         let { status } = await registerReq.data;
        
