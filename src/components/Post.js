@@ -38,6 +38,7 @@ export default class Post extends Component {
                 tag: []
             },
             default_avatar: require('../assets/images/default_avatar.jpg'),
+            etda_avatar: require('../assets/images/etdaprofile.png'),
             visibleBottomSheet: false,
             visibleModalReport: false,
             is_like: 0,
@@ -301,10 +302,15 @@ export default class Post extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={!author.photo ? this.state.default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+                                {
+                                    this.props.page == 'main' ? 
+                                    <Image source={this.state.etda_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+                                    :
+                                    <Image source={!author.photo ? this.state.default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+                                }
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
+                                <Text style={{ fontSize: hp('2%') }}>{this.props.page == 'main' ? 'ETDA' : author.full_name}</Text>
                                 <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{post_date}</Text>
                             </View>
                         </View>

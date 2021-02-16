@@ -1,17 +1,12 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
     StatusBar,
-    Image,
-    TextInput,
     TouchableOpacity,
-    FlatList,
-    RefreshControl,
     ActivityIndicator
 } from 'react-native';
 
@@ -46,7 +41,7 @@ export default class Main extends Component {
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
         let user_data = JSON.parse(user_json);
-
+        
         this.setState({
             user_type: user_data.user_type,
             user_role: user_data.user_role
@@ -77,7 +72,7 @@ export default class Main extends Component {
     }
 
     render() {
-        const { isFetching, user_type, user_role, list_data } = this.state
+        const { isFetching, user_role, list_data } = this.state
 
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
@@ -131,7 +126,7 @@ export default class Main extends Component {
 
                             this.state.list_data.map((item, index) => {
                                 return (
-                                    <Post data={item} key={`post_${index}`} onPostUpdate={()=>this.callHomeFeed()}></Post>
+                                    <Post data={item} key={`post_${index}`} page="main" onPostUpdate={()=>this.callHomeFeed()}></Post>
                                 )
                             })
                         }

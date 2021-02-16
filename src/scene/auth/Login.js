@@ -156,7 +156,7 @@ export default class Login extends Component {
 
     async checkLogin() {
         let token = await AsyncStorage.getItem('token');
-        
+        console.log(token)
         if(token) {
             await this.refreshToken();
         }
@@ -190,7 +190,7 @@ export default class Login extends Component {
             Alert.alert('Please fill your user name and password.');
             return false;
         }
-        
+
         const data = {
             "user_email" : this.state.email,
             "user_password" : this.state.pass,
@@ -222,7 +222,7 @@ export default class Login extends Component {
             await http.setTokenHeader();
             let response = await http.post(apiServer.url + '/api/backend/user/information');
             let {status, data} = response.data;
-            console.log("Information", data)
+            // console.log("Information", data)
             if (status == "success") {
                 await AsyncStorage.setItem( 'user_data', JSON.stringify(data) );
                 await this.setState({ spinner: false });

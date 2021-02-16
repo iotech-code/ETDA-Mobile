@@ -39,7 +39,7 @@ export default class MyProfile extends Component {
     async getUserInfo () {
         let json_data = await AsyncStorage.getItem('user_data');
         let data = JSON.parse(json_data);
-        console.log(data)
+        // console.log(data)
         this.setState({
             mobile_number: data.mobile_number,
             professional: data.professional, 
@@ -74,7 +74,6 @@ export default class MyProfile extends Component {
                     </View>
                     <View style={{ ...style.container }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
                                 {user_data.photo == null || user_data.photo == '' ?
                                 <Image source={ user_data.dafault_avatar } style={{
@@ -135,7 +134,7 @@ export default class MyProfile extends Component {
                                 <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {user_data.user_type} </Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {user_data.user_type.toUpperCase()} </Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>

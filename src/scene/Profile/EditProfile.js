@@ -222,7 +222,6 @@ export default class EditProfile extends Component {
     renderChangeTypeOfUser() {
         const { visibleChangeTypeOfUser } = this.state
         return (
-            <View>
             <Overlay
                 isVisible={visibleChangeTypeOfUser}
                 onBackdropPress={() => this.setState({ visibleChangeTypeOfUser: false })}
@@ -286,9 +285,7 @@ export default class EditProfile extends Component {
                         onPress={() => this.setState({ visibleChangeTypeOfUser: false })}
                     />
                 </View>
-
             </Overlay>
-            </View>
         )
     }
 
