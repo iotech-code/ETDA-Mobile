@@ -1,6 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-
 export const colors = {
     primary: '#427AA1'
 }
@@ -14,8 +11,8 @@ export const fonts = {
 }
 
 export const apiServer = {
-    url: 'https://looks.etda.or.th'
-    // url: 'https://etda.amn-corporation.com'
+    // url: 'https://looks.etda.or.th'
+    url: 'https://etda.amn-corporation.com'
 }
 
 export const configs = {
