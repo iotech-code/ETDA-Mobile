@@ -275,8 +275,7 @@ export default class ChooseUserType extends Component {
             },
             "accept_term" : "yes"
         }
-        // console.log(JSON.stringify(data))
-        // return false;
+        
         let registerReq = await http.post(apiServer.url + '/api/backend/user/register', data);
         let { status } = await registerReq.data;
        
@@ -291,9 +290,12 @@ export default class ChooseUserType extends Component {
 
     callLogin = async () => {
         const data = {
-            "user_email": this.props.email,
-            "user_password": this.props.password,
-            "authen_method": "local",
+            "user_email" : (this.props.source == 'local') ? this.props.email : '',
+            "user_password" : this.props.password,
+            "authen_method" : this.props.source,
+            "google_id" : (this.props.source == 'google') ? this.props.email : '',
+            "facebook_id" : (this.props.source == 'facebook') ? this.props.email : '',
+            "line_id" : (this.props.source == 'line') ? this.props.email : '',
             "device": Platform.OS
         }
         this.setState({ spinner: true });
