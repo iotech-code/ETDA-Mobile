@@ -117,7 +117,6 @@ export default class EventCreate extends Component {
             if(status == 'success'){
                 Actions.replace('Event')
             }
-            console.log('response create : ', response)
         } catch (error) {
             console.log('Create event error : ', error)
         }

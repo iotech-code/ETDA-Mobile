@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    ActivityIndicator
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -50,7 +51,8 @@ export default class Activity extends Component {
     state = {
         visibleSearch: false,
         eventList: [],
-        markedDates: null
+        markedDates: null,
+        isFetching: false
     }
 
     componentDidMount() {
@@ -58,6 +60,7 @@ export default class Activity extends Component {
     }
 
     async onGetEventList() {
+        this.setState({ isFetching: true })
         try {
             let res = await homeFeed();
             let { post_data } = res.data
@@ -71,20 +74,21 @@ export default class Activity extends Component {
                         let data = new Date(element.post_addition_data.event_date)
                         let aa = moment(data).format('YYYY-MM-DD')
                         console.log(aa)
-                        markedDates['2021-02-17'] = {marked: true}
+                        markedDates['2021-02-17'] = { marked: true }
                     }
                 }
             }
-            this.setState({markedDates})
-            this.setState({ eventList: event })
+            await this.setState({ markedDates })
+            await this.setState({ eventList: event })
         } catch (error) {
             console.log('Get list Event error : ', error)
         }
+        this.setState({ isFetching: false })
     }
 
 
     render() {
-        const { eventList , markedDates } = this.state
+        const { eventList, markedDates, isFetching } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -136,26 +140,39 @@ export default class Activity extends Component {
 
                         {/* end calendar */}
 
-                        <View style={{ marginTop: hp('2%') }}>
-                            <View style={{ ...style.container }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>My events(1)</Text>
-                            </View>
-                            <View style={{ marginTop: hp('2%') }}>
-                                {/* <EventPost></EventPost> */}
-                            </View>
 
-                            <View style={{ ...style.container, marginTop: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>All events(2)</Text>
-                            </View>
-                            <View style={{ marginTop: hp('2%') }}>
-                                {
-                                    eventList.map((el, index) => {
-                                        return (
-                                            <EventPost key={`EventList_${index}`} data={el}></EventPost>
-                                        )
-                                    })
-                                }
-                            </View>
+
+                        <View style={{ marginTop: hp('2%') }}>
+                            {
+                                isFetching ?
+                                    <ActivityIndicator color="#003764" style={{ marginTop: hp('10%') }} />
+                                    : <Fragment>
+                                        <View style={{ ...style.container }}>
+                                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>My events(1)</Text>
+                                        </View>
+                                        <View style={{ marginTop: hp('2%') }}>
+                                            {/* <EventPost></EventPost> */}
+                                        </View>
+
+                                        <View style={{ ...style.container, marginTop: hp('2%') }}>
+                                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>All events(2)</Text>
+                                        </View>
+
+                                        <View style={{ marginTop: hp('2%') }}>
+                                            {
+                                                eventList.map((el, index) => {
+                                                    return (
+                                                        <EventPost key={`EventList_${index}`} data={el}></EventPost>
+                                                    )
+                                                })
+                                            }
+                                        </View>
+                                        
+                                    </Fragment>
+                            }
+
+
+
                         </View>
 
                     </View>
