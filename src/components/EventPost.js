@@ -19,7 +19,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-
+import { actionLikePost } from '../Service/PostService'
 
 export default class MessagsPost extends Component {
 
@@ -29,7 +29,9 @@ export default class MessagsPost extends Component {
 
     state = {
         visibleBottomSheet: false,
-        default_avatar: require('../assets/images/default_avatar.jpg')
+        default_avatar: require('../assets/images/default_avatar.jpg'),
+        is_like: 0,
+        like_count: 0
     }
 
     openOption() {
@@ -39,6 +41,11 @@ export default class MessagsPost extends Component {
 
     componentDidMount() {
         // this.RBSheet.open()
+        const { is_like, like } = this.props.data
+        this.setState({
+            is_like,
+            like_count: like
+        })
 
     }
 
@@ -46,6 +53,22 @@ export default class MessagsPost extends Component {
         this.RBSheet.close()
         Actions.push('EventEdit')
     }
+
+    async callPostLike(post_id) {
+        try {
+            let { is_like, like_count } = this.state
+            let response = await actionLikePost({ post_id })
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_like: is_like ? 0 : 1,
+                    like_count: is_like ? like_count - 1 : like_count + 1
+                })
+            }
+        } catch (error) {
+            console.log('Like post error : ', error)
+        }
+    };
 
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
@@ -100,8 +123,8 @@ export default class MessagsPost extends Component {
     }
     render() {
         console.log(this.props.data)
-        const { default_avatar } = this.state
-        const { author, title, post_description, post_addition_data } = this.props.data
+        const { default_avatar, is_like, like_count } = this.state
+        const { author, title, post_description, post_addition_data, comment_number, post_id } = this.props.data
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -142,7 +165,7 @@ export default class MessagsPost extends Component {
                             post_addition_data.event_schedule ?
                                 post_addition_data.event_schedule.map((el, index) => {
                                     return (
-                                        <View style={{ ...style.flex__start, marginTop: hp('1%') }} key={`event_schedule__${index}`}>
+                                        <View style={{ ...style.flex__start, alignItems: 'center', marginTop: hp('1%') }} key={`event_schedule__${index}`}>
                                             <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>{el.time}</Text>
                                             <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
                                         </View>
@@ -155,12 +178,16 @@ export default class MessagsPost extends Component {
                 </View>
 
                 <View style={{ ...style.sectionSocial }}>
-                    <TouchableOpacity>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
+                    <TouchableOpacity
+                        style={{ ...style.flex__start, alignItems: 'center', marginRight: hp('3%') }}
+                        onPress={() => this.callPostLike(post_id)}>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                        <Text style={{ color: '#B5B5B5' }}>{like_count}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
-                    </TouchableOpacity>
+                    <View style={{ ...style.flex__start, alignItems: 'center', marginRight: hp('3%') }}>
+                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                        <Text style={{ color: '#B5B5B5' }}>{comment_number}</Text>
+                    </View>
                     <TouchableOpacity>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
