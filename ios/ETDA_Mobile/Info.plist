@@ -23,8 +23,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-      		<key>CFBundleTypeRole</key>
-      		<string>Editor</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb2819405665044055</string>
@@ -35,7 +35,6 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<!-- Specify URL scheme to use when returning from LINE to your app. -->
 				<string>line3rdp.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			</array>
 		</dict>
@@ -56,22 +55,13 @@
 	<string>LOOKs</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>fbapi</string>
-		<string>fbauth</string>
-		<string>fb-messenger-share-api</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
+		<string>lineauth2</string>
 	</array>
 	<key>LineSDKConfig</key>
 	<dict>
 		<key>ChannelID</key>
 		<string>1655665695</string>
 	</dict>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<!-- Specify URL scheme to use when launching LINE from your app. -->
-		<string>lineauth2</string>
-	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -90,7 +80,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Your message to user when the camera is accessed for the first time</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Your message to user when the microsphone is accessed for the first time</string>
 	<key>NSPhotoLibraryUsageDescription</key>

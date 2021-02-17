@@ -122,7 +122,7 @@ export default class MessagsPost extends Component {
         )
     }
     render() {
-        console.log(this.props.data)
+        // console.log(this.props.data)
         const { default_avatar, is_like, like_count } = this.state
         const { author, title, post_description, post_addition_data, comment_number, post_id } = this.props.data
         return (
@@ -158,7 +158,7 @@ export default class MessagsPost extends Component {
                     </View>
 
 
-                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.EventDetail()}>
+                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail',{...this.props.data})}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
                         <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{post_addition_data.event_date}</Text>
                         {

@@ -28,6 +28,7 @@ import { getTagsList, createPost, updatePost } from '../../Service/PostService'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
+
 export default class CreatePost extends Component {
     constructor() {
         super();
@@ -139,6 +140,7 @@ export default class CreatePost extends Component {
 
         } catch (error) {
             console.log('Create post error : ', error)
+            Alert.alert('Someting wrong !')
         }
         this.setState({ spinner: false })
     }
@@ -162,33 +164,6 @@ export default class CreatePost extends Component {
             console.log('Update post error : ', error)
         }
         this.setState({ spinner: false })
-
-
-        // const headers = {
-        //     'Content-Type': 'application/json',
-        //     'Authorization': 'Bearer ' + this.state.token
-        // }
-
-
-
-
-        // axios.put(apiServer.url + '/api/backend/post/update/' + post_id, data, {
-        //     headers
-        // })
-        //     .then((response) => {
-        //         console.log('data : ', response.data)
-        //         if (response.data.status == "success") {
-        //             Actions.MessageBoard()
-        //         } else {
-
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.log('data : ', error)
-        //     })
-        //     .finally(function () {
-        //     });
-
     };
 
     async pickImage() {
