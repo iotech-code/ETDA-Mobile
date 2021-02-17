@@ -39,7 +39,7 @@ export default class MyProfile extends Component {
     async getUserInfo () {
         let json_data = await AsyncStorage.getItem('user_data');
         let data = JSON.parse(json_data);
-        // console.log(data)
+
         this.setState({
             mobile_number: data.mobile_number,
             professional: data.professional, 
@@ -55,6 +55,7 @@ export default class MyProfile extends Component {
     async logout () {
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('user_data');
+        await AsyncStorage.removeItem('social_network');
         Actions.replace('Login');
     }
 

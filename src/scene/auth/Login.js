@@ -22,7 +22,6 @@ import style from '../../styles/base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Actions } from 'react-native-router-flux';
 import Spinner from 'react-native-loading-spinner-overlay';
-// import LineLogin from 'react-native-line-sdk'
 import Line from '@xmartlabs/react-native-line'
 import { 
     LoginManager,
@@ -82,8 +81,8 @@ export default class Login extends Component {
         try {
             let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
             let {token} = loginRequest.data;
-            console.log(loginRequest)
             await AsyncStorage.setItem('token', token);
+            await AsyncStorage.setItem('social_network', 'yes');
             await this.callInfomation();
    
         } catch (e) {
@@ -207,6 +206,7 @@ export default class Login extends Component {
             let {token, status} = loginRequest.data;
    
             await AsyncStorage.setItem('token', token);
+            await AsyncStorage.setItem('social_network', 'no');
             await this.callInfomation();
         } catch (e) {
             if(e.response.status === 401) {

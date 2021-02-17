@@ -255,7 +255,6 @@ export default class MessagsPost extends Component {
                                 marginRight: hp('1%'),
                                 borderRadius: 50
                             }}>
-
                                 <Image source={this.props.data.user_image ? { uri: this.props.data.user_image } : default_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                             </View>
                             <View >

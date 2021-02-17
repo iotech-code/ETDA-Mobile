@@ -1,31 +1,36 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
-    TextInput,
-    TouchableOpacity,
-    FlatList
+    TouchableOpacity
 } from 'react-native';
 
-import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-import { apiServer } from '../../constant/util';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 export default class ProfileSetting extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super();
+        this.state = {
+            visibleSearch: false,
+            socialID: 'no'
+        }
     }
+
+    async componentDidMount () {
+        const social = await AsyncStorage.getItem('social_network');
+        await this.setState({
+            socialID:  social
+        })
+    }
+
     render() {
+        const {socialID} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -37,13 +42,26 @@ export default class ProfileSetting extends Component {
                         </View>
                     </View>
                     <View >
-                        <TouchableOpacity style={{ padding: hp('2%'), flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}
-                            onPress={() => Actions.replace('ChangePassword')}
-                        >
-                            <Icon name="key" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Change password</Text>
-                        </TouchableOpacity>
-                        <View style={{ ...style.divider }}></View>
+                        {
+                            socialID == 'no' ?
+                            <>
+                                <TouchableOpacity 
+                                    style={{ 
+                                        padding: hp('2%'), 
+                                        flexDirection: 'row', 
+                                        justifyContent: 'flex-start', 
+                                        alignItems: 'center' 
+                                    }}
+                                    onPress={() => Actions.replace('ChangePassword')}
+                                >
+                                    <Icon name="key" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
+                                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Change password</Text>
+                                </TouchableOpacity>
+                                <View style={{ ...style.divider }}></View>
+                            </>
+                            :
+                            <></>
+                        }
                         <TouchableOpacity
                             style={{
                                 padding: hp('2%'),

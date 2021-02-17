@@ -44,6 +44,10 @@ export default class EditProfile extends Component {
             updatePhoto: false,
             visibleSearch: false,
             visibleChangeTypeOfUser: false,
+            readButtonColor: '#fff',
+            readTextColor: colors.primary,
+            postButtonColor: '#fff',
+            postTextColor: colors.primary,
             visibleModalPostandRead: false,
             rReason: '',
             rExp: {
@@ -88,7 +92,6 @@ export default class EditProfile extends Component {
             });
         })
     }
-
 
     continueTypeOfUser(type ) {
         if (type == 'read'){
@@ -231,11 +234,11 @@ export default class EditProfile extends Component {
                 <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
                 <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
                 <TouchableOpacity
-                        style={{ width: '49%' }}
-                        onPress={() => this.setState({ visible: true , type : 'read' })}
+                    style={{ width: '49%' }}
+                    onPress={() => this.confirmReadOnly() }
                     >
-                        <View style={{ ...styleScoped.option, backgroundColor: colors.primary }}>
-                            <Icons name="description" size={hp('12%')} style={{ alignSelf: "center" }} color="white" />
+                        <View style={{ ...styleScoped.option, backgroundColor: this.state.readButtonColor }}>
+                            <Icons name="description" size={hp('12%')} style={{ alignSelf: "center" }} color={ this.state.readTextColor } />
                         </View>
                         <Text style={{
                             marginTop: hp('3%'),
@@ -244,22 +247,20 @@ export default class EditProfile extends Component {
                             color: '#000000'
                         }}>Read only</Text>
                     </TouchableOpacity>
-
+ 
                     <TouchableOpacity
                         style={{ width: '49%' }}
-                        onPress={() => this.setState({ visible: true , type : 'read, post_read' })}
+                        onPress={ () => this.confirmPostRead() }
                     >
-                        <View style={styleScoped.option}>
-                                    <Icons name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />
+                        <View style={{ ...styleScoped.option, backgroundColor: this.state.postButtonColor }}>
+                            <Icons name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={ this.state.postTextColor } />
                         </View>
                         <Text style={{
                             marginTop: hp('3%'),
                             textAlign: 'center',
                             fontSize: hp('2%'),
                             color: '#000000'
-                        }}>
-                            Posts and Read
-                                </Text>
+                        }}>Posts and Read</Text>
 
                     </TouchableOpacity>
                 </View>
@@ -287,6 +288,30 @@ export default class EditProfile extends Component {
                 </View>
             </Overlay>
         )
+    }
+
+    confirmReadOnly () {
+        this.setState({
+            readButtonColor: colors.primary,
+            readTextColor: '#fff',
+            postButtonColor: '#fff',
+            postTextColor: colors.primary,
+            visible: true, 
+            type: 'read'
+        })
+    }
+
+    confirmPostRead () {
+        this.setState({
+            readButtonColor: '#fff',
+            readTextColor: colors.primary,
+            postButtonColor: colors.primary,
+            postTextColor: '#fff',
+            visible: true, 
+            visibleModalPostandRead: true,
+            type: 'read,post_read'
+        })
+        this.continueTypeOfUser('read,post_read')
     }
 
     callEditProfile = async () => {

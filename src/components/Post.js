@@ -1,12 +1,9 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
     TextInput,
     TouchableOpacity,
@@ -19,8 +16,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { fonts, apiServer } from '../constant/util';
-import axios from 'axios';
+import { fonts } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
 import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'

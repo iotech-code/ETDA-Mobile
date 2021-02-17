@@ -1,26 +1,23 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
     TextInput,
-    TouchableOpacity,
-    FlatList
+    TouchableOpacity
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
-import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-import axios from 'axios';
-import { colors, apiServer } from '../../constant/util'
+import HttpRequest from '../../Service/HttpRequest';
+import { apiServer } from '../../constant/util';
+import { Alert } from 'react-native';
 
+const http = new HttpRequest();
 export default class ChangePassword extends Component {
     constructor() {
         super();
@@ -29,68 +26,55 @@ export default class ChangePassword extends Component {
             oldPass: '',
             newPass: '',
             confirmPass: '',
-            token: '',
+            user_data: '',
+            passwordBorder: '#CADAFB',
             statusSecureTextOld: true,
             statusSecureTextNew: true,
             statusSecureTextConfirm: true
         }
     }
 
-
     async componentDidMount() {
         try {
-            const token = await AsyncStorage.getItem('token')
+            const userInfo = await AsyncStorage.getItem('user_data');
             this.setState({
-                token: token
+                user_data: JSON.parse(userInfo)
             })
-        } catch (err) {
-            // handle errors
+        } catch (e) {
+            console.log(e)
         }
     }
 
-
     callChangePassword = async () => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
         const data = {
             "old_ps": this.state.oldPass,
             "new_ps": this.state.newPass
         }
-        axios.post(apiServer.url + '/api/backend/user/change-password', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    Actions.MyProfile()
-                } else {
-
-                }
-            })
-            .catch((error) => {
-            })
-            .finally(function () {
-            });
-
+        await this.verifyPassword();
+        await http.setTokenHeader();
+        const changeRequest = await http.post( apiServer.url + '/api/backend/user/change-password', data);
+        const { status } = await changeRequest.data;
+        if (status == "success") {
+            await Actions.MyProfile();
+        }
     };
 
+    verifyPassword () {
+        if( this.state.confirmPass !== this.state.newPass ) {
+            Alert.alert('Password and confirm password does not match!')
+            return false
+        }
+
+        if( this.state.old === ''|| this.state.newPass === '' || this.state.confirmPass === '' ) {
+            Alert.alert('Password can not empty!')
+            return false
+        }
+        return true;
+    }
+
     render() {
-
-        onChangeTextOldPass = async (value) => {
-            this.setState({
-                oldPass: value
-            })
-        }
-
-        onChangeTextNewPass = async (value) => {
-            this.setState({
-                newPass: value
-            })
-        }
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
@@ -101,47 +85,48 @@ export default class ChangePassword extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-
-                    <View style={{ ...style.container, marginTop: hp('2%') }}>
+                    <View style={{...style.container, marginTop: 20}}>
                         <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Current password</Text>
-                        <TextInput
-                            value={this.state.oldPass}
-                            maxLength={20}
-                            style={[style.input, { color: 'black', width: wp(70) }]}
-                            placeholder="Current password"
-                            secureTextEntry={this.state.statusSecureTextOld}
-                            onChangeText={text => this.setState({ oldPass: text })}
-                        />
-                        <Icon color={this.state.statusSecureTextOld ? "#ccc" : "#333"} type="font-awesome" name={this.state.statusSecureTextOld ? "eye-slash" : "eye"} onPress={() => this.setState({statusSecureTextOld: this.state.statusSecureTextOld?false:true })} />
-                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>{this.state.oldPass.length}/20</Text>
-                    </View>
+                        <View style={{...style.customInput, borderColor: this.state.passwordBorder, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                            <TextInput
+                                value={this.state.oldPass}
+                                maxLength={20}
+                                style={[style.input, { color: 'black', width: wp(70) }]}
+                                placeholder="Current password"
+                                secureTextEntry={this.state.statusSecureTextOld}
+                                onChangeText={text => this.setState({ oldPass: text })}
+                            />
+                            <Icon color={this.state.statusSecureTextOld ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={() => this.setState({statusSecureTextOld: this.state.statusSecureTextOld?false:true })} />
+                        </View>
+                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%'), marginTop: 5 }}> {this.state.oldPass.length}/20 </Text>
 
-                    <View style={{ ...style.container, marginTop: hp('5%') }}>
                         <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>New password</Text>
-                        <TextInput
-                            value={this.state.newPass}
-                            maxLength={20}
-                            style={[style.input, { color: 'black', width: wp(70) }]}
-                            placeholder="Enter new password"
-                            secureTextEntry={this.state.statusSecureTextNew}
-                            onChangeText={text => this.setState({ newPass: text })}
-                        />
-                        <Icon color={this.state.statusSecureTextNew ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={() => this.setState({statusSecureTextNew: this.state.statusSecureTextNew?false:true })} />
-                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>{this.state.newPass.length}/20</Text>
-                    </View>
+                        <View style={{...style.customInput, borderColor: this.state.passwordBorder, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                            <TextInput
+                                value={this.state.newPass}
+                                maxLength={20}
+                                style={[style.input, { color: 'black', width: wp(70) }]}
+                                placeholder="Enter new password"
+                                secureTextEntry={this.state.statusSecureTextNew}
+                                onChangeText={text => this.setState({ newPass: text })}
+                            />
+                            <Icon color={this.state.statusSecureTextNew ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={() => this.setState({statusSecureTextNew: this.state.statusSecureTextNew?false:true })} />
+                        </View>
+                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%'), marginTop: 5 }}>{this.state.newPass.length}/20</Text>
 
-                    <View style={{ ...style.container, marginTop: hp('5%') }}>
                         <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Confirm-New password</Text>
-                        <TextInput
-                            value={this.state.confirmPass}
-                            maxLength={20}
-                            style={[style.input, { color: 'black', width: wp(70) }]}
-                            placeholder="Confirm your password"
-                            secureTextEntry={this.state.statusSecureTextConfirm}
-                            onChangeText={text => this.setState({ confirmPass: text })}
-                        />
-                        <Icon color={this.state.statusSecureTextConfirm ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={() => this.setState({statusSecureTextConfirm: this.state.statusSecureTextConfirm?false:true })} />
-                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>{this.state.confirmPass.length}/20</Text>
+                        <View style={{...style.customInput, borderColor: this.state.passwordBorder, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                            <TextInput
+                                value={this.state.confirmPass}
+                                maxLength={20}
+                                style={[style.input, { color: 'black', width: wp(70) }]}
+                                placeholder="Confirm your password"
+                                secureTextEntry={this.state.statusSecureTextConfirm}
+                                onChangeText={text => this.setState({ confirmPass: text })}
+                            />
+                            <Icon color={this.state.statusSecureTextConfirm ? "#ccc" : "#333"} type="font-awesome" name={"eye"} onPress={() => this.setState({statusSecureTextConfirm: this.state.statusSecureTextConfirm?false:true })} />
+                        </View>
+                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%'), marginTop: 5 }}>{this.state.confirmPass.length}/20</Text>
                     </View>
 
                 </ScrollView>
