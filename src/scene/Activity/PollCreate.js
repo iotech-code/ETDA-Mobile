@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -41,7 +41,18 @@ export default class PollCreate extends Component {
         showTimePicker: false,
         indexSchedule: 0,
         datepicker: new Date(),
-        timepicker: new Date()
+        timepicker: new Date(),
+        question: {
+            question: null,
+            answer: [
+                {
+                    id: 1,
+                    detail: null,
+                },
+            ]
+        }
+
+
 
 
     }
@@ -122,7 +133,13 @@ export default class PollCreate extends Component {
 
 
     addAnswer() {
-
+        let { question } = this.state
+        let objAnswer = {
+            id: question.answer.length + 1,
+            detail: null
+        }
+        question.answer.push(objAnswer)
+        this.setState({ question: question })
     }
 
     render() {
@@ -130,8 +147,7 @@ export default class PollCreate extends Component {
             post_to_feed,
             topic,
             detail,
-            schedule,
-            date_event
+            question
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
@@ -155,28 +171,42 @@ export default class PollCreate extends Component {
                                 ></TextInput>
                             </View>
                             <View style={{ ...style.divider }}></View>
+
                             <View style={{ minHeight: hp('30%') }}>
                                 <View style={{ ...style.container }}>
                                     <Text style={{ marginVertical: hp('3%'), fontSize: hp('2%') }}>
                                         Poll question
                                     </Text>
-                                    <TextInput
-                                        placeholder="Enter your question here…"
-                                        style={{ paddingVertical: hp('2%'), fontSize: hp('2%') }}
-                                        value={detail}
-                                        multiline
-                                        onChangeText={(text) => this.setState({ detail: text })}
-                                    ></TextInput>
-                                    <View style={{ ...style.divider }}></View>
-                                    <TextInput
-                                        placeholder="Enter your question here…"
-                                        style={{ paddingVertical: hp('2%'), fontSize: hp('2%'), marginTop: hp('2%') }}
-                                        value={detail}
-                                        multiline
-                                        onChangeText={(text) => this.setState({ detail: text })}
-                                    ></TextInput>
 
-                                    <View style={{ marginTop: hp('2%'), ...style.flex__start }}>
+
+                                    <View>
+                                        <TextInput
+                                            placeholder="Enter your question here…"
+                                            style={{ paddingVertical: hp('2%'), fontSize: hp('2%') }}
+                                            value={detail}
+                                            multiline
+                                            onChangeText={(text) => this.setState({ detail: text })}
+                                        ></TextInput>
+                                        <View style={{ ...style.divider }}></View>
+                                        {
+                                            question.answer.map((e, i) => {
+                                                return (
+                                                    <View key={`answer_${i}`}>
+                                                        <TextInput
+                                                            placeholder="Enter your answer here…"
+                                                            style={{ paddingVertical: hp('2%'), fontSize: hp('2%'), marginTop: hp('2%') }}
+                                                            value={detail}
+                                                            multiline
+                                                            onChangeText={(text) => this.setState({ detail: text })}
+                                                        ></TextInput>
+                                                    </View>
+                                                )
+                                            })
+                                        }
+                                    </View>
+
+
+                                    <View style={{ marginVertical: hp('2%'), ...style.flex__start }}>
                                         <Button
                                             title="Add answer"
                                             buttonStyle={{
@@ -197,7 +227,7 @@ export default class PollCreate extends Component {
                                 <Text style={{ fontSize: hp('2%'), }}>Type of Poll</Text>
                                 <View style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }}>
                                     <Text style={{ fontSize: hp('1.8%') }}>For general</Text>
-                                    <Icon name="chevron-down" style={{fontSize:hp('2%')}} color={colors.primary}/>
+                                    <Icon name="chevron-down" style={{ fontSize: hp('2%') }} color={colors.primary} />
                                 </View>
                             </View>
 
@@ -230,9 +260,9 @@ const styleScoped = StyleSheet.create({
         padding: hp('1.5%'),
         borderColor: '#427AA1',
         borderWidth: 1,
-        borderRadius:50,
+        borderRadius: 50,
         ...style.space__between,
-        alignItems:'center'
+        alignItems: 'center'
     }
 });
 
