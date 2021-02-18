@@ -29,7 +29,7 @@ import ManageBlog from './ManageBlog'
 import EventCreate from './Activity/EventCreate'
 import EventEdit from './Activity/EventEdit'
 import Notification from './Notification'
-
+import PollCreate from './Activity/PollCreate'
 const RouterPage = () => {
     return (
 
@@ -47,8 +47,9 @@ const RouterPage = () => {
                 <Scene key="Event" component={Event} title="Event" hideNavBar />
                 <Scene key="EventDetail" component={EventDetail} title="EventDetail" hideNavBar />
                 <Scene key="Poll" component={Poll} title="Poll" hideNavBar />
-                <Scene key="Survey" component={Survey} title="Survey" hideNavBar />
                 <Scene key="PollDetail" component={PollDetail} title="PollDetail" hideNavBar />
+                <Scene key="PollCreate" component={PollCreate} title="PollCreate" hideNavBar />
+                <Scene key="Survey" component={Survey} title="Survey" hideNavBar />
                 <Scene key="SurveyDetail" component={SurveyDetail} title="SurveyDetail" hideNavBar />
 
                 <Scene key="PostDetail" component={PostDetail} title="PostDetail" hideNavBar />

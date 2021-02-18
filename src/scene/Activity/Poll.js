@@ -61,7 +61,7 @@ export default class Poll extends Component {
                                     ...style.btnPrimaryOutline,
                                     ...style.btnRounded,
                                 }}
-                                onPress={() => Actions.CreatePost()}
+                                onPress={() => Actions.replace('PollCreate')}
                             />
                         </View>
 
@@ -83,9 +83,6 @@ export default class Poll extends Component {
                             <PostPoll></PostPoll>
                             <PostPoll></PostPoll>
                         </View>
-
-
-
                     </View>
                 </ScrollView>
                 <MenuFooter></MenuFooter>

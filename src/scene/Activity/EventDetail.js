@@ -112,7 +112,7 @@ export default class EventDetail extends Component {
                             <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                         </View>
                     </View>
-
+  
 
 
 

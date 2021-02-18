@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     StyleSheet,
     ScrollView,
@@ -21,6 +21,7 @@ import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
 import { homeFeed } from '../Service/PostService'
+import EventPost from '../components/EventPost'
 export default class Main extends Component {
     state = {
         visibleSearch: false,
@@ -41,7 +42,7 @@ export default class Main extends Component {
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
         let user_data = JSON.parse(user_json);
-        
+
         this.setState({
             user_type: user_data.user_type,
             user_role: user_data.user_role
@@ -125,9 +126,15 @@ export default class Main extends Component {
                         {
 
                             this.state.list_data.map((item, index) => {
-                                return (
-                                    <Post data={item} key={`post_${index}`} page="main" onPostUpdate={()=>this.callHomeFeed()}></Post>
-                                )
+                                if (item.post_type == 'event') {
+                                    return (
+                                        <EventPost data={item} key={`event_${index}`}></EventPost>
+                                    )
+                                } else if (item.post_type == 'blog') {
+                                    return (
+                                        <Post data={item} page="main" onPostUpdate={() => this.callHomeFeed()} key={`blog_${index}`}></Post>
+                                    )
+                                }
                             })
                         }
                         {/* end  show post */}
