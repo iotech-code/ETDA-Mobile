@@ -114,8 +114,6 @@ export default class Main extends Component {
                                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                         </TouchableOpacity>
                                     </View>
-
-                                    {/* section create post  */}
                                     {
                                         user_role !== 'Member' &&
                                         <View style={{ ...style.container, marginBottom: hp('1%') }}>
