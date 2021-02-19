@@ -92,14 +92,8 @@ export default class PollCreate extends Component {
         this.setState({ question })
     }
     async onChangeTextAnswer(text, index_answer) {
-        console.log(index_answer)
         let { question } = this.state
-        for (let index = 0; index < question.answer.length; index++) {
-            const element = question.answer[index];
-            if (index_answer == index) {
-                element.detail = text
-            }
-        }
+        question.answer[index_answer].detail = text
         await this.setState({ question })
     }
 

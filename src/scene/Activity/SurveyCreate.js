@@ -42,16 +42,18 @@ export default class PollCreate extends Component {
         indexSchedule: 0,
         datepicker: new Date(),
         timepicker: new Date(),
-        question: {
-            question: null,
-            type_of_poll: 'for general',
-            answer: [
-                {
-                    id: 1,
-                    detail: null,
-                },
-            ]
-        }
+        question: [
+            {
+                id: 1,
+                question: '',
+                answer: [
+                    {
+                        id: 1,
+                        detail: null,
+                    },
+                ]
+            }
+        ]
 
     }
 
@@ -61,10 +63,10 @@ export default class PollCreate extends Component {
         try {
             let { topic, detail, question } = this.state
             let post_addition_data = {
-                ...question,
+                question,
                 post_to_etda: true
             }
-            let { data } = await createPost(topic, 'poll', [], '', [], post_addition_data)
+            let { data } = await createPost(topic, 'survey', [], '', [], post_addition_data)
             console.log('create poll : ', data)
             let { status } = data
             if (status == 'success') {
@@ -75,30 +77,40 @@ export default class PollCreate extends Component {
         }
     }
 
-
-    addAnswer() {
+    onAddQuestion() {
         let { question } = this.state
-        let objAnswer = {
-            id: question.answer.length + 1,
-            detail: null
+        let objQuestion = {
+            id: question.length + 1,
+            question: '',
+            answer: [
+                {
+                    id: 1,
+                    detail: null,
+                },
+            ]
         }
-        question.answer.push(objAnswer)
-        this.setState({ question: question })
-    }
-    onChangeTextQuestion(text) {
-        let { question } = this.state
-        question.question = text
+        question.push(objQuestion)
         this.setState({ question })
     }
-    async onChangeTextAnswer(text, index_answer) {
-        console.log(index_answer)
+
+    addAnswer(index) {
         let { question } = this.state
-        for (let index = 0; index < question.answer.length; index++) {
-            const element = question.answer[index];
-            if (index_answer == index) {
-                element.detail = text
-            }
+        let objAnswer = {
+            id: question[index].answer.length + 1,
+            detail: null
         }
+        question[index].answer.push(objAnswer)
+        this.setState({ question: question })
+    }
+    onChangeTextQuestion(text , index) {
+        let { question } = this.state
+        question[index].question = text
+        this.setState({ question })
+    }
+    async onChangeTextAnswer(text, index_question, index_answer) {
+
+        let { question } = this.state
+        question[index_question].answer[index_answer].detail = text
         await this.setState({ question })
     }
 
@@ -133,68 +145,80 @@ export default class PollCreate extends Component {
                             <View style={{ ...style.divider }}></View>
 
                             <View style={{ minHeight: hp('30%') }}>
+
                                 <View style={{ ...style.container }}>
-                                    <Text style={{ marginVertical: hp('3%'), fontSize: hp('2%') }}>
-                                        Poll question
+                                    <Text style={{ marginTop: hp('3%'), fontSize: hp('2%') }}>
+                                        Survey question
                                     </Text>
+                                </View>
 
+                                {
+                                    question.map((element, index) => {
+                                        return (
+                                            <Fragment key={`question_${index}`}>
+                                                <View style={{ ...style.container, marginTop: hp('3%') }}>
+                                                    <TextInput
+                                                        placeholder="Enter your question here…"
+                                                        style={{ paddingVertical: hp('2%'), fontSize: hp('2%') }}
+                                                        value={element.question}
+                                                        multiline
+                                                        onChangeText={(text) => this.onChangeTextQuestion(text , index)}
+                                                    ></TextInput>
+                                                    <View style={{ ...style.divider }}></View>
+                                                    {
+                                                        element.answer.map((e, i) => {
+                                                            return (
+                                                                <View key={`answer_${i}`}>
+                                                                    <TextInput
+                                                                        placeholder="Enter your answer here…"
+                                                                        style={{ paddingVertical: hp('2%'), fontSize: hp('2%'), marginTop: hp('2%') }}
+                                                                        value={e.detail}
+                                                                        multiline
+                                                                        onChangeText={(text) => this.onChangeTextAnswer(text, index, i)}
+                                                                    ></TextInput>
+                                                                </View>
+                                                            )
+                                                        })
+                                                    }
+                                                    <View style={{ marginVertical: hp('2%'), ...style.flex__start }}>
+                                                        {
+                                                            element.answer.length >= 6 ? null : <Button
+                                                                title="Add answer"
+                                                                buttonStyle={{
+                                                                    padding: hp('1%'),
+                                                                    paddingHorizontal: hp('2%'),
+                                                                    ...style.btnPrimary,
+                                                                    ...style.btnRounded
+                                                                }}
+                                                                onPress={() => this.addAnswer(index)}
+                                                            />
+                                                        }
 
-                                    <View>
-                                        <TextInput
-                                            placeholder="Enter your question here…"
-                                            style={{ paddingVertical: hp('2%'), fontSize: hp('2%') }}
-                                            value={question.question}
-                                            multiline
-                                            onChangeText={(text) => this.onChangeTextQuestion(text)}
-                                        ></TextInput>
-                                        <View style={{ ...style.divider }}></View>
-                                        {
-                                            question.answer.map((e, i) => {
-                                                return (
-                                                    <View key={`answer_${i}`}>
-                                                        <TextInput
-                                                            placeholder="Enter your answer here…"
-                                                            style={{ paddingVertical: hp('2%'), fontSize: hp('2%'), marginTop: hp('2%') }}
-                                                            value={e.detail}
-                                                            multiline
-                                                            onChangeText={(text) => this.onChangeTextAnswer(text, i)}
-                                                        ></TextInput>
                                                     </View>
-                                                )
-                                            })
-                                        }
-                                    </View>
-
-
-                                    <View style={{ marginVertical: hp('2%'), ...style.flex__start }}>
-                                        {
-                                            question.answer.length >= 6 ? null : <Button
-                                                title="Add answer"
-                                                buttonStyle={{
-                                                    padding: hp('1%'),
-                                                    paddingHorizontal: hp('2%'),
-                                                    ...style.btnPrimary,
-                                                    ...style.btnRounded
-                                                }}
-                                                onPress={() => this.addAnswer()}
-                                            />
-                                        }
-
-                                    </View>
-                                </View>
+                                                </View>
+                                                <View style={{ ...style.divider }}></View>
+                                            </Fragment>
+                                        )
+                                    })
+                                }
 
                             </View>
-                            <View style={{ ...style.divider }}></View>
 
-                            <View style={{ ...style.container, marginVertical: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2%'), }}>Type of Poll</Text>
-                                <View style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }}>
-                                    <Text style={{ fontSize: hp('1.8%') }}>For general</Text>
-                                    <Icon name="chevron-down" style={{ fontSize: hp('2%') }} color={colors.primary} />
-                                </View>
+
+                            <View style={{ ...style.container, marginTop: hp('2%') }}>
+                                <Button
+                                    title="Add new question"
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded,
+                                    }}
+                                    onPress={() => this.onAddQuestion()}
+                                />
+
                             </View>
-
-                            <View style={{ ...style.divider }}></View>
 
                             <View style={{ marginTop: hp('2%'), ...style.container }}>
                                 <Button
