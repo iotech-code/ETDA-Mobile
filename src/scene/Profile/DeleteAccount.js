@@ -6,24 +6,56 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
     TextInput,
-    TouchableOpacity,
-    FlatList
+    TouchableOpacity
 } from 'react-native';
 
-import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
 import { apiServer } from '../../constant/util';
+import HttpRequest from '../../Service/HttpRequest';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
+
+const http = new HttpRequest();
 
 export default class DeleteAccount extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super();
+        this.state = {
+            password: '',
+            user_data: {}
+        }
+    }
+
+    async componentDidMount () {
+        try {
+            const userInfo = await AsyncStorage.getItem('user_data');
+            this.setState({
+                user_data: JSON.parse(userInfo)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    callDelete = async () => {
+        await http.setTokenHeader();
+        const deleteAcc = await http.post( apiServer.url + '/api/backend/post/delete/' + this.state.user_data.userid , data);
+        const { status } = await deleteAcc.data;
+        if (status == "success") {
+            Alert.alert("Your account has been requested for deletion. If you wish to activate this account, Please contact ETDA within 90 days after deletion request has been submitted.")
+            await this.logout();
+        }
+    };
+
+    async logout () {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('user_data');
+        await AsyncStorage.removeItem('social_network');
+        Actions.replace('Login');
     }
 
 
@@ -56,10 +88,13 @@ export default class DeleteAccount extends Component {
                     <View style={{ ...style.container, marginTop: hp('2%') }}>
                         <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Password</Text>
                         <TextInput
+                            value={this.state.password}
+                            maxLength={20}
                             style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder="Enter your password here…"
+                            onChangeText = { v => this.setState({password: v}) }
                         />
-                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>1/20</Text>
+                        <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>{this.state.password.length}/20</Text>
                     </View>
 
                 </ScrollView>
@@ -70,12 +105,9 @@ export default class DeleteAccount extends Component {
 
 const styleScoped = StyleSheet.create({
     btnImageProfile: {
-        // padding: hp('1%'),
         width: hp('4%'),
         height: hp('4%'),
         borderRadius: 100,
-        // borderWidth: 1,
-        // borderColor: 'black',
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',

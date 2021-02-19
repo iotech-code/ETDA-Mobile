@@ -48,6 +48,7 @@ export default class EditProfile extends Component {
             postButtonColor: '#fff',
             postTextColor: colors.primary,
             visibleModalPostandRead: false,
+            sucessModal: false,
             rReason: '',
             rExp: {
                 exp1: '',
@@ -143,9 +144,8 @@ export default class EditProfile extends Component {
                         style={{ fontSize: hp('2%') }}
                         placeholder="Enter your reason…"
                         multiline={true}
-                        onChange={ (value) => this.setState({rReason: value}) }
+                        onChangeText={ (value) => this.setState({rReason: value}) }
                         numberOfLines={50}
-
                     />
                 </View>
 
@@ -166,40 +166,37 @@ export default class EditProfile extends Component {
 
                 <View >
                     <TextInput
+                        value={this.state.rExp.exp1}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
-                        onChangeText={(value) => {
-                            onChangeTextExp1(value)
-                        }}
+                        onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp1: value } } ) }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
+                        value={this.state.rExp.exp2}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
-                        onChangeText={(value) => {
-                            onChangeTextExp2(value)
-                        }}
+                        onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp2: value} } ) }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
+                        value={this.state.rExp.exp3}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder="Enter your experience…"
-                        onChangeText={(value) => {
-                            onChangeTextExp3(value)
-                        }}
+                        onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp3: value} } ) }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
                         title="Confirm"
-                        buttonStyle={{
+                        buttonStyle={ {
                             padding: hp('1.5%'),
                             ...style.btnRounded,
                             ...style.btnPrimary
-                        }}
-                        onPress={() => this.setState({ visibleModalPostandRead: false })}
+                        } }
+                        onPress={ () => this.saveTypeOfUser() }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
@@ -216,6 +213,37 @@ export default class EditProfile extends Component {
                 </View>
             </Overlay>
             </>
+        )
+    }
+
+    showSuccessModal() {
+        const { sucessModal } = this.state
+        return (
+            <Overlay
+                isVisible={ sucessModal }
+                overlayStyle={{
+                    width: wp('90%'),
+                    paddingVertical: hp('2%'),
+                    paddingHorizontal: hp('2%')
+                }}
+            >
+                <View>
+                    <Icon name="check" size={hp('12%')} style={{ alignSelf: "center" }} color="#30D100"/>
+                    <Text style={{ marginTop: 20 }}>
+                    Your registration has been submitted, 
+                    to post please wait for administrator approval.
+                    </Text>
+                    <Button
+                        title="Done"
+                        buttonStyle={{
+                            marginTop: hp('3%'),
+                            ...style.btnRounded,
+                            ...style.btnPrimary
+                        }}
+                        onPress={() => this.saveTypeOfUser()}
+                    />
+                </View>
+            </Overlay>
         )
     }
 
@@ -250,7 +278,10 @@ export default class EditProfile extends Component {
                         onPress={ () => this.confirmPostRead() }
                     >
                         <View style={{ ...styleScoped.option, backgroundColor: this.state.postButtonColor }}>
-                            <Icons name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={ this.state.postTextColor } />
+                            <Icons 
+                            name="create" size={hp('12%')} 
+                            style={{ alignSelf: "center" }} 
+                            color={ this.state.postTextColor } />
                         </View>
                         <Text style={{
                             marginTop: hp('3%'),
@@ -268,7 +299,7 @@ export default class EditProfile extends Component {
                             ...style.btnRounded,
                             ...style.btnPrimary
                         }}
-                        onPress={() => this.continueTypeOfUser(this.state.type)}
+                        onPress={() => this.saveTypeOfUser()}
                     />
                     <View style={{ marginTop: hp('1%') }}></View>
                     <Button
@@ -286,6 +317,15 @@ export default class EditProfile extends Component {
         )
     }
 
+    saveTypeOfUser() {
+        this.setState({
+            visibleModalPostandRead: false,
+            visibleChangeTypeOfUser: false,
+            sucessModal: true
+        })
+        this.showSuccessModal()
+    }
+
     confirmReadOnly () {
         this.setState({
             readButtonColor: colors.primary,
@@ -293,7 +333,12 @@ export default class EditProfile extends Component {
             postButtonColor: '#fff',
             postTextColor: colors.primary,
             visible: true, 
-            type: 'read'
+            visibleChangeTypeOfUser: false,
+            type: 'read',
+            userObject: {
+                ...this.state.userObject,
+                user_type: 'read'
+            }
         })
     }
 
@@ -303,10 +348,15 @@ export default class EditProfile extends Component {
             readTextColor: colors.primary,
             postButtonColor: colors.primary,
             postTextColor: '#fff',
-            visible: true, 
+            visible: true,
             visibleModalPostandRead: true,
-            type: 'read,post_read'
+            type: 'read,post_read',
+            userObject: {
+                ...this.state.userObject,
+                user_type: 'read,post_read'
+            }
         })
+        // this.setState({ visibleModalPostandRead: true })
         this.continueTypeOfUser('read,post_read')
     }
 
