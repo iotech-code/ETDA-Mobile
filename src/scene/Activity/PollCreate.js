@@ -11,7 +11,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -19,7 +20,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import moment from 'moment'
 import { createPost } from '../../Service/PostService'
 import { colors } from '../../constant/util';
 
@@ -44,6 +44,7 @@ export default class PollCreate extends Component {
         timepicker: new Date(),
         question: {
             question: null,
+            type_of_poll: 'for general',
             answer: [
                 {
                     id: 1,
@@ -54,77 +55,24 @@ export default class PollCreate extends Component {
 
     }
 
-    onChangeDate(event, date, btn) {
-        const { date_event } = this.state
-        if (btn) {
-            if (!date_event) {
-                this.setState({ date_event: moment(date).format('DD/MM/YYYY') })
-            }
-            this.setState({ showDatePicker: false })
-        } else {
-            this.setState({ datepicker: date })
-            this.setState({ date_event: moment(date).format('DD/MM/YYYY') })
-        }
-    }
 
-    onChangeTime(event, time, btn) {
-        let { schedule, indexSchedule } = this.state
-        for (let index = 0; index < schedule.length; index++) {
-            const element = schedule[index];
-            if (index == indexSchedule) {
-                element.time = moment(time).format('HH:mm')
-                element.time_default = time
-            }
-        }
-        this.setState({ timepicker: time })
-        this.setState({ schedule })
-        if (btn) {
-            this.setState({ showTimePicker: false })
-        }
-    }
-
-    addSchedule() {
-        const { schedule } = this.state
-        schedule.push({
-            time: null,
-            detail: null,
-            time_default: new Date()
-        })
-        this.setState({ schedule })
-    }
-
-    setEventSchedule(text, index) {
-        let { schedule } = this.state
-        for (let i = 0; i < schedule.length; i++) {
-            const element = schedule[i];
-            if (index == i) {
-                element.detail = text
-            }
-        }
-        this.setState({ schedule })
-    }
-
-    async setIndexIimeSchedule(index, time) {
-        await this.setState({ timepicker: time })
-        await this.setState({ indexSchedule: index })
-        await this.setState({ showTimePicker: true })
-    }
 
     async onCreatePoll() {
         try {
-            let { topic, detail, post_to_feed, schedule, date_event } = this.state
+            let { topic, detail, question } = this.state
             let post_addition_data = {
-                event_date: date_event,
-                event_schedule: schedule,
-                post_to_etda: post_to_feed
+                ...question,
+                post_to_etda: true
             }
-            let response = await createPost(topic, 'event', [], detail, [], post_addition_data)
-            let { status } = response.data
+            let { data } = await createPost(topic, 'poll', [], '', [], post_addition_data)
+            console.log('create poll : ', data)
+            let { status } = data
             if (status == 'success') {
-                Actions.replace('Event')
+                Actions.replace('Poll')
             }
         } catch (error) {
-            console.log('Create event error : ', error)
+            Alert.alert('Something worng!')
+            console.log('Create poll error : ', error)
         }
     }
 
@@ -138,20 +86,36 @@ export default class PollCreate extends Component {
         question.answer.push(objAnswer)
         this.setState({ question: question })
     }
+    onChangeTextQuestion(text) {
+        let { question } = this.state
+        question.question = text
+        this.setState({ question })
+    }
+    async onChangeTextAnswer(text, index_answer) {
+        console.log(index_answer)
+        let { question } = this.state
+        for (let index = 0; index < question.answer.length; index++) {
+            const element = question.answer[index];
+            if (index_answer == index) {
+                element.detail = text
+            }
+        }
+        await this.setState({ question })
+    }
 
     render() {
         const {
             post_to_feed,
             topic,
             detail,
-            question
+            question,
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', marginBottom: hp('3%') }}>
                     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ ...style.navbar }}>
-                            <TouchableOpacity onPress={() => Actions.pop()}>
+                            <TouchableOpacity onPress={() => Actions.replace('Poll')}>
                                 <Icon name="chevron-left" size={hp('3%')} color="white" />
                             </TouchableOpacity>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create Poll</Text>
@@ -180,9 +144,9 @@ export default class PollCreate extends Component {
                                         <TextInput
                                             placeholder="Enter your question here…"
                                             style={{ paddingVertical: hp('2%'), fontSize: hp('2%') }}
-                                            value={detail}
+                                            value={question.question}
                                             multiline
-                                            onChangeText={(text) => this.setState({ detail: text })}
+                                            onChangeText={(text) => this.onChangeTextQuestion(text)}
                                         ></TextInput>
                                         <View style={{ ...style.divider }}></View>
                                         {
@@ -192,9 +156,9 @@ export default class PollCreate extends Component {
                                                         <TextInput
                                                             placeholder="Enter your answer here…"
                                                             style={{ paddingVertical: hp('2%'), fontSize: hp('2%'), marginTop: hp('2%') }}
-                                                            value={detail}
+                                                            value={e.detail}
                                                             multiline
-                                                            onChangeText={(text) => this.setState({ detail: text })}
+                                                            onChangeText={(text) => this.onChangeTextAnswer(text, i)}
                                                         ></TextInput>
                                                     </View>
                                                 )
@@ -204,16 +168,19 @@ export default class PollCreate extends Component {
 
 
                                     <View style={{ marginVertical: hp('2%'), ...style.flex__start }}>
-                                        <Button
-                                            title="Add answer"
-                                            buttonStyle={{
-                                                padding: hp('1%'),
-                                                paddingHorizontal: hp('2%'),
-                                                ...style.btnPrimary,
-                                                ...style.btnRounded
-                                            }}
-                                            onPress={() => this.addAnswer()}
-                                        />
+                                        {
+                                            question.answer.length >= 6 ? null : <Button
+                                                title="Add answer"
+                                                buttonStyle={{
+                                                    padding: hp('1%'),
+                                                    paddingHorizontal: hp('2%'),
+                                                    ...style.btnPrimary,
+                                                    ...style.btnRounded
+                                                }}
+                                                onPress={() => this.addAnswer()}
+                                            />
+                                        }
+
                                     </View>
                                 </View>
 
