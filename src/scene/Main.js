@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
@@ -35,16 +35,12 @@ export default class Main extends Component {
         lng: {}
     }
 
-
     async componentDidMount() {
-        console.log('test : ',  global.testGobal) // แสดงค่า gobal testGobal
+        // console.log('test : ',  global.lng) // แสดงค่า gobal testGobal
         await this.getUserInfo();
         await this.callHomeFeed();
         await this.getLang();
-        
     }
-
-
 
     async getLang() {
         this.setState({ isFetching: true })
@@ -52,7 +48,6 @@ export default class Main extends Component {
         this.setState({ lng })
         this.setState({ isFetching: false })
     }
-
 
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
@@ -118,7 +113,7 @@ export default class Main extends Component {
                                         user_role !== 'Member' &&
                                         <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                             <Button
-                                                title={lng.new_post}
+                                                title={global.lng.new_post}
                                                 Outline={true}
                                                 titleStyle={{ color: '#003764', }}
                                                 buttonStyle={{

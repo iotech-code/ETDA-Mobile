@@ -43,17 +43,17 @@ export default class ProfileSetting extends Component {
                     </View>
                     <View >
            
-                    <TouchableOpacity 
-                        style={{ 
-                            padding: hp('2%'), 
-                            flexDirection: 'row', 
-                            justifyContent: 'flex-start', 
-                            alignItems: 'center' 
-                        }}
-                        onPress={() => Actions.push('Language')}
-                    >
-                        <Icon name="language" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
-                        <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Language</Text>
+                        <TouchableOpacity 
+                            style={{ 
+                                padding: hp('2%'), 
+                                flexDirection: 'row', 
+                                justifyContent: 'flex-start', 
+                                alignItems: 'center' 
+                            }}
+                            onPress={() => Actions.push('Language')}
+                        >
+                            <Icon name="earth" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Language</Text>
                     </TouchableOpacity>
                     <View style={{ ...style.divider }}></View>
                         {

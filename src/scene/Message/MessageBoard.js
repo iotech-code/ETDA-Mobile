@@ -146,47 +146,31 @@ export default class MessageBoard extends Component {
                     <HeaderNavbar  value={'admin'}></HeaderNavbar>
                     }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                           
-                            {this.state.user_type == 'read,post_read' ?
-                                <View style={{ ...style.container }}>
-                                     <View style={{
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        padding: hp('2%'),
-                                        alignItems: 'center'
-                                    }}>
-                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board</Text>
-                                        <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                                    </View>
-                                    <Button
-                                        title="Write New Blog"
-                                        Outline={true}
-                                        titleStyle={{ color: '#003764', }}
-                                        buttonStyle={{
-                                            padding: hp('1.5%'),
-                                            ...style.btnPrimaryOutline,
-                                            ...style.btnRounded
-                                        }}
-                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
-                                        'description': '',
-                                        'post_images': []})}
-                                    />
-                                </View>
-                                :
-                                <View>
+           
+                            <View style={{ ...style.container }}>
                                     <View style={{
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        padding: hp('2%'),
-                                        alignItems: 'center'
-                                    }}>
-                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board(Read only)</Text>
-                                        <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                                    </View>
-                                    <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    padding: hp('2%'),
+                                    alignItems: 'center'
+                                }}>
+                                    <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board</Text>
+                                    <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                 </View>
-                            }
-
+                                <Button
+                                    title={global.lng.new_post}
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1.5%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded
+                                    }}
+                                    onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                    'description': '',
+                                    'post_images': []})}
+                                />
+                            </View>
 
                             <View style={{ ...styleScoped.wrapperButtonGroup }}>
                                 <TouchableOpacity style={this.state.board == 'community' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}

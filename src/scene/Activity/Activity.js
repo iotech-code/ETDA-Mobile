@@ -39,11 +39,11 @@ export default class Activity extends Component {
                 token : token,
                 user_role : user_data.user_role
             })
-            this.callCommunityFeed(token)
         } catch (err) {
             console.log('err : ', err)
         }
     }
+    
     render() {
         const { dataList } = this.state
         return (

@@ -184,11 +184,7 @@ export default class Activity extends Component {
                                         
                                     </Fragment>
                             }
-
-
-
                         </View>
-
                     </View>
                 </ScrollView>
                     {this.state.user_role == "Member" ?
