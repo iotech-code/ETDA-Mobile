@@ -37,10 +37,11 @@ export default class Main extends Component {
 
 
     async componentDidMount() {
-
+        console.log('test : ',  global.testGobal) // แสดงค่า gobal testGobal
         await this.getUserInfo();
         await this.callHomeFeed();
         await this.getLang();
+        
     }
 
 
