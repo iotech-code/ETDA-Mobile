@@ -35,12 +35,22 @@ export default class Main extends Component {
         lng: {}
     }
 
+
     async componentDidMount() {
 
         await this.getUserInfo();
         await this.callHomeFeed();
+        await this.getLang();
     }
 
+
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let lng = await tr()
+        this.setState({ lng })
+        this.setState({ isFetching: false })
+    }
 
 
     async getUserInfo() {
@@ -90,57 +100,62 @@ export default class Main extends Component {
                                 <HeaderNavbar value={'admin'}></HeaderNavbar>
                         }
 
-                        <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
-                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
-                            <TouchableOpacity onPress={() => this.sortFeed(list_data)}>
-                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                            </TouchableOpacity>
-                        </View>
-
-
-                        {/* section create post  */}
-                        {
-                            user_role !== 'Member' &&
-                            <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                                <Button
-                                    title={tr().new_post}
-                                    Outline={true}
-                                    titleStyle={{ color: '#003764', }}
-                                    buttonStyle={{
-                                        padding: hp('1%'),
-                                        ...style.btnPrimaryOutline,
-                                        ...style.btnRounded
-                                    }}
-                                    onPress={() => this.createPost()}
-                                />
-                            </View>
-                        }
 
                         {/* loading data */}
+                
                         {
                             isFetching ?
-                                <ActivityIndicator color="#003764" style={{ marginTop: hp('27%') }} />
-                                : null
+                                <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
+                                : <Fragment>
+                                    <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
+                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
+                                        <TouchableOpacity onPress={() => this.sortFeed(list_data)}>
+                                            <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    {/* section create post  */}
+                                    {
+                                        user_role !== 'Member' &&
+                                        <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                            <Button
+                                                title={lng.new_post}
+                                                Outline={true}
+                                                titleStyle={{ color: '#003764', }}
+                                                buttonStyle={{
+                                                    padding: hp('1%'),
+                                                    ...style.btnPrimaryOutline,
+                                                    ...style.btnRounded
+                                                }}
+                                                onPress={() => this.createPost()}
+                                            />
+                                        </View>
+                                    }
+                                    {/* end section create post  */}
+
+
+                                    {/*   show post  */}
+                                    {
+
+                                        this.state.list_data.map((item, index) => {
+                                            if (item.post_type == 'event') {
+                                                return (
+                                                    <EventPost data={item} key={`event_${index}`}></EventPost>
+                                                )
+                                            } else if (item.post_type == 'blog') {
+                                                return (
+                                                    <Post data={item} page="main" onPostUpdate={() => this.callHomeFeed()} key={`blog_${index}`}></Post>
+                                                )
+                                            }
+                                        })
+                                    }
+                                    {/* end  show post */}
+
+
+                                </Fragment>
                         }
                         {/* end loading data */}
 
-
-                        {/*   show post  */}
-                        {
-
-                            this.state.list_data.map((item, index) => {
-                                if (item.post_type == 'event') {
-                                    return (
-                                        <EventPost data={item} key={`event_${index}`}></EventPost>
-                                    )
-                                } else if (item.post_type == 'blog') {
-                                    return (
-                                        <Post data={item} page="main" onPostUpdate={() => this.callHomeFeed()} key={`blog_${index}`}></Post>
-                                    )
-                                }
-                            })
-                        }
-                        {/* end  show post */}
                     </View>
                 </ScrollView>
 
