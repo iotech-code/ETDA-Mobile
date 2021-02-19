@@ -2,6 +2,8 @@ import axios from 'axios'
 import { apiServer } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+
 
 class HttpRequest {
   constructor() {
@@ -27,14 +29,37 @@ class HttpRequest {
       console.log(`Result ${response.config.url} : `, response)
       return response
     }, function (error) {
-      console.log(`error ${error.config.url} : `, error)
-      Alert.alert('Something worng!')
+      console.log(`error ${error.config.url} : `, error.response)
+
+
+      // Alert.alert('Something worng!')
+      if (error.response.status == 401) {
+        let self = this
+        Alert.alert(
+          'Sorry!',
+          'Session timeout. Please login again.',
+          [
+            {
+              text: 'OK', onPress: async () => {
+                await AsyncStorage.removeItem('token');
+                await AsyncStorage.removeItem('user_data');
+                await AsyncStorage.removeItem('social_network');
+                Actions.replace('Login');
+              }
+            }
+          ],
+          { cancelable: false }
+        );
+      }
+
+
 
       // Do something with response error
       return Promise.reject(error)
     })
 
   }
+
 
   setHeader(header) {
     // this.axiosInstance.defaults.headers.common[header.key] = header.value

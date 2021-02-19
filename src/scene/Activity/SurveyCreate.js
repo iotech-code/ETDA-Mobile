@@ -63,7 +63,7 @@ export default class PollCreate extends Component {
         try {
             let { topic, detail, question } = this.state
             let post_addition_data = {
-                question,
+                survey_date :question,
                 post_to_etda: true
             }
             let { data } = await createPost(topic, 'survey', [], '', [], post_addition_data)
