@@ -22,6 +22,7 @@ import PostDetail from './Post/Detail'
 import MyProfile from './Profile/MyProfile'
 import EditProfile from './Profile/EditProfile'
 import ProfileSetting from './Profile/ProfileSetting'
+import Language from './Profile/Language'
 import ChangePassword from './Profile/ChangePassword'
 import Search from './Search'
 import DeleteAccount from './Profile/DeleteAccount'
@@ -56,6 +57,7 @@ const RouterPage = () => {
                 <Scene key="MyProfile" component={MyProfile} title="MyProfile" hideNavBar />
                 <Scene key="EditProfile" component={EditProfile} title="EditProfile" hideNavBar />
                 <Scene key="ProfileSetting" component={ProfileSetting} title="ProfileSetting" hideNavBar />
+                <Scene key="Language" component={Language} title="Language" hideNavBar />
                 <Scene key="ChangePassword" component={ChangePassword} title="ChangePassword" hideNavBar />
                 <Scene key="Search" component={Search} title="Search" hideNavBar />
                 <Scene key="DeleteAccount" component={DeleteAccount} title="DeleteAccount" hideNavBar />

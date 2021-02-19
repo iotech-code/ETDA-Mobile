@@ -22,6 +22,8 @@ import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
 import { homeFeed } from '../Service/PostService'
 import EventPost from '../components/EventPost'
+import tr from '../constant/lang'
+
 export default class Main extends Component {
     state = {
         visibleSearch: false,
@@ -29,15 +31,17 @@ export default class Main extends Component {
         token: '',
         list_data: [],
         user_role: '',
-        isFetching: false
+        isFetching: false,
+        lng: {}
     }
 
     async componentDidMount() {
 
         await this.getUserInfo();
         await this.callHomeFeed();
-        // const [refreshing, setRefreshing] = React.useState(false);
     }
+
+
 
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
@@ -73,8 +77,7 @@ export default class Main extends Component {
     }
 
     render() {
-        const { isFetching, user_role, list_data } = this.state
-
+        const { isFetching, user_role, list_data, lng } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
@@ -100,7 +103,7 @@ export default class Main extends Component {
                             user_role !== 'Member' &&
                             <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                 <Button
-                                    title="Write New Blog"
+                                    title={tr().new_post}
                                     Outline={true}
                                     titleStyle={{ color: '#003764', }}
                                     buttonStyle={{

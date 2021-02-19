@@ -18,7 +18,6 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import { colors, apiServer } from '../../constant/util'
 import Icons from 'react-native-vector-icons/MaterialIcons';

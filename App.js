@@ -1,16 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import RouterPage from './src/scene/Router';
 
-
-
-
 const App = () => {
-
   return (
     <RouterPage />
   );
-  
 };
 
 export default App;

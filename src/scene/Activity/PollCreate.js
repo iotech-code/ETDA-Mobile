@@ -52,9 +52,6 @@ export default class PollCreate extends Component {
             ]
         }
 
-
-
-
     }
 
     onChangeDate(event, date, btn) {
