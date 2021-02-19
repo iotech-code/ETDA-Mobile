@@ -83,7 +83,7 @@ export default class Main extends Component {
     }
 
     render() {
-        const { isFetching, user_role, list_data, lng } = this.state
+        const { isFetching, user_role, list_data } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />

@@ -58,7 +58,6 @@ export default class EditProfile extends Component {
         }
     }
 
-
     componentDidMount() {
         this.setUserObject();
     }
@@ -140,12 +139,11 @@ export default class EditProfile extends Component {
 
                 <View style={{ ...style.customInput, height: hp('10%') }}>
                     <TextInput
+                        value={this.state.rReason}
                         style={{ fontSize: hp('2%') }}
                         placeholder="Enter your reason…"
                         multiline={true}
-                        onChangeText={(value) => {
-                            onChangeTextReason(value)
-                        }}
+                        onChange={ (value) => this.setState({rReason: value}) }
                         numberOfLines={50}
 
                     />
@@ -260,7 +258,6 @@ export default class EditProfile extends Component {
                             fontSize: hp('2%'),
                             color: '#000000'
                         }}>Posts and Read</Text>
-
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: hp('2%') }}>
@@ -488,8 +485,6 @@ export default class EditProfile extends Component {
             </View >
         );
     }
-
-
 };
 
 const styleScoped = StyleSheet.create({

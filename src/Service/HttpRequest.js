@@ -5,7 +5,6 @@ import { Alert } from 'react-native'
 
 class HttpRequest {
   constructor() {
-
     // this.axios = axios
     this.axiosInstance = axios.create({
       baseURL: apiServer.url,
@@ -37,7 +36,6 @@ class HttpRequest {
   }
 
   setHeader(header) {
-    // this.axiosInstance.defaults.headers.common[header.key] = header.value
     this.axiosInstance.defaults.headers.common = header
     this.axiosInstance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   }
