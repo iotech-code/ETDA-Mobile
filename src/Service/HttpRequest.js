@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { apiServer } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { Alert } from 'react-native'
 
 class HttpRequest {
   constructor() {
@@ -28,6 +28,8 @@ class HttpRequest {
       return response
     }, function (error) {
       console.log(`error ${error.config.url} : `, error)
+      Alert.alert('Something worng!')
+
       // Do something with response error
       return Promise.reject(error)
     })
