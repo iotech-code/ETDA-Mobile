@@ -20,7 +20,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import PostSurvey from '../../components/Survey'
-import { apiServer } from '../../constant/util';
+import {Button} from 'react-native-elements'
 export default class Survey extends Component {
     state = {
         visibleSearch: false
@@ -35,7 +35,7 @@ export default class Survey extends Component {
                         </TouchableOpacity>
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Survey</Text>
                         <TouchableOpacity onPress={() => Actions.push('Search')}>
-                            <Icon name="magnify" size={hp('3%')} color="white"  />
+                            <Icon name="magnify" size={hp('3%')} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
@@ -47,6 +47,20 @@ export default class Survey extends Component {
                         }}>
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Survey</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                        </View>
+
+                        <View style={{ ...style.container }}>
+                            <Button
+                                title="Create new Survey"
+                                Outline={true}
+                                titleStyle={{ color: '#003764', }}
+                                buttonStyle={{
+                                    padding: hp('1%'),
+                                    ...style.btnPrimaryOutline,
+                                    ...style.btnRounded,
+                                }}
+                                onPress={() => Actions.replace('SurveyCreate')}
+                            />
                         </View>
 
 

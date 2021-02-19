@@ -31,6 +31,7 @@ import EventCreate from './Activity/EventCreate'
 import EventEdit from './Activity/EventEdit'
 import Notification from './Notification'
 import PollCreate from './Activity/PollCreate'
+import SurveyCreate from './Activity/SurveyCreate'
 const RouterPage = () => {
     return (
 
@@ -51,8 +52,8 @@ const RouterPage = () => {
                 <Scene key="PollDetail" component={PollDetail} title="PollDetail" hideNavBar />
                 <Scene key="PollCreate" component={PollCreate} title="PollCreate" hideNavBar />
                 <Scene key="Survey" component={Survey} title="Survey" hideNavBar />
+                <Scene key="SurveyCreate" component={SurveyCreate} title="SurveyCreate" hideNavBar />
                 <Scene key="SurveyDetail" component={SurveyDetail} title="SurveyDetail" hideNavBar />
-
                 <Scene key="PostDetail" component={PostDetail} title="PostDetail" hideNavBar />
                 <Scene key="MyProfile" component={MyProfile} title="MyProfile" hideNavBar />
                 <Scene key="EditProfile" component={EditProfile} title="EditProfile" hideNavBar />
