@@ -137,7 +137,6 @@ export default class SurveyDetail extends Component {
 
                     </View>
                 </ScrollView>
-                <MenuFooter></MenuFooter>
             </View>
         );
     }

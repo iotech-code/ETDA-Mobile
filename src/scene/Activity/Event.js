@@ -18,8 +18,10 @@ import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MenuFooterUser from '../../components/MenuFooter'
+import MenuFooter from '../../components/MenuFooter'
+import MenuFooterUser from '../../components/MenuFooterUser'
 import EventPost from '../../components/EventPost'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
 import { homeFeed } from '../../Service/PostService'
@@ -52,12 +54,24 @@ export default class Activity extends Component {
         visibleSearch: false,
         eventList: [],
         markedDates: null,
-        isFetching: false
+        isFetching: false,
+        user_role: '',
+        user_type: ''
     }
 
     componentDidMount() {
         this.onGetEventList();
+        this.getUserInfo();
     }
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+
+        this.setState({
+            user_type: user_data.user_type,
+            user_role: user_data.user_role
+        })
+    };
 
     async onGetEventList() {
         this.setState({ isFetching: true })
@@ -177,7 +191,11 @@ export default class Activity extends Component {
 
                     </View>
                 </ScrollView>
-                <MenuFooterUser></MenuFooterUser>
+                    {this.state.user_role == "Member" ?
+                        <MenuFooterUser value={'activity'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'activity'}></MenuFooter>
+                    }
             </View>
         );
     }

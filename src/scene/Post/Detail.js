@@ -213,14 +213,13 @@ export default class EventDetail extends Component {
                             </TextInput>
                         </View>
                         <Button
-                            title="send"
+                            title="Send"
                             buttonStyle={{ ...style.btnPrimary }}
                             onPress={() => this.createComment()}
                         />
 
                     </View>
                 </KeyboardAvoidingView>
-
             </View >
         );
     }

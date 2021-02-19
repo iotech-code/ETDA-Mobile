@@ -18,13 +18,34 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import MenuFooter from '../../components/MenuFooter'
+import MenuFooterUser from '../../components/MenuFooterUser'
 import PostSurvey from '../../components/Survey'
 import {Button} from 'react-native-elements'
 export default class Survey extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super()
+        this.state = {
+            user_type: '',
+            user_role: ''
+        }
     }
+
+    componentDidMount() {
+        this.getUserInfo()
+    }
+
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+
+        this.setState({
+            user_type: user_data.user_type,
+            user_role: user_data.user_role
+        })
+    };
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -75,7 +96,11 @@ export default class Survey extends Component {
 
                     </View>
                 </ScrollView>
-                <MenuFooter></MenuFooter>
+                {this.state.user_role == "Member" ?
+                        <MenuFooterUser value={'activity'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'activity'}></MenuFooter>
+                    }
             </View>
         );
     }

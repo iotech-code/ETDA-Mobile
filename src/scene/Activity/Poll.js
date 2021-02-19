@@ -19,14 +19,35 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import MenuFooter from '../../components/MenuFooter'
+import MenuFooterUser from '../../components/MenuFooterUser'
 import EventPost from '../../components/EventPost'
 import PostPoll from '../../components/Poll'
 import { apiServer } from '../../constant/util';
 export default class Poll extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super()
+        this.state = {
+            user_type: '',
+            user_role: ''
+        }
     }
+
+    componentDidMount() {
+        this.getUserInfo()
+    }
+
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+
+        this.setState({
+            user_type: user_data.user_type,
+            user_role: user_data.user_role
+        })
+    };
+    
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -85,7 +106,11 @@ export default class Poll extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <MenuFooter></MenuFooter>
+                {this.state.user_role == "Member" ?
+                        <MenuFooterUser value={'activity'}></MenuFooterUser>
+                        :
+                        <MenuFooter value={'activity'}></MenuFooter>
+                    }
             </View>
         );
     }

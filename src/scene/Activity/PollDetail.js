@@ -136,7 +136,6 @@ export default class PollDetail extends Component {
 
                     </View>
                 </ScrollView>
-                <MenuFooter></MenuFooter>
             </View>
         );
     }

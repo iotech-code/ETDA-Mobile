@@ -10,18 +10,24 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
+    KeyboardAvoidingView,
+    Platform,
     FlatList
 } from 'react-native';
-
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { apiServer } from '../../constant/util';
+import Comment from '../../components/Comment'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
         data: {},
+        list_comment: [],
+        comment: null,
+        reply_to: null,
         default_avatar: require('../../assets/images/default_avatar.jpg'),
         etda_avatar: require('../../assets/images/etdaprofile.png'),
     }
@@ -33,6 +39,7 @@ export default class EventDetail extends Component {
 
     render() {
         const { author, title, post_description, post_addition_data, comment_number, post_id, is_like, like } = this.props
+        const { default_avatar, list_comment, comment } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -112,12 +119,35 @@ export default class EventDetail extends Component {
                             <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                         </View>
                     </View>
-  
 
-
-
-
+                    {
+                        list_comment.map((item, index) => {
+                            return (
+                                <Comment data={item} key={`comment_${index}`} fnPressButton={() => this.onPressButtonChildren.bind(this)}></Comment>
+                            )
+                        })
+                    }
                 </ScrollView>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                    <View style={{ ...styleScoped.warpperComment }}>
+                        <TouchableOpacity>
+                            <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
+                        </TouchableOpacity>
+                        <View style={{ ...styleScoped.boxInputCommment }}>
+                            <TextInput
+                                placeholder="Comment here"
+                                style={{ padding: 0, fontSize: hp('2%') }}
+                                value={comment}
+                                onChangeText={(comment) => this.setState({ comment })} >
+                            </TextInput>
+                        </View>
+                        <Button
+                            title="Send"
+                            buttonStyle={{ ...style.btnPrimary }}
+                            onPress={() => this.createComment()}
+                        />
+                    </View>
+                </KeyboardAvoidingView>
             </View>
         );
     }
@@ -132,6 +162,22 @@ const styleScoped = StyleSheet.create({
         textAlign: 'center',
         fontSize: hp('2%'),
         color: '#003764'
+    },
+    warpperComment: {
+        paddingHorizontal: hp('3%'),
+        paddingTop: hp('1%'),
+        paddingBottom: hp('4%'),
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    boxInputCommment: {
+        padding: hp('1%'),
+        borderColor: '#C8C8CC',
+        borderWidth: 1,
+        borderRadius: 5,
+        width: '70%',
+        marginRight: hp('1%')
     },
     inputCustom: {
         height: hp('5%'),
