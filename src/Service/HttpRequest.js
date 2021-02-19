@@ -34,7 +34,6 @@ class HttpRequest {
 
       // Alert.alert('Something worng!')
       if (error.response.status == 401) {
-        let self = this
         Alert.alert(
           'Sorry!',
           'Session timeout. Please login again.',
@@ -51,7 +50,9 @@ class HttpRequest {
           { cancelable: false }
         );
       }
-
+      else if (error.response.status == 500) {
+         Alert.alert('Something worng!')
+      }
 
 
       // Do something with response error
