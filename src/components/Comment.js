@@ -1,24 +1,15 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
-    TextInput,
     TouchableOpacity
 } from 'react-native';
-
-import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import style from '../styles/base'
-import { Actions } from 'react-native-router-flux'
-import { fonts, apiServer } from '../constant/util'
-
-
+import { fonts } from '../constant/util'
 
 export default class Comment extends Component {
     state = {
@@ -28,6 +19,7 @@ export default class Comment extends Component {
     replyCommentTo(reply_to) {
         this.props.fnPressButton(reply_to)
     }
+
     render() {
         const { User, Message, create_date, Reply_to } = this.props.data
         const { default_avatar } = this.state
@@ -69,7 +61,9 @@ export default class Comment extends Component {
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{Message}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: hp('1%') }}>
-                        <TouchableOpacity onPress={() => this.replyCommentTo(Reply_to.User_id)}>
+                        <TouchableOpacity onPress={ () => this.replyCommentTo(User) }
+                        style={{flexDirection: 'row'}}>
+                            <Icon name="reply" style={{ fontSize: hp('2%'), color: fonts.color.primary }}/>
                             <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Reply</Text>
                         </TouchableOpacity>
                     </View>

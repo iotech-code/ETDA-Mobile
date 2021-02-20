@@ -46,9 +46,9 @@ export default class ImageGrid extends Component {
                         return (
                             <View
                                 style={{
-                                    height: width == '100%' ? hp('23%') : hp('10%'),
+                                    height: width == '100%' ? hp('30%') : hp('15%'),
                                     width: width,
-                                    margin: 1
+                                    margin: 2
                                 }}
                                 key={`Image_${index}`}
                             >
@@ -56,7 +56,7 @@ export default class ImageGrid extends Component {
                                 <TouchableOpacity onPress={() => this.onPressImage(index)}>
                                     <Image
                                         source={{ uri: el }}
-                                        style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+                                        style={{ height: '100%', width: '100%', resizeMode: 'cover', borderRadius: 4 }}
                                         PlaceholderContent={<ActivityIndicator color="white" />}
                                     />
                                 </TouchableOpacity>

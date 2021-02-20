@@ -48,7 +48,7 @@ export default class EditProfile extends Component {
             postButtonColor: '#fff',
             postTextColor: colors.primary,
             visibleModalPostandRead: false,
-            sucessModal: false,
+            successModal: false,
             rReason: '',
             rExp: {
                 exp1: '',
@@ -63,12 +63,26 @@ export default class EditProfile extends Component {
         this.setUserObject();
     }
 
+    componentWillUnmount() {
+        this.setState({})
+    }
+
     async setUserObject () {
         const {user_data} = await this.props;
         await this.setState({
             userObject: {...user_data}
         });
-        console.log(this.state.userObject)
+    }
+
+    async requestChangeRole (type) {
+        await http.setTokenHeader();
+        const data = {
+            user_rq_type: type,
+            rq_reason: this.state.rReason,
+            rq_exp: this.state.rExp
+        }
+
+        http.post(apiServer.url + '/user/update-role', data);
     }
 
     chooseImageFileRegister = async () => {
@@ -218,32 +232,35 @@ export default class EditProfile extends Component {
     }
 
     showSuccessModal() {
-        const { sucessModal } = this.state
+        const { successModal } = this.state
         return (
             <Overlay
-                isVisible={ sucessModal }
+                isVisible={ successModal }
                 overlayStyle={{
                     width: wp('90%'),
                     paddingVertical: hp('2%'),
                     paddingHorizontal: hp('2%')
                 }}
             >
-                <View>
-                    <Icon name="check" size={hp('12%')} style={{ alignSelf: "center" }} color="#30D100"/>
-                    <Text style={{ marginTop: 20 }}>
+                <>
+                    <Icon name="check-circle" size={hp('12%')} style={{ alignSelf: "center" }} color="#30D100"/>
+                    <Text style={{ marginTop: 20, textAlign: 'center' }}>
                     Your registration has been submitted, 
                     to post please wait for administrator approval.
                     </Text>
-                    <Button
-                        title="Done"
-                        buttonStyle={{
-                            marginTop: hp('3%'),
-                            ...style.btnRounded,
-                            ...style.btnPrimary
-                        }}
-                        onPress={() => this.saveTypeOfUser()}
-                    />
-                </View>
+                    <View style={{
+                        marginTop: hp('3%')
+                    }}>
+                        <Button
+                            title="Done"
+                            buttonStyle={{
+                                ...style.btnRounded,
+                                ...style.btnPrimary
+                            }}
+                            onPress={() => this.setState({successModal: false})}
+                        />
+                    </View>
+                </>
             </Overlay>
         )
     }
@@ -324,13 +341,12 @@ export default class EditProfile extends Component {
         this.setState({
             visibleModalPostandRead: false,
             visibleChangeTypeOfUser: false,
-            sucessModal: true
+            successModal: true
         })
-        this.showSuccessModal()
     }
 
-    confirmReadOnly () {
-        this.setState({
+    async confirmReadOnly () {
+        await this.setState({
             readButtonColor: colors.primary,
             readTextColor: '#fff',
             postButtonColor: '#fff',
@@ -338,15 +354,17 @@ export default class EditProfile extends Component {
             visible: true, 
             visibleChangeTypeOfUser: false,
             type: 'read',
+            successModal: true,
             userObject: {
                 ...this.state.userObject,
                 user_type: 'read'
             }
         })
+        await this.requestChangeRole('read')
     }
 
-    confirmPostRead () {
-        this.setState({
+    async confirmPostRead () {
+        await this.setState({
             readButtonColor: '#fff',
             readTextColor: colors.primary,
             postButtonColor: colors.primary,
@@ -354,13 +372,14 @@ export default class EditProfile extends Component {
             visible: true,
             visibleModalPostandRead: true,
             type: 'read,post_read',
+            successModal: true,
             userObject: {
                 ...this.state.userObject,
                 user_type: 'read,post_read'
             }
         })
-        // this.setState({ visibleModalPostandRead: true })
-        this.continueTypeOfUser('read,post_read')
+        await this.requestChangeRole('read,post_read')
+        await this.continueTypeOfUser('read,post_read')
     }
 
     callEditProfile = async () => {
@@ -385,7 +404,6 @@ export default class EditProfile extends Component {
         await http.setTokenHeader();
         let update = await http.put(apiServer.url + '/api/backend/user/update/' + userObject.userid, data);
         let {status} = await update.data;
-        console.log(update.data)
         if (status == "success") {
             await this.setState({
                 userObject: {
@@ -393,7 +411,6 @@ export default class EditProfile extends Component {
                         photo: this.state.ImagePath
                     }
             });
-            console.log(userObject)
             await AsyncStorage.removeItem('user_data');
             await AsyncStorage.setItem('user_data', JSON.stringify( userObject ) );
             await Actions.pop({refresh:{}});
@@ -404,9 +421,12 @@ export default class EditProfile extends Component {
 
     render() {
         const { userObject } = this.state;
-
+        
         return (
             <View style={{ flex: 1 }}>
+                {
+                    this.showSuccessModal()
+                }
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%'), marginBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>

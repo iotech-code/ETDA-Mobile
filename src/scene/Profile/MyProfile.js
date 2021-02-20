@@ -31,9 +31,6 @@ export default class MyProfile extends Component {
         await console.log("before_render", this.state)
     }
 
-    componentDidMount () {
-    }
-
     UNSAFE_componentWillReceiveProps(props){
         this.getUserInfo();
     }

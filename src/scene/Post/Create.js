@@ -5,8 +5,6 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
     TextInput,
     TouchableOpacity,
     FlatList,
@@ -20,9 +18,7 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { fonts } from '../../constant/util';
-import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
-import { apiServer } from '../../constant/util';
 import ImageGrid from '../../components/ImageGrid'
 import { getTagsList, createPost, updatePost } from '../../Service/PostService'
 import Spinner from 'react-native-loading-spinner-overlay';

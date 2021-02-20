@@ -7,7 +7,8 @@ import {
     Text,
     StatusBar,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Clipboard
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,7 +24,7 @@ import Post from '../components/Post'
 import { homeFeed } from '../Service/PostService'
 import EventPost from '../components/EventPost'
 import tr from '../constant/lang'
-
+import FlashMessage, { showMessage } from "react-native-flash-message";
 export default class Main extends Component {
     state = {
         visibleSearch: false,
@@ -32,10 +33,15 @@ export default class Main extends Component {
         list_data: [],
         user_role: '',
         isFetching: false,
-        lng: {}
+        lng: {},
+        feedCurrentPage: 0
     }
 
-    async componentDidMount() {
+    async componentWillUnmount () {
+        await this.setState({list_data: []})
+    }
+
+    async UNSAFE_componentWillMount () {
         // console.log('test : ',  global.lng) // แสดงค่า gobal testGobal
         await this.getUserInfo();
         await this.callHomeFeed();
@@ -62,13 +68,36 @@ export default class Main extends Component {
     async callHomeFeed() {
         this.setState({ isFetching: true })
         try {
-            let { data } = await homeFeed();
+            let { data } = await homeFeed(0, 0);
             await this.setState({ list_data: data.post_data });
         } catch (error) {
             console.log("Main scene error : ", error)
         }
         this.setState({ isFetching: false })
     };
+
+    shareCallback (url) {
+        showMessage({
+            message: "Share url copied!",
+            description: url,
+            type: "info",
+        });
+        Clipboard.setString(url)
+    }
+
+    async updateHomeFeed() {
+        // this.setState({ isFetching: true })
+        try {
+            let { data } = await homeFeed(this.stat.feedCurrentPage, this.stat.feedCurrentPage+1);
+            await this.setState({ 
+                ...this.state.list_data,
+                list_data: data.post_data, 
+                feedCurrentPage: this.stat.feedCurrentPage+1 
+            });
+        } catch (error) {
+            console.log("Main scene error : ", error)
+        }
+    }
 
     createPost() {
         Actions.replace('CreatePost', {
@@ -87,6 +116,10 @@ export default class Main extends Component {
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
+                <FlashMessage position="top" 
+                style={{
+                    backgroundColor: '#5b5b5b'
+                }}/>
                 <ScrollView>
                     <View style={{ flex: 1, paddingBottom: hp('1%') }}>
                         {
@@ -138,7 +171,7 @@ export default class Main extends Component {
                                                 )
                                             } else if (item.post_type == 'blog') {
                                                 return (
-                                                    <Post data={item} page="main" onPostUpdate={() => this.callHomeFeed()} key={`blog_${index}`}></Post>
+                                                    <Post data={item} page="main" sharePressButton={(url) => this.shareCallback(url)} onPostUpdate={() => this.callHomeFeed} key={`blog_${index}`}></Post>
                                                 )
                                             }
                                         })
@@ -149,7 +182,7 @@ export default class Main extends Component {
                                 </Fragment>
                         }
                         {/* end loading data */}
-
+ 
                     </View>
                 </ScrollView>
 

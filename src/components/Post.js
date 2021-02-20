@@ -21,7 +21,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
 import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
 
-
 export default class Post extends Component {
     constructor(props) {
         super(props)
@@ -34,7 +33,6 @@ export default class Post extends Component {
                 tag: []
             },
             default_avatar: require('../assets/images/default_avatar.jpg'),
-            etda_avatar: require('../assets/images/etdaprofile.png'),
             visibleBottomSheet: false,
             visibleModalReport: false,
             is_like: 0,
@@ -262,6 +260,10 @@ export default class Post extends Component {
         // AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
     }
 
+    sharePOST(post_url) {
+        this.props.sharePressButton(post_url)
+    }
+
     render() {
 
         let {
@@ -272,6 +274,7 @@ export default class Post extends Component {
             post_id,
             like,
             comment_number,
+            share_url,
             author,
         } = this.props.data
 
@@ -298,15 +301,13 @@ export default class Post extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                {
-                                    this.props.page == 'main' ? 
-                                    <Image source={this.state.etda_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
-                                    :
-                                    <Image source={!author.photo ? this.state.default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
-                                }
+                                
+                                <Image source={!author.photo ? default_avatar : { uri: author.photo }}
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+                                
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%') }}>{this.props.page == 'main' ? 'ETDA' : author.full_name}</Text>
+                                <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
                                 <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary, fontSize: 12 }}>{post_date}</Text>
                             </View>
                         </View>
@@ -330,7 +331,7 @@ export default class Post extends Component {
                             })
                         }
                     </View>
-                    <View style={{ maxHeight: hp('23%'), marginVertical: hp('1%') }}>
+                    <View style={{ maxHeight: hp('31%'), marginVertical: hp('1%') }}>
                         <ImageGrid data={post_images} />
                     </View>
                     <Text
@@ -349,7 +350,8 @@ export default class Post extends Component {
                         <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
                         <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{comment_number}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => this.sharePOST(share_url)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                 </View>

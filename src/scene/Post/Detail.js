@@ -6,7 +6,7 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
+    ActivityIndicator,
     Image,
     TextInput,
     TouchableOpacity,
@@ -23,6 +23,7 @@ import { KeyboardAvoidingView } from 'react-native';
 import { getListCommentPost, createCommentPost } from '../../Service/PostService'
 import ImageGrid from '../../components/ImageGrid'
 import ImageView from 'react-native-image-view';
+import ImagePicker from 'react-native-image-crop-picker';
 export default class EventDetail extends Component {
 
     constructor(props) {
@@ -36,7 +37,9 @@ export default class EventDetail extends Component {
             reply_to: null,
             comment: null,
             indeximageView: 0,
-            isImageViewVisible: false
+            isImageViewVisible: false,
+            commentImage: null,
+            commentImage64: null
         }
     }
     async componentDidMount() {
@@ -69,7 +72,24 @@ export default class EventDetail extends Component {
         }
     };
     onPressButtonChildren(data) {
-        this.setState({ reply_to: data })
+        this.setState({ reply_to: data.User_id, comment: '@'+data.Fullname +' ' })
+        this.secondTextInput.focus()
+
+    }
+
+    async pickImage() {
+        this.setState({ loadingImage: true })
+        let images = await ImagePicker.openPicker({
+            multiple: false,
+            includeBase64: true
+        })
+        var image_base64 = 'data:image/jpeg;base64,' + images.data
+
+        await this.setState({
+            commentImage: images.sourceURL,
+            commentImage64: image_base64
+        });
+        console.log(this.state)
     }
 
     showImage(index) {
@@ -79,9 +99,9 @@ export default class EventDetail extends Component {
         })
     }
 
-
     render() {
         const { author, post_date, tags, post_description, post_images, like, title } = this.props.data;
+        console.log(this.props.data)
         const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible } = this.state
         let imageForView = []
         for (let index = 0; index < post_images.length; index++) {
@@ -95,6 +115,7 @@ export default class EventDetail extends Component {
             }
             imageForView.push(objImage)
         }
+        
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -150,7 +171,7 @@ export default class EventDetail extends Component {
                             </View>
 
 
-                            <View style={{ maxHeight: hp('24%'), width: '100%', marginTop: hp('1%') }}>
+                            <View style={{ maxHeight: hp('31%'), width: '100%', marginTop: hp('1%') }}>
                                 <ImageGrid
                                     data={post_images}
                                     getIndexImage={true}
@@ -174,13 +195,23 @@ export default class EventDetail extends Component {
                             ...style.flex__start,
                             marginTop: hp('2%'),
                             paddingTop: hp('1.5%'),
+                            alignItems: 'center',
+                            paddingHorizontal: hp('2%'),
+                        }}>
+                            <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                            <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                        </View>
+                        <View style={{
+                            ...style.flex__start,
+                            marginTop: hp('2%'),
+                            paddingTop: hp('1.5%'),
                             borderTopWidth: 1,
                             borderTopColor: '#B5B5B5',
                             alignItems: 'center',
                             paddingHorizontal: hp('2%'),
                         }}>
-                            <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
                             <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                             <Text style={{ color: '#B5B5B5' }}>{list_comment.length}  comments</Text>
                         </View>
@@ -192,7 +223,7 @@ export default class EventDetail extends Component {
                         {
                             list_comment.map((item, index) => {
                                 return (
-                                    <Comment data={item} key={`comment_${index}`} fnPressButton={() => this.onPressButtonChildren.bind(this)}></Comment>
+                                    <Comment data={item} key={`comment_${index}`} fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
                                 )
                             })
                         }
@@ -201,7 +232,15 @@ export default class EventDetail extends Component {
                 </ScrollView>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{ ...styleScoped.warpperComment }}>
-                        <TouchableOpacity>
+                        <View>
+                            {
+                                this.state.commentImage &&
+                                <Image source={{uri: this.state.commentImage}}
+                                style={{ width: '50%', height: '25%', resizeMode: 'cover', borderRadius: 4 }} />
+                                
+                            }
+                        </View>
+                        <TouchableOpacity onPress={() => this.pickImage()}>
                             <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
                         </TouchableOpacity>
                         <View style={{ ...styleScoped.boxInputCommment }}>
@@ -209,6 +248,7 @@ export default class EventDetail extends Component {
                                 placeholder="Comment here"
                                 style={{ padding: 0, fontSize: hp('2%') }}
                                 value={comment}
+                                ref={(input) => { this.secondTextInput = input; }}
                                 onChangeText={(comment) => this.setState({ comment })} >
                             </TextInput>
                         </View>

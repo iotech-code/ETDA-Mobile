@@ -24,38 +24,38 @@ import { createPost } from '../../Service/PostService'
 import { colors } from '../../constant/util';
 
 export default class PollCreate extends Component {
-    state = {
-        visibleSearch: false,
-        post_to_feed: false,
-        topic: null,
-        detail: null,
-        date_event: null,
-        schedule: [
-            {
-                time: null,
-                detail: null,
-                time_default: new Date()
-            }
-        ],
-        showDatePicker: false,
-        showTimePicker: false,
-        indexSchedule: 0,
-        datepicker: new Date(),
-        timepicker: new Date(),
-        question: {
-            question: null,
-            type_of_poll: 'for general',
-            answer: [
+    constructor (props) {
+        super(props);
+        this.state = {
+            visibleSearch: false,
+            post_to_feed: false,
+            topic: null,
+            detail: null,
+            date_event: null,
+            schedule: [
                 {
-                    id: 1,
+                    time: null,
                     detail: null,
-                },
-            ]
+                    time_default: new Date()
+                }
+            ],
+            showDatePicker: false,
+            showTimePicker: false,
+            indexSchedule: 0,
+            datepicker: new Date(),
+            timepicker: new Date(),
+            question: {
+                question: null,
+                type_of_poll: 'for general',
+                answer: [
+                    {
+                        id: 1,
+                        detail: null,
+                    },
+                ]
+            }
         }
-
     }
-
-
 
     async onCreatePoll() {
         try {

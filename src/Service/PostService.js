@@ -2,9 +2,18 @@ import HttpRequest from './HttpRequest';
 
 const http = new HttpRequest();
 
-export const homeFeed = async () => {
+export const homeFeed = async (cr = 0, next = 0) => {
     await http.setTokenHeader();
-    return await http.get('/api/backend/post/home-feed');
+    return await http.post('/api/backend/post/home-feed', {"currentPage" : cr, "nextPage" : next });
+};
+
+export const communityFeed = async (cr = 0, next = 0) => {
+    await http.setTokenHeader();
+    return await http.post('/api/backend/post/community-feed', {"currentPage" : cr, "nextPage" : next });
+};
+export const myFeed = async (cr = 0, next = 0) => {
+    await http.setTokenHeader();
+    return await http.post('/api/backend/post/my', {"currentPage" : cr, "nextPage" : next });
 };
 
 export const getTagsList = async () => {
