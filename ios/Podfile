@@ -25,6 +25,8 @@ target 'LOOKs' do
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
+  pod 'React-ART', :path => '../node_modules/react-native/Libraries/ART'
   
   # pod 'FBSDKLoginKit'
   pod 'GoogleSignIn', '~> 5.0.2'

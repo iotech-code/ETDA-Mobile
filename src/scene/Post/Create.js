@@ -80,13 +80,13 @@ export default class CreatePost extends Component {
             let { data } = await getTagsList();
             for (let index = 0; index < data.post_data.length; index++) {
                 const element = data.post_data[index];
-                let result = await this.state.tag.find(el => {
+                let result = await this.state.listTags.find(el => {
                     return el == element.tag
                 })
                 element.selected = result ? true : false
             }
-            this.setState({ listTags: data.post_data })
-            this.setState({ originalTag: data.post_data })
+            await this.setState({ listTags: data.post_data })
+            await this.setState({ originalTag: data.post_data })
         } catch (error) {
             console.log('Get list tags error : ', error)
         }
