@@ -68,6 +68,7 @@ export default class EditProfile extends Component {
         await this.setState({
             userObject: {...user_data}
         });
+        console.log(this.state.userObject)
     }
 
     chooseImageFileRegister = async () => {
@@ -104,7 +105,6 @@ export default class EditProfile extends Component {
     renderModalPostandRead() {
         const { visibleModalPostandRead } = this.state
         return (
-            <>
             <Overlay
                 isVisible={visibleModalPostandRead}
                 overlayStyle={{
@@ -113,6 +113,7 @@ export default class EditProfile extends Component {
                     paddingHorizontal: hp('2%')
                 }}
             >
+                <>
                 <View style={{
                     borderBottomColor: '#707070',
                     borderBottomWidth: 1,
@@ -211,8 +212,8 @@ export default class EditProfile extends Component {
                         onPress={() => this.setState({ visibleModalPostandRead: false })}
                     />
                 </View>
+                </>
             </Overlay>
-            </>
         )
     }
 
@@ -255,6 +256,7 @@ export default class EditProfile extends Component {
                 onBackdropPress={() => this.setState({ visibleChangeTypeOfUser: false })}
                 overlayStyle={{ width: '90%', padding: hp('2%') }}
             >
+                <>
                 <Text style={{ fontSize: hp('2%'), textAlign: 'center', color: '#003764' }}>Change type of your account</Text>
                 <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
                 <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
@@ -313,6 +315,7 @@ export default class EditProfile extends Component {
                         onPress={() => this.setState({ visibleChangeTypeOfUser: false })}
                     />
                 </View>
+                </>
             </Overlay>
         )
     }
@@ -382,7 +385,7 @@ export default class EditProfile extends Component {
         await http.setTokenHeader();
         let update = await http.put(apiServer.url + '/api/backend/user/update/' + userObject.userid, data);
         let {status} = await update.data;
-
+        console.log(update.data)
         if (status == "success") {
             await this.setState({
                 userObject: {
@@ -390,8 +393,10 @@ export default class EditProfile extends Component {
                         photo: this.state.ImagePath
                     }
             });
+            console.log(userObject)
+            await AsyncStorage.removeItem('user_data');
             await AsyncStorage.setItem('user_data', JSON.stringify( userObject ) );
-            await Actions.MyProfile();
+            await Actions.pop({refresh:{}});
         } else {
             alert('Update fail.');
         }
@@ -405,7 +410,7 @@ export default class EditProfile extends Component {
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%'), marginBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop({refresh:{}})} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Profile</Text>
                             <TouchableOpacity
                                 onPress={() => this.callEditProfile()}

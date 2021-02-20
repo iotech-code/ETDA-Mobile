@@ -75,9 +75,6 @@ export default class Comment extends Component {
                     </View>
 
                 </View>
-
-
-
             </View>
         );
     }

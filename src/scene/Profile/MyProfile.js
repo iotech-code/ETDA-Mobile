@@ -17,39 +17,35 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { fonts } from '../../constant/util'
 
 export default class MyProfile extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            mobile_number: '', 
-            professional: '', 
-            position: '', 
-            organization: '', 
-            user_type: '', 
-            fullname: '', 
-            photo: '', 
-            userid: '' , 
-            dafault_avatar:require('../../assets/images/default_avatar.jpg') 
+            dafault_avatar: require('../../assets/images/default_avatar.jpg') 
         }
+
+        
     }
 
-    componentDidMount() {
+    async UNSAFE_componentWillMount() {
+        await this.getUserInfo();
+        await console.log("before_render", this.state)
+    }
+
+    componentDidMount () {
+    }
+
+    UNSAFE_componentWillReceiveProps(props){
         this.getUserInfo();
     }
 
     async getUserInfo () {
         let json_data = await AsyncStorage.getItem('user_data');
-        let data = JSON.parse(json_data);
-
-        this.setState({
-            mobile_number: data.mobile_number,
-            professional: data.professional, 
-            position: data.position, 
-            organization: data.organization, 
-            user_type: data.user_type, 
-            fullname: data.fullname, 
-            photo: data.photo,
-            userid: data.userid
+        let data = await JSON.parse(json_data);
+        await this.setState({
+            ...this.state,
+            ...data
         });
+        
     }
 
     async logout () {
@@ -135,14 +131,14 @@ export default class MyProfile extends Component {
                                 <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {user_data.user_type.toUpperCase()} </Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}> {user_data.user_type} </Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
                             <Button
                                 title="Edit Profile"
                                 buttonStyle={{ padding: hp('1%'), ...style.btnRounded, ...style.btnPrimary }}
-                                onPress={() => Actions.EditProfile({user_data})}
+                                onPress={() => Actions.push('EditProfile', {user_data})}
                             />
                         </View>
                         <View style={{ marginTop: hp('2%') }}>
