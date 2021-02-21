@@ -35,12 +35,10 @@ export default class Poll extends Component {
             lng: {}
         }
     }
-    async UNSAFE_componentWillMount() {
-        await this.onGetListPoll()
-    }
-
+ 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        await this.onGetListPoll()
     }
     
     async getLang() {
