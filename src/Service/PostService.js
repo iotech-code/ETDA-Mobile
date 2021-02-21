@@ -59,9 +59,9 @@ export const createCommentPost = async (post_id, reply_to, message) => {
 }
 
 
-export const getListApprove = async () => {
+export const getListApprove = async (cr = 0, next = 0) => {
     await http.setTokenHeader()
-    return await http.get('/api/backend/post/approve-list')
+    return await http.post('/api/backend/post/approve-list', {"currentPage" : cr, "nextPage" : next })
 }
 
 export const approvePost = async (params) => {
