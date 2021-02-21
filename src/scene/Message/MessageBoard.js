@@ -290,11 +290,15 @@ export default class MessageBoard extends Component {
                                                     )
                                                 } else if (item.post_type == 'blog') {
                                                     return (
-                                                        <Post data={item} page="message_board"
+                                                        <Post 
+                                                            data={item} 
+                                                            page="message_board"
                                                             sharePressButton={(url) => this.shareCallback(url)}
                                                             onPostUpdate={() => this.callHomeFeed()}
                                                             onPostReport={(data) => this.openReport(data)}
-                                                            key={`blog_${index}`}></Post>
+                                                            key={`blog_${index}`}
+                                                            report={true}
+                                                            ></Post>
                                                     )
                                                 }
                                             })

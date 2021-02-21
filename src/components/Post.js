@@ -139,12 +139,15 @@ export default class Post extends Component {
 
     renderBottomSheet() {
         const { visibleBottomSheet, is_follow } = this.state
+        const { report } = this.props
+        let height = Platform.OS === 'ios' ? hp('32%') : hp('30%')
+        height = report ? height : Platform.OS === 'ios' ? hp('25%') : hp('23%')
         return (
             <RBSheet
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('32%') : hp('30%')}
+                height={height}
                 openDuration={250}
                 customStyles={{
                     container: {
@@ -198,11 +201,15 @@ export default class Post extends Component {
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
+                {
+                    report ?
+                        <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
+                            <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Report</Text>
+                        </TouchableOpacity>
+                        : null
+                }
 
-                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
-                    <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Report</Text>
-                </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
 
             </RBSheet>
