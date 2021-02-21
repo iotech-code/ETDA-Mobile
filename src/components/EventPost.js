@@ -184,10 +184,6 @@ export default class MessagsPost extends Component {
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                         <Text style={{ color: '#B5B5B5' }}>{like_count}</Text>
                     </TouchableOpacity>
-                    <View style={{ ...style.flex__start, alignItems: 'center', marginRight: hp('3%') }}>
-                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                        <Text style={{ color: '#B5B5B5' }}>{comment_number}</Text>
-                    </View>
                     <TouchableOpacity>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>

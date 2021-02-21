@@ -286,6 +286,7 @@ export default class Post extends Component {
             comment_number,
             share_url,
             author,
+            view
         } = this.props.data
 
         let { is_like, like_count, default_avatar } = this.state
@@ -351,7 +352,42 @@ export default class Post extends Component {
                     >{post_description}</Text>
                 </TouchableOpacity>
 
-                <View style={{ ...style.sectionSocial }}>
+                <View style={{
+                        justifyContent: 'flex-start',
+                        marginTop: hp('2%'),
+                        paddingTop: hp('1.5%'),
+                        flexDirection: 'row',
+                        width: wp('100%'),
+                        paddingHorizontal: hp('2%'),
+                    }}>
+                    <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{flexDirection: 'row'}}>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                    </TouchableOpacity>
+
+                    <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                    <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {view === undefined?0:view}</Text>
+
+                    <TouchableOpacity onPress={() => this.sharePOST(share_url)}>
+                        <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                onPress={() => this.postView()}
+                style={{
+                    ...style.flex__start,
+                    marginTop: hp('2%'),
+                    paddingTop: hp('1.5%'),
+                    borderTopWidth: 1,
+                    borderTopColor: '#B5B5B5',
+                    alignItems: 'center',
+                    paddingHorizontal: hp('2%'),
+                }}>
+                    <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                    <Text style={{ color: '#B5B5B5' }}>{comment_number}  comments</Text>
+                </TouchableOpacity>
+           
+                {/* <View style={{ ...style.sectionSocial }}>
                     <TouchableOpacity style={style.flex__start} onPress={() => this.callPostLike(post_id)}>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                         <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{like_count}</Text>
@@ -364,7 +400,7 @@ export default class Post extends Component {
                         onPress={() => this.sharePOST(share_url)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
-                </View>
+                </View> */}
                 {this.renderBottomSheet()}
                 {/* {this.renderModalReport()} */}
             </View>

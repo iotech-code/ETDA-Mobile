@@ -7,6 +7,7 @@ import {
     View,
     Text,
     ActivityIndicator,
+    Clipboard,
     Image,
     TextInput,
     TouchableOpacity,
@@ -24,6 +25,8 @@ import { getListCommentPost, createCommentPost } from '../../Service/PostService
 import ImageGrid from '../../components/ImageGrid'
 import ImageView from 'react-native-image-view';
 import ImagePicker from 'react-native-image-crop-picker';
+import FlashMessage, { showMessage } from "react-native-flash-message";
+
 export default class EventDetail extends Component {
 
     constructor(props) {
@@ -99,9 +102,18 @@ export default class EventDetail extends Component {
         })
     }
 
+    sharePOST(post_url) {
+        showMessage({
+            message: "Share url copied!",
+            description: post_url,
+            type: "info",
+        });
+        Clipboard.setString(post_url)
+    }
+
     render() {
-        const { author, post_date, tags, post_description, post_images, like, title } = this.props.data;
-        console.log(this.props.data)
+        const { author, post_date, tags, post_description, post_images, like, title, share_url, view } = this.props.data;
+        // console.log(this.props.data)
         const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible } = this.state
         let imageForView = []
         for (let index = 0; index < post_images.length; index++) {
@@ -118,8 +130,12 @@ export default class EventDetail extends Component {
         
         return (
             <View style={{ flex: 1 }}>
+                <FlashMessage position="top"
+                    style={{
+                        backgroundColor: '#5b5b5b'
+                    }} />
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
-
+                    
                     <View style={{
                         ...styleScoped.shadowCard,
                         backgroundColor: 'white',
@@ -196,14 +212,24 @@ export default class EventDetail extends Component {
                             marginTop: hp('2%'),
                             paddingTop: hp('1.5%'),
                             alignItems: 'center',
+                            width: wp('100%'),
                             paddingHorizontal: hp('2%'),
                         }}>
-                            <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                            <TouchableOpacity onPress={() => this.likePost()} style={{flexDirection: 'row'}}>
+                                <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                            </TouchableOpacity>
+
                             <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {view === undefined?0:view}</Text>
+
+                            <TouchableOpacity onPress={() => this.sharePOST(share_url)}>
+                                <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            </TouchableOpacity>
                         </View>
-                        <View style={{
+                        <TouchableOpacity
+                        onPress={() => this.secondTextInput.focus()}
+                        style={{
                             ...style.flex__start,
                             marginTop: hp('2%'),
                             paddingTop: hp('1.5%'),
@@ -214,7 +240,7 @@ export default class EventDetail extends Component {
                         }}>
                             <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                             <Text style={{ color: '#B5B5B5' }}>{list_comment.length}  comments</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
 
 
