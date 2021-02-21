@@ -124,7 +124,7 @@ export default class Poll extends Component {
                             {
                                 list_data_student.map((el, index) => {
                                     return (
-                                        <PostPoll key={`student_${index}`}></PostPoll>
+                                        <PostPoll key={`student_${index}`} data={el}></PostPoll>
                                     )
                                 })
                             }
@@ -139,7 +139,7 @@ export default class Poll extends Component {
                             {
                                 list_data_general.map((el, index) => {
                                     return (
-                                        <PostPoll key={`general_${index}`}></PostPoll>
+                                        <PostPoll key={`general_${index}`} data={el}></PostPoll>
                                     )
                                 })
                             }
