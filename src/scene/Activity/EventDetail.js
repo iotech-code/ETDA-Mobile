@@ -21,6 +21,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import translate from '../../constant/lang'
+import moment from 'moment'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -86,7 +87,7 @@ export default class EventDetail extends Component {
 
                         <View style={{ marginTop: hp('1.5%'), paddingHorizontal: hp('2%') }} >
                             <Text style={{ fontSize: hp('2%') }}>{title}</Text>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{post_addition_data.event_date}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{moment(post_addition_data.event_date).format('DD/MM/YYYY')}</Text>
                             <Text style={{ fontSize: hp('2%'), marginTop: hp('1%') }}>{post_description}</Text>
 
 

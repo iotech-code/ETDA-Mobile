@@ -3,14 +3,10 @@ import React, { Component } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
-    TextInput,
-    TouchableOpacity,
-    Platform
+    TouchableOpacity
 } from 'react-native';
 
 
@@ -22,6 +18,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import { actionLikePost } from '../Service/PostService'
 import translate from '../constant/lang'
 
+import moment from 'moment'
 export default class MessagsPost extends Component {
 
     constructor(props) {
@@ -173,7 +170,7 @@ export default class MessagsPost extends Component {
 
                     <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail',{...this.props.data})}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
-                        <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{post_addition_data.event_date}</Text>
+                        <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{moment(post_addition_data.event_date).format('DD/MM/YYYY')}</Text>
                         {
                             post_addition_data.event_schedule ?
                                 post_addition_data.event_schedule.map((el, index) => {

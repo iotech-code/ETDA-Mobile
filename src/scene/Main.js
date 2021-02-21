@@ -8,7 +8,8 @@ import {
     StatusBar,
     TouchableOpacity,
     ActivityIndicator,
-    Clipboard
+    Clipboard,
+    FlatList
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,11 +38,11 @@ export default class Main extends Component {
         feedCurrentPage: 0
     }
 
-    async componentWillUnmount () {
-        await this.setState({list_data: false})
+    async componentWillUnmount() {
+        await this.setState({ list_data: false })
     }
 
-    async UNSAFE_componentWillMount () {
+    async UNSAFE_componentWillMount() {
         // console.log('test : ',  global.lng) // แสดงค่า gobal testGobal
         await this.getUserInfo();
         await this.callHomeFeed();
@@ -76,7 +77,7 @@ export default class Main extends Component {
         this.setState({ isFetching: false })
     };
 
-    shareCallback (url) {
+    shareCallback(url) {
         showMessage({
             message: "Share url copied!",
             description: url,
@@ -87,11 +88,11 @@ export default class Main extends Component {
 
     async updateHomeFeed() {
         try {
-            let { data } = await homeFeed(this.stat.feedCurrentPage, this.stat.feedCurrentPage+1);
-            await this.setState({ 
+            let { data } = await homeFeed(this.stat.feedCurrentPage, this.stat.feedCurrentPage + 1);
+            await this.setState({
                 ...this.state.list_data,
-                list_data: data.post_data, 
-                feedCurrentPage: this.stat.feedCurrentPage+1 
+                list_data: data.post_data,
+                feedCurrentPage: this.stat.feedCurrentPage + 1
             });
         } catch (error) {
             console.log("Main scene error : ", error)
@@ -110,16 +111,29 @@ export default class Main extends Component {
         this.setState({ list_data: feed.reverse() });
     }
 
+    renderTypeInFlatlist({item}) {
+        console.log(item)
+        if (item.post_type == 'event') {
+            return (
+                <EventPost data={item} ></EventPost>
+            )
+        } else if (item.post_type == 'blog') {
+            return (
+                <Post data={item} page="main" sharePressButton={(url) => this.shareCallback(url)} onPostUpdate={() => this.callHomeFeed} ></Post>
+            )
+        }
+    }
+
     render() {
         const { isFetching, user_role, list_data, lng } = this.state
  
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
-                <FlashMessage position="top" 
-                style={{
-                    backgroundColor: '#5b5b5b'
-                }}/>
+                <FlashMessage position="top"
+                    style={{
+                        backgroundColor: '#5b5b5b'
+                    }} />
                 <ScrollView>
                     <View style={{ flex: 1, paddingBottom: hp('1%') }}>
                         {
@@ -131,7 +145,7 @@ export default class Main extends Component {
 
 
                         {/* loading data */}
-                
+
                         {
                             isFetching ?
                                 <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
@@ -162,7 +176,12 @@ export default class Main extends Component {
 
 
                                     {/*   show post  */}
-                                    {
+                                    <FlatList
+                                        data={this.state.list_data}
+                                        renderItem={this.renderTypeInFlatlist}
+                                        keyExtractor={item => item.id}
+                                    />
+                                    {/* {
 
                                         this.state.list_data.map((item, index) => {
                                             if (item.post_type == 'event') {
@@ -175,14 +194,14 @@ export default class Main extends Component {
                                                 )
                                             }
                                         })
-                                    }
+                                    } */}
                                     {/* end  show post */}
 
 
                                 </Fragment>
                         }
                         {/* end loading data */}
- 
+
                     </View>
                 </ScrollView>
 

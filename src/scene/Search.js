@@ -6,15 +6,11 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
     TextInput,
     TouchableOpacity,
-    FlatList,
-    KeyboardAvoidingView
+    FlatList
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
@@ -56,6 +52,19 @@ export default class Poll extends Component {
         }
     }
 
+    async UNSAFE_componentWillMount(){
+        this.onGetListTags()
+    }
+
+    async onGetListTags() {
+        try {
+            let { data } = await getTagsList()
+            
+        } catch (error) {
+
+        }
+    }
+
     callSearch = async (name) => {
         const headers = {
             'Content-Type': 'application/json',
@@ -68,16 +77,16 @@ export default class Poll extends Component {
             .then((response) => {
                 console.log('data : ', response.data)
                 if (response.data.status == "success") {
-                    var i 
+                    var i
                     var text = ""
                     var list = []
-                    for (i = 0 ; i  < response.data.post_data.length ; i++){
+                    for (i = 0; i < response.data.post_data.length; i++) {
                         text = response.data.post_data[i].title
                         list.push(text)
                     }
 
                     this.setState({
-                        list_search : list
+                        list_search: list
                     })
                 } else {
 
@@ -115,16 +124,17 @@ export default class Poll extends Component {
                                 <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.search_by_tags}</Text>
                             </View>
                         </View>
-                        <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
-                        <ScrollView style={{ ...style.container }}>
-                        {this.state.list_search.map((item, index) => {
-                                return (
-                                    <Text style={{ ...styleScoped.textList }}>{item}</Text>
-                                    )}
-                                )}
-                        </ScrollView>
                     </View>
-            </View>
+                    <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
+                    <ScrollView style={{ ...style.container }}>
+                        {this.state.list_search.map((item, index) => {
+                            return (
+                                <Text style={{ ...styleScoped.textList }}>{item}</Text>
+                            )
+                        }
+                        )}
+                    </ScrollView>
+                </View>
         );
     }
 };

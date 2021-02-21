@@ -37,6 +37,8 @@ target 'LOOKs' do
 
   pod 'react-native-image-base64', :path => '../node_modules/react-native-image-base64'
 
+  pod 'Picker', :path => '../node_modules/react-native-picker'
+
   target 'LOOKsTests' do
     inherit! :complete
     # Pods for testing

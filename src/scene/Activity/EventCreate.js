@@ -32,6 +32,7 @@ export default class EventCreate extends Component {
         topic: null,
         detail: null,
         date_event: null,
+        date_event_to_show: null,
         schedule: [
             {
                 time: null,
@@ -49,15 +50,16 @@ export default class EventCreate extends Component {
     }
 
     onChangeDate(event, date, btn) {
-        const { date_event } = this.state
+        const { date_event, date_event_to_show } = this.state
+        this.setState({ date_event: date })
         if (btn) {
-            if (!date_event) {
-                this.setState({ date_event: moment(date).format('DD/MM/YYYY') })
+            if (!date_event_to_show) {
+                this.setState({ date_event_to_show: moment(date).format('DD/MM/YYYY') })
             }
             this.setState({ showDatePicker: false })
         } else {
             this.setState({ datepicker: date })
-            this.setState({ date_event: moment(date).format('DD/MM/YYYY') })
+            this.setState({ date_event_to_show: moment(date).format('DD/MM/YYYY') })
         }
     }
 
@@ -113,8 +115,8 @@ export default class EventCreate extends Component {
                 post_to_etda: post_to_feed
             }
             let response = await createPost(topic, 'event', [], detail, [], post_addition_data)
-            let {status } =response.data
-            if(status == 'success'){
+            let { status } = response.data
+            if (status == 'success') {
                 Actions.replace('Event')
             }
         } catch (error) {
@@ -135,22 +137,24 @@ export default class EventCreate extends Component {
                     borderRadius: 10
                 }}
             >
+                <View>
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={timepicker}
+                        mode="time"
+                        display="spinner"
+                        is24Hour={true}
+                        onChange={(event, selectedDate) => this.onChangeTime(event, selectedDate)}
+                    />
 
-                <DateTimePicker
-                    testID="dateTimePicker"
-                    value={timepicker}
-                    mode="time"
-                    display="spinner"
-                    is24Hour={true}
-                    onChange={(event, selectedDate) => this.onChangeTime(event, selectedDate)}
-                />
 
+                    <Button
+                        title="Confirm"
+                        buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
+                        onPress={() => this.onChangeTime(null, timepicker, true)}
+                    />
+                </View>
 
-                <Button
-                    title="Confirm"
-                    buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                    onPress={() => this.onChangeTime(null, timepicker, true)}
-                />
 
             </Overlay>
         )
@@ -169,20 +173,24 @@ export default class EventCreate extends Component {
                 }}
             >
 
-                <DateTimePicker
-                    testID="dateTimePicker"
-                    value={datepicker}
-                    mode="date"
-                    display="spinner"
-                    onChange={(event, selectedDate) => this.onChangeDate(event, selectedDate)}
-                />
+                <View>
+
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={datepicker}
+                        mode="date"
+                        display="spinner"
+                        onChange={(event, selectedDate) => this.onChangeDate(event, selectedDate)}
+                    />
 
 
-                <Button
-                    title="Confirm"
-                    buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                    onPress={() => this.onChangeDate(null, datepicker, true)}
-                />
+                    <Button
+                        title="Confirm"
+                        buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
+                        onPress={() => this.onChangeDate(null, datepicker, true)}
+                    />
+
+                </View>
 
             </Overlay>
         )
@@ -195,7 +203,8 @@ export default class EventCreate extends Component {
             topic,
             detail,
             schedule,
-            date_event
+            date_event,
+            date_event_to_show
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
@@ -235,9 +244,9 @@ export default class EventCreate extends Component {
                                 <Text style={{ fontSize: hp('2%') }}>Event schedule</Text>
                                 <View style={{ marginTop: hp('3%'), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     {
-                                        !date_event ?
+                                        !date_event_to_show ?
                                             <Text style={{ fontSize: hp('2%') }}>Add event date</Text>
-                                            : <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{date_event}</Text>
+                                            : <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{date_event_to_show}</Text>
                                     }
                                     <Button
                                         title="Date"
