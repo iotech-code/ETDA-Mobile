@@ -1,14 +1,10 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
-    TextInput,
     TouchableOpacity,
     FlatList
 } from 'react-native';
@@ -77,7 +73,7 @@ export default class Poll extends Component {
                     list_data_student.push(element)
                 }
             }
-            console.log(list_data_student,list_data_general)
+
             this.setState({ list_data_student, list_data_general })
         } catch (error) {
 
