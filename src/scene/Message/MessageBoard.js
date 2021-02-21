@@ -9,10 +9,13 @@ import {
     Clipboard,
     ActivityIndicator,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    KeyboardAvoidingView,
+    TextInput,
+    Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button } from 'react-native-elements';
+import { Button, BottomSheet, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
@@ -23,22 +26,23 @@ import MenuFooterUser from '../../components/MenuFooterUser'
 import Post from '../../components/Post'
 import { communityFeed, myFeed } from '../../Service/PostService'
 import EventPost from '../../components/EventPost'
-import { colors, apiServer } from '../../constant/util'
+import { colors, apiServer, fonts } from '../../constant/util'
 import FlashMessage, { showMessage } from "react-native-flash-message";
 
 export default class MessageBoard extends Component {
     constructor() {
         super();
-        this.state = { 
-            visibleSearch: false, 
-            type: 'create', 
-            user_type: '', 
-            board: 'community' , 
-            token : '' , 
-            list_data : []  , 
-            user_role : '',
+        this.state = {
+            visibleSearch: false,
+            type: 'create',
+            user_type: '',
+            board: 'community',
+            token: '',
+            list_data: [],
+            user_role: '',
             communityFeedCurrentPage: 0,
-            myFeedCurrentPage: 0 
+            myFeedCurrentPage: 0,
+            visibleModalReport: false
         }
     }
 
@@ -46,18 +50,18 @@ export default class MessageBoard extends Component {
 
     }
 
-    async UNSAFE_componentWillMount () {
+    async UNSAFE_componentWillMount() {
         try {
             const token = await AsyncStorage.getItem('token');
             const user = await AsyncStorage.getItem('user_data');
-            const {user_type, user_role, fullname} = JSON.parse(user);
+            const { user_type, user_role, fullname } = JSON.parse(user);
 
             this.setState({
                 user_type: user_type,
-                token : token,
-                user_role : user_role
+                token: token,
+                user_role: user_role
             })
-            
+
             this.callCommunityFeed(token);
 
         } catch (err) {
@@ -77,43 +81,43 @@ export default class MessageBoard extends Component {
 
     callMYFeed = async (token) => {
         await this.setState({
-            list_data : [],
+            list_data: [],
         });
         let { data } = await myFeed(0, 0);
 
         await this.setState({
-            list_data : data.post_data,
+            list_data: data.post_data,
         });
     }
 
     callCommunityFeed = async (token) => {
         await this.setState({
-            list_data : [],
+            list_data: [],
         });
         let { data } = await communityFeed(0, 0);
 
         await this.setState({
-            list_data : data.post_data,
+            list_data: data.post_data,
         });
     };
 
-    async updateCommunityFeed () {
-        let { data } = await communityFeed(this.state.communityFeedCurrentPage, this.state.communityFeedCurrentPage+1);
+    async updateCommunityFeed() {
+        let { data } = await communityFeed(this.state.communityFeedCurrentPage, this.state.communityFeedCurrentPage + 1);
 
         await this.setState({
             ...this.state.list_data,
-            list_data : data.post_data,
-            communityFeedCurrentPage: communityFeedCurrentPage+1
+            list_data: data.post_data,
+            communityFeedCurrentPage: communityFeedCurrentPage + 1
         });
     }
 
-    async updateMyFeed () {
-        let { data } = await communityFeed(this.state.myFeedCurrentPage, this.state.myFeedCurrentPage+1);
+    async updateMyFeed() {
+        let { data } = await communityFeed(this.state.myFeedCurrentPage, this.state.myFeedCurrentPage + 1);
 
         await this.setState({
             ...this.state.list_data,
-            list_data : data.post_data,
-            myFeedCurrentPage: myFeedCurrentPage+1
+            list_data: data.post_data,
+            myFeedCurrentPage: myFeedCurrentPage + 1
         });
     }
 
@@ -121,7 +125,7 @@ export default class MessageBoard extends Component {
         this.setState({ list_data: feed.reverse() });
     }
 
-    shareCallback (url) {
+    shareCallback(url) {
         showMessage({
             message: "Share url copied!",
             description: url,
@@ -130,21 +134,99 @@ export default class MessageBoard extends Component {
         Clipboard.setString(url)
     }
 
+    openReport(data) {
+        console.log('open report : ', data)
+        this.setState({ visibleModalReport: true })
+    }
+
+    renderModalReport() {
+        const { visibleModalReport } = this.state
+        return (
+            <Overlay
+                isVisible={visibleModalReport}
+                overlayStyle={{
+                    width: wp('90%'),
+                    paddingVertical: hp('2%'),
+                    paddingHorizontal: hp('2%')
+                }}
+                onBackdropPress={() => this.setState({ visibleModalReport: false })}
+            >
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                    <View style={{
+                        borderBottomColor: '#707070',
+                        borderBottomWidth: 1,
+                        paddingBottom: hp('1.5%')
+                    }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            color: fonts.color.primary,
+                            fontSize: hp('2%'),
+                            fontWeight: '600'
+                        }}>Report</Text>
+                    </View>
+
+                    <View style={{ marginVertical: hp('1%') }}>
+                        <Text style={{ fontSize: hp('2%') }}>Select topic for report</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+                            <Button
+                                title="Fake news"
+                                titleStyle={{ fontSize: hp('2%') }}
+                                buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                            />
+                            <Button
+                                title="Cyber bully"
+                                titleStyle={{ fontSize: hp('2%') }}
+                                buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
+                            />
+                            <Button
+                                title="Threat"
+                                titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
+                                buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
+                            />
+                        </View>
+                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>Give reason for report this post not suitable</Text>
+                    </View>
+
+                    <View style={{ ...style.customInput, height: hp('20%'), flexDirection: 'column', justifyContent: 'flex-start' }}>
+                        <TextInput
+                            style={{ fontSize: hp('2%'), padding: 0 }}
+                            placeholder="Enter your reason…"
+                            multiline={true}
+                        />
+                    </View>
+
+
+                    <View style={{ marginTop: hp('1%') }}>
+                        <Button
+                            title="Report"
+                            buttonStyle={{
+                                padding: hp('1.5%'),
+                                ...style.btnRounded,
+                                ...style.btnPrimary
+                            }}
+                            onPress={() => this.setState({ visibleModalReport: false })}
+                        />
+                    </View>
+                </KeyboardAvoidingView>
+            </Overlay>
+        )
+    }
+
     render() {
         const { dataList } = this.state
         return (
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                <FlashMessage position="top" 
-                style={{
-                    backgroundColor: '#5b5b5b'
-                }}/>
+                <FlashMessage position="top"
+                    style={{
+                        backgroundColor: '#5b5b5b'
+                    }} />
                 <ScrollView>
                     <View style={{ flex: 1 }}>
-                    {this.state.user_role == "Member" ? 
-                    <HeaderNavbar  value={'member'}></HeaderNavbar>
-                    :
-                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
-                    }
+                        {this.state.user_role == "Member" ?
+                            <HeaderNavbar value={'member'}></HeaderNavbar>
+                            :
+                            <HeaderNavbar value={'admin'}></HeaderNavbar>
+                        }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
                             
                             <>
@@ -196,28 +278,29 @@ export default class MessageBoard extends Component {
                             </View>
 
                             <View style={{ marginTop: hp('2%') }}>
-                            <ScrollView style={{ marginBottom: 24 }}>
-                                {
-                                    this.state.list_data.length === 0 ?
-                                    <ActivityIndicator color="#003764" style={{ marginTop: hp('25%') }} />
-                                    :
-                                    this.state.list_data.map((item, index) => {
-                                        if (item.post_type == 'event') {
-                                            return (
-                                                <EventPost data={item} key={`event_${index}`}></EventPost>
-                                            )
-                                        } else if (item.post_type == 'blog') {
-                                            return (
-                                                <Post data={item} page="message_board" 
-                                                sharePressButton={(url) => this.shareCallback(url)} 
-                                                onPostUpdate={() => this.callHomeFeed()} 
-                                                key={`blog_${index}`}></Post>
-                                            )
-                                        }
-                                    })
-                                }
-                                {/* end  show post */}
-                                {/* {this.state.list_data.map((item, index) => {
+                                <ScrollView style={{ marginBottom: 24 }}>
+                                    {
+                                        this.state.list_data.length === 0 ?
+                                            <ActivityIndicator color="#003764" style={{ marginTop: hp('25%') }} />
+                                            :
+                                            this.state.list_data.map((item, index) => {
+                                                if (item.post_type == 'event') {
+                                                    return (
+                                                        <EventPost data={item} key={`event_${index}`}></EventPost>
+                                                    )
+                                                } else if (item.post_type == 'blog') {
+                                                    return (
+                                                        <Post data={item} page="message_board"
+                                                            sharePressButton={(url) => this.shareCallback(url)}
+                                                            onPostUpdate={() => this.callHomeFeed()}
+                                                            onPostReport={(data) => this.openReport(data)}
+                                                            key={`blog_${index}`}></Post>
+                                                    )
+                                                }
+                                            })
+                                    }
+                                    {/* end  show post */}
+                                    {/* {this.state.list_data.map((item, index) => {
                                 return (
                                
                                     <View>
@@ -226,15 +309,16 @@ export default class MessageBoard extends Component {
                                     </View>
                                     )}
                                 )} */}
-                            </ScrollView>
-                                
+                                </ScrollView>
+
 
                             </View>
 
                         </View>
                     </View>
+                    {this.renderModalReport()}
                 </ScrollView>
-                {this.state.user_role == "Member" ? 
+                {this.state.user_role == "Member" ?
                     <MenuFooterUser value={'message'}></MenuFooterUser>
                     :
                     <MenuFooter value={'message'}></MenuFooter>
