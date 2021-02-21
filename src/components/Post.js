@@ -56,9 +56,11 @@ export default class Post extends Component {
         this.RBSheet.open()
     }
 
-    openReport() {
-        this.setState({ visibleModalReport: true })
+    async openReport () {
         this.RBSheet.close()
+        setTimeout(() =>{
+            this.setState({ visibleModalReport: true })
+        }, 300)
     }
 
     renderModalReport() {
@@ -125,7 +127,7 @@ export default class Post extends Component {
                                 ...style.btnRounded,
                                 ...style.btnPrimary
                             }}
-                            onPress={() => this.setState({ visibleModalReport: false })}
+                            onPress={() => this.setState({ visibleModalReport: tr })}
                         />
                     </View>
                 </KeyboardAvoidingView>
@@ -278,7 +280,7 @@ export default class Post extends Component {
             author,
         } = this.props.data
 
-        let { is_like, like_count } = this.state
+        let { is_like, like_count, default_avatar } = this.state
 
         return (
             <View style={{

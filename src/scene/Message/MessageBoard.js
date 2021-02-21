@@ -7,13 +7,12 @@ import {
     View,
     Text,
     Clipboard,
-    Image,
     ActivityIndicator,
     TouchableOpacity,
     FlatList
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
@@ -43,7 +42,6 @@ export default class MessageBoard extends Component {
         }
     }
 
-
     async componentDidMount() {
 
     }
@@ -68,7 +66,7 @@ export default class MessageBoard extends Component {
     }
 
     async componentWillUnmount () {
-        await this.setState({list_data: []})
+        await this.setState({list_data: false})
     }
 
     setBoard = (value) => {
@@ -86,7 +84,6 @@ export default class MessageBoard extends Component {
         await this.setState({
             list_data : data.post_data,
         });
-
     }
 
     callCommunityFeed = async (token) => {
@@ -150,7 +147,7 @@ export default class MessageBoard extends Component {
                     }
                         <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
                             
-                            <View style={{ ...style.container }}>
+                            <>
                                     <View style={{
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
@@ -162,20 +159,22 @@ export default class MessageBoard extends Component {
                                         <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                     </TouchableOpacity>
                                 </View>
-                                <Button
-                                    title={global.lng.new_post}
-                                    Outline={true}
-                                    titleStyle={{ color: '#003764', }}
-                                    buttonStyle={{
-                                        padding: hp('1.5%'),
-                                        ...style.btnPrimaryOutline,
-                                        ...style.btnRounded
-                                    }}
-                                    onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
-                                    'description': '',
-                                    'post_images': []})}
-                                />
-                            </View>
+                                <View  style={{ ...style.container }}>
+                                    <Button
+                                        title={global.lng.new_post}
+                                        Outline={true}
+                                        titleStyle={{ color: '#003764', }}
+                                        buttonStyle={{
+                                            padding: hp('1.5%'),
+                                            ...style.btnPrimaryOutline,
+                                            ...style.btnRounded
+                                        }}
+                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                        'description': '',
+                                        'post_images': []})}
+                                    />
+                                </View>
+                            </>
 
                             <View style={{ ...styleScoped.wrapperButtonGroup }}>
                                 <TouchableOpacity style={this.state.board == 'community' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}

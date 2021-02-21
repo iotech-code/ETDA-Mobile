@@ -11,5 +11,4 @@ const trans = async () => {
     }
 }
 
-
 export default trans

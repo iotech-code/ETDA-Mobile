@@ -38,7 +38,7 @@ export default class Main extends Component {
     }
 
     async componentWillUnmount () {
-        await this.setState({list_data: []})
+        await this.setState({list_data: false})
     }
 
     async UNSAFE_componentWillMount () {
@@ -86,7 +86,6 @@ export default class Main extends Component {
     }
 
     async updateHomeFeed() {
-        // this.setState({ isFetching: true })
         try {
             let { data } = await homeFeed(this.stat.feedCurrentPage, this.stat.feedCurrentPage+1);
             await this.setState({ 
