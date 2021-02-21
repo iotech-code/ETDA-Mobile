@@ -128,5 +128,6 @@ export const th = {
     add_new_question: "เพิ่มคำถามใหม่",
     event: "กิจกรรม",
     schedule: "กำหนดการ",
-    edit: "แก้ไข"
+    edit: "แก้ไข",
+    create_event: "สร้างกิจกรรม"
 }

@@ -128,5 +128,6 @@ export const en = {
     add_new_question: "Add new question",
     event: "Event",
     schedule: "Schedule",
-    edit: "Edit"
+    edit: "Edit",
+    create_event: "สร้างกิจกรรม"
 }

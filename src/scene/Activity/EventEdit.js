@@ -131,11 +131,6 @@ export default class EventEdit extends Component {
                             onPress={()=>Actions.pop()}
                         />
                     </View>
-
-
-
-
-
                 </ScrollView>
             </View>
         );

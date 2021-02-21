@@ -103,38 +103,38 @@ export default class Poll extends Component {
         const {lng} = this.state
         return (
             <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
-                        <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.search}</Text>
-                            <TouchableOpacity onPress={() => Actions.replace('Main')}>
-                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.done}</Text>
-                            </TouchableOpacity>
+                <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+                    <View style={{ ...style.navbar }}>
+                        <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.search}</Text>
+                        <TouchableOpacity onPress={() => Actions.replace('Main')}>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.done}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ ...style.container, marginTop: hp('2%') }}>
+                        <View style={{ ...styleScoped.customInputSearch }}>
+                            <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
+                            <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."
+                                onChangeText={(value) => {
+                                this.callSearch(value)
+                            }}
+                            ></TextInput>
                         </View>
-                        <View style={{ ...style.container, marginTop: hp('2%') }}>
-                            <View style={{ ...styleScoped.customInputSearch }}>
-                                <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
-                                <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."
-                                 onChangeText={(value) => {
-                                    this.callSearch(value)
-                                }}
-                                ></TextInput>
-                            </View>
-                            <View style={{ marginTop: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.search_by_tags}</Text>
-                            </View>
+                        <View style={{ marginTop: hp('2%') }}>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.search_by_tags}</Text>
                         </View>
                     </View>
-                    <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
-                    <ScrollView style={{ ...style.container }}>
-                        {this.state.list_search.map((item, index) => {
-                            return (
-                                <Text style={{ ...styleScoped.textList }}>{item}</Text>
-                            )
-                        }
-                        )}
-                    </ScrollView>
                 </View>
+                <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
+                <ScrollView style={{ ...style.container }}>
+                    {this.state.list_search.map((item, index) => {
+                        return (
+                            <Text style={{ ...styleScoped.textList }}>{item}</Text>
+                        )
+                    }
+                    )}
+                </ScrollView>
+            </View>
         );
     }
 };

@@ -24,6 +24,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Fragment } from 'react';
 import moment from 'moment'
 import { createPost } from '../../Service/PostService'
+import translate from '../../constant/lang'
 
 export default class EventCreate extends Component {
     state = {
@@ -44,9 +45,19 @@ export default class EventCreate extends Component {
         showTimePicker: false,
         indexSchedule: 0,
         datepicker: new Date(),
-        timepicker: new Date()
+        timepicker: new Date(),
+        lng: {}
+    }
 
-
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     onChangeDate(event, date, btn) {
@@ -126,7 +137,7 @@ export default class EventCreate extends Component {
 
 
     renderTimeOverlay() {
-        const { showTimePicker, timepicker } = this.state
+        const { showTimePicker, timepicker, lng } = this.state
         return (
             <Overlay
                 isVisible={showTimePicker}
@@ -204,7 +215,8 @@ export default class EventCreate extends Component {
             detail,
             schedule,
             date_event,
-            date_event_to_show
+            date_event_to_show,
+            lng
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
@@ -214,7 +226,7 @@ export default class EventCreate extends Component {
                             <TouchableOpacity onPress={() => Actions.pop()}>
                                 <Icon name="chevron-left" size={hp('3%')} color="white" />
                             </TouchableOpacity>
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create event</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.create_event}</Text>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}></Text>
                         </View>
                         {/* content */}
@@ -241,15 +253,15 @@ export default class EventCreate extends Component {
 
 
                             <View style={{ ...style.container, marginTop: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2%') }}>Event schedule</Text>
+                                <Text style={{ fontSize: hp('2%') }}>{lng.event_schedule}</Text>
                                 <View style={{ marginTop: hp('3%'), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     {
                                         !date_event_to_show ?
-                                            <Text style={{ fontSize: hp('2%') }}>Add event date</Text>
+                                            <Text style={{ fontSize: hp('2%') }}>{lng.add_event_date}</Text>
                                             : <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{date_event_to_show}</Text>
                                     }
                                     <Button
-                                        title="Date"
+                                        title={lng.date}
                                         titleStyle={{ padding: hp('2%') }}
                                         buttonStyle={{ ...style.btnTagPrimary, padding: hp('3%'), ...style.btnRounded }}
                                         onPress={() => this.setState({ showDatePicker: true })}
@@ -273,7 +285,7 @@ export default class EventCreate extends Component {
                                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                                     <Text style={{ fontSize: hp('2%'), color: '#4267B2' }}>{el.time}</Text>
                                                     <Button
-                                                        title={el.time ? 'Change' : 'Time'}
+                                                        title={el.time ? lng.change : lng.time}
                                                         titleStyle={{ padding: hp('2%') }}
                                                         buttonStyle={{ ...style.btnTagPrimary, padding: hp('3%'), ...style.btnRounded }}
                                                         onPress={() => this.setIndexIimeSchedule(index, el.time_default)}
@@ -292,7 +304,7 @@ export default class EventCreate extends Component {
 
                                 <View style={{ marginTop: hp('2%') }}>
                                     <Button
-                                        title="Add schedule"
+                                        title={lng.add_schedule}
                                         Outline={true}
                                         titleStyle={{ color: '#003764', }}
                                         buttonStyle={{
@@ -318,12 +330,12 @@ export default class EventCreate extends Component {
                                             <Icon name="checkbox-marked-circle" size={hp('3%')} color="#4267B2" />
                                         </TouchableOpacity>
                                 }
-                                <Text style={{ fontSize: hp('2%'), marginLeft: hp('2%') }}>Post to ETDA feed</Text>
+                                <Text style={{ fontSize: hp('2%'), marginLeft: hp('2%') }}>{lng.post_to_etda}</Text>
 
                             </View>
                             <View style={{ marginTop: hp('2%'), ...style.container }}>
                                 <Button
-                                    title="Create"
+                                    title={lng.create}
                                     buttonStyle={{
                                         padding: hp('1%'),
                                         ...style.btnPrimary,

@@ -219,7 +219,7 @@ export default class PollCreate extends Component {
                             <View style={{ ...style.divider }}></View>
 
                             <View style={{ ...style.container, marginVertical: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2%'), }}>Type of Poll</Text>
+                                <Text style={{ fontSize: hp('2%'), }}>{lng.type_of_poll}</Text>
                                 <TouchableOpacity style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }} onPress={() => this.openSelectType()}>
                                     <Text style={{ fontSize: hp('1.8%') }}>{type_of_poll[0]}</Text>
                                     <Icon name="chevron-down" style={{ fontSize: hp('2%') }} color={colors.primary} />
@@ -230,7 +230,7 @@ export default class PollCreate extends Component {
 
                             <View style={{ marginTop: hp('2%'), ...style.container }}>
                                 <Button
-                                    title={lng.type_of_poll}
+                                    title={lng.create_poll}
                                     buttonStyle={{
                                         padding: hp('1%'),
                                         ...style.btnPrimary,
