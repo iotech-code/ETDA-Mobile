@@ -56,16 +56,20 @@ export default class Post extends Component {
         this.RBSheet.open()
     }
 
-    openReport() {
-        this.setState({ visibleModalReport: true })
-        this.RBSheet.close()
+    async openReport() {
+        await this.RBSheet.close()
+        // await this.setState({ visibleModalReport: true })
+        let self = this
+        setTimeout(() => {
+            self.props.onPostReport(this.props.data.post_id)
+        }, 300);
     }
 
     renderModalReport() {
         const { visibleModalReport } = this.state
         return (
             <Overlay
-                isVisible={visibleModalReport}
+                isVisible={true}
                 overlayStyle={{
                     width: wp('90%'),
                     paddingVertical: hp('2%'),
@@ -243,7 +247,6 @@ export default class Post extends Component {
         try {
             let { is_follow } = this.state
             let response = await actionFollowPost({ post_id })
-            console.log(response)
             let { status } = response.data
             if (status == 'success') {
                 this.setState({
@@ -301,10 +304,10 @@ export default class Post extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                
+
                                 <Image source={!author.photo ? default_avatar : { uri: author.photo }}
                                     style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
-                                
+
                             </View>
                             <View >
                                 <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
@@ -351,12 +354,12 @@ export default class Post extends Component {
                         <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{comment_number}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                    onPress={() => this.sharePOST(share_url)}>
+                        onPress={() => this.sharePOST(share_url)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                 </View>
                 {this.renderBottomSheet()}
-                {this.renderModalReport()}
+                {/* {this.renderModalReport()} */}
             </View>
         );
     }
