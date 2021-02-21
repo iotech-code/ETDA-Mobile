@@ -6,8 +6,6 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
     TextInput,
     TouchableOpacity,
     FlatList,
@@ -21,42 +19,55 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createPost } from '../../Service/PostService'
-import { colors } from '../../constant/util';
+import translate from '../../constant/lang'
 
 export default class PollCreate extends Component {
-    state = {
-        visibleSearch: false,
-        post_to_feed: false,
-        topic: null,
-        detail: null,
-        date_event: null,
-        schedule: [
-            {
-                time: null,
-                detail: null,
-                time_default: new Date()
-            }
-        ],
-        showDatePicker: false,
-        showTimePicker: false,
-        indexSchedule: 0,
-        datepicker: new Date(),
-        timepicker: new Date(),
-        question: [
-            {
-                id: 1,
-                question: '',
-                answer: [
-                    {
-                        id: 1,
-                        detail: null,
-                    },
-                ]
-            }
-        ]
+    constructor() {
+        super()
+        this.state = {
+            visibleSearch: false,
+            post_to_feed: false,
+            topic: null,
+            lng: {},
+            detail: null,
+            date_event: null,
+            schedule: [
+                {
+                    time: null,
+                    detail: null,
+                    time_default: new Date()
+                }
+            ],
+            showDatePicker: false,
+            showTimePicker: false,
+            indexSchedule: 0,
+            datepicker: new Date(),
+            timepicker: new Date(),
+            question: [
+                {
+                    id: 1,
+                    question: '',
+                    answer: [
+                        {
+                            id: 1,
+                            detail: null,
+                        },
+                    ]
+                }
+            ]
 
+        }
     }
 
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+    }
 
 
     async onCreatePoll() {
@@ -120,23 +131,24 @@ export default class PollCreate extends Component {
             topic,
             detail,
             question,
+            lng
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', marginBottom: hp('3%') }}>
                     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ ...style.navbar }}>
-                            <TouchableOpacity onPress={() => Actions.replace('Poll')}>
+                            <TouchableOpacity onPress={() => Actions.replace('Survey')}>
                                 <Icon name="chevron-left" size={hp('3%')} color="white" />
                             </TouchableOpacity>
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create Survey</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.create_new_survey}</Text>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}></Text>
                         </View>
                         {/* content */}
                         <View>
                             <View style={{ height: hp('7%') }}>
                                 <TextInput
-                                    placeholder="Enter your topic event here…"
+                                    placeholder={lng.survey_topic_here}
                                     style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
                                     value={topic}
                                     onChangeText={(text) => this.setState({ topic: text })}
@@ -148,7 +160,7 @@ export default class PollCreate extends Component {
 
                                 <View style={{ ...style.container }}>
                                     <Text style={{ marginTop: hp('3%'), fontSize: hp('2%') }}>
-                                        Survey question
+                                    {lng.survey_question}
                                     </Text>
                                 </View>
 
@@ -158,7 +170,7 @@ export default class PollCreate extends Component {
                                             <Fragment key={`question_${index}`}>
                                                 <View style={{ ...style.container, marginTop: hp('3%') }}>
                                                     <TextInput
-                                                        placeholder="Enter your question here…"
+                                                        placeholder={lng.survey_question_here}
                                                         style={{ paddingVertical: hp('2%'), fontSize: hp('2%') }}
                                                         value={element.question}
                                                         multiline
@@ -170,7 +182,7 @@ export default class PollCreate extends Component {
                                                             return (
                                                                 <View key={`answer_${i}`}>
                                                                     <TextInput
-                                                                        placeholder="Enter your answer here…"
+                                                                        placeholder={lng.survey_answer_here}
                                                                         style={{ paddingVertical: hp('2%'), fontSize: hp('2%'), marginTop: hp('2%') }}
                                                                         value={e.detail}
                                                                         multiline
@@ -183,7 +195,7 @@ export default class PollCreate extends Component {
                                                     <View style={{ marginVertical: hp('2%'), ...style.flex__start }}>
                                                         {
                                                             element.answer.length >= 6 ? null : <Button
-                                                                title="Add answer"
+                                                                title={lng.add_answer}
                                                                 buttonStyle={{
                                                                     padding: hp('1%'),
                                                                     paddingHorizontal: hp('2%'),
@@ -207,7 +219,7 @@ export default class PollCreate extends Component {
 
                             <View style={{ ...style.container, marginTop: hp('2%') }}>
                                 <Button
-                                    title="Add new question"
+                                    title={lng.add_new_question}
                                     Outline={true}
                                     titleStyle={{ color: '#003764', }}
                                     buttonStyle={{
@@ -222,7 +234,7 @@ export default class PollCreate extends Component {
 
                             <View style={{ marginTop: hp('2%'), ...style.container }}>
                                 <Button
-                                    title="Create"
+                                    title={lng.create}
                                     buttonStyle={{
                                         padding: hp('1%'),
                                         ...style.btnPrimary,

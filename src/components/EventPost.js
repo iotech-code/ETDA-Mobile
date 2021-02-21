@@ -20,18 +20,30 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { actionLikePost } from '../Service/PostService'
+import translate from '../constant/lang'
 
 export default class MessagsPost extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            visibleBottomSheet: false,
+            default_avatar: require('../assets/images/default_avatar.jpg'),
+            is_like: 0,
+            like_count: 0,
+            lng: {}
+        }
     }
 
-    state = {
-        visibleBottomSheet: false,
-        default_avatar: require('../assets/images/default_avatar.jpg'),
-        is_like: 0,
-        like_count: 0
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     openOption() {
@@ -46,13 +58,14 @@ export default class MessagsPost extends Component {
             is_like,
             like_count: like
         })
-
     }
 
     onEdit() {
         this.RBSheet.close()
         Actions.push('EventEdit')
     }
+
+    
 
     async callPostLike(post_id) {
         try {
@@ -71,7 +84,7 @@ export default class MessagsPost extends Component {
     };
 
     renderBottomSheet() {
-        const { visibleBottomSheet } = this.state
+        const { visibleBottomSheet, lng } = this.state
 
         return (
             <RBSheet
@@ -93,26 +106,26 @@ export default class MessagsPost extends Component {
                     ...styleScoped.listMore
                 }}>
                     <Icon name="star" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Join event</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.join_event}</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
                     <Icon name="star-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Unjoin event</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.unjoin_event}</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 {/* section admin */}
                 <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onEdit()}>
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit Event</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_event}</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
 
                 <TouchableOpacity style={{ ...styleScoped.listMore }}>
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete Event</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_event}</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 {/* section admin */}

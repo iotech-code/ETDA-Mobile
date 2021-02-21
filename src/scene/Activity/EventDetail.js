@@ -19,8 +19,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { apiServer } from '../../constant/util';
 import Comment from '../../components/Comment'
+import translate from '../../constant/lang'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -30,16 +30,28 @@ export default class EventDetail extends Component {
         reply_to: null,
         default_avatar: require('../../assets/images/default_avatar.jpg'),
         etda_avatar: require('../../assets/images/etdaprofile.png'),
+        lng:{},
+        isFetching: false
     }
 
     componentDidMount() {
         console.log(this.props)
     }
 
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
 
     render() {
         const { author, title, post_description, post_addition_data, comment_number, post_id, is_like, like } = this.props
-        const { default_avatar, list_comment, comment } = this.state
+        const { default_avatar, list_comment, comment, lng } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -48,7 +60,8 @@ export default class EventDetail extends Component {
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{title}</Text>
-                            <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <View></View>
+                            {/* <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} /> */}
                         </View>
                         <View style={{
                             ...style.space__between,
@@ -68,9 +81,6 @@ export default class EventDetail extends Component {
                                     <Text style={{ fontSize: hp('2%'), color: "#707070" }}>{author.full_name}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity onPress={() => this.openOption()} >
-                                <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
-                            </TouchableOpacity>
                         </View>
 
 
@@ -86,7 +96,7 @@ export default class EventDetail extends Component {
                             </View> */}
 
                             <View style={{ marginTop: hp('3%'), marginBottom: hp('2%'), alignItems: 'flex-start', ...style.boxTextBorder }}>
-                                <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5', paddingLeft: 0, paddingRight: hp('1%') }}>Scheduler</Text>
+                                <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5', paddingLeft: 0, paddingRight: hp('1%') }}>{lng.schedule}</Text>
                             </View>
 
                             {
@@ -126,20 +136,20 @@ export default class EventDetail extends Component {
                 </ScrollView>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{ ...styleScoped.warpperComment }}>
-                        <TouchableOpacity>
+                        {/* <TouchableOpacity>
                             <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <View style={{ ...styleScoped.boxInputCommment }}>
                             <TextInput
-                                placeholder="Comment here"
+                                placeholder={lng.comment_here}
                                 style={{ padding: 0, fontSize: hp('2%') }}
                                 value={comment}
                                 onChangeText={(comment) => this.setState({ comment })} >
                             </TextInput>
                         </View>
                         <Button
-                            title="Send"
-                            buttonStyle={{ ...style.btnPrimary }}
+                            title={lng.send}
+                            buttonStyle={{ ...style.btnPrimary, minWidth: wp("13%") }}
                             onPress={() => this.createComment()}
                         />
                     </View>
@@ -172,7 +182,7 @@ const styleScoped = StyleSheet.create({
         borderColor: '#C8C8CC',
         borderWidth: 1,
         borderRadius: 5,
-        width: '70%',
+        width: '85%',
         marginRight: hp('1%')
     },
     inputCustom: {

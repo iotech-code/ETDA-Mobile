@@ -23,6 +23,8 @@ import { colors, apiServer } from '../../constant/util'
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImgToBase64 from 'react-native-image-base64';
+import translate from '../../constant/lang'
+
 const http = new HttpRequest();
 
 const options = {
@@ -32,7 +34,9 @@ const options = {
         skipBackup: true,
         path: 'images',
     }
-};
+}
+
+
 
 export default class EditProfile extends Component {
     constructor(props) {
@@ -55,12 +59,25 @@ export default class EditProfile extends Component {
                 exp2: '',
                 exp3: ''
             },
+            lng: {},
             dafault_avatar: require('../../assets/images/default_avatar.jpg')
         }
     }
 
-    componentDidMount() {
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
         this.setUserObject();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+
+    componentDidMount() {
+        
     }
 
     componentWillUnmount() {
@@ -82,7 +99,7 @@ export default class EditProfile extends Component {
             rq_exp: this.state.rExp
         }
 
-        http.post(apiServer.url + '/user/update-role', data);
+        http.post(apiServer.url + '/api/backend/user/change-role', data);
     }
 
     chooseImageFileRegister = async () => {
@@ -117,7 +134,7 @@ export default class EditProfile extends Component {
     }
 
     renderModalPostandRead() {
-        const { visibleModalPostandRead } = this.state
+        const { visibleModalPostandRead, lng } = this.state
         return (
             <Overlay
                 isVisible={visibleModalPostandRead}
@@ -138,7 +155,7 @@ export default class EditProfile extends Component {
                         color: '#003764',
                         fontSize: hp('1.7%'),
                         fontWeight: '600'
-                    }}>Change permission to posts and read</Text>
+                    }}>{lng.change_user_type_title}</Text>
                 </View>
                 <Text
                     style={{
@@ -149,15 +166,14 @@ export default class EditProfile extends Component {
                         fontWeight: '300'
                     }}
                 >
-                    Please, enter your reason for change
-                    permission to posts and read.
+                    {lng.change_user_type_detail}
                 </Text>
 
                 <View style={{ ...style.customInput, height: hp('10%') }}>
                     <TextInput
                         value={this.state.rReason}
                         style={{ fontSize: hp('2%') }}
-                        placeholder="Enter your reason…"
+                        placeholder={lng.enter_reason}
                         multiline={true}
                         onChangeText={ (value) => this.setState({rReason: value}) }
                         numberOfLines={50}
@@ -174,16 +190,14 @@ export default class EditProfile extends Component {
                         fontWeight: '300'
                     }}
                 >
-                    Please, enter your experience or
-                    workmanship that will help make decision
-                    for ETDA. (Give 3 experience or less than)
+                    {lng.change_user_type_detail2}
                 </Text>
 
                 <View >
                     <TextInput
                         value={this.state.rExp.exp1}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
-                        placeholder="Enter your experience…"
+                        placeholder={lng.enter_experience}
                         onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp1: value } } ) }
                     />
                 </View>
@@ -191,7 +205,7 @@ export default class EditProfile extends Component {
                     <TextInput
                         value={this.state.rExp.exp2}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
-                        placeholder="Enter your experience…"
+                        placeholder={lng.enter_experience}
                         onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp2: value} } ) }
                     />
                 </View>
@@ -199,13 +213,13 @@ export default class EditProfile extends Component {
                     <TextInput
                         value={this.state.rExp.exp3}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
-                        placeholder="Enter your experience…"
+                        placeholder={lng.enter_experience}
                         onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp3: value} } ) }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
-                        title="Confirm"
+                        title={lng.confirm}
                         buttonStyle={ {
                             padding: hp('1.5%'),
                             ...style.btnRounded,
@@ -216,7 +230,7 @@ export default class EditProfile extends Component {
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
-                        title="Cancle"
+                        title={lng.cancle}
                         Outline={true}
                         titleStyle={{ color: '#003764' }}
                         buttonStyle={{
@@ -232,7 +246,7 @@ export default class EditProfile extends Component {
     }
 
     showSuccessModal() {
-        const { successModal } = this.state
+        const { successModal,lng } = this.state
         return (
             <Overlay
                 isVisible={ successModal }
@@ -245,8 +259,7 @@ export default class EditProfile extends Component {
                 <>
                     <Icon name="check-circle" size={hp('12%')} style={{ alignSelf: "center" }} color="#30D100"/>
                     <Text style={{ marginTop: 20, textAlign: 'center' }}>
-                    Your registration has been submitted, 
-                    to post please wait for administrator approval.
+                    {lng.sucess_change_role}
                     </Text>
                     <View style={{
                         marginTop: hp('3%')
@@ -266,7 +279,7 @@ export default class EditProfile extends Component {
     }
 
     renderChangeTypeOfUser() {
-        const { visibleChangeTypeOfUser } = this.state
+        const { visibleChangeTypeOfUser, lng } = this.state
         return (
             <Overlay
                 isVisible={visibleChangeTypeOfUser}
@@ -274,7 +287,7 @@ export default class EditProfile extends Component {
                 overlayStyle={{ width: '90%', padding: hp('2%') }}
             >
                 <>
-                <Text style={{ fontSize: hp('2%'), textAlign: 'center', color: '#003764' }}>Change type of your account</Text>
+                <Text style={{ fontSize: hp('2%'), textAlign: 'center', color: '#003764' }}>{lng.change_type_of_account}</Text>
                 <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
                 <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
                 <TouchableOpacity
@@ -289,7 +302,7 @@ export default class EditProfile extends Component {
                             textAlign: 'center',
                             fontSize: hp('2%'),
                             color: '#000000'
-                        }}>Read only</Text>
+                        }}>{lng.read_only}</Text>
                     </TouchableOpacity>
  
                     <TouchableOpacity
@@ -307,12 +320,12 @@ export default class EditProfile extends Component {
                             textAlign: 'center',
                             fontSize: hp('2%'),
                             color: '#000000'
-                        }}>Posts and Read</Text>
+                        }}>{lng.post_and_read}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: hp('2%') }}>
                     <Button
-                        title="Continue"
+                        title={lng.continue}
                         buttonStyle={{
                             padding: hp('1%'),
                             ...style.btnRounded,
@@ -322,7 +335,7 @@ export default class EditProfile extends Component {
                     />
                     <View style={{ marginTop: hp('1%') }}></View>
                     <Button
-                        title="Cancle"
+                        title={lng.cancle}
                         Outline={true}
                         titleStyle={{ color: '#003764' }}
                         buttonStyle={{
@@ -372,13 +385,13 @@ export default class EditProfile extends Component {
             visible: true,
             visibleModalPostandRead: true,
             type: 'read,post_read',
-            successModal: true,
+            successModal: false,
             userObject: {
                 ...this.state.userObject,
                 user_type: 'read,post_read'
             }
         })
-        await this.requestChangeRole('read,post_read')
+        // await this.requestChangeRole('read,post_read')
         await this.continueTypeOfUser('read,post_read')
     }
 
@@ -420,7 +433,7 @@ export default class EditProfile extends Component {
     };
 
     render() {
-        const { userObject } = this.state;
+        const { userObject, lng } = this.state;
         
         return (
             <View style={{ flex: 1 }}>
@@ -431,11 +444,11 @@ export default class EditProfile extends Component {
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%'), marginBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop({refresh:{}})} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Profile</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.edit_profile}</Text>
                             <TouchableOpacity
                                 onPress={() => this.callEditProfile()}
                             >
-                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.save}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -466,7 +479,7 @@ export default class EditProfile extends Component {
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
+                                <Text style={{ fontSize: hp('2.5%') }}>{lng.name}</Text>
                                 <TextInput
                                     value={userObject.fullname}
                                     style={{ ...style.customInput, minWidth: '60%', marginTop: 5, borderWidth: 0 }}
@@ -480,7 +493,7 @@ export default class EditProfile extends Component {
                         <View style={{ marginTop: hp('4%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Contact me</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.contact_me}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <TextInput
@@ -500,7 +513,7 @@ export default class EditProfile extends Component {
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="lightbulb-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Professional</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.professional}</Text>
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
@@ -512,7 +525,7 @@ export default class EditProfile extends Component {
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="domain" size={hp('3%')} color="#EE3397" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Organization</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.organization}</Text>
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
@@ -524,7 +537,7 @@ export default class EditProfile extends Component {
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="bag-checked" size={hp('3%')} color="#427AA1" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Position</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.position}</Text>
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
@@ -536,7 +549,7 @@ export default class EditProfile extends Component {
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.type_of_user}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{ userObject.user_type }</Text>
@@ -544,13 +557,13 @@ export default class EditProfile extends Component {
                                     style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
                                     onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
                                 >
-                                    <Text style={{ color: "white" }}>Change</Text>
+                                    <Text style={{ color: "white" }}>{lng.change}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
-                            <Text style={{ fontSize: hp('1.7%'), width: '70%', color: '#707070' }}>*If you want to change permission to post. You can request to admin.</Text>
+                            <Text style={{ fontSize: hp('1.7%'), width: '70%', color: '#707070' }}>{lng.edit_profile_footer}</Text>
                         </View>
                     </KeyboardAvoidingView>
                     </View>

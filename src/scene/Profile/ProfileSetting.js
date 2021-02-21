@@ -13,13 +13,27 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import translate from '../../constant/lang'
+
 export default class ProfileSetting extends Component {
     constructor() {
         super();
         this.state = {
             visibleSearch: false,
-            socialID: 'no'
+            socialID: 'no', 
+            lng: {}
         }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     async componentDidMount () {
@@ -30,14 +44,14 @@ export default class ProfileSetting extends Component {
     }
 
     render() {
-        const {socialID} = this.state
+        const {socialID, lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Setting</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.setting}</Text>
                             <View></View>
                         </View>
                     </View>
@@ -53,7 +67,7 @@ export default class ProfileSetting extends Component {
                             onPress={() => Actions.push('Language')}
                         >
                             <Icon name="earth" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Language</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.language}</Text>
                     </TouchableOpacity>
                     <View style={{ ...style.divider }}></View>
                         {
@@ -69,7 +83,7 @@ export default class ProfileSetting extends Component {
                                     onPress={() => Actions.replace('ChangePassword')}
                                 >
                                     <Icon name="key" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
-                                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Change password</Text>
+                                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.change_password}</Text>
                                 </TouchableOpacity>
                                 <View style={{ ...style.divider }}></View>
                             </>
@@ -86,7 +100,7 @@ export default class ProfileSetting extends Component {
                             onPress={() => Actions.replace('DeleteAccount')}
                         >
                             <Icon name="close-octagon" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#FF0000' }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete account</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_account}</Text>
                         </TouchableOpacity>
                         <View style={{ ...style.divider }}></View>
 

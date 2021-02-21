@@ -22,6 +22,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createPost } from '../../Service/PostService'
 import { colors } from '../../constant/util';
+import translate from '../../constant/lang'
 
 export default class PollCreate extends Component {
     constructor (props) {
@@ -31,6 +32,7 @@ export default class PollCreate extends Component {
             post_to_feed: false,
             topic: null,
             detail: null,
+            lng: {},
             date_event: null,
             schedule: [
                 {
@@ -56,6 +58,16 @@ export default class PollCreate extends Component {
             }
         }
     }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+    }
+
 
     async onCreatePoll() {
         try {
@@ -103,6 +115,7 @@ export default class PollCreate extends Component {
             topic,
             detail,
             question,
+            lng
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
@@ -112,7 +125,7 @@ export default class PollCreate extends Component {
                             <TouchableOpacity onPress={() => Actions.replace('Poll')}>
                                 <Icon name="chevron-left" size={hp('3%')} color="white" />
                             </TouchableOpacity>
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Create Poll</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.create_poll}</Text>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}></Text>
                         </View>
                         {/* content */}
@@ -130,7 +143,7 @@ export default class PollCreate extends Component {
                             <View style={{ minHeight: hp('30%') }}>
                                 <View style={{ ...style.container }}>
                                     <Text style={{ marginVertical: hp('3%'), fontSize: hp('2%') }}>
-                                        Poll question
+                                        {lng.create_new_poll}
                                     </Text>
 
 
@@ -164,7 +177,7 @@ export default class PollCreate extends Component {
                                     <View style={{ marginVertical: hp('2%'), ...style.flex__start }}>
                                         {
                                             question.answer.length >= 6 ? null : <Button
-                                                title="Add answer"
+                                                title={lng.add_answer}
                                                 buttonStyle={{
                                                     padding: hp('1%'),
                                                     paddingHorizontal: hp('2%'),
@@ -182,7 +195,7 @@ export default class PollCreate extends Component {
                             <View style={{ ...style.divider }}></View>
 
                             <View style={{ ...style.container, marginVertical: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2%'), }}>Type of Poll</Text>
+                                <Text style={{ fontSize: hp('2%'), }}>{lng.add_answer}</Text>
                                 <View style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }}>
                                     <Text style={{ fontSize: hp('1.8%') }}>For general</Text>
                                     <Icon name="chevron-down" style={{ fontSize: hp('2%') }} color={colors.primary} />
@@ -193,7 +206,7 @@ export default class PollCreate extends Component {
 
                             <View style={{ marginTop: hp('2%'), ...style.container }}>
                                 <Button
-                                    title="Create"
+                                    title={lng.type_of_poll}
                                     buttonStyle={{
                                         padding: hp('1%'),
                                         ...style.btnPrimary,

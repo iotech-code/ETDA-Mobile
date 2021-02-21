@@ -16,6 +16,7 @@ import { Actions } from 'react-native-router-flux'
 import HttpRequest from '../../Service/HttpRequest';
 import { apiServer } from '../../constant/util';
 import { Alert } from 'react-native';
+import translate from '../../constant/lang'
 
 const http = new HttpRequest();
 export default class ChangePassword extends Component {
@@ -30,8 +31,20 @@ export default class ChangePassword extends Component {
             passwordBorder: '#CADAFB',
             statusSecureTextOld: true,
             statusSecureTextNew: true,
-            statusSecureTextConfirm: true
+            statusSecureTextConfirm: true,
+            lng: {}
         }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     async componentDidMount() {
@@ -73,26 +86,27 @@ export default class ChangePassword extends Component {
     }
 
     render() {
+        const {lng} = this.state
         return (
             <View style={{flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('ProfileSetting')} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Chnage Password</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.change_password}</Text>
                             <TouchableOpacity onPress={() => this.callChangePassword()}>
-                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.save}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                     <View style={{...style.container, marginTop: 20}}>
-                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Current password</Text>
+                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>{lng.current_password}</Text>
                         <View style={{...style.customInput, borderColor: this.state.passwordBorder, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
                             <TextInput
                                 value={this.state.oldPass}
                                 maxLength={20}
                                 style={[style.input, { color: 'black', width: wp(70) }]}
-                                placeholder="Current password"
+                                placeholder={lng.current_password}
                                 secureTextEntry={this.state.statusSecureTextOld}
                                 onChangeText={text => this.setState({ oldPass: text })}
                             />
@@ -100,13 +114,13 @@ export default class ChangePassword extends Component {
                         </View>
                         <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%'), marginTop: 5 }}> {this.state.oldPass.length}/20 </Text>
 
-                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>New password</Text>
+                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>{lng.new_password}</Text>
                         <View style={{...style.customInput, borderColor: this.state.passwordBorder, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
                             <TextInput
                                 value={this.state.newPass}
                                 maxLength={20}
                                 style={[style.input, { color: 'black', width: wp(70) }]}
-                                placeholder="Enter new password"
+                                placeholder={lng.enter_new_password}
                                 secureTextEntry={this.state.statusSecureTextNew}
                                 onChangeText={text => this.setState({ newPass: text })}
                             />
@@ -114,13 +128,13 @@ export default class ChangePassword extends Component {
                         </View>
                         <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%'), marginTop: 5 }}>{this.state.newPass.length}/20</Text>
 
-                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Confirm-New password</Text>
+                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>{lng.confirm_new_password}</Text>
                         <View style={{...style.customInput, borderColor: this.state.passwordBorder, display: 'flex', justifyContent: 'space-evenly', flexDirection: 'row'}}>
                             <TextInput
                                 value={this.state.confirmPass}
                                 maxLength={20}
                                 style={[style.input, { color: 'black', width: wp(70) }]}
-                                placeholder="Confirm your password"
+                                placeholder={lng.confirm_your_password}
                                 secureTextEntry={this.state.statusSecureTextConfirm}
                                 onChangeText={text => this.setState({ confirmPass: text })}
                             />

@@ -1,12 +1,10 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    ActivityIndicator,
     Clipboard,
     Image,
     TextInput,
@@ -26,6 +24,7 @@ import ImageGrid from '../../components/ImageGrid'
 import ImageView from 'react-native-image-view';
 import ImagePicker from 'react-native-image-crop-picker';
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import translate from '../../constant/lang'
 
 export default class EventDetail extends Component {
 
@@ -42,9 +41,22 @@ export default class EventDetail extends Component {
             indeximageView: 0,
             isImageViewVisible: false,
             commentImage: null,
-            commentImage64: null
+            commentImage64: null,
+            lng: {}
         }
     }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+
     async componentDidMount() {
         const { post_id } = this.props.data
         await this.setState({ post_id })
@@ -114,7 +126,7 @@ export default class EventDetail extends Component {
     render() {
         const { author, post_date, tags, post_description, post_images, like, title, share_url, view } = this.props.data;
         // console.log(this.props.data)
-        const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible } = this.state
+        const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible, lng } = this.state
         let imageForView = []
         for (let index = 0; index < post_images.length; index++) {
             const element = post_images[index];
@@ -239,7 +251,7 @@ export default class EventDetail extends Component {
                             paddingHorizontal: hp('2%'),
                         }}>
                             <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                            <Text style={{ color: '#B5B5B5' }}>{list_comment.length}  comments</Text>
+                            <Text style={{ color: '#B5B5B5' }}>{list_comment.length}  {lng.comments}</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -266,12 +278,12 @@ export default class EventDetail extends Component {
                                 
                             }
                         </View>
-                        <TouchableOpacity onPress={() => this.pickImage()}>
+                        {/* <TouchableOpacity onPress={() => this.pickImage()}>
                             <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <View style={{ ...styleScoped.boxInputCommment }}>
                             <TextInput
-                                placeholder="Comment here"
+                                placeholder={lng.comment_here}
                                 style={{ padding: 0, fontSize: hp('2%') }}
                                 value={comment}
                                 ref={(input) => { this.secondTextInput = input; }}
@@ -279,8 +291,8 @@ export default class EventDetail extends Component {
                             </TextInput>
                         </View>
                         <Button
-                            title="Send"
-                            buttonStyle={{ ...style.btnPrimary }}
+                            title={lng.send}
+                            buttonStyle={{ ...style.btnPrimary, minWidth: wp('13%') }}
                             onPress={() => this.createComment()}
                         />
 
@@ -305,7 +317,7 @@ const styleScoped = StyleSheet.create({
         borderColor: '#C8C8CC',
         borderWidth: 1,
         borderRadius: 5,
-        width: '70%',
+        width: '83%',
         marginRight: hp('1%')
     },
     shadowCard: {

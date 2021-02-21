@@ -17,12 +17,11 @@ import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
-import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
-import EventPost from '../../components/EventPost'
+import translate from '../../constant/lang'
 import PostPoll from '../../components/Poll'
 import { apiServer } from '../../constant/util';
 export default class Poll extends Component {
@@ -30,9 +29,20 @@ export default class Poll extends Component {
         super()
         this.state = {
             user_type: '',
-            user_role: ''
+            user_role: '',
+            lng: {}
         }
     }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+    }
+
 
     componentDidMount() {
         this.getUserInfo()
@@ -49,6 +59,7 @@ export default class Poll extends Component {
     };
     
     render() {
+        const {lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -56,7 +67,7 @@ export default class Poll extends Component {
                         <TouchableOpacity onPress={() => Actions.replace('Activity')}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" />
                         </TouchableOpacity>
-                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll</Text>
+                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.poll}</Text>
                         <TouchableOpacity onPress={() => Actions.push('Search')}>
                             <Icon name="magnify" size={hp('3%')} color="white"  />
                         </TouchableOpacity>
@@ -68,13 +79,13 @@ export default class Poll extends Component {
                             padding: hp('2%'),
                             alignItems: 'center'
                         }}>
-                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Poll</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.poll}</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
 
                         <View style={{ ...style.container }}>
                             <Button
-                                title="Create new poll"
+                                title={lng.create_new_poll}
                                 Outline={true}
                                 titleStyle={{ color: '#003764', }}
                                 buttonStyle={{
@@ -87,7 +98,7 @@ export default class Poll extends Component {
                         </View>
 
                         <View style={{ ...style.container, marginTop: hp('3%') }}>
-                            <Text style={{ fontSize: hp('2%') }}>For student</Text>
+                            <Text style={{ fontSize: hp('2%') }}>{lng.for_student}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
@@ -97,7 +108,7 @@ export default class Poll extends Component {
 
 
                         <View style={{ ...style.container, marginTop: hp('3%') }}>
-                            <Text style={{ fontSize: hp('2%') }}>For general</Text>
+                            <Text style={{ fontSize: hp('2%') }}>{lng.for_general}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>

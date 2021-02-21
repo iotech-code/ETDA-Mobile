@@ -23,9 +23,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import EventPost from '../../components/EventPost'
-import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { homeFeed } from '../../Service/PostService'
 import moment from 'moment'
+import translate from '../../constant/lang'
+
 LocaleConfig.locales['en'] = {
     formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
     monthNames: [
@@ -50,19 +52,34 @@ LocaleConfig.locales['en'] = {
 LocaleConfig.defaultLocale = 'en';
 
 export default class Activity extends Component {
-    state = {
-        visibleSearch: false,
-        eventList: [],
-        markedDates: null,
-        isFetching: false,
-        user_role: '',
-        user_type: ''
+    constructor(props) {
+        super(props)
+        this.state = {
+            visibleSearch: false,
+            eventList: [],
+            markedDates: null,
+            isFetching: false,
+            user_role: '',
+            user_type: '',
+            lng: {}
+        }
+    }
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     componentDidMount() {
         this.onGetEventList();
         this.getUserInfo();
     }
+
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
         let user_data = JSON.parse(user_json);
@@ -102,7 +119,7 @@ export default class Activity extends Component {
 
 
     render() {
-        const { eventList, markedDates, isFetching } = this.state
+        const { eventList, markedDates, isFetching, lng } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -110,7 +127,7 @@ export default class Activity extends Component {
                         <TouchableOpacity onPress={() => Actions.replace('Activity')}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" />
                         </TouchableOpacity>
-                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Event</Text>
+                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.event}</Text>
                         <TouchableOpacity onPress={() => Actions.push('Search')}>
                             <Icon name="magnify" size={hp('3%')} color="white" />
                         </TouchableOpacity>
@@ -122,7 +139,7 @@ export default class Activity extends Component {
                             padding: hp('2%'),
                             alignItems: 'center'
                         }}>
-                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Event</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.event}</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
 
@@ -130,7 +147,7 @@ export default class Activity extends Component {
                         {/* section admin */}
                         <View style={{ ...style.container, marginBottom: hp('1%') }}>
                             <Button
-                                title="Create New Event"
+                                title={lng.create_new_event}
                                 Outline={true}
                                 titleStyle={{ color: '#003764', }}
                                 buttonStyle={{
@@ -162,14 +179,14 @@ export default class Activity extends Component {
                                     <ActivityIndicator color="#003764" style={{ marginTop: hp('10%') }} />
                                     : <Fragment>
                                         <View style={{ ...style.container }}>
-                                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>My events(1)</Text>
+                                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.my_events}</Text>
                                         </View>
                                         <View style={{ marginTop: hp('2%') }}>
                                             {/* <EventPost></EventPost> */}
                                         </View>
 
                                         <View style={{ ...style.container, marginTop: hp('2%') }}>
-                                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>All events(2)</Text>
+                                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.all_events}</Text>
                                         </View>
 
                                         <View style={{ marginTop: hp('2%') }}>

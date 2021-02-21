@@ -21,6 +21,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import { apiServer } from '../constant/util';
+import translate from '../constant/lang'
 export default class Poll extends Component {
     constructor(props) {
         super(props)
@@ -28,10 +29,21 @@ export default class Poll extends Component {
             token: '',
             text: '',
             visibleSearch: false,
-            list_search : []
+            list_search : [],
+            lng: {}
         }
     }
 
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
 
     async componentDidMount() {
         try {
@@ -79,14 +91,15 @@ export default class Poll extends Component {
 
     };
     render() {
+        const {lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                     <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Search</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.search}</Text>
                             <TouchableOpacity onPress={() => Actions.replace('Main')}>
-                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Done</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.done}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ ...style.container, marginTop: hp('2%') }}>
@@ -99,7 +112,7 @@ export default class Poll extends Component {
                                 ></TextInput>
                             </View>
                             <View style={{ marginTop: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Search by tags</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.search_by_tags}</Text>
                             </View>
                         </View>
                         <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
