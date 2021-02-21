@@ -22,9 +22,10 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createPost } from '../../Service/PostService'
 import { colors } from '../../constant/util';
+import Picker from 'react-native-picker';
 
 export default class PollCreate extends Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = {
             visibleSearch: false,
@@ -44,6 +45,7 @@ export default class PollCreate extends Component {
             indexSchedule: 0,
             datepicker: new Date(),
             timepicker: new Date(),
+            type_of_poll: 'for general',
             question: {
                 question: null,
                 type_of_poll: 'for general',
@@ -55,6 +57,26 @@ export default class PollCreate extends Component {
                 ]
             }
         }
+    }
+
+
+    componentDidMount() {
+
+    }
+
+
+    openSelectType() {
+        const { type_of_poll } = this.state
+        Picker.init({
+            pickerData: ['for general', 'for student'],
+            selectedValue: type_of_poll,
+            pickerTextEllipsisLen: 100,
+            pickerTitleText: 'Type of Poll',
+            onPickerConfirm: data => {
+                this.setState({ type_of_poll: data })
+            },
+        });
+        Picker.show();
     }
 
     async onCreatePoll() {
@@ -183,10 +205,10 @@ export default class PollCreate extends Component {
 
                             <View style={{ ...style.container, marginVertical: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2%'), }}>Type of Poll</Text>
-                                <View style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }}>
+                                <TouchableOpacity style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }} onPress={()=> this.openSelectType()}>
                                     <Text style={{ fontSize: hp('1.8%') }}>For general</Text>
                                     <Icon name="chevron-down" style={{ fontSize: hp('2%') }} color={colors.primary} />
-                                </View>
+                                </TouchableOpacity>
                             </View>
 
                             <View style={{ ...style.divider }}></View>
