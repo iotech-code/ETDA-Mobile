@@ -22,11 +22,25 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import { colors, apiServer } from '../../constant/util'
-
+import translate from '../../constant/lang'
 export default class Activity extends Component {
     state = {
         visibleSearch: false,
-        user_type: '' , token : '' , user_role : ''
+        user_type: '' , 
+        token : '' , 
+        user_role : '',
+        lng: {}
+    }
+
+    async UNSAFE_componentWillMount () {
+        await this.getLang();
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     async componentDidMount() {
@@ -45,7 +59,7 @@ export default class Activity extends Component {
     }
     
     render() {
-        const { dataList } = this.state
+        const { dataList, lng } = this.state
         return (
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
@@ -58,31 +72,28 @@ export default class Activity extends Component {
                     <View style={{ ...style.container, marginTop: hp('4%') }}>
                         <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={() => Actions.replace('Event')}>
                             <Text style={{ ...styleScoped.menuName }}>
-                                Event
+                                {lng.event}
                             </Text>
                             <Icon name="account-plus" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
                             <Text style={{ ...styleScoped.description }}>
-                                Lorem ipsum dolor sit amet, consetetur
                             </Text>
                         </TouchableOpacity>
                         
                         <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.replace('Poll')}>
                             <Text style={{ ...styleScoped.menuName }}>
-                                Poll
+                                {lng.poll}
                             </Text>
                             <Icon name="checkbox-marked-outline" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
                             <Text style={{ ...styleScoped.description }}>
-                                Lorem ipsum dolor sit amet, consetetur
                             </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent, marginTop: hp('2%') }} onPress={()=>Actions.replace('Survey')}>
                             <Text style={{ ...styleScoped.menuName }}>
-                                Survey
+                                {lng.survey}
                             </Text>
                             <Icon name="flag" color="white" style={{ ...styleScoped.menuIcon }} size={hp('6%')} />
                             <Text style={{ ...styleScoped.description }}>
-                                Lorem ipsum dolor sit amet, consetetur
                             </Text>
                         </TouchableOpacity>
                     </View>

@@ -7,25 +7,21 @@ import {
     View,
     Text,
     StatusBar,
-    Image,
-    TextInput,
     TouchableOpacity,
     FlatList,
     Platform,
     ActivityIndicator
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
-import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../components/Navbar'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../components/MenuFooter'
 import BlogManager from '../components/ManageBlog'
-import { fonts, apiServer } from '../constant/util';
+import { fonts } from '../constant/util';
 import { getListApprove, approvePost } from '../Service/PostService'
+import translate from '../constant/lang'
 export default class ManageBlog extends Component {
     state = {
         visibleSearch: false,
@@ -33,6 +29,7 @@ export default class ManageBlog extends Component {
         token: '',
         user_role: '',
         list_data: [],
+        lng: {},
         showMangeBlogControl: false,
         loadingList: false,
         count_selected: 0,
@@ -55,6 +52,17 @@ export default class ManageBlog extends Component {
         }
     }
 
+
+    async UNSAFE_componentWillMount () {
+        await this.getLang();
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
 
     async callPostApprove() {
 
@@ -148,7 +156,7 @@ export default class ManageBlog extends Component {
     }
 
     render() {
-        const { list_data, count_selected, loadingList, selectAll } = this.state
+        const { list_data, count_selected, loadingList, selectAll, lng } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>
                 <StatusBar barStyle="dark-content" />
@@ -166,7 +174,7 @@ export default class ManageBlog extends Component {
                                 padding: hp('2%'),
                                 alignItems: 'center'
                             }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Manage Blogs</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.manage_blogs}</Text>
 
                             </View>
 
@@ -177,9 +185,9 @@ export default class ManageBlog extends Component {
                                 alignItems: 'center',
                                 marginBottom: hp('2%')
                             }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Waiting for publish({this.state.list_data.length})</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.wait_for_publish} ({this.state.list_data.length})</Text>
                                 <Button
-                                    title={selectAll || count_selected == 0 ? "Select all" : "Un Select all"}
+                                    title={selectAll || count_selected == 0 ? lng.select_all : lng.select_all}
                                     titleStyle={{ fontSize: hp('1.5%'), fontWeight: '300', padding: hp('1%') }}
                                     buttonStyle={{ ...style.btnTagPrimary, padding: hp('1%') }}
                                     onPress={() => this.selectAll()}
@@ -222,26 +230,26 @@ export default class ManageBlog extends Component {
     }
 
     renderManageBlgControl() {
-        const { count_selected } = this.state
+        const { count_selected, lng } = this.state
         return (
             <View style={{ ...styleScoped.containerSelectOption }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity onPress={() => this.cancleSelected()}>
-                        <Text style={{ fontSize: hp('2%'), color: fonts.color.primary, }}>Cancle</Text>
+                        <Text style={{ fontSize: hp('2%'), color: fonts.color.primary, }}>{lng.cancle}</Text>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Blog selected({count_selected})</Text>
+                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{lng.blog_selected} ({count_selected})</Text>
                     <Text></Text>
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
-                        title="Publish"
+                        title={lng.publish}
                         buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
                         onPress={() => this.callPostApprove()}
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
-                        title="Reject"
+                        title={lng.reject}
                         Outline={true}
                         titleStyle={{ color: fonts.color.primary }}
                         buttonStyle={{

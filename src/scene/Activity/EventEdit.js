@@ -6,10 +6,6 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
-    TextInput,
-    TouchableOpacity,
     FlatList
 } from 'react-native';
 
@@ -20,12 +16,28 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { fonts, apiServer } from '../../constant/util';
 import { Button, BottomSheet } from 'react-native-elements';
+import translate from '../../constant/lang'
 
 export default class EventEdit extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super()
+        this.state = {
+            visibleSearch: '',
+            lng: {}
+        }
     }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+    }
+
     render() {
+        const {lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -33,12 +45,12 @@ export default class EventEdit extends Component {
                     <View style={{ ...styleScoped.shadowCard, backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Event</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.edit_event}</Text>
                             <View></View>
                         </View>
 
                         <View style={{ ...style.container, paddingTop: hp('2%') }}>
-                            <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Event topic</Text>
+                            <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{lng.event_topic}</Text>
                         </View>
 
                         <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
@@ -50,12 +62,12 @@ export default class EventEdit extends Component {
                         </View>
                         <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
                         <View style={{ ...style.container }}>
-                            <Text style={{ fontSize: hp('2%') }}>Event schedule</Text>
+                            <Text style={{ fontSize: hp('2%') }}>{lng.event_schedule}</Text>
 
                             <View style={{ marginTop: hp('3%'), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>Add event date</Text>
                                 <Button
-                                    title="Change"
+                                    title={lng.change}
                                     titleStyle={{ padding: hp('2%') }}
                                     buttonStyle={{ ...style.btnTagPrimary, padding: hp('3%'), ...style.btnRounded }}
                                 />
@@ -65,12 +77,12 @@ export default class EventEdit extends Component {
                         <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
 
                         <View style={{ ...style.container }}>
-                            <Text style={{ fontSize: hp('2%') }}>Start event</Text>
+                            <Text style={{ fontSize: hp('2%') }}>{lng.start_event}</Text>
 
                             <View style={{ marginTop: hp('3%'), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>10:00</Text>
                                 <Button
-                                    title="Change"
+                                    title={lng.change}
                                     titleStyle={{ padding: hp('2%') }}
                                     buttonStyle={{ ...style.btnTagPrimary, padding: hp('3%'), ...style.btnRounded }}
                                 />
@@ -80,12 +92,12 @@ export default class EventEdit extends Component {
                         <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
 
                         <View style={{ ...style.container }}>
-                            <Text style={{ fontSize: hp('2%') }}>Work shop</Text>
+                            <Text style={{ fontSize: hp('2%') }}>{lng.work_shop}</Text>
 
                             <View style={{ marginTop: hp('3%'), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>10:00</Text>
                                 <Button
-                                    title="Change"
+                                    title={lng.change}
                                     titleStyle={{ padding: hp('2%') }}
                                     buttonStyle={{ ...style.btnTagPrimary, padding: hp('3%'), ...style.btnRounded }}
                                 />
@@ -96,7 +108,7 @@ export default class EventEdit extends Component {
 
                         <View style={{ marginTop: hp('2%') , ...style.container }}>
                             <Button
-                                title="Add schedule"
+                                title={lng.add_schedule}
                                 Outline={true}
                                 titleStyle={{ color: '#003764', }}
                                 buttonStyle={{
@@ -110,7 +122,7 @@ export default class EventEdit extends Component {
                     </View>
                     <View style={{ marginTop: hp('2%'), ...style.container }}>
                         <Button
-                            title="Edit"
+                            title={lng.edit}
                             buttonStyle={{
                                 padding: hp('1%'),
                                 ...style.btnPrimary,

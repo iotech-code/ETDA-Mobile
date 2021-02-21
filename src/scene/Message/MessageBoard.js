@@ -28,6 +28,7 @@ import { communityFeed, myFeed } from '../../Service/PostService'
 import EventPost from '../../components/EventPost'
 import { colors, apiServer, fonts } from '../../constant/util'
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import translate from '../../constant/lang'
 
 export default class MessageBoard extends Component {
     constructor() {
@@ -39,6 +40,7 @@ export default class MessageBoard extends Component {
             board: 'community',
             token: '',
             list_data: [],
+            lng: {},
             user_role: '',
             communityFeedCurrentPage: 0,
             myFeedCurrentPage: 0,
@@ -50,12 +52,19 @@ export default class MessageBoard extends Component {
 
     }
 
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+
     async UNSAFE_componentWillMount() {
         try {
             const token = await AsyncStorage.getItem('token');
             const user = await AsyncStorage.getItem('user_data');
             const { user_type, user_role, fullname } = JSON.parse(user);
-
+            await this.getLang();
             this.setState({
                 user_type: user_type,
                 token: token,
@@ -140,7 +149,7 @@ export default class MessageBoard extends Component {
     }
 
     renderModalReport() {
-        const { visibleModalReport } = this.state
+        const { visibleModalReport, lng } = this.state
         return (
             <Overlay
                 isVisible={visibleModalReport}
@@ -162,35 +171,35 @@ export default class MessageBoard extends Component {
                             color: fonts.color.primary,
                             fontSize: hp('2%'),
                             fontWeight: '600'
-                        }}>Report</Text>
+                        }}>{lng.report}</Text>
                     </View>
 
                     <View style={{ marginVertical: hp('1%') }}>
-                        <Text style={{ fontSize: hp('2%') }}>Select topic for report</Text>
+                        <Text style={{ fontSize: hp('2%') }}>{lng.select_topic_for_report}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
                             <Button
-                                title="Fake news"
+                                title={lng.fake_news}
                                 titleStyle={{ fontSize: hp('2%') }}
                                 buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
                             />
                             <Button
-                                title="Cyber bully"
+                                title={lng.cyber_bully}
                                 titleStyle={{ fontSize: hp('2%') }}
                                 buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
                             />
                             <Button
-                                title="Threat"
+                                title={lng.threat}
                                 titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
                                 buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
                             />
                         </View>
-                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>Give reason for report this post not suitable</Text>
+                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>{lng.report_reason}</Text>
                     </View>
 
                     <View style={{ ...style.customInput, height: hp('20%'), flexDirection: 'column', justifyContent: 'flex-start' }}>
                         <TextInput
                             style={{ fontSize: hp('2%'), padding: 0 }}
-                            placeholder="Enter your reason…"
+                            placeholder={lng.enter_reason}
                             multiline={true}
                         />
                     </View>
@@ -198,7 +207,7 @@ export default class MessageBoard extends Component {
 
                     <View style={{ marginTop: hp('1%') }}>
                         <Button
-                            title="Report"
+                            title={lng.report}
                             buttonStyle={{
                                 padding: hp('1.5%'),
                                 ...style.btnRounded,
@@ -213,7 +222,7 @@ export default class MessageBoard extends Component {
     }
 
     render() {
-        const { dataList } = this.state
+        const { dataList, lng } = this.state
         return (
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <FlashMessage position="top"
@@ -236,14 +245,14 @@ export default class MessageBoard extends Component {
                                     padding: hp('2%'),
                                     alignItems: 'center'
                                 }}>
-                                    <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Message Board</Text>
+                                    <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.message_board}</Text>
                                     <TouchableOpacity onPress={() => this.sortFeed(this.state.list_data)}>
                                         <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                     </TouchableOpacity>
                                 </View>
                                 <View  style={{ ...style.container }}>
                                     <Button
-                                        title={global.lng.new_post}
+                                        title={lng.new_post}
                                         Outline={true}
                                         titleStyle={{ color: '#003764', }}
                                         buttonStyle={{
@@ -265,7 +274,7 @@ export default class MessageBoard extends Component {
                                         this.callCommunityFeed(this.state.token)
                                     }}
                                 >
-                                    <Text style={this.state.board == 'community' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>Community board</Text>
+                                    <Text style={this.state.board == 'community' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>{lng.community_board}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={this.state.board == 'my' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
                                     onPress={() => {
@@ -273,7 +282,7 @@ export default class MessageBoard extends Component {
                                         this.callMYFeed(this.state.token)
                                     }}
                                 >
-                                    <Text style={this.state.board == 'my' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>My board</Text>
+                                    <Text style={this.state.board == 'my' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>{lng.my_board}</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -303,21 +312,8 @@ export default class MessageBoard extends Component {
                                                 }
                                             })
                                     }
-                                    {/* end  show post */}
-                                    {/* {this.state.list_data.map((item, index) => {
-                                return (
-                               
-                                    <View>
-                                        
-                                        <MessagePost data={item} key={`MessagePost_${index}`}>   </MessagePost>
-                                    </View>
-                                    )}
-                                )} */}
                                 </ScrollView>
-
-
                             </View>
-
                         </View>
                     </View>
                     {this.renderModalReport()}

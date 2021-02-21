@@ -23,13 +23,25 @@ import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import PostSurvey from '../../components/Survey'
 import {Button} from 'react-native-elements'
+import translate from '../../constant/lang'
+
 export default class Survey extends Component {
     constructor() {
         super()
         this.state = {
             user_type: '',
-            user_role: ''
+            user_role: '',
+            lng: {}
         }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
     }
 
     componentDidMount() {
@@ -47,6 +59,7 @@ export default class Survey extends Component {
     };
 
     render() {
+        const {lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -54,7 +67,7 @@ export default class Survey extends Component {
                         <TouchableOpacity onPress={() => Actions.replace('Activity')}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" />
                         </TouchableOpacity>
-                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Survey</Text>
+                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.survey}</Text>
                         <TouchableOpacity onPress={() => Actions.push('Search')}>
                             <Icon name="magnify" size={hp('3%')} color="white" />
                         </TouchableOpacity>
@@ -66,13 +79,13 @@ export default class Survey extends Component {
                             padding: hp('2%'),
                             alignItems: 'center'
                         }}>
-                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Survey</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.survey}</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
 
                         <View style={{ ...style.container }}>
                             <Button
-                                title="Create new Survey"
+                                title={lng.create_new_survey}
                                 Outline={true}
                                 titleStyle={{ color: '#003764', }}
                                 buttonStyle={{

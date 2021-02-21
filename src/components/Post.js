@@ -20,6 +20,7 @@ import { fonts } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
 import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
+import translate from '../constant/lang'
 
 export default class Post extends Component {
     constructor(props) {
@@ -37,8 +38,20 @@ export default class Post extends Component {
             visibleModalReport: false,
             is_like: 0,
             like_count: 0,
+            lng: {},
             is_follow: 0
         }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     async componentDidMount() {
@@ -66,7 +79,7 @@ export default class Post extends Component {
     }
 
     renderModalReport() {
-        const { visibleModalReport } = this.state
+        const { visibleModalReport, lng } = this.state
         return (
             <Overlay
                 isVisible={true}
@@ -87,35 +100,35 @@ export default class Post extends Component {
                             color: fonts.color.primary,
                             fontSize: hp('2%'),
                             fontWeight: '600'
-                        }}>Report</Text>
+                        }}>{lng.report}</Text>
                     </View>
 
                     <View style={{ marginVertical: hp('1%') }}>
-                        <Text style={{ fontSize: hp('2%') }}>Select topic for report</Text>
+                        <Text style={{ fontSize: hp('2%') }}>{lng.select_topic_for_report}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
                             <Button
-                                title="Fake news"
+                                title={lng.fake_news}
                                 titleStyle={{ fontSize: hp('2%') }}
                                 buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
                             />
                             <Button
-                                title="Cyber bully"
+                                title={lng.cyber_bully}
                                 titleStyle={{ fontSize: hp('2%') }}
                                 buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
                             />
                             <Button
-                                title="Threat"
+                                title={lng.threat}
                                 titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
                                 buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
                             />
                         </View>
-                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>Give reason for report this post not suitable</Text>
+                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>{lng.report_reason}</Text>
                     </View>
 
                     <View style={{ ...style.customInput, height: hp('20%'), flexDirection: 'column', justifyContent: 'flex-start' }}>
                         <TextInput
                             style={{ fontSize: hp('2%'), padding: 0 }}
-                            placeholder="Enter your reason…"
+                            placeholder={lng.enter_reason}
                             multiline={true}
                         />
                     </View>
@@ -123,7 +136,7 @@ export default class Post extends Component {
 
                     <View style={{ marginTop: hp('1%') }}>
                         <Button
-                            title="Report"
+                            title={lng.report}
                             buttonStyle={{
                                 padding: hp('1.5%'),
                                 ...style.btnRounded,
@@ -138,7 +151,7 @@ export default class Post extends Component {
     }
 
     renderBottomSheet() {
-        const { visibleBottomSheet, is_follow } = this.state
+        const { visibleBottomSheet, is_follow, lng } = this.state
         const { report } = this.props
         let height = Platform.OS === 'ios' ? hp('32%') : hp('30%')
         height = report ? height : Platform.OS === 'ios' ? hp('25%') : hp('23%')
@@ -168,7 +181,7 @@ export default class Post extends Component {
                         name={is_follow ? "heart" : 'heart-outline'}
                         size={hp('3%')} color={is_follow ? "#FF0066" : '#707070'}
                         style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.follow_blog}</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 <TouchableOpacity style={{
@@ -188,7 +201,7 @@ export default class Post extends Component {
                     }}
                 >
                     <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_blog}</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
 
@@ -198,14 +211,14 @@ export default class Post extends Component {
                     onPress={() => this.callDeletePost(this.props.data.post_id)}
                 >
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
                 </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
                 {
                     report ?
                         <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
                             <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Report</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.report}</Text>
                         </TouchableOpacity>
                         : null
                 }
@@ -289,7 +302,7 @@ export default class Post extends Component {
             view
         } = this.props.data
 
-        let { is_like, like_count, default_avatar } = this.state
+        let { is_like, like_count, default_avatar, lng } = this.state
 
         return (
             <View style={{
@@ -384,7 +397,7 @@ export default class Post extends Component {
                     paddingHorizontal: hp('2%'),
                 }}>
                     <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                    <Text style={{ color: '#B5B5B5' }}>{comment_number}  comments</Text>
+                    <Text style={{ color: '#B5B5B5' }}>{comment_number}  {lng.comment}</Text>
                 </TouchableOpacity>
            
                 {/* <View style={{ ...style.sectionSocial }}>

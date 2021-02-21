@@ -17,58 +17,32 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconMaterail from 'react-native-vector-icons/MaterialIcons';
 import { Fragment } from 'react';
 import HttpRequest from '../Service/HttpRequest'
+import translate from '../constant/lang'
 
 const http = new HttpRequest();
 export default class Notification extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            lng: {},
             dataEvent: [
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    title: 'Events Topic',
-                    time: '11/02/2020  3:30 pm'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    title: 'Events Topic',
-                    time: '11/02/2020  5:30 pm'
-                }
             ],
             dataNoti: [
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                }
             ]
         }
     }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+
     componentDidMount() {
         this.getListNotification();
     }
@@ -85,7 +59,7 @@ export default class Notification extends Component {
     }
 
     render() {
-        const { dataEvent, dataNoti } = this.state
+        const { dataEvent, dataNoti, lng } = this.state
         return (
             <View
                 style={{
@@ -98,7 +72,7 @@ export default class Notification extends Component {
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>
-                        Notifications
+                        {lng.notifications}
                     </Text>
                     <View></View>
                 </View>
@@ -118,7 +92,7 @@ export default class Notification extends Component {
                                 color="#427AA1"
                                 style={{ marginRight: hp('1%') }}
                             />
-                            <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>Your events today</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>{lng.event_today}</Text>
                         </View>
                         <TouchableOpacity>
                             <Icon
@@ -154,7 +128,7 @@ export default class Notification extends Component {
                     </View>
                     <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
                     <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styleScoped.textSeeMore }}>See Upcoming Events</Text>
+                        <Text style={{ ...styleScoped.textSeeMore }}>{lng.see_upcomming_events}</Text>
                         <Icon name="chevron-right" size={hp('2.5%')} color="#707070" />
                     </TouchableOpacity>
                 </View>
@@ -170,7 +144,7 @@ export default class Notification extends Component {
                 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                         <IconMaterail name="notifications" size={hp('2.5%')} color="#427AA1" style={{ marginRight: hp('1%') }} />
-                        <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>Notifications</Text>
+                        <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>{lng.notifications}</Text>
                     </View>
                     <View style={{ ...style.divider, marginVertical: hp('2.5%') }}></View>
                     <ScrollView>

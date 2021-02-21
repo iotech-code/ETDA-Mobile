@@ -24,7 +24,7 @@ import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
 import { homeFeed } from '../Service/PostService'
 import EventPost from '../components/EventPost'
-import tr from '../constant/lang'
+import translate from '../constant/lang'
 import FlashMessage, { showMessage } from "react-native-flash-message";
 export default class Main extends Component {
     state = {
@@ -51,8 +51,8 @@ export default class Main extends Component {
 
     async getLang() {
         this.setState({ isFetching: true })
-        let lng = await tr()
-        this.setState({ lng })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
         this.setState({ isFetching: false })
     }
 
@@ -125,7 +125,8 @@ export default class Main extends Component {
     }
 
     render() {
-        const { isFetching, user_role, list_data } = this.state
+        const { isFetching, user_role, list_data, lng } = this.state
+ 
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
@@ -150,7 +151,7 @@ export default class Main extends Component {
                                 <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
                                 : <Fragment>
                                     <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
-                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
+                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.etda_blog}</Text>
                                         <TouchableOpacity onPress={() => this.sortFeed(list_data)}>
                                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                         </TouchableOpacity>
@@ -159,7 +160,7 @@ export default class Main extends Component {
                                         user_role !== 'Member' &&
                                         <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                             <Button
-                                                title={global.lng.new_post}
+                                                title={lng.new_post}
                                                 Outline={true}
                                                 titleStyle={{ color: '#003764', }}
                                                 buttonStyle={{

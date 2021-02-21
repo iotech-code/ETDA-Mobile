@@ -22,9 +22,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import ImageGrid from '../../components/ImageGrid'
 import { getTagsList, createPost, updatePost } from '../../Service/PostService'
 import Spinner from 'react-native-loading-spinner-overlay';
-
-
-
+import translate from '../../constant/lang'
 export default class CreatePost extends Component {
     constructor() {
         super();
@@ -48,8 +46,20 @@ export default class CreatePost extends Component {
             listTags: [],
             originalTag: [],
             spinner: false,
+            lng: {},
             loadingTags: false
         }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     async componentDidMount() {
@@ -63,7 +73,6 @@ export default class CreatePost extends Component {
                 image: post_images,
                 tag: post_tag
             })
-            console.log('props', this.props)
             this.getListTag();
         } catch (err) {
             // handle errors
@@ -216,7 +225,7 @@ export default class CreatePost extends Component {
     }
 
     render() {
-        const { loadingImage, listTags, spinner, loadingTags } = this.state
+        const { loadingImage, listTags, spinner, loadingTags, lng } = this.state
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <Spinner visible={spinner} />
@@ -227,16 +236,16 @@ export default class CreatePost extends Component {
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>
                         {
                             this.props.type_value == 'detail'
-                                ? 'Detail Blog'
+                                ? lng.detail
                                 : this.props.type_value == 'create'
-                                    ? 'Create Blog'
-                                    : 'Edit Blog'
+                                    ? lng.create_blog
+                                    : lng.edit_blog
                         }
                     </Text>
                     {this.props.type_value == 'detail' ? null
                         :
                         <TouchableOpacity onPress={() => this.createPost()}>
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.post}</Text>
                         </TouchableOpacity>
                     }
 
@@ -244,7 +253,7 @@ export default class CreatePost extends Component {
                 {/* content */}
                 <View>
                     <View style={{ height: hp('7%') }}>
-                        <TextInput placeholder="Enter your topic here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
+                        <TextInput placeholder={lng.enter_topic} style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
                             defaultValue={this.state.title}
                             editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
                             onChangeText={(value) => { this.setState({ title: value }) }}
@@ -254,7 +263,7 @@ export default class CreatePost extends Component {
                     <View style={{ ...style.divider }}></View>
                     <View style={{ height: hp('25%') }}>
                         <TextInput
-                            placeholder="Enter your post here…"
+                            placeholder={lng.enter_post_detail==null?"Enter post description":lng.enter_post_detail}
                             style={{
                                 paddingVertical: hp('2%'),
                                 paddingHorizontal: hp('2%'),
@@ -302,7 +311,7 @@ export default class CreatePost extends Component {
                                         style={{ marginRight: hp('2%') }}
                                         color="#003764"
                                         size={hp('3%')} />
-                                    <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
+                                    <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>{lng.pick_picture}</Text>
 
                                 </View>
                         }
@@ -317,7 +326,7 @@ export default class CreatePost extends Component {
                         paddingHorizontal: hp('2%')
                     }}>
                         <Icon name="tag" style={{ marginRight: hp('2%') }} color="#003764" size={hp('2.5%')} />
-                        <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Tag</Text>
+                        <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>{lng.tag}</Text>
                     </View>
                     {
                         this.props.type_value == 'detail'
@@ -326,14 +335,14 @@ export default class CreatePost extends Component {
                                 <View style={{ paddingHorizontal: hp('2%'), marginTop: hp('2%') }}>
                                     <TextInput
                                         style={{ ...style.customInput }}
-                                        placeholder="Search tags"
+                                        placeholder={lng.search_tags}
                                         onChangeText={(text) => this.searchTags(text)}
                                     />
                                 </View>
 
                                 <View style={{ paddingHorizontal: hp('2%') }}>
                                     <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
-                                        <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
+                                        <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>{lng.or}</Text>
                                     </View>
                                 </View>
                             </Fragment>

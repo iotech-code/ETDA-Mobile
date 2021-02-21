@@ -18,6 +18,7 @@ import { apiServer } from '../../constant/util';
 import HttpRequest from '../../Service/HttpRequest';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
+import translate from '../../constant/lang'
 
 const http = new HttpRequest();
 
@@ -26,7 +27,8 @@ export default class DeleteAccount extends Component {
         super();
         this.state = {
             password: '',
-            user_data: {}
+            user_data: {},
+            lng: {}
         }
     }
 
@@ -39,6 +41,17 @@ export default class DeleteAccount extends Component {
         } catch (e) {
             console.log(e)
         }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     callDelete = async () => {
@@ -60,38 +73,37 @@ export default class DeleteAccount extends Component {
 
 
     render() {
+        const {lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Delete Account</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.delete_account}</Text>
                             <TouchableOpacity onPress={() => Actions.replace('Main')}>
-                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Confirm</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.confirm}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
 
                     <View style={style.container}>
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '600' }}>Delete your account permanently!</Text>
+                        <Text style={{ fontSize: hp('2%'), fontWeight: '600' }}>{lng.delete_account_title}</Text>
                         <Text style={{ fontSize: hp('2%'), marginTop: hp('1%'), color: "#707070", fontWeight: '300' }}>
-                            Your data cannot be recovered if you reactivate
-                            your account in the future.
+                            {lng.delete_account_detail}
                         </Text>
                         <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
                         <Text style={{ fontSize: hp('2%'), marginTop: hp('1%'), color: "#707070", fontWeight: '300' }}>
-                            If you want to delete. Please enter your
-                            password for confirm delete your account.
+                            {lng.delete_account_detail2}
                         </Text>
                     </View>
                     <View style={{ ...style.container, marginTop: hp('2%') }}>
-                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>Password</Text>
+                        <Text style={{ fontSize: hp('2%'), marginBottom: hp('1%') }}>{lng.password}</Text>
                         <TextInput
                             value={this.state.password}
                             maxLength={20}
                             style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
-                            placeholder="Enter your password here…"
+                            placeholder={lng.enter_password}
                             onChangeText = { v => this.setState({password: v}) }
                         />
                         <Text style={{ textAlign: 'right', color: '#4267B2', marginRight: hp('2%') }}>{this.state.password.length}/20</Text>
