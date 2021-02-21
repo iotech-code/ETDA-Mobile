@@ -18,22 +18,168 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, fonts, apiServer } from '../../constant/util';
+import { colors, fonts } from '../../constant/util';
 import * as Progress from 'react-native-progress';
+import { postAction } from '../../Service/PostService'
 export default class PollDetail extends Component {
-    state = {
-        visibleSearch: false
+    constructor(props) {
+        super()
+        this.state = {
+            visibleSearch: false,
+            data: null,
+            answer_id: null,
+            progress: 0,
+            is_play: 0
+        }
     }
+
+
+    async UNSAFE_componentWillMount() {
+        const { data } = this.props
+        await this.setState({ data })
+        await this.setState({ is_play: data.is_play })
+    }
+
+
+    onChooseAnswer(answer) {
+        this.setState({ answer_id: answer.id })
+        this.setState({ progress: 1 })
+    }
+
+    async onSaveAnswer() {
+        try {
+            const { post_id, post_addition_data, answer_id } = this.state.data
+            let data = {
+                post_id: post_id,
+                post_type: 'poll',
+                datas: [
+                    {
+                        question_id: post_addition_data.question_id,
+                        answer_id: this.state.answer_id
+                    }
+                ]
+            }
+            let response = await postAction(data)
+            if (response.data.status == 'success') {
+                Actions.pop({ refresh: {} });
+            }
+        } catch (error) {
+            console.log('Save anser error : ', error)
+        }
+
+    }
+
+
+    renderTakePoll() {
+        const { answer_id, progress } = this.state
+        const { title, author, post_date, post_addition_data } = this.state.data
+        console.log('post_addition_data', this.state.data)
+        return (
+            <View>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', ...style.container }}>
+
+                    <Progress.Circle
+                        size={80}
+                        thickness={4}
+                        color={fonts.color.primary}
+                        progress={progress}
+                        indeterminate={false}
+                        showsText={true}
+                        style={{ marginRight: hp('3%') }}
+
+                    />
+                    <Text style={{ fontSize: hp('3%') }}>{title}</Text>
+                </View>
+                {/* section content */}
+
+
+
+                <View style={{ ...style.container, marginTop: hp('3%') }}>
+                    <Text style={{ fontSize: hp('2%') }}>{post_addition_data.question}</Text>
+                    <View style={{ ...styleScoped.warpperList }}>
+                        {
+                            post_addition_data.answer.map((el, index) => {
+                                return (
+                                    <TouchableOpacity style={{ ...styleScoped.listItem }} key={`answer_${index}`} onPress={() => this.onChooseAnswer(el)}>
+                                        <Icon name={el.id == answer_id ? "checkbox-blank-circle" : 'checkbox-blank-circle-outline'} size={hp('2.5%')} style={{ marginRight: hp('1%'), color: colors.primary }} />
+                                        <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{el.detail}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+
+                    </View>
+                </View>
+
+
+
+                <View style={{ ...style.container, marginTop: hp('3%') }}>
+                    <Button
+                        title="Done"
+                        buttonStyle={{ padding: hp('1.5%'), ...style.btnRounded, ...style.btnPrimary }}
+                        onPress={() => this.onSaveAnswer()}
+                    />
+                </View>
+
+
+            </View>
+
+        )
+    }
+
+    renderFinishPoll() {
+        const { title, post_addition_data } = this.state.data
+        return (
+            <View style={{ ...style.container, marginTop: hp('1%') }}>
+                <Text style={{ fontSize: hp('2%') }}>{title}</Text>
+
+                {
+                    post_addition_data.answer.map((el, index) => {
+                        return (
+                            <View style={{ marginTop: hp('2%'), ...style.space__between, alignItems: 'flex-start' }} key={`percen_${index}`}>
+                                <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>33.33%</Text>
+                            </View>
+                        )
+                    })
+                }
+
+
+
+
+                <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
+
+                {
+                    post_addition_data.answer.map((el, index) => {
+                        return (
+                            <View style={{ marginTop: hp('1%') }} key={`progressbar_${index}`}>
+                                <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
+                                <Progress.Bar progress={0.1} width={wp('80%')} height={10} />
+                            </View>
+                        )
+                    })
+                }
+
+
+            </View>
+        )
+    }
+
+
     render() {
+        const { title, author, post_date, post_addition_data } = this.state.data
+
         return (
             <View style={{
                 flex: 1,
                 backgroundColor: "#F9FCFF"
             }}>
+
                 <ScrollView style={{ flex: 1, ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll Detail</Text>
+                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll detail</Text>
                         <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                     </View>
                     <View style={{
@@ -53,8 +199,8 @@ export default class PollDetail extends Component {
                         }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <View >
-                                    <Text style={{ fontSize: hp('2%'), }}>ETDA official</Text>
-                                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > 11/11/2020  3:30 pm </Text>
+                                    <Text style={{ fontSize: hp('2%'), }}>{author.full_name}</Text>
+                                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > {post_date} </Text>
                                 </View>
                             </View>
                             <TouchableOpacity  >
@@ -63,136 +209,10 @@ export default class PollDetail extends Component {
                         </View>
                         <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', ...style.container }}>
-                            {/* <View style={{ ...styleScoped.borderStep }}>
-                                <Text style={{ fontSize: hp('3%'), color: fonts.color.primary }}>Step</Text>
-                            </View> */}
-                            <Progress.Circle
-                                size={80}
-                                thickness={2}
-                                color={fonts.color.primary}
-                                progress={0.5}
-                                indeterminate={false}
-                                style={{ marginRight: hp('3%') }}
-                                showsText={true}
-                            />
-                            <Text style={{ fontSize: hp('3%') }}>Step info</Text>
-                        </View>
-                        {/* section content */}
 
-
-
-                        <View style={{ ...style.container, marginTop: hp('3%') }}>
-                            <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
-                            <View style={{ ...styleScoped.warpperList }}>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: colors.primary }} />
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>None</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>SomeTime</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>Always</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={{ ...style.container, marginTop: hp('3%') }}>
-                            <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
-                            <View style={{ ...styleScoped.warpperList }}>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>None</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: colors.primary }} />
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>SomeTime</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>Always</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={{ ...style.container, marginTop: hp('3%') }}>
-                            <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
-                            <View style={{ ...styleScoped.warpperList }}>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>None</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: colors.primary }} />
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>SomeTime</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ ...styleScoped.listItem }}>
-                                    <Icon name="checkbox-blank-circle-outline" size={hp('2.5%')} style={{ marginRight: hp('1%') }} />
-                                    <Text style={{ fontSize: hp('2%') }}>Always</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={{ ...style.container, marginTop: hp('3%') }}>
-                            <Button
-                                title="Done"
-                                buttonStyle={{ padding: hp('1.5%'), ...style.btnRounded, ...style.btnPrimary }}
-                            />
-                        </View>
-
-
-                    </View>
-
-                    <View style={{
-                        backgroundColor: 'white',
-                        paddingVertical: hp('3%'),
-                        marginBottom: hp('10%'),
-                        marginTop: hp('1%'),
-                        ...styleScoped.shadowCard,
-                    }}>
-                        <View style={{ ...style.container, marginTop: hp('1%') }}>
-                            <Text style={{ fontSize: hp('2%') }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod</Text>
-
-                            <View style={{ marginTop: hp('2%'), ...style.space__between, alignItems: 'flex-start' }}>
-                                <Text style={{ fontSize: hp('2%') }}>Answer 1</Text>
-                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>40%</Text>
-                            </View>
-
-
-                            <View style={{ marginTop: hp('1%'), ...style.space__between, alignItems: 'flex-start' }}>
-                                <Text style={{ fontSize: hp('2%') }}>Answer 2</Text>
-                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>30%</Text>
-                            </View>
-
-                            <View style={{ marginTop: hp('1%'), ...style.space__between, alignItems: 'flex-start' }}>
-                                <Text style={{ fontSize: hp('2%') }}>Answer 3</Text>
-                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>30%</Text>
-                            </View>
-
-                            <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
-
-
-                            <View style={{ marginTop: hp('1%') }}>
-                                <Text style={{ fontSize: hp('2%') }}>Answer 1</Text>
-                                <Progress.Bar progress={0.3} width={wp('80%')} height={10} />
-                            </View>
-
-                            <View style={{ marginTop: hp('1%') }}>
-                                <Text style={{ fontSize: hp('2%') }}>Answer 2</Text>
-                                <Progress.Bar progress={0.3} width={wp('80%')} height={10} />
-                            </View>
-
-                            <View style={{ marginTop: hp('1%') }}>
-                                <Text style={{ fontSize: hp('2%') }}>Answer 3</Text>
-                                <Progress.Bar progress={0.3} width={wp('80%')} height={10} />
-                            </View>
-
-
-
-                        </View>
+                        {
+                            !this.state.is_play ? this.renderTakePoll() : this.renderFinishPoll()
+                        }
 
                     </View>
                 </ScrollView>
@@ -233,9 +253,9 @@ const styleScoped = StyleSheet.create({
         alignItems: 'center'
     },
     warpperList: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        // flexDirection: 'row',
+        // justifyContent: 'space-between',
+        // alignItems: 'center',
         marginVertical: hp('1%')
     },
     borderStep: {

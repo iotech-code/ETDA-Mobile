@@ -130,7 +130,7 @@ export default class MessagsPost extends Component {
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
-                        <TouchableOpacity onPress={() => Actions.PollDetail()}>
+                        <TouchableOpacity onPress={() => Actions.PollDetail({ data: this.props.data }) }>
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
                     </View>

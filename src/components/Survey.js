@@ -25,10 +25,12 @@ export default class MessagsPost extends Component {
 
     constructor(props) {
         super(props)
-    }
+        this.state = {
+            visibleBottomSheet: false,
+            data: null,
+            default_avatar: require('../assets/images/default_avatar.jpg'),
+        }
 
-    state = {
-        visibleBottomSheet: false
     }
 
     openOption() {
@@ -40,6 +42,9 @@ export default class MessagsPost extends Component {
     componentDidMount() {
         // this.RBSheet.open()
 
+    }
+    async UNSAFE_componentWillMount() {
+        await this.setState({ data: this.props.data })
     }
 
     renderBottomSheet() {
@@ -79,6 +84,8 @@ export default class MessagsPost extends Component {
         )
     }
     render() {
+        const { title, author, post_date } = this.state.data
+        const { default_avatar } = this.state
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -98,11 +105,13 @@ export default class MessagsPost extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={require('../assets/images/avatar.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image
+                                    source={!author.photo ? default_avatar : { uri: author.photo }}
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), }}>ETDA official</Text>
-                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > 11/11/2020  3:30 pm </Text>
+                                <Text style={{ fontSize: hp('2%'), }}>{author.full_name}</Text>
+                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text>
                             </View>
                         </View>
                         <TouchableOpacity onPress={() => this.openOption()} >
@@ -110,8 +119,8 @@ export default class MessagsPost extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
-                        <Text style={{ fontSize: hp('2%') }}>Survey Topic</Text>
-                        <TouchableOpacity onPress={() => Actions.SurveyDetail()}>
+                        <Text style={{ fontSize: hp('2%') }}>{title}</Text>
+                        <TouchableOpacity onPress={() => Actions.SurveyDetail({data : this.state.data})}>
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
                     </View>

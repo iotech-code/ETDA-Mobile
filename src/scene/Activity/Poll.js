@@ -46,6 +46,9 @@ export default class Poll extends Component {
         this.setState({ lng: vocap })
     }
 
+    async UNSAFE_componentWillReceiveProps(props){
+        await this.onGetListPoll()
+    }
 
     componentDidMount() {
         this.getUserInfo()

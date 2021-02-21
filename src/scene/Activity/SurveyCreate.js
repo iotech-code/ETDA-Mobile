@@ -18,7 +18,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { createPost } from '../../Service/PostService'
+import { createSurvey } from '../../Service/PostService'
 import translate from '../../constant/lang'
 
 export default class PollCreate extends Component {
@@ -45,11 +45,9 @@ export default class PollCreate extends Component {
             timepicker: new Date(),
             question: [
                 {
-                    id: 1,
                     question: '',
                     answer: [
                         {
-                            id: 1,
                             detail: null,
                         },
                     ]
@@ -77,7 +75,7 @@ export default class PollCreate extends Component {
                 survey_date :question,
                 post_to_etda: true
             }
-            let { data } = await createPost(topic, 'survey', [], '', [], post_addition_data)
+            let { data } = await createSurvey(topic, 'survey', [], '', [], post_addition_data)
             console.log('create poll : ', data)
             let { status } = data
             if (status == 'success') {
@@ -91,11 +89,9 @@ export default class PollCreate extends Component {
     onAddQuestion() {
         let { question } = this.state
         let objQuestion = {
-            id: question.length + 1,
             question: '',
             answer: [
                 {
-                    id: 1,
                     detail: null,
                 },
             ]
@@ -107,7 +103,6 @@ export default class PollCreate extends Component {
     addAnswer(index) {
         let { question } = this.state
         let objAnswer = {
-            id: question[index].answer.length + 1,
             detail: null
         }
         question[index].answer.push(objAnswer)

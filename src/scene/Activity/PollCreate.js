@@ -81,7 +81,7 @@ export default class PollCreate extends Component {
         let self = this
         Picker.init({
             pickerData: ['For general', 'For student'],
-            selectedValue: [type_of_poll],
+            selectedValue: type_of_poll,
             pickerTextEllipsisLen: 100,
             pickerTitleText: 'Type of Poll',
             onPickerConfirm: data => {

@@ -22,23 +22,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import PostSurvey from '../../components/Survey'
-import {Button} from 'react-native-elements'
+import { Button } from 'react-native-elements'
 import translate from '../../constant/lang'
-
+import { getListPostSurvey } from '../../Service/PostService'
 export default class Survey extends Component {
     constructor() {
         super()
         this.state = {
             user_type: '',
             user_role: '',
-            lng: {}
+            lng: {},
+            list_data: []
         }
     }
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        await this.onGetlistSurvey()
     }
-    
+
     async getLang() {
         let vocap = await translate()
         this.setState({ lng: vocap })
@@ -58,8 +60,17 @@ export default class Survey extends Component {
         })
     };
 
+    async onGetlistSurvey() {
+        try {
+            let { data } = await getListPostSurvey()
+            this.setState({ list_data: data.post_data })
+        } catch (error) {
+            console.log('Get list Post survey error : ', error)
+        }
+    }
+
     render() {
-        const {lng} = this.state
+        const { lng, list_data } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -99,10 +110,13 @@ export default class Survey extends Component {
 
 
                         <View style={{ marginTop: hp('2%') }}>
-                            <PostSurvey></PostSurvey>
-                            <PostSurvey></PostSurvey>
-                            <PostSurvey></PostSurvey>
-                            <PostSurvey></PostSurvey>
+                            {
+                                list_data.map((el, index) => {
+                                    return (
+                                        <PostSurvey data={el} key={`survey_${index}`}></PostSurvey>
+                                    )
+                                })
+                            }
                         </View>
 
 
@@ -110,10 +124,10 @@ export default class Survey extends Component {
                     </View>
                 </ScrollView>
                 {this.state.user_role == "Member" ?
-                        <MenuFooterUser value={'activity'}></MenuFooterUser>
-                        :
-                        <MenuFooter value={'activity'}></MenuFooter>
-                    }
+                    <MenuFooterUser value={'activity'}></MenuFooterUser>
+                    :
+                    <MenuFooter value={'activity'}></MenuFooter>
+                }
             </View>
         );
     }
