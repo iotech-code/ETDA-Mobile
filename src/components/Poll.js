@@ -32,7 +32,8 @@ export default class MessagsPost extends Component {
             question: [],
             answer: [],
             choice: [],
-            token: ''
+            token: '',
+            default_avatar: require('../assets/images/default_avatar.jpg'),
         }
     }
 
@@ -92,42 +93,9 @@ export default class MessagsPost extends Component {
     }
 
 
-
-    callPoll = async () => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        const data = {
-            "post_id": this.state.postId,
-            "post_type": this.state.type,
-            "post_question": this.state.question,
-            "post_answer": this.state.answer,
-            "post_choice": this.state.choice
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/action', data, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
-
-
     render() {
+        const { default_avatar } = this.state
+        const { title, author, post_date } = this.props.data
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -147,11 +115,13 @@ export default class MessagsPost extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={require('../assets/images/avatar.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image
+                                    source={!author.photo ? default_avatar : { uri: author.photo }}
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), }}>ETDA official</Text>
-                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > 11/11/2020  3:30 pm </Text>
+                                <Text style={{ fontSize: hp('2%'), }}>{author.full_name}</Text>
+                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > {post_date}</Text>
                             </View>
                         </View>
                         <TouchableOpacity onPress={() => this.openOption()} >
@@ -159,7 +129,7 @@ export default class MessagsPost extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
-                        <Text style={{ fontSize: hp('2%') }}>Poll Topic</Text>
+                        <Text style={{ fontSize: hp('2%') }}>{title}</Text>
                         <TouchableOpacity onPress={() => Actions.PollDetail()}>
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
