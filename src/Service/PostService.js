@@ -7,6 +7,21 @@ export const homeFeed = async (cr = 0, next = 0) => {
     return await http.post('/api/backend/post/home-feed', {"currentPage" : cr, "nextPage" : next });
 };
 
+export const getListPostPoll = async (cr = 0, next = 0) => {
+    await http.setTokenHeader();
+    return await http.post('/api/backend/post/list-poll', {"currentPage" : cr, "nextPage" : next });
+};
+
+
+export const getListPostSurvey = async (cr = 0, next = 0) => {
+    await http.setTokenHeader();
+    return await http.post('/api/backend/post/list-poll', {"currentPage" : cr, "nextPage" : next });
+};
+
+
+
+
+
 export const communityFeed = async (cr = 0, next = 0) => {
     await http.setTokenHeader();
     return await http.post('/api/backend/post/community-feed', {"currentPage" : cr, "nextPage" : next });
@@ -41,6 +56,34 @@ export const createPost = async (
     };
     return await http.post(`/api/backend/post/create`, formData);
 };
+
+
+export const createPoll = async (
+    post_title,
+    post_type,
+    post_images,
+    post_description,
+    post_tag,
+    post_addition_data,
+) => {
+    // post_addition_data.post_to_etda = true
+    await http.setTokenHeader();
+    let formData = {
+        post_title,
+        post_type,
+        post_images,
+        post_description,
+        post_tag,
+        post_addition_data,
+    };
+    return await http.post(`/api/backend/post/create-poll`, formData);
+};
+
+
+
+
+
+
 
 export const updatePost = async (params) => {
     await http.setTokenHeader()

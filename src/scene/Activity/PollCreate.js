@@ -20,7 +20,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { createPost } from '../../Service/PostService'
+import { createPoll } from '../../Service/PostService'
 import { colors } from '../../constant/util';
 import Picker from 'react-native-picker';
 
@@ -45,13 +45,12 @@ export default class PollCreate extends Component {
             indexSchedule: 0,
             datepicker: new Date(),
             timepicker: new Date(),
-            type_of_poll: 'for general',
+            type_of_poll: ['For general'],
             question: {
                 question: null,
                 type_of_poll: 'for general',
                 answer: [
                     {
-                        id: 1,
                         detail: null,
                     },
                 ]
@@ -67,26 +66,29 @@ export default class PollCreate extends Component {
 
     openSelectType() {
         const { type_of_poll } = this.state
+        let self = this
         Picker.init({
-            pickerData: ['for general', 'for student'],
-            selectedValue: type_of_poll,
+            pickerData: ['For general', 'For student'],
+            selectedValue: [type_of_poll],
             pickerTextEllipsisLen: 100,
             pickerTitleText: 'Type of Poll',
             onPickerConfirm: data => {
-                this.setState({ type_of_poll: data })
+                self.setState({ type_of_poll: data })
             },
         });
         Picker.show();
     }
 
     async onCreatePoll() {
+        const { type_of_poll } = this.state
         try {
             let { topic, detail, question } = this.state
+            question.type_of_poll = type_of_poll[0]
             let post_addition_data = {
                 ...question,
                 post_to_etda: true
             }
-            let { data } = await createPost(topic, 'poll', [], '', [], post_addition_data)
+            let { data } = await createPoll(topic, 'poll', [], '', [], post_addition_data)
             console.log('create poll : ', data)
             let { status } = data
             if (status == 'success') {
@@ -102,7 +104,6 @@ export default class PollCreate extends Component {
     addAnswer() {
         let { question } = this.state
         let objAnswer = {
-            id: question.answer.length + 1,
             detail: null
         }
         question.answer.push(objAnswer)
@@ -125,6 +126,7 @@ export default class PollCreate extends Component {
             topic,
             detail,
             question,
+            type_of_poll
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
@@ -205,8 +207,8 @@ export default class PollCreate extends Component {
 
                             <View style={{ ...style.container, marginVertical: hp('2%') }}>
                                 <Text style={{ fontSize: hp('2%'), }}>Type of Poll</Text>
-                                <TouchableOpacity style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }} onPress={()=> this.openSelectType()}>
-                                    <Text style={{ fontSize: hp('1.8%') }}>For general</Text>
+                                <TouchableOpacity style={{ marginTop: hp('2%'), ...styleScoped.boxSelectionType }} onPress={() => this.openSelectType()}>
+                                    <Text style={{ fontSize: hp('1.8%') }}>{type_of_poll[0]}</Text>
                                     <Icon name="chevron-down" style={{ fontSize: hp('2%') }} color={colors.primary} />
                                 </TouchableOpacity>
                             </View>

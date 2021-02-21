@@ -24,14 +24,19 @@ import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import EventPost from '../../components/EventPost'
 import PostPoll from '../../components/Poll'
-import { apiServer } from '../../constant/util';
+import { getListPostPoll } from '../../Service/PostService'
 export default class Poll extends Component {
     constructor() {
         super()
         this.state = {
             user_type: '',
-            user_role: ''
+            user_role: '',
+            list_data_general: [],
+            list_data_student: []
         }
+    }
+    async UNSAFE_componentWillMount() {
+        await this.onGetListPoll()
     }
 
     componentDidMount() {
@@ -47,8 +52,29 @@ export default class Poll extends Component {
             user_role: user_data.user_role
         })
     };
-    
+
+    async onGetListPoll() {
+        try {
+            let { data } = await getListPostPoll();
+            let list_data_student =  []
+            let list_data_general = []
+            for (let index = 0; index < data.post_data.length; index++) {
+                const element = data.post_data[index];
+                if (element.post_addition_data.type_of_poll == 'For general') {
+                    list_data_general.push(element)
+                } else if (element.post_addition_data.type_of_poll == 'For student') {
+                    list_data_student.push(element)
+                }
+            }
+            console.log(list_data_student,list_data_general)
+            this.setState({ list_data_student, list_data_general })
+        } catch (error) {
+
+        }
+    }
+
     render() {
+        const { list_data_student, list_data_general } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -58,7 +84,7 @@ export default class Poll extends Component {
                         </TouchableOpacity>
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll</Text>
                         <TouchableOpacity onPress={() => Actions.push('Search')}>
-                            <Icon name="magnify" size={hp('3%')} color="white"  />
+                            <Icon name="magnify" size={hp('3%')} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
@@ -91,8 +117,13 @@ export default class Poll extends Component {
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
-                            <PostPoll></PostPoll>
-                            <PostPoll></PostPoll>
+                            {
+                                list_data_student.map((el, index) => {
+                                    return (
+                                        <PostPoll key={`student_${index}`}></PostPoll>
+                                    )
+                                })
+                            }
                         </View>
 
 
@@ -101,16 +132,21 @@ export default class Poll extends Component {
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
-                            <PostPoll></PostPoll>
-                            <PostPoll></PostPoll>
+                            {
+                                list_data_general.map((el, index) => {
+                                    return (
+                                        <PostPoll key={`general_${index}`}></PostPoll>
+                                    )
+                                })
+                            }
                         </View>
                     </View>
                 </ScrollView>
                 {this.state.user_role == "Member" ?
-                        <MenuFooterUser value={'activity'}></MenuFooterUser>
-                        :
-                        <MenuFooter value={'activity'}></MenuFooter>
-                    }
+                    <MenuFooterUser value={'activity'}></MenuFooterUser>
+                    :
+                    <MenuFooter value={'activity'}></MenuFooter>
+                }
             </View>
         );
     }
