@@ -86,9 +86,8 @@ export default class Activity extends Component {
                     event.push(element)
                     if (element.post_addition_data.event_date) {
                         let data = new Date(element.post_addition_data.event_date)
-                        let aa = moment(data).format('YYYY-MM-DD')
-                        console.log(aa)
-                        markedDates['2021-02-17'] = { marked: true }
+                        let date_converted = moment(data).format('YYYY-MM-DD')
+                        markedDates[date_converted] = { marked: true }
                     }
                 }
             }
