@@ -5,6 +5,7 @@
 - $ npx pod-install
 - Edit file `node_modules/react-native-picker/android/build.gradle`
 - $ cd android && ./gradlew assembleRelease
+- $ npx jetify
 ```
 android {
     compileSdkVersion 29
