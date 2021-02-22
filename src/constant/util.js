@@ -11,8 +11,8 @@ export const fonts = {
 }
 
 export const apiServer = {
-    // url: 'https://looks.etda.or.th'
-    url: 'https://etda.amn-corporation.com'
+    url: 'https://looks.etda.or.th'
+    // url: 'https://etda.amn-corporation.com'
 }
 
 export const configs = {
