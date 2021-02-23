@@ -33,6 +33,9 @@ export const getTagsList = async () => {
     return await http.get('/api/backend/post/tag-list');
 };
 
+
+
+
 export const createPost = async (
     post_title,
     post_type,
@@ -101,6 +104,27 @@ export const updatePost = async (params) => {
     await http.setTokenHeader()
     return await http.put(`/api/backend/post/update/${params.post_id}`, params)
 }
+
+export const updateEvent = async (
+    post_id,
+    post_title,
+    post_type,
+    post_images,
+    post_description,
+    post_tag,
+    post_addition_data,) => {
+    await http.setTokenHeader()
+    let formData = {
+        post_title,
+        post_type,
+        post_images,
+        post_description,
+        post_tag,
+        post_addition_data,
+    };
+    return await http.put(`/api/backend/post/update-event/${post_id}`, formData)
+}
+
 
 
 export const getListCommentPost = async (params) => {

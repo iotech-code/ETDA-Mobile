@@ -6,7 +6,8 @@ import {
     View,
     Text,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 
 
@@ -15,7 +16,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { actionLikePost, actionJoinPost, actionPostUnJoin, actionPostJoin } from '../Service/PostService'
+import { actionLikePost, actionPostUnJoin, actionPostJoin, actionDeletePost } from '../Service/PostService'
 import translate from '../constant/lang'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment'
@@ -74,7 +75,7 @@ export default class MessagsPost extends Component {
 
     onEdit() {
         this.RBSheet.close()
-        Actions.push('EventEdit')
+        Actions.push('EventCreate', { data: this.props.data })
     }
 
 
@@ -97,6 +98,7 @@ export default class MessagsPost extends Component {
 
     async onPostJoin(post_id) {
         try {
+            this.RBSheet.close()
             let { data } = await actionPostJoin(post_id)
             if (data.status == 'success') {
                 this.setState({ is_join: 1 })
@@ -108,12 +110,45 @@ export default class MessagsPost extends Component {
 
     async onPostUnJoin(post_id) {
         try {
+            this.RBSheet.close()
             let { data } = await actionPostUnJoin(post_id)
             if (data.status == 'success') {
                 this.setState({ is_join: 1 })
             }
         } catch (error) {
             console.log('Post un join error : ', error)
+        }
+    }
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            let { data } = await actionDeletePost(post_id)
+            if (data.status == 'success') {
+                this.props.onDeletePost()
+            }
+        } catch (error) {
+            console.log('Delete poll error : ', error)
         }
     }
 
@@ -165,7 +200,7 @@ export default class MessagsPost extends Component {
                         </TouchableOpacity>
                         <View style={{ ...style.divider }}></View>
 
-                        <TouchableOpacity style={{ ...styleScoped.listMore }}>
+                        <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onConfirmDeletePost()}>
                             <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                             <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_event}</Text>
                         </TouchableOpacity>

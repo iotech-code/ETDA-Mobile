@@ -23,7 +23,7 @@ import { fonts } from '../../constant/util';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Fragment } from 'react';
 import moment from 'moment'
-import { createPost } from '../../Service/PostService'
+import { createPost, updateEvent } from '../../Service/PostService'
 import translate from '../../constant/lang'
 
 export default class EventCreate extends Component {
@@ -51,8 +51,26 @@ export default class EventCreate extends Component {
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        this.checkEditEvent();
     }
-    
+
+    async checkEditEvent() {
+        const { data } = this.props
+        if (!data) return
+        await data.post_addition_data.event_schedule.map(el => {
+            el.time_default = new Date()
+            return el
+        })
+        this.setState({
+            topic: data.title,
+            detail: data.post_description,
+            date_event: moment(data.post_addition_data.event_date).format(),
+            date_event_to_show: moment(data.post_addition_data.event_date).format('DD/MM/YYYY'),
+            schedule: data.post_addition_data.event_schedule,
+            post_to_feed: data.post_addition_data.post_to_etda
+        })
+    }
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
@@ -121,13 +139,19 @@ export default class EventCreate extends Component {
 
     async onCreateEvent() {
         try {
+            const { data } = this.props
             let { topic, detail, post_to_feed, schedule, date_event } = this.state
             let post_addition_data = {
                 event_date: date_event,
                 event_schedule: schedule,
                 post_to_etda: post_to_feed
             }
-            let response = await createPost(topic, 'event', [], detail, [], post_addition_data)
+            let response = null
+            if (data) {
+                response = await updateEvent(data.post_id, topic, 'event', [], detail, [], post_addition_data)
+            } else {
+                response = await createPost(topic, 'event', [], detail, [], post_addition_data)
+            }
             let { status } = response.data
             if (status == 'success') {
                 Actions.replace('Event')
