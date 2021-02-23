@@ -6,7 +6,8 @@ import {
     View,
     Text,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
@@ -28,11 +29,13 @@ export default class Poll extends Component {
             user_role: '',
             list_data_general: [],
             list_data_student: [],
-            lng: {}
+            lng: {},
+            userInfo: null
         }
     }
 
     async UNSAFE_componentWillMount() {
+        await this.getUserInfo()
         await this.getLang();
         await this.onGetListPoll()
     }
@@ -47,17 +50,12 @@ export default class Poll extends Component {
     }
 
     componentDidMount() {
-        this.getUserInfo()
     }
 
     async getUserInfo() {
-        let user_json = await AsyncStorage.getItem('user_data');
-        let user_data = JSON.parse(user_json);
-
-        this.setState({
-            user_type: user_data.user_type,
-            user_role: user_data.user_role
-        })
+        let userInfo = await AsyncStorage.getItem('user_data');
+        userInfo = JSON.parse(userInfo)
+        this.setState({ user_role : userInfo.user_role })
     };
 
     async onGetListPoll() {
@@ -76,12 +74,12 @@ export default class Poll extends Component {
 
             this.setState({ list_data_student, list_data_general })
         } catch (error) {
-
+            console.log('Get list poll error : ' , error)
         }
     }
 
     render() {
-        const { list_data_student, list_data_general, lng } = this.state
+        const { list_data_student, list_data_general, lng, user_role } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -105,19 +103,24 @@ export default class Poll extends Component {
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
 
-                        <View style={{ ...style.container }}>
-                            <Button
-                                title={lng.create_new_poll}
-                                Outline={true}
-                                titleStyle={{ color: '#003764', }}
-                                buttonStyle={{
-                                    padding: hp('1%'),
-                                    ...style.btnPrimaryOutline,
-                                    ...style.btnRounded,
-                                }}
-                                onPress={() => Actions.replace('PollCreate')}
-                            />
-                        </View>
+                        {
+                            user_role == 'Admin' ?
+                                <View style={{ ...style.container }}>
+                                    <Button
+                                        title={lng.create_new_poll}
+                                        Outline={true}
+                                        titleStyle={{ color: '#003764', }}
+                                        buttonStyle={{
+                                            padding: hp('1%'),
+                                            ...style.btnPrimaryOutline,
+                                            ...style.btnRounded,
+                                        }}
+                                        onPress={() => Actions.replace('PollCreate')}
+                                    />
+                                </View> : null
+                        }
+
+
 
                         <View style={{ ...style.container, marginTop: hp('3%') }}>
                             <Text style={{ fontSize: hp('2%') }}>{lng.for_student}</Text>
