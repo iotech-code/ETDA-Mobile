@@ -191,3 +191,8 @@ export const getPollStat = async (post_id) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/poll-stat', { post_id })
 }
+
+export const getSurveyStat = async (post_id) => {
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/survey-stat', { post_id })
+}

@@ -36,8 +36,8 @@ export default class PollDetail extends Component {
             is_play: 0,
             user_id: null,
             data_stat_poll: {
-                question:'',
-                answer:[]
+                question: '',
+                answer: []
             }
         }
     }
@@ -90,7 +90,7 @@ export default class PollDetail extends Component {
             }
             let response = await postAction(data)
             if (response.data.status == 'success') {
-                this.setState({is_play:1})
+                this.setState({ is_play: 1 })
                 this.onGetPollStat()
             }
         } catch (error) {
@@ -237,9 +237,6 @@ export default class PollDetail extends Component {
                     })
                 }
 
-
-
-
                 <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
                 {
@@ -247,7 +244,7 @@ export default class PollDetail extends Component {
                         return (
                             <View style={{ marginTop: hp('1%') }} key={`progressbar_${index}`}>
                                 <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                <Progress.Bar progress={el.percent/10} width={wp('80%')} height={10} />
+                                <Progress.Bar progress={parseInt(el.percent) / 100} width={wp('80%')} height={10} />
                             </View>
                         )
                     })
