@@ -15,10 +15,13 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios';
-import { apiServer } from '../constant/util';
+import { fonts } from '../constant/util';
 import translate from '../constant/lang'
-import { getTagsList } from '../Service/PostService'
+import { getTagsList, searchPost } from '../Service/PostService'
+import { Button, ListItem, Avatar } from 'react-native-elements'
+
+
+let timeoutId = null
 export default class Poll extends Component {
     constructor(props) {
         super(props)
@@ -27,7 +30,12 @@ export default class Poll extends Component {
             text: '',
             visibleSearch: false,
             list_search: [],
-            lng: {}
+            originalTag: [],
+            lng: {},
+            listTags: [],
+            tags: [],
+            default_avatar: require('../assets/images/default_avatar.jpg'),
+            keyword: ''
         }
     }
 
@@ -60,80 +68,131 @@ export default class Poll extends Component {
     async onGetListTags() {
         try {
             let { data } = await getTagsList()
-            console.log('data list tags : ', data)
+            for (let index = 0; index < data.post_data.length; index++) {
+                const element = data.post_data[index];
+                let result = await this.state.listTags.find(el => {
+                    return el == element.tag
+                })
+                element.selected = result ? true : false
+            }
+            await this.setState({ listTags: data.post_data })
+            await this.setState({ originalTag: data.post_data })
+
         } catch (error) {
             console.log('Get list tags in search error : ', error)
         }
     }
 
-    callSearch = async (name) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+    async selectTag(indexTag) {
+        let { originalTag } = this.state
+        let listTagSelected = []
+        for (let index = 0; index < originalTag.length; index++) {
+            const element = originalTag[index];
+            if (index == indexTag) {
+                element.selected = element.selected ? false : true
+            }
+            if (element.selected) {
+                listTagSelected.push(element.tag)
+            }
         }
+        await this.setState({ originalTag })
+        await this.setState({ tags: listTagSelected })
+        this.onSearchPost()
+    }
 
-        axios.get(apiServer.url + '/api/backend/post/search?query=' + name, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    var i
-                    var text = ""
-                    var list = []
-                    for (i = 0; i < response.data.post_data.length; i++) {
-                        text = response.data.post_data[i].title
-                        list.push(text)
-                    }
+    async onSearchPost(text) {
+        try {
+            clearTimeout(timeoutId);
+            let self = this
+            if (text) {
+                await self.setState({ keyword: text })
+            }
+            timeoutId = setTimeout(async () => {
+                let { tags, keyword } = self.state
+                let { data } = await searchPost(keyword, tags)
+                self.setState({ list_search: data.post_data })
+            }, 500);
 
-                    this.setState({
-                        list_search: list
-                    })
-                } else {
+        } catch (error) {
+            console.log('Get search post error : ', error)
+        }
+    }
 
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
     render() {
-        const { lng } = this.state
+        const { lng, listTags, list_search, default_avatar, keyword } = this.state
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+                <View style={{ backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.search}</Text>
-                        <TouchableOpacity onPress={() => Actions.replace('Main')}>
+                        <TouchableOpacity onPress={() => Actions.pop()}>
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.done}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{ ...style.container, marginTop: hp('2%') }}>
                         <View style={{ ...styleScoped.customInputSearch }}>
                             <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
-                            <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."
-                                onChangeText={(value) => {
-                                    this.callSearch(value)
-                                }}
+                            <TextInput style={{ padding: 0, fontSize: hp('2%'), width: '100%' }} placeholder="Search..."
+                                onChangeText={(value) => { this.onSearchPost(value) }}
                             ></TextInput>
-                        </View>
-                        <View style={{ marginTop: hp('2%') }}>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.search_by_tags}</Text>
                         </View>
                     </View>
                 </View>
                 <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
-                <ScrollView style={{ ...style.container }}>
-                    {this.state.list_search.map((item, index) => {
-                        return (
-                            <Text style={{ ...styleScoped.textList }}>{item}</Text>
-                        )
-                    }
-                    )}
+                <ScrollView >
+                    <View style={{
+                        ...style.container,
+                        ...style.flex__start,
+                        alignItems: 'center',
+                        flexWrap: 'wrap'
+                    }}>
+
+                        {
+                            listTags.map((el, index) => {
+                                let tagStyle = el.selected ? style.btnPrimary : style.btnPrimaryOutline
+                                return (
+                                    <Button
+                                        title={el.tag}
+                                        titleStyle={{
+                                            fontSize: hp('2%'),
+                                            color: !el.selected ? fonts.color.primary : 'white'
+                                        }}
+                                        buttonStyle={{ ...tagStyle, margin: hp('0.5%') }}
+                                        onPress={() => { this.selectTag(index) }}
+                                        key={`tags_${index}`}
+                                    />
+                                )
+                            })
+                        }
+
+                    </View>
+                    <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
+                    <View style={{ ...style.container }}>
+                        {
+                            list_search.map((l, i) => {
+                                let action_to = null
+                                if (l.post_type == 'blog') {
+                                    action_to = 'PostDetail'
+                                } else if (l.post_type == 'poll') {
+                                    action_to = 'PollDetail'
+                                } else if (l.post_type == 'event') {
+                                    action_to = 'EventDetail'
+                                } else if (l.post_type == 'survey') {
+                                    action_to = 'SurveyDetail'
+                                }
+                                return (
+                                    <ListItem key={i} bottomDivider onPress={() => Actions.push(action_to, { data: l })}>
+                                        <Avatar source={!l.author.photo ? default_avatar : { uri: l.author.photo }} rounded />
+                                        <ListItem.Content >
+                                            <ListItem.Title>{l.title}</ListItem.Title>
+                                            <ListItem.Subtitle style={{ color: fonts.color.secondary }}>{l.post_date}</ListItem.Subtitle>
+                                        </ListItem.Content>
+                                    </ListItem>
+                                )
+                            })
+                        }
+                    </View>
                 </ScrollView>
             </View>
         );

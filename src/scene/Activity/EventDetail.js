@@ -36,7 +36,7 @@ export default class EventDetail extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
+        
     }
 
     async UNSAFE_componentWillMount() {
@@ -51,7 +51,7 @@ export default class EventDetail extends Component {
     }
 
     render() {
-        const { author, title, post_description, post_addition_data, comment_number, post_id, is_like, like } = this.props
+        const { author, title, post_description, post_addition_data, comment_number, post_id, is_like, like } = this.props.data
         const { default_avatar, list_comment, comment, lng } = this.state
         return (
             <View style={{ flex: 1 }}>

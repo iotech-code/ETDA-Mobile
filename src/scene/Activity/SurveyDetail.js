@@ -123,7 +123,8 @@ export default class SurveyDetail extends Component {
             }
             let response = await postAction(data)
             if (response.data.status == 'success') {
-                Actions.pop({ refresh: {} });
+                this.setState({ is_play: 1 })
+                this.onGetSurveyStat()
             }
         } catch (error) {
             console.log('Save anser error : ', error)

@@ -248,7 +248,7 @@ export default class MessagsPost extends Component {
                     </View>
 
 
-                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail', { ...this.props.data })}>
+                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail', { data : this.props.data })}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
                         <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{moment(post_addition_data.event_date).format('DD/MM/YYYY')}</Text>
                         {

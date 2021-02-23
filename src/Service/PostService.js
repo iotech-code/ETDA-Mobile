@@ -196,3 +196,14 @@ export const getSurveyStat = async (post_id) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/survey-stat', { post_id })
 }
+
+export const searchPost = async (query, tags, date = "", type = "") => {
+    await http.setTokenHeader()
+    let formData = {
+        query,
+        tags,
+        date,
+        type
+    }
+    return await http.post('/api/backend/post/search', formData)
+}
