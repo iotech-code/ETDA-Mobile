@@ -186,3 +186,8 @@ export const actionPostUnJoin = async (post_id) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/unjoin', { post_id })
 }
+
+export const getPollStat = async (post_id) => {
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/poll-stat', { post_id })
+}
