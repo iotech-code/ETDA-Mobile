@@ -38,7 +38,8 @@ export default class Main extends Component {
         isFetching: false,
         lng: {},
         loading: false,
-        feedCurrentPage: 0
+        feedCurrentPage: 0,
+        isFinish: false,
     }
 
     async componentWillUnmount() {
@@ -93,15 +94,21 @@ export default class Main extends Component {
         try {
             // let {feedCurrentPage} = this.state
             await this.setState({loading: true})
-            let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
-            console.log(this.state.feedCurrentPage, this.state.feedCurrentPage+1)
-
-            await this.setState({
-                list_data: [...this.state.list_data, data.post_data],
-                feedCurrentPage: this.state.feedCurrentPage + 1,
-                loading: false
-            });
-            console.log(this.state.list_data)
+            console.log("finish", this.state.isFinish)
+            if(!this.state.isFinish) {
+                let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
+                console.log(this.state.feedCurrentPage, this.state.feedCurrentPage + 1, data.post_data.length)
+                if(data.post_data.length !== 0) {
+                    let new_data = [...this.state.list_data, ...data.post_data]
+                    await this.setState({
+                        list_data: new_data,
+                        feedCurrentPage: this.state.feedCurrentPage + 1
+                    })
+                } else {
+                    this.setState({isFinish: true})
+                }
+            }
+            await this.setState({loading: true})
         } catch (error) {
             console.log("Main scene error : ", error)
         }
@@ -199,9 +206,9 @@ export default class Main extends Component {
                                         renderItem={this.renderTypeInFlatlist}
                                         keyExtractor={item => item.id}
                                         // onEndReached={this.updateHomeFeed()}
-                                        onEndReached={this.updateHomeFeed.bind(this)}
+                                        onEndReached={!this.state.isFinish&&this.updateHomeFeed.bind(this)}
                                         ListFooterComponent={this.renderFooter.bind(this)}
-                                        onEndThreshold={0.1}
+                                        onEndThreshold={0.4}
                                         refreshControl={
                                             <RefreshControl
                                               refreshing={this.state.isFetching}
