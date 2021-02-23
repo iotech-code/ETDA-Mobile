@@ -21,7 +21,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors, fonts } from '../../constant/util';
 import * as Progress from 'react-native-progress';
 import { Fragment } from 'react';
-import { postAction } from '../../Service/PostService'
+import { postAction, getSurveyStat } from '../../Service/PostService'
 export default class SurveyDetail extends Component {
 
     constructor(props) {
@@ -33,7 +33,8 @@ export default class SurveyDetail extends Component {
             progress: 0,
             is_play: 0,
             answer_data: [],
-            survey_data: []
+            survey_data: [],
+            survey_data_stat: []
         }
     }
 
@@ -43,8 +44,9 @@ export default class SurveyDetail extends Component {
         const { data } = this.props
         await this.setState({ data })
         await this.setState({ is_play: data.is_play })
-
-
+        if (this.state.is_play) {
+            await this.onGetSurveyStat()
+        }
     }
 
     async componentDidMount() {
@@ -62,6 +64,18 @@ export default class SurveyDetail extends Component {
         await this.setState({ survey_data })
     }
 
+
+    async onGetSurveyStat() {
+        try {
+            const { post_id } = this.props.data
+            let { data } = await getSurveyStat(post_id)
+            if (data.status == 'success') {
+                this.setState({ survey_data_stat: data.datas.survey_stat })
+            }
+        } catch (error) {
+            console.log('Get survey stat error : ', error)
+        }
+    }
 
     async onChooseAnswer(question_id, answer_id) {
         let { survey_data } = this.state
@@ -121,8 +135,6 @@ export default class SurveyDetail extends Component {
     renderTakeSurvey() {
         const { answer_id, progress, answer_data, survey_data } = this.state
         const { title, author, post_date, post_addition_data } = this.state.data
-
-        console.log(survey_data)
         return (
             <View>
 
@@ -197,24 +209,24 @@ export default class SurveyDetail extends Component {
 
     renderFinishSurvey() {
         const { title, post_addition_data } = this.state.data
-        const { survey_data } = this.state
+        const { survey_data, survey_data_stat } = this.state
         return (
-            <View style={{ ...style.container, marginTop: hp('1%') }}>
+            <View style={{ ...style.container, marginTop: hp('1%'), marginBottom: hp('10%') }}>
 
                 {
-                    survey_data.map((element, i) => {
+                    survey_data_stat.map((element, i) => {
                         return (
                             <Fragment key={`qqq_${i}`}>
                                 <Text style={{
                                     fontSize: hp('2%'), marginTop: hp('3%'),
                                     marginBottom: hp('1%')
-                                }}>{title}</Text>
+                                }}>{element.question}</Text>
                                 {
                                     element.answer.map((el, index) => {
                                         return (
                                             <View style={{ marginTop: hp('2%'), ...style.space__between, alignItems: 'flex-start' }} key={`percen_${index}`}>
                                                 <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>33.33%</Text>
+                                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{el.percent}%</Text>
                                             </View>
                                         )
                                     })
@@ -231,19 +243,19 @@ export default class SurveyDetail extends Component {
                 <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
                 {
-                    survey_data.map((element, i) => {
+                    survey_data_stat.map((element, i) => {
                         return (
                             <Fragment key={`qq_${i}`}>
                                 <Text style={{
                                     fontSize: hp('2%'), marginTop: hp('3%'),
                                     marginBottom: hp('1%')
-                                }}>{title}</Text>
+                                }}>{element.question}</Text>
                                 {
                                     element.answer.map((el, index) => {
                                         return (
-                                            <View style={{  }} key={`progressbar_${index}`}>
+                                            <View style={{}} key={`progressbar_${index}`}>
                                                 <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                                <Progress.Bar progress={0.1} width={wp('80%')} height={10} />
+                                                <Progress.Bar progress={parseInt(el.percent) / 100} width={wp('80%')} height={10} />
                                             </View>
                                         )
                                     })
@@ -271,7 +283,7 @@ export default class SurveyDetail extends Component {
                 <ScrollView style={{ flex: 1, ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll detail</Text>
+                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Survey detail</Text>
                         <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                     </View>
                     <View style={{
