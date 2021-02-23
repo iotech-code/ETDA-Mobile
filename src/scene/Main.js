@@ -112,7 +112,7 @@ export default class Main extends Component {
     }
 
     renderTypeInFlatlist({item}) {
-        console.log(item)
+        // console.log(item)
         if (item.post_type == 'event') {
             return (
                 <EventPost data={item} ></EventPost>
@@ -181,22 +181,6 @@ export default class Main extends Component {
                                         renderItem={this.renderTypeInFlatlist}
                                         keyExtractor={item => item.id}
                                     />
-                                    {/* {
-
-                                        this.state.list_data.map((item, index) => {
-                                            if (item.post_type == 'event') {
-                                                return (
-                                                    <EventPost data={item} key={`event_${index}`}></EventPost>
-                                                )
-                                            } else if (item.post_type == 'blog') {
-                                                return (
-                                                    <Post data={item} page="main" sharePressButton={(url) => this.shareCallback(url)} onPostUpdate={() => this.callHomeFeed} key={`blog_${index}`}></Post>
-                                                )
-                                            }
-                                        })
-                                    } */}
-                                    {/* end  show post */}
-
 
                                 </Fragment>
                         }

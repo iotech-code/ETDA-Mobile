@@ -339,7 +339,6 @@ export default class Post extends Component {
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-
                     <Text style={{ fontSize: hp('2%'), fontWeight: '400', marginTop: hp('2%') }} >{title}</Text>
                     <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {

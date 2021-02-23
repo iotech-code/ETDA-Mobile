@@ -13,16 +13,16 @@ import {
     Platform,
     Alert
 } from 'react-native';
-
-import { Button, ListItem } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
+import { apiServer } from '../constant/util';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { actionDeletePost } from '../Service/PostService'
 
-export default class MessagsPost extends Component {
+export default class SurveyPost extends Component {
 
     constructor(props) {
         super(props)
@@ -30,22 +30,26 @@ export default class MessagsPost extends Component {
             visibleBottomSheet: false,
             data: null,
             default_avatar: require('../assets/images/default_avatar.jpg'),
+            user_data: {}
         }
-
     }
 
     openOption() {
-        console.log('askdjkasjdkasjdk')
         this.setState({ visibleBottomSheet: true })
         this.RBSheet.open()
     }
 
-    componentDidMount() {
-        // this.RBSheet.open()
-
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+        this.setState({
+            user_data: user_data
+        })
     }
+
     async UNSAFE_componentWillMount() {
         await this.setState({ data: this.props.data })
+        await this.getUserInfo()
     }
 
 
@@ -83,7 +87,7 @@ export default class MessagsPost extends Component {
     }
     
     renderBottomSheet() {
-        const { visibleBottomSheet } = this.state
+        const { visibleBottomSheet, user_data } = this.state
         return (
             <RBSheet
                 ref={ref => {
@@ -92,10 +96,33 @@ export default class MessagsPost extends Component {
                 height={Platform.OS === 'ios' ? hp('10%') : hp('8%')}
                 openDuration={250}
             >
-                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onConfirmDeletePost()}>
-                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete</Text>
+                <TouchableOpacity style={{
+                    ...styleScoped.listMore
+                }}>
+                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
                 </TouchableOpacity>
+
+                <View style={{ ...style.divider }}></View>
+                {
+                    user_data.user_role == 'Admin' || user_data.userid == this.props.data.author.id &&
+                    <>
+                        <TouchableOpacity style={{
+                            ...styleScoped.listMore
+                        }}>
+                            <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
+                        </TouchableOpacity>
+                        <View style={{ ...style.divider }}></View>
+
+                        <TouchableOpacity style={{
+                            ...styleScoped.listMore
+                        }}>
+                            <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
+                        </TouchableOpacity>
+                    </>
+                }
 
             </RBSheet>
         )
