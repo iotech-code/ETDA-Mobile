@@ -3,19 +3,19 @@ import React, { Component } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
     Clipboard,
     ActivityIndicator,
     TouchableOpacity,
     FlatList,
+    RefreshControl,
     KeyboardAvoidingView,
     TextInput,
     Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, BottomSheet, Overlay } from 'react-native-elements';
+import { Button, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
@@ -25,8 +25,7 @@ import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import Post from '../../components/Post'
 import { communityFeed, myFeed } from '../../Service/PostService'
-import EventPost from '../../components/EventPost'
-import { colors, apiServer, fonts } from '../../constant/util'
+import { colors, fonts } from '../../constant/util'
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import translate from '../../constant/lang'
 
@@ -44,7 +43,11 @@ export default class MessageBoard extends Component {
             user_role: '',
             communityFeedCurrentPage: 0,
             myFeedCurrentPage: 0,
-            visibleModalReport: false
+            visibleModalReport: false,
+            loading: false,
+            feedCurrentPage: 0,
+            isFinish: false,
+            isFetching: false
         }
     }
 
@@ -85,50 +88,69 @@ export default class MessageBoard extends Component {
 
     setBoard = (value) => {
         this.setState({
-            board: value
+            board: value,
+            isFinish: false
         })
     }
 
-    callMYFeed = async (token) => {
-        await this.setState({
-            list_data: [],
-        });
+    callMYFeed = async () => {
+        await this.setState({ list_data: false });
         let { data } = await myFeed(0, 0);
-
-        await this.setState({
-            list_data: data.post_data,
-        });
+        await this.setState({ list_data: data.post_data });
     }
 
-    callCommunityFeed = async (token) => {
-        await this.setState({
-            list_data: [],
-        });
+    callCommunityFeed = async () => {
+        await this.setState({ list_data: false });
         let { data } = await communityFeed(0, 0);
-
-        await this.setState({
-            list_data: data.post_data,
-        });
+        await this.setState({ list_data: data.post_data });
     };
 
     async updateCommunityFeed() {
-        let { data } = await communityFeed(this.state.communityFeedCurrentPage, this.state.communityFeedCurrentPage + 1);
-
-        await this.setState({
-            ...this.state.list_data,
-            list_data: data.post_data,
-            communityFeedCurrentPage: communityFeedCurrentPage + 1
-        });
+  
+        try {
+            let {communityFeedCurrentPage, isFinish} = this.state
+            await this.setState({loading: true})
+            if(isFinish === false) {
+                let { data } = await communityFeed(communityFeedCurrentPage, communityFeedCurrentPage + 1);
+                if(communityFeedCurrentPage < Math.ceil(data.post_count/10)) {
+                    let new_data = [...this.state.list_data, ...data.post_data]
+                    await this.setState({
+                        list_data: new_data,
+                        communityFeedCurrentPage: communityFeedCurrentPage + 1
+                    })
+                } else {
+                    this.setState({isFinish: true})
+                }
+            }
+                
+            await this.setState({loading: true})
+        } catch (error) {
+            console.log("Main scene error : ", error)
+        }
     }
 
     async updateMyFeed() {
-        let { data } = await communityFeed(this.state.myFeedCurrentPage, this.state.myFeedCurrentPage + 1);
-
-        await this.setState({
-            ...this.state.list_data,
-            list_data: data.post_data,
-            myFeedCurrentPage: myFeedCurrentPage + 1
-        });
+       
+        try {
+            let {myFeedCurrentPage, isFinish} = this.state
+            await this.setState({loading: true})
+            if(isFinish === false) {
+                let { data } = await communityFeed(myFeedCurrentPage, myFeedCurrentPage + 1);
+                if(myFeedCurrentPage < Math.ceil(data.post_count/10)) {
+                    let new_data = [...this.state.list_data, ...data.post_data]
+                    await this.setState({
+                        list_data: new_data,
+                        myFeedCurrentPage: myFeedCurrentPage + 1
+                    })
+                } else {
+                    this.setState({isFinish: true})
+                }
+            }
+                
+            await this.setState({loading: true})
+        } catch (error) {
+            console.log("Main scene error : ", error)
+        }
     }
 
     sortFeed(feed) {
@@ -148,6 +170,41 @@ export default class MessageBoard extends Component {
         console.log('open report : ', data)
         this.setState({ visibleModalReport: true })
     }
+
+    renderTypeInFlatlist ({item}) {
+        if(this.state.board === 'community') {
+            return(
+                <Post 
+                    data={item} 
+                    page="message_board"
+                    sharePressButton={(url) => this.shareCallback(url)}
+                    onPostUpdate={() => this.callCommunityFeed()}
+                    onPostReport={(data) => this.openReport(data)}
+                    report={true}
+                ></Post>
+            )
+        } else {
+            return(
+                <Post 
+                    data={item} 
+                    page="message_board"
+                    sharePressButton={(url) => this.shareCallback(url)}
+                    onPostUpdate={() => this.callMYFeed()}
+                    onPostReport={(data) => this.openReport(data)}
+                    report={true}
+                ></Post>
+            )
+        }
+    }
+
+    renderFooter = () => {
+         if (!this.state.loading) return null;
+         return (
+           <ActivityIndicator
+             style={{ color: '#000' }}
+           />
+         );
+       };
 
     renderModalReport() {
         const { visibleModalReport, lng } = this.state
@@ -223,111 +280,111 @@ export default class MessageBoard extends Component {
     }
 
     render() {
-        const { dataList, lng } = this.state
+        const { lng } = this.state
         return (
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <FlashMessage position="top"
-                    style={{
-                        backgroundColor: '#5b5b5b'
-                    }} />
-                <ScrollView>
-                    <View style={{ flex: 1 }}>
-                        {this.state.user_role == "Member" ?
-                            <HeaderNavbar value={'member'}></HeaderNavbar>
-                            :
-                            <HeaderNavbar value={'admin'}></HeaderNavbar>
-                        }
-                        <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                            
-                            <>
-                                    <View style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    padding: hp('2%'),
-                                    alignItems: 'center'
-                                }}>
-                                    <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.message_board}</Text>
-                                    <TouchableOpacity onPress={() => this.sortFeed(this.state.list_data)}>
-                                        <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                                    </TouchableOpacity>
+                style={{
+                    backgroundColor: '#5b5b5b'
+                }} />
+                <View style={{ flex: 1 }}>
+                    {this.state.user_role == "Member" ?
+                        <HeaderNavbar value={'member'}></HeaderNavbar>
+                        :
+                        <HeaderNavbar value={'admin'}></HeaderNavbar>
+                    }
+                    <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
+                        
+                        <>
+                                <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                padding: hp('2%'),
+                                alignItems: 'center'
+                            }}>
+                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.message_board}</Text>
+                                <TouchableOpacity onPress={() => this.sortFeed(this.state.list_data)}>
+                                    <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                                </TouchableOpacity>
+                            </View>
+                            {
+                                this.state.user_type != 'read' || this.state.user_role == 'Admin' &&
+                                <View  style={{ ...style.container }}>
+                                    <Button
+                                        title={lng.new_post}
+                                        Outline={true}
+                                        titleStyle={{ color: '#003764', }}
+                                        buttonStyle={{
+                                            padding: hp('1.5%'),
+                                            ...style.btnPrimaryOutline,
+                                            ...style.btnRounded
+                                        }}
+                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                        'description': '',
+                                        'post_images': []})}
+                                    />
                                 </View>
-                                {
-                                    this.state.user_type != 'read' || this.state.user_role == 'Admin' &&
-                                    <View  style={{ ...style.container }}>
-                                        <Button
-                                            title={lng.new_post}
-                                            Outline={true}
-                                            titleStyle={{ color: '#003764', }}
-                                            buttonStyle={{
-                                                padding: hp('1.5%'),
-                                                ...style.btnPrimaryOutline,
-                                                ...style.btnRounded
-                                            }}
-                                            onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
-                                            'description': '',
-                                            'post_images': []})}
-                                        />
-                                    </View>
-                                }
-                            </>
+                            }
+                        </>
 
-                            <View style={{ ...styleScoped.wrapperButtonGroup }}>
-                                <TouchableOpacity style={this.state.board == 'community' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
-                                    onPress={() => {
-                                        this.setBoard('community')
-                                        this.callCommunityFeed(this.state.token)
-                                    }}
-                                >
-                                    <Text style={this.state.board == 'community' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>{lng.community_board}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={this.state.board == 'my' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
-                                    onPress={() => {
-                                        this.setBoard('my')
-                                        this.callMYFeed(this.state.token)
-                                    }}
-                                >
-                                    <Text style={this.state.board == 'my' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>{lng.my_board}</Text>
-                                </TouchableOpacity>
-                            </View>
-
-                            <View style={{ marginTop: hp('2%') }}>
-                                <ScrollView style={{ marginBottom: 24 }}>
-                                    {
-                                        this.state.list_data.length === 0 ?
-                                            <ActivityIndicator color="#003764" style={{ marginTop: hp('25%') }} />
-                                            :
-                                            this.state.list_data.map((item, index) => {
-                                                if (item.post_type == 'event') {
-                                                    return (
-                                                        <EventPost data={item} key={`event_${index}`}></EventPost>
-                                                    )
-                                                } else if (item.post_type == 'blog') {
-                                                    return (
-                                                        <Post 
-                                                            data={item} 
-                                                            page="message_board"
-                                                            sharePressButton={(url) => this.shareCallback(url)}
-                                                            onPostUpdate={() => this.callHomeFeed()}
-                                                            onPostReport={(data) => this.openReport(data)}
-                                                            key={`blog_${index}`}
-                                                            report={true}
-                                                            ></Post>
-                                                    )
-                                                }
-                                            })
-                                    }
-                                </ScrollView>
-                            </View>
+                        <View style={{ ...styleScoped.wrapperButtonGroup }}>
+                            <TouchableOpacity style={this.state.board == 'community' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
+                                onPress={() => {
+                                    this.setBoard('community')
+                                    this.callCommunityFeed(this.state.token)
+                                }}
+                            >
+                                <Text style={this.state.board == 'community' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>{lng.community_board}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={this.state.board == 'my' ? { ...styleScoped.btnGroupActive } : { ...styleScoped.btnGroup }}
+                                onPress={() => {
+                                    this.setBoard('my')
+                                    this.callMYFeed(this.state.token)
+                                }}
+                            >
+                                <Text style={this.state.board == 'my' ? { ...styleScoped.textBtnGroupActive } : { ...styleScoped.textBtnGroup }}>{lng.my_board}</Text>
+                            </TouchableOpacity>
                         </View>
+
+                        {
+                            this.state.isFetching ?
+                            <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
+                            : 
+                            <View style={{marginTop: 20}}>
+                                <FlatList
+                                    data={this.state.list_data}
+                                    renderItem={this.renderTypeInFlatlist.bind(this)}
+                                    keyExtractor={item => item.id}
+                                    onEndReached={() => {
+                                        if(this.state.board == 'community')
+                                            !this.state.isFinish&&this.updateCommunityFeed.bind(this)
+                                        else
+                                            !this.state.isFinish&&this.updateMyFeed.bind(this)
+                                    }}
+                                    ListFooterComponent={this.renderFooter.bind(this)}
+                                    onEndThreshold={0.4}
+                                    refreshControl={
+                                        <RefreshControl
+                                        refreshing={this.state.isFetching}
+                                        onRefresh={() => {
+                                            if(this.state.board == 'community')
+                                                !this.state.isFinish&&this.updateCommunityFeed.bind(this)
+                                            else
+                                                !this.state.isFinish&&this.updateMyFeed.bind(this)
+                                        }}
+                                        />
+                                    }
+                                />
+                            </View>
+                        }       
                     </View>
-                    {this.renderModalReport()}
-                </ScrollView>
+                </View>
+                {/* {this.renderModalReport()} */}
                 {this.state.user_role == "Member" ?
                     <MenuFooterUser value={'message'}></MenuFooterUser>
                     :
                     <MenuFooter value={'message'}></MenuFooter>
                 }
-                {/* <MenuFooter></MenuFooter> */}
             </View>
         );
     }

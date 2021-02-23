@@ -97,9 +97,9 @@ export default class Main extends Component {
 
     async updateHomeFeed() {
         try {
-            let {feedCurrentPage, isFinish} = this.state
-            await this.setState({loading: true})
-            if(isFinish === false) {
+            let { feedCurrentPage, isFinish } = this.state
+            await this.setState({ loading: true })
+            if (isFinish === false) {
                 let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
                 if(feedCurrentPage < Math.ceil(data.post_count/10)) {
                     let new_data = [...this.state.list_data, ...data.post_data]
@@ -108,11 +108,11 @@ export default class Main extends Component {
                         feedCurrentPage: this.state.feedCurrentPage + 1
                     })
                 } else {
-                    this.setState({isFinish: true})
+                    this.setState({ isFinish: true })
                 }
             }
-                
-            await this.setState({loading: true})
+
+            await this.setState({ loading: true })
         } catch (error) {
             console.log("Main scene error : ", error)
         }
@@ -130,10 +130,11 @@ export default class Main extends Component {
         this.setState({ list_data: feed.reverse() });
     }
 
-    renderTypeInFlatlist({item}) {
+    renderTypeInFlatlist({ item }) {
+        // console.log(item)
         if (item.post_type == 'event') {
             return (
-                <EventPost data={item} ></EventPost>
+                <EventPost data={item} onDeletePost={() => this.callHomeFeed()} ></EventPost>
             )
         } else if (item.post_type == 'blog') {
             return (
@@ -149,17 +150,17 @@ export default class Main extends Component {
 
     renderFooter = () => {
         //it will show indicator at the bottom of the list when data is loading otherwise it returns null
-         if (!this.state.loading) return null;
-         return (
-           <ActivityIndicator
-             style={{ color: '#000' }}
-           />
-         );
-       };
+        if (!this.state.loading) return null;
+        return (
+            <ActivityIndicator
+                style={{ color: '#000' }}
+            />
+        );
+    };
 
     render() {
         const { isFetching, user_role, list_data, lng } = this.state
- 
+
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
@@ -208,21 +209,21 @@ export default class Main extends Component {
 
 
                                 {/*   show post  */}
-                                <SafeAreaView style={{flex: 1}}>
+                                <SafeAreaView style={{ flex: 1 }}>
                                     <FlatList
                                         data={this.state.list_data}
                                         renderItem={this.renderTypeInFlatlist.bind(this)}
                                         keyExtractor={item => item.id}
                                         // onEndReached={this.updateHomeFeed()}
-                                        onEndReached={!this.state.isFinish&&this.updateHomeFeed.bind(this)}
+                                        onEndReached={!this.state.isFinish && this.updateHomeFeed.bind(this)}
                                         ListFooterComponent={this.renderFooter.bind(this)}
                                         onEndThreshold={0.4}
                                         refreshControl={
                                             <RefreshControl
-                                              refreshing={this.state.isFetching}
-                                              onRefresh={this.callHomeFeed.bind(this)}
+                                                refreshing={this.state.isFetching}
+                                                onRefresh={this.callHomeFeed.bind(this)}
                                             />
-                                          }
+                                        }
                                     />
                                 </SafeAreaView>
 
