@@ -77,7 +77,7 @@ export default class EditProfile extends Component {
     }
 
     componentDidMount() {
-        
+        // console.log(this.props)
     }
 
     componentWillUnmount() {
@@ -86,6 +86,7 @@ export default class EditProfile extends Component {
 
     async setUserObject () {
         const {user_data} = await this.props;
+        
         await this.setState({
             userObject: {...user_data}
         });
@@ -144,7 +145,7 @@ export default class EditProfile extends Component {
                     paddingHorizontal: hp('2%')
                 }}
             >
-                <>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={{
                     borderBottomColor: '#707070',
                     borderBottomWidth: 1,
@@ -240,7 +241,7 @@ export default class EditProfile extends Component {
                         onPress={() => this.setState({ visibleModalPostandRead: false })}
                     />
                 </View>
-                </>
+                </KeyboardAvoidingView>
             </Overlay>
         )
     }
@@ -350,12 +351,13 @@ export default class EditProfile extends Component {
         )
     }
 
-    saveTypeOfUser() {
-        this.setState({
+    async saveTypeOfUser() {
+        await this.setState({
             visibleModalPostandRead: false,
             visibleChangeTypeOfUser: false,
             successModal: true
         })
+        await this.requestChangeRole('read,post_read')
     }
 
     async confirmReadOnly () {
@@ -384,14 +386,14 @@ export default class EditProfile extends Component {
             postTextColor: '#fff',
             visible: true,
             visibleModalPostandRead: true,
-            type: 'read,post_read',
+            type: 'read',
             successModal: false,
             userObject: {
                 ...this.state.userObject,
-                user_type: 'read,post_read'
+                user_type: 'read'
             }
         })
-        // await this.requestChangeRole('read,post_read')
+        
         await this.continueTypeOfUser('read,post_read')
     }
 
@@ -545,26 +547,30 @@ export default class EditProfile extends Component {
                                 onChangeText={ (value) => this.setState({userObject: { ...userObject, position: value } }) }
                             />
                         </View>
+                            {
+                                userObject.user_role == 'Member' &&
+                                <>
+                                <View style={{ marginTop: hp('2%') }}>
+                                    <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
+                                        <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                                        <Text style={{ fontSize: hp('2.2%') }}>{lng.type_of_user}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{ userObject.user_type }</Text>
+                                        <TouchableOpacity
+                                            style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
+                                            onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
+                                        >
+                                            <Text style={{ color: "white" }}>{lng.change}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
 
-                        <View style={{ marginTop: hp('2%') }}>
-                            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
-                                <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>{lng.type_of_user}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{ userObject.user_type }</Text>
-                                <TouchableOpacity
-                                    style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
-                                    onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
-                                >
-                                    <Text style={{ color: "white" }}>{lng.change}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: hp('2%') }}>
-                            <Text style={{ fontSize: hp('1.7%'), width: '70%', color: '#707070' }}>{lng.edit_profile_footer}</Text>
-                        </View>
+                                <View style={{ marginTop: hp('2%') }}>
+                                    <Text style={{ fontSize: hp('1.7%'), width: '70%', color: '#707070' }}>{lng.edit_profile_footer}</Text>
+                                </View>
+                                </>
+                            }
                     </KeyboardAvoidingView>
                     </View>
                 </ScrollView>

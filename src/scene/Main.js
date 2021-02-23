@@ -29,17 +29,21 @@ import EventPost from '../components/EventPost'
 import translate from '../constant/lang'
 import FlashMessage, { showMessage } from "react-native-flash-message";
 export default class Main extends Component {
-    state = {
-        visibleSearch: false,
-        user_type: '',
-        token: '',
-        list_data: [],
-        user_role: '',
-        isFetching: false,
-        lng: {},
-        loading: false,
-        feedCurrentPage: 0,
-        isFinish: false,
+    constructor(props) {
+        super(props)
+        this.state = {
+            visibleSearch: false,
+            user_type: '',
+            token: '',
+            list_data: [],
+            user_role: '',
+            isFetching: false,
+            lng: {},
+            loading: false,
+            feedCurrentPage: 0,
+            isFinish: false,
+        }
+        this.callHomeFeed.bind(this)
     }
 
     async componentWillUnmount() {
@@ -71,6 +75,7 @@ export default class Main extends Component {
     };
 
     async callHomeFeed() {
+        this.setState({list_data: false})
         this.setState({ isFetching: true })
         try {
             let { data } = await homeFeed(0, 0);
@@ -96,7 +101,6 @@ export default class Main extends Component {
             await this.setState({loading: true})
             if(isFinish === false) {
                 let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
-                console.log(feedCurrentPage, Math.ceil(data.post_count/10), isFinish)
                 if(feedCurrentPage < Math.ceil(data.post_count/10)) {
                     let new_data = [...this.state.list_data, ...data.post_data]
                     await this.setState({
@@ -127,14 +131,18 @@ export default class Main extends Component {
     }
 
     renderTypeInFlatlist({item}) {
-        // console.log(item)
         if (item.post_type == 'event') {
             return (
                 <EventPost data={item} ></EventPost>
             )
         } else if (item.post_type == 'blog') {
             return (
-                <Post data={item} page="main" sharePressButton={(url) => this.shareCallback(url)} onPostUpdate={() => this.callHomeFeed} ></Post>
+                <Post 
+                data={item} 
+                page="main" 
+                sharePressButton={(url) => this.shareCallback(url)} 
+                onPostUpdate={async () => this.callHomeFeed()} >
+                </Post>
             )
         }
     }
@@ -203,7 +211,7 @@ export default class Main extends Component {
                                 <SafeAreaView style={{flex: 1}}>
                                     <FlatList
                                         data={this.state.list_data}
-                                        renderItem={this.renderTypeInFlatlist}
+                                        renderItem={this.renderTypeInFlatlist.bind(this)}
                                         keyExtractor={item => item.id}
                                         // onEndReached={this.updateHomeFeed()}
                                         onEndReached={!this.state.isFinish&&this.updateHomeFeed.bind(this)}
