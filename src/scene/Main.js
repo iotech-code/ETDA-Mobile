@@ -75,7 +75,7 @@ export default class Main extends Component {
     };
 
     async callHomeFeed() {
-        this.setState({list_data: false})
+        this.setState({ list_data: false })
         this.setState({ isFetching: true })
         try {
             let { data } = await homeFeed(0, 0);
@@ -101,7 +101,7 @@ export default class Main extends Component {
             await this.setState({ loading: true })
             if (isFinish === false) {
                 let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
-                if(feedCurrentPage < Math.ceil(data.post_count/10)) {
+                if (feedCurrentPage < Math.ceil(data.post_count / 10)) {
                     let new_data = [...this.state.list_data, ...data.post_data]
                     await this.setState({
                         list_data: new_data,
@@ -138,11 +138,13 @@ export default class Main extends Component {
             )
         } else if (item.post_type == 'blog') {
             return (
-                <Post 
-                data={item} 
-                page="main" 
-                sharePressButton={(url) => this.shareCallback(url)} 
-                onPostUpdate={async () => this.callHomeFeed()} >
+                <Post
+                    data={item}
+                    page="main"
+                    sharePressButton={(url) => this.shareCallback(url)}
+                    onPostUpdate={async () => this.callHomeFeed()}
+                    onDeletePost={() => this.callHomeFeed()}
+                >
                 </Post>
             )
         }

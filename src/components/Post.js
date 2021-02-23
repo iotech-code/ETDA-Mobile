@@ -7,7 +7,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
@@ -19,7 +20,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import { fonts } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
-import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
+import { actionLikePost, actionDeletePost, actionFollowPost  } from '../Service/PostService'
 import translate from '../constant/lang'
 
 export default class Post extends Component {
@@ -84,6 +85,39 @@ export default class Post extends Component {
         setTimeout(() => {
             self.props.onPostReport(this.props.data.post_id)
         }, 300);
+    }
+
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            let { data } = await actionDeletePost(post_id)
+            if(data.status == 'success'){
+                this.props.onDeletePost()
+            }
+        } catch (error) {
+            console.log('Delete poll error : ' , error)
+        }
     }
 
     renderModalReport() {
@@ -158,6 +192,8 @@ export default class Post extends Component {
         )
     }
 
+
+
     renderBottomSheet() {
         const { visibleBottomSheet, is_follow, lng, user_id ,user_role } = this.state
         const { report } = this.props
@@ -175,6 +211,7 @@ export default class Post extends Component {
                         borderTopRightRadius: 30,
                         borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
+                        paddingBottom:hp('2%'),
                         backgroundColor: 'white',
                         ...style.shadowCard,
                         height: 'auto'
@@ -220,7 +257,7 @@ export default class Post extends Component {
                         <TouchableOpacity style={{
                             ...styleScoped.listMore
                         }}
-                            onPress={() => this.callDeletePost(this.props.data.post_id)}
+                            onPress={() => this.onConfirmDeletePost()}
                         >
                             <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                             <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
@@ -245,19 +282,6 @@ export default class Post extends Component {
     }
 
 
-    async callDeletePost(post_id) {
-        this.setState({ visibleBottomSheet: false })
-        this.RBSheet.close()
-        try {
-            let response = await actionDeletePost(post_id)
-            let { status } = response.data
-            if (status == 'success') {
-                this.props.onPostUpdate()
-            }
-        } catch (error) {
-            console.log('Delete post error : ', error)
-        }
-    };
 
     async callPostLike(post_id) {
         try {
