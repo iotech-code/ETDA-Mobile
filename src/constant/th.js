@@ -16,7 +16,7 @@ export const th = {
     follow_blog: "ติดตาม",
     unfollow_blog: "เลิกติดตาม",
     edit_blog: "แก้ไขบทความ",
-    delete_blog: "แก้ไขบทความ",
+    delete_blog: "ลบบทความ",
     comment_here: "แสดงความคิดเห็นที่นี่",
     send: "ส่ง",
     search: "ค้นหา",

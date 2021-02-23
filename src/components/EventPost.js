@@ -17,7 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { actionLikePost } from '../Service/PostService'
 import translate from '../constant/lang'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment'
 export default class MessagsPost extends Component {
 

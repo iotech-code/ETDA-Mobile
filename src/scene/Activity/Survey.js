@@ -21,7 +21,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
-import PostSurvey from '../../components/Survey'
+import SurveyPost from '../../components/Survey'
 import { Button } from 'react-native-elements'
 import translate from '../../constant/lang'
 import { getListPostSurvey } from '../../Service/PostService'
@@ -39,14 +39,6 @@ export default class Survey extends Component {
     async UNSAFE_componentWillMount() {
         await this.getLang();
         await this.onGetlistSurvey()
-    }
-
-    async getLang() {
-        let vocap = await translate()
-        this.setState({ lng: vocap })
-    }
-
-    componentDidMount() {
         this.getUserInfo()
     }
 
@@ -58,7 +50,17 @@ export default class Survey extends Component {
             user_type: user_data.user_type,
             user_role: user_data.user_role
         })
-    };
+    }
+
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+    }
+
+    componentDidMount() {
+        
+    }
+
 
     async onGetlistSurvey() {
         try {
@@ -113,7 +115,7 @@ export default class Survey extends Component {
                             {
                                 list_data.map((el, index) => {
                                     return (
-                                        <PostSurvey data={el} key={`survey_${index}`}></PostSurvey>
+                                        <SurveyPost data={el} key={`survey_${index}`}></SurveyPost>
                                     )
                                 })
                             }
