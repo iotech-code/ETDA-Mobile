@@ -63,7 +63,7 @@ export default class MessageBoard extends Component {
         try {
             const token = await AsyncStorage.getItem('token');
             const user = await AsyncStorage.getItem('user_data');
-            const { user_type, user_role, fullname } = JSON.parse(user);
+            const { user_type, user_role } = JSON.parse(user);
             await this.getLang();
             this.setState({
                 user_type: user_type,
@@ -77,6 +77,7 @@ export default class MessageBoard extends Component {
             console.log('err : ', err)
         }
     }
+
 
     async componentWillUnmount () {
         await this.setState({list_data: false})
@@ -250,21 +251,24 @@ export default class MessageBoard extends Component {
                                         <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                     </TouchableOpacity>
                                 </View>
-                                <View  style={{ ...style.container }}>
-                                    <Button
-                                        title={lng.new_post}
-                                        Outline={true}
-                                        titleStyle={{ color: '#003764', }}
-                                        buttonStyle={{
-                                            padding: hp('1.5%'),
-                                            ...style.btnPrimaryOutline,
-                                            ...style.btnRounded
-                                        }}
-                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
-                                        'description': '',
-                                        'post_images': []})}
-                                    />
-                                </View>
+                                {
+                                    this.state.user_type != 'read' || this.state.user_role == 'Admin' &&
+                                    <View  style={{ ...style.container }}>
+                                        <Button
+                                            title={lng.new_post}
+                                            Outline={true}
+                                            titleStyle={{ color: '#003764', }}
+                                            buttonStyle={{
+                                                padding: hp('1.5%'),
+                                                ...style.btnPrimaryOutline,
+                                                ...style.btnRounded
+                                            }}
+                                            onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
+                                            'description': '',
+                                            'post_images': []})}
+                                        />
+                                    </View>
+                                }
                             </>
 
                             <View style={{ ...styleScoped.wrapperButtonGroup }}>

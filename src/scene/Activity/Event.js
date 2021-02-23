@@ -141,23 +141,24 @@ export default class Activity extends Component {
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.event}</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
+                        
+                        {
+                            this.state.user_role == 'Admin' &&
+                            <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                <Button
+                                    title={lng.create_new_event}
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded
+                                    }}
+                                    onPress={() => Actions.push('EventCreate')}
+                                />
+                            </View>
+                        }
 
-
-                        {/* section admin */}
-                        <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                            <Button
-                                title={lng.create_new_event}
-                                Outline={true}
-                                titleStyle={{ color: '#003764', }}
-                                buttonStyle={{
-                                    padding: hp('1%'),
-                                    ...style.btnPrimaryOutline,
-                                    ...style.btnRounded
-                                }}
-                                onPress={() => Actions.push('EventCreate')}
-                            />
-                        </View>
-                        {/* end section admin */}
 
                         {/* calendar*/}
                         <View style={style.container}>

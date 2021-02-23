@@ -92,13 +92,12 @@ export default class Main extends Component {
 
     async updateHomeFeed() {
         try {
-            // let {feedCurrentPage} = this.state
+            let {feedCurrentPage, isFinish} = this.state
             await this.setState({loading: true})
-            console.log("finish", this.state.isFinish)
-            if(!this.state.isFinish) {
+            if(isFinish === false) {
                 let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
-                console.log(this.state.feedCurrentPage, this.state.feedCurrentPage + 1, data.post_data.length)
-                if(data.post_data.length !== 0) {
+                console.log(feedCurrentPage, Math.ceil(data.post_count/10), isFinish)
+                if(feedCurrentPage < Math.ceil(data.post_count/10)) {
                     let new_data = [...this.state.list_data, ...data.post_data]
                     await this.setState({
                         list_data: new_data,
@@ -108,6 +107,7 @@ export default class Main extends Component {
                     this.setState({isFinish: true})
                 }
             }
+                
             await this.setState({loading: true})
         } catch (error) {
             console.log("Main scene error : ", error)
