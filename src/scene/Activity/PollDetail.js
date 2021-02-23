@@ -24,7 +24,7 @@ import * as Progress from 'react-native-progress';
 import { postAction } from '../../Service/PostService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RBSheet from "react-native-raw-bottom-sheet";
-import {actionDeletePost} from '../../Service/PostService'
+import { actionDeletePost, getPollStat } from '../../Service/PostService'
 export default class PollDetail extends Component {
     constructor(props) {
         super()
@@ -34,7 +34,11 @@ export default class PollDetail extends Component {
             answer_id: null,
             progress: 0,
             is_play: 0,
-            user_id: null
+            user_id: null,
+            data_stat_poll: {
+                question:'',
+                answer:[]
+            }
         }
     }
 
@@ -44,12 +48,25 @@ export default class PollDetail extends Component {
         await this.setState({ data })
         await this.setState({ is_play: data.is_play })
         await this.getUserId()
+        if (data.is_play) {
+            this.onGetPollStat()
+        }
     }
 
     async getUserId() {
         let user = await AsyncStorage.getItem('user_data')
         user = JSON.parse(user)
         this.setState({ user_id: user.userid })
+    }
+
+    async onGetPollStat() {
+        try {
+            let { post_id } = this.props.data
+            let { data } = await getPollStat(post_id)
+            this.setState({ data_stat_poll: data.datas })
+        } catch (error) {
+            console.log('Get poll stat : ', error)
+        }
     }
 
 
@@ -73,7 +90,8 @@ export default class PollDetail extends Component {
             }
             let response = await postAction(data)
             if (response.data.status == 'success') {
-                Actions.pop({ refresh: {} });
+                this.setState({is_play:1})
+                this.onGetPollStat()
             }
         } catch (error) {
             console.log('Save anwser error : ', error)
@@ -81,7 +99,7 @@ export default class PollDetail extends Component {
 
     }
 
-    openBottomOption(){
+    openBottomOption() {
         this.RBSheet.open()
     }
 
@@ -109,13 +127,12 @@ export default class PollDetail extends Component {
     async onDeletePost() {
         try {
             const { post_id } = this.props.data
-            // console.log(post_id)
             let { data } = await actionDeletePost(post_id)
-            if(data.status == 'success'){
-                Actions.pop({refresh:{}})
+            if (data.status == 'success') {
+                Actions.pop({ refresh: {} })
             }
         } catch (error) {
-            console.log('Delete poll error : ' , error)
+            console.log('Delete poll error : ', error)
         }
     }
 
@@ -186,8 +203,6 @@ export default class PollDetail extends Component {
                     </View>
                 </View>
 
-
-
                 <View style={{ ...style.container, marginTop: hp('3%') }}>
                     <Button
                         title="Done"
@@ -203,17 +218,18 @@ export default class PollDetail extends Component {
     }
 
     renderFinishPoll() {
-        const { title, post_addition_data } = this.state.data
+        const { title, post_addition_data, } = this.state.data
+        const { data_stat_poll } = this.state
         return (
             <View style={{ ...style.container, marginTop: hp('1%') }}>
-                <Text style={{ fontSize: hp('2%') }}>{title}</Text>
+                <Text style={{ fontSize: hp('2%') }}>{data_stat_poll.question}</Text>
 
                 {
-                    post_addition_data.answer.map((el, index) => {
+                    data_stat_poll.answer.map((el, index) => {
                         return (
                             <View style={{ marginTop: hp('2%'), ...style.space__between, alignItems: 'flex-start' }} key={`percen_${index}`}>
                                 <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>33.33%</Text>
+                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{el.percent}%</Text>
                             </View>
                         )
                     })
@@ -225,11 +241,11 @@ export default class PollDetail extends Component {
                 <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
                 {
-                    post_addition_data.answer.map((el, index) => {
+                    data_stat_poll.answer.map((el, index) => {
                         return (
                             <View style={{ marginTop: hp('1%') }} key={`progressbar_${index}`}>
                                 <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                <Progress.Bar progress={0.1} width={wp('80%')} height={10} />
+                                <Progress.Bar progress={el.percent/10} width={wp('80%')} height={10} />
                             </View>
                         )
                     })
@@ -279,7 +295,7 @@ export default class PollDetail extends Component {
                             </View>
                             {
                                 user_id == author.id ?
-                                    <TouchableOpacity  onPress={()=>this.openBottomOption()}>
+                                    <TouchableOpacity onPress={() => this.openBottomOption()}>
                                         <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                                     </TouchableOpacity>
                                     : null

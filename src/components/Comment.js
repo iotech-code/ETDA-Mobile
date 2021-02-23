@@ -51,7 +51,7 @@ export default class Comment extends Component {
                             </View>
                             <View >
                                 <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{User.Fullname}</Text>
-                                <Text style={{ fontSize: hp('2%'), color: "#B5B5B5" }}>{create_date}</Text>
+                                <Text style={{ fontSize: 12, color: "#B5B5B5" }}>{create_date}</Text>
                             </View>
                         </View>
                     </View>
