@@ -9,7 +9,9 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Clipboard,
-    FlatList
+    SafeAreaView,
+    FlatList,
+    RefreshControl
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,6 +37,7 @@ export default class Main extends Component {
         user_role: '',
         isFetching: false,
         lng: {},
+        loading: false,
         feedCurrentPage: 0
     }
 
@@ -88,12 +91,17 @@ export default class Main extends Component {
 
     async updateHomeFeed() {
         try {
-            let { data } = await homeFeed(this.stat.feedCurrentPage, this.stat.feedCurrentPage + 1);
+            // let {feedCurrentPage} = this.state
+            await this.setState({loading: true})
+            let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
+            console.log(this.state.feedCurrentPage, this.state.feedCurrentPage+1)
+
             await this.setState({
-                ...this.state.list_data,
-                list_data: data.post_data,
-                feedCurrentPage: this.stat.feedCurrentPage + 1
+                list_data: [...this.state.list_data, data.post_data],
+                feedCurrentPage: this.state.feedCurrentPage + 1,
+                loading: false
             });
+            console.log(this.state.list_data)
         } catch (error) {
             console.log("Main scene error : ", error)
         }
@@ -124,6 +132,16 @@ export default class Main extends Component {
         }
     }
 
+    renderFooter = () => {
+        //it will show indicator at the bottom of the list when data is loading otherwise it returns null
+         if (!this.state.loading) return null;
+         return (
+           <ActivityIndicator
+             style={{ color: '#000' }}
+           />
+         );
+       };
+
     render() {
         const { isFetching, user_role, list_data, lng } = this.state
  
@@ -134,60 +152,70 @@ export default class Main extends Component {
                     style={{
                         backgroundColor: '#5b5b5b'
                     }} />
-                <ScrollView>
-                    <View style={{ flex: 1, paddingBottom: hp('1%') }}>
-                        {
-                            user_role == "Member" ?
-                                <HeaderNavbar value={'member'}></HeaderNavbar>
-                                :
-                                <HeaderNavbar value={'admin'}></HeaderNavbar>
-                        }
+                <View style={{ flex: 1, paddingBottom: hp('1%') }}>
+                    {
+                        user_role == "Member" ?
+                            <HeaderNavbar value={'member'}></HeaderNavbar>
+                            :
+                            <HeaderNavbar value={'admin'}></HeaderNavbar>
+                    }
 
 
-                        {/* loading data */}
+                    {/* loading data */}
 
-                        {
-                            isFetching ?
-                                <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
-                                : <Fragment>
-                                    <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
-                                        <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.etda_blog}</Text>
-                                        <TouchableOpacity onPress={() => this.sortFeed(list_data)}>
-                                            <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                                        </TouchableOpacity>
+                    {
+                        isFetching ?
+                            <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
+                            : <Fragment>
+                                <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
+                                    <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.etda_blog}</Text>
+                                    <TouchableOpacity onPress={() => this.sortFeed(list_data)}>
+                                        <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                                    </TouchableOpacity>
+                                </View>
+                                {
+                                    user_role !== 'Member' &&
+                                    <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                        <Button
+                                            title={lng.new_post}
+                                            Outline={true}
+                                            titleStyle={{ color: '#003764', }}
+                                            buttonStyle={{
+                                                padding: hp('1%'),
+                                                ...style.btnPrimaryOutline,
+                                                ...style.btnRounded
+                                            }}
+                                            onPress={() => this.createPost()}
+                                        />
                                     </View>
-                                    {
-                                        user_role !== 'Member' &&
-                                        <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                                            <Button
-                                                title={lng.new_post}
-                                                Outline={true}
-                                                titleStyle={{ color: '#003764', }}
-                                                buttonStyle={{
-                                                    padding: hp('1%'),
-                                                    ...style.btnPrimaryOutline,
-                                                    ...style.btnRounded
-                                                }}
-                                                onPress={() => this.createPost()}
-                                            />
-                                        </View>
-                                    }
-                                    {/* end section create post  */}
+                                }
+                                {/* end section create post  */}
 
 
-                                    {/*   show post  */}
+                                {/*   show post  */}
+                                <SafeAreaView style={{flex: 1}}>
                                     <FlatList
                                         data={this.state.list_data}
                                         renderItem={this.renderTypeInFlatlist}
                                         keyExtractor={item => item.id}
+                                        // onEndReached={this.updateHomeFeed()}
+                                        onEndReached={this.updateHomeFeed.bind(this)}
+                                        ListFooterComponent={this.renderFooter.bind(this)}
+                                        onEndThreshold={0.1}
+                                        refreshControl={
+                                            <RefreshControl
+                                              refreshing={this.state.isFetching}
+                                              onRefresh={this.callHomeFeed.bind(this)}
+                                            />
+                                          }
                                     />
+                                </SafeAreaView>
 
-                                </Fragment>
-                        }
-                        {/* end loading data */}
+                            </Fragment>
+                    }
+                    {/* end loading data */}
 
-                    </View>
-                </ScrollView>
+                </View>
 
                 <View style={{ backgroundColor: null }}>
                     {this.state.user_role == "Member" ?
