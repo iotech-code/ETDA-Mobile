@@ -15,7 +15,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { actionLikePost } from '../Service/PostService'
+import { actionLikePost, actionJoinPost, actionPostUnJoin, actionPostJoin } from '../Service/PostService'
 import translate from '../constant/lang'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment'
@@ -30,7 +30,8 @@ export default class MessagsPost extends Component {
             like_count: 0,
             lng: {},
             user_type: '',
-            user_role: ''
+            user_role: '',
+            is_join: 0
         }
     }
 
@@ -48,7 +49,7 @@ export default class MessagsPost extends Component {
             user_role: user_data.user_role
         })
     };
-    
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
@@ -63,10 +64,11 @@ export default class MessagsPost extends Component {
 
     componentDidMount() {
         // this.RBSheet.open()
-        const { is_like, like } = this.props.data
+        const { is_like, like, is_join } = this.props.data
         this.setState({
             is_like,
-            like_count: like
+            like_count: like,
+            is_join: is_join
         })
     }
 
@@ -75,7 +77,7 @@ export default class MessagsPost extends Component {
         Actions.push('EventEdit')
     }
 
-    
+
 
     async callPostLike(post_id) {
         try {
@@ -93,8 +95,30 @@ export default class MessagsPost extends Component {
         }
     };
 
+    async onPostJoin(post_id) {
+        try {
+            let { data } = await actionPostJoin(post_id)
+            if (data.status == 'success') {
+                this.setState({ is_join: 1 })
+            }
+        } catch (error) {
+            console.log('Post join error : ', error)
+        }
+    }
+
+    async onPostUnJoin(post_id) {
+        try {
+            let { data } = await actionPostUnJoin(post_id)
+            if (data.status == 'success') {
+                this.setState({ is_join: 1 })
+            }
+        } catch (error) {
+            console.log('Post un join error : ', error)
+        }
+    }
+
     renderBottomSheet() {
-        const { visibleBottomSheet, lng, user_role, user_type } = this.state
+        const { visibleBottomSheet, lng, user_role, user_type, is_join } = this.state
 
         return (
             <RBSheet
@@ -107,40 +131,44 @@ export default class MessagsPost extends Component {
                         borderTopRightRadius: 30,
                         borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
+                        paddingBottom: hp('1%'),
                         backgroundColor: 'white',
                         ...style.shadowCard,
                         height: 'auto'
                     }
                 }}
             >
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="star" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.join_event}</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="star-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.unjoin_event}</Text>
-                </TouchableOpacity>
+
+                {
+                    !is_join ?
+                        <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => { this.onPostJoin() }}>
+                            <Icon name="star" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.join_event}</Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => { this.onPostUnJoin() }}>
+                            <Icon name="star-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.unjoin_event}</Text>
+                        </TouchableOpacity>
+                }
+
+
+
                 {/* section admin */}
                 {
                     user_role == "Admin" &&
                     <>
-                    <View style={{ ...style.divider }}></View>
-                    <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onEdit()}>
-                        <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                        <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_event}</Text>
-                    </TouchableOpacity>
-                    <View style={{ ...style.divider }}></View>
+                        <View style={{ ...style.divider }}></View>
+                        <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onEdit()}>
+                            <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_event}</Text>
+                        </TouchableOpacity>
+                        <View style={{ ...style.divider }}></View>
 
-                    <TouchableOpacity style={{ ...styleScoped.listMore }}>
-                        <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                        <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_event}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={{ ...styleScoped.listMore }}>
+                            <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_event}</Text>
+                        </TouchableOpacity>
                     </>
                 }
 
@@ -185,7 +213,7 @@ export default class MessagsPost extends Component {
                     </View>
 
 
-                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail',{...this.props.data})}>
+                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail', { ...this.props.data })}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
                         <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{moment(post_addition_data.event_date).format('DD/MM/YYYY')}</Text>
                         {

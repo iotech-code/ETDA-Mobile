@@ -53,6 +53,7 @@ export default class CreatePost extends Component {
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        this.setState({})
     }
     
     async getLang() {

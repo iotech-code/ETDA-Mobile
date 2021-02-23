@@ -204,7 +204,7 @@ export default class Post extends Component {
                                 Actions.replace('CreatePost', {
                                     'type_value': 'edit',
                                     'title': this.props.data.title,
-                                    'description': this.props.data.description,
+                                    'description': this.props.data.post_description,
                                     'post_images': this.props.data.post_images,
                                     'post_tag': this.props.data.tags,
                                     'post_id': this.props.data.post_id
