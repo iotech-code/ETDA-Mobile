@@ -40,7 +40,9 @@ export default class Post extends Component {
             like_count: 0,
             lng: {},
             is_follow: 0,
-            user_data: {}
+            user_data: {},
+            user_id: '',
+            user_role: ''
         }
     }
 
@@ -57,11 +59,8 @@ export default class Post extends Component {
     }
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
-        let user_data = JSON.parse(user_json);
-
-        this.setState({
-            user_data: user_data
-        })
+        let userInfo = await JSON.parse(user_json);
+        await this.setState({ user_id: userInfo.userid, user_role: userInfo.user_role })
     };
     async componentDidMount() {
         let { is_like, like, is_follow } = this.props.data
@@ -160,7 +159,7 @@ export default class Post extends Component {
     }
 
     renderBottomSheet() {
-        const { visibleBottomSheet, is_follow, lng } = this.state
+        const { visibleBottomSheet, is_follow, lng, user_id ,user_role } = this.state
         const { report } = this.props
         let height = Platform.OS === 'ios' ? hp('32%') : hp('30%')
         height = report ? height : Platform.OS === 'ios' ? hp('25%') : hp('23%')
@@ -194,7 +193,7 @@ export default class Post extends Component {
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.follow_blog}</Text>
                 </TouchableOpacity>
                 {
-                    this.state.user_data.user_role == 'Admin' || this.state.user_data.userid == this.props.data.author.id &&
+                    user_role == 'Admin' || user_id == this.props.data.author.id ?
                     <>
                         <View style={{ ...style.divider }}></View>
                         <TouchableOpacity style={{
@@ -227,8 +226,9 @@ export default class Post extends Component {
                             <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
                         </TouchableOpacity>
                         <View style={{ ...style.divider }}></View>
-                        
-                    </>
+
+                    </> 
+                    : null
                 }
                 {
                     report && this.state.user_data.userid != this.props.data.author.id ?
@@ -380,14 +380,14 @@ export default class Post extends Component {
                 </TouchableOpacity>
 
                 <View style={{
-                        justifyContent: 'flex-start',
-                        marginTop: hp('2%'),
-                        paddingTop: hp('1.5%'),
-                        flexDirection: 'row',
-                        width: wp('100%'),
-                        paddingHorizontal: hp('2%'),
-                    }}>
-                    <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{flexDirection: 'row'}}>
+                    justifyContent: 'flex-start',
+                    marginTop: hp('2%'),
+                    paddingTop: hp('1.5%'),
+                    flexDirection: 'row',
+                    width: wp('100%'),
+                    paddingHorizontal: hp('2%'),
+                }}>
+                    <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{ flexDirection: 'row' }}>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                         <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like_count}</Text>
                     </TouchableOpacity>
