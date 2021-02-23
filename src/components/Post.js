@@ -57,10 +57,10 @@ export default class Post extends Component {
     }
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
-        let user_data = JSON.parse(user_json);
+        let info = JSON.parse(user_json);
 
         this.setState({
-            user_data: user_data
+            user_data: info
         })
     };
     async componentDidMount() {
@@ -194,7 +194,7 @@ export default class Post extends Component {
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.follow_blog}</Text>
                 </TouchableOpacity>
                 {
-                    this.state.user_data.user_role == 'Admin' || this.state.user_data.userid == this.props.data.author.id &&
+                    this.state.user_data.user_role == 'Admin' || this.state.user_data.userid == this.props.data.author.id ?
                     <>
                         <View style={{ ...style.divider }}></View>
                         <TouchableOpacity style={{
@@ -229,6 +229,7 @@ export default class Post extends Component {
                         <View style={{ ...style.divider }}></View>
                         
                     </>
+                    : <></>
                 }
                 {
                     report && this.state.user_data.userid != this.props.data.author.id ?

@@ -109,7 +109,7 @@ export default class PollDetail extends Component {
     async onDeletePost() {
         try {
             const { post_id } = this.props.data
-            console.log(post_id)
+            // console.log(post_id)
             let { data } = await actionDeletePost(post_id)
             if(data.status == 'success'){
                 Actions.pop({refresh:{}})
