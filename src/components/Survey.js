@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    Platform
+    Platform,
+    Alert
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
@@ -19,6 +20,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { apiServer } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { actionDeletePost } from '../Service/PostService'
 
 export default class SurveyPost extends Component {
 
@@ -50,6 +52,40 @@ export default class SurveyPost extends Component {
         await this.getUserInfo()
     }
 
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            console.log(post_id)
+            let { data } = await actionDeletePost(post_id)
+            if (data.status == 'success') {
+                this.props.onDeletePost()
+            }
+        } catch (error) {
+            console.log('Delete survey error : ', error)
+        }
+    }
+    
     renderBottomSheet() {
         const { visibleBottomSheet, user_data } = this.state
         return (
@@ -57,7 +93,7 @@ export default class SurveyPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('24%') : hp('22%')}
+                height={Platform.OS === 'ios' ? hp('10%') : hp('8%')}
                 openDuration={250}
             >
                 <TouchableOpacity style={{
@@ -128,7 +164,7 @@ export default class SurveyPost extends Component {
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
-                        <TouchableOpacity onPress={() => Actions.SurveyDetail({data : this.state.data})}>
+                        <TouchableOpacity onPress={() => Actions.SurveyDetail({ data: this.state.data })}>
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
                     </View>

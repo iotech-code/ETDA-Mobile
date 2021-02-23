@@ -64,6 +64,7 @@ export default class Survey extends Component {
 
     async onGetlistSurvey() {
         try {
+            await this.setState({ list_data: [] })
             let { data } = await getListPostSurvey()
             this.setState({ list_data: data.post_data })
         } catch (error) {
@@ -115,7 +116,11 @@ export default class Survey extends Component {
                             {
                                 list_data.map((el, index) => {
                                     return (
-                                        <SurveyPost data={el} key={`survey_${index}`}></SurveyPost>
+                                        <SurveyPost
+                                            data={el}
+                                            key={`survey_${index}`}
+                                            onDeletePost={() => this.onGetlistSurvey()}
+                                        ></SurveyPost>
                                     )
                                 })
                             }

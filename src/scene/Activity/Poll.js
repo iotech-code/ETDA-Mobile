@@ -31,18 +31,18 @@ export default class Poll extends Component {
             lng: {}
         }
     }
- 
+
     async UNSAFE_componentWillMount() {
         await this.getLang();
         await this.onGetListPoll()
     }
-    
+
     async getLang() {
         let vocap = await translate()
         this.setState({ lng: vocap })
     }
 
-    async UNSAFE_componentWillReceiveProps(props){
+    async UNSAFE_componentWillReceiveProps(props) {
         await this.onGetListPoll()
     }
 
@@ -63,7 +63,7 @@ export default class Poll extends Component {
     async onGetListPoll() {
         try {
             let { data } = await getListPostPoll();
-            let list_data_student =  []
+            let list_data_student = []
             let list_data_general = []
             for (let index = 0; index < data.post_data.length; index++) {
                 const element = data.post_data[index];
@@ -81,7 +81,7 @@ export default class Poll extends Component {
     }
 
     render() {
-        const { list_data_student, list_data_general , lng} = this.state
+        const { list_data_student, list_data_general, lng } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -127,7 +127,11 @@ export default class Poll extends Component {
                             {
                                 list_data_student.map((el, index) => {
                                     return (
-                                        <PostPoll key={`student_${index}`} data={el}></PostPoll>
+                                        <PostPoll
+                                            onDeletePost={() => this.onGetListPoll()}
+                                            key={`student_${index}`}
+                                            data={el}
+                                        ></PostPoll>
                                     )
                                 })
                             }
@@ -142,7 +146,10 @@ export default class Poll extends Component {
                             {
                                 list_data_general.map((el, index) => {
                                     return (
-                                        <PostPoll key={`general_${index}`} data={el}></PostPoll>
+                                        <PostPoll
+                                            onDeletePost={() => this.onGetListPoll()}
+                                            key={`general_${index}`}
+                                            data={el}></PostPoll>
                                     )
                                 })
                             }
