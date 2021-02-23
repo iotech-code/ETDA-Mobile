@@ -179,6 +179,7 @@ export default class MessageBoard extends Component {
                     page="message_board"
                     sharePressButton={(url) => this.shareCallback(url)}
                     onPostUpdate={() => this.callCommunityFeed()}
+                    onDeletePost={() => this.callCommunityFeed()}
                     onPostReport={(data) => this.openReport(data)}
                     report={true}
                 ></Post>
@@ -190,6 +191,7 @@ export default class MessageBoard extends Component {
                     page="message_board"
                     sharePressButton={(url) => this.shareCallback(url)}
                     onPostUpdate={() => this.callMYFeed()}
+                    onDeletePost={() => this.callMYFeed()}
                     onPostReport={(data) => this.openReport(data)}
                     report={true}
                 ></Post>
@@ -379,7 +381,7 @@ export default class MessageBoard extends Component {
                         }       
                     </View>
                 </View>
-                {/* {this.renderModalReport()} */}
+                {this.renderModalReport()}
                 {this.state.user_role == "Member" ?
                     <MenuFooterUser value={'message'}></MenuFooterUser>
                     :

@@ -118,6 +118,7 @@ export default class EventDetail extends Component {
     }
 
     sharePOST(post_url) {
+        console.log(post_url)
         showMessage({
             message: "Share url copied!",
             description: post_url,
@@ -194,7 +195,7 @@ export default class EventDetail extends Component {
                                 </View>
                                 <View >
                                     <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{post_date}</Text>
+                                    <Text style={{ fontSize: 12, color: fonts.color.secondary }}>{post_date}</Text>
                                 </View>
                             </View>
                         </View>

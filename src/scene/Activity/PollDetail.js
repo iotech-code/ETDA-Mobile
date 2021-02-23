@@ -203,8 +203,6 @@ export default class PollDetail extends Component {
                     </View>
                 </View>
 
-
-
                 <View style={{ ...style.container, marginTop: hp('3%') }}>
                     <Button
                         title="Done"
