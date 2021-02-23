@@ -61,16 +61,18 @@ export default class EventCreate extends Component {
     }
 
     onChangeDate(event, date, btn) {
+        let newDate = moment(date).format()
+        let date_arr = newDate.split('+')
         const { date_event, date_event_to_show } = this.state
-        this.setState({ date_event: date })
+        this.setState({ date_event: date_arr[0] })
         if (btn) {
             if (!date_event_to_show) {
-                this.setState({ date_event_to_show: moment(date).format('DD/MM/YYYY') })
+                this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
             }
             this.setState({ showDatePicker: false })
         } else {
-            this.setState({ datepicker: date })
-            this.setState({ date_event_to_show: moment(date).format('DD/MM/YYYY') })
+            this.setState({ datepicker: newDate })
+            this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
         }
     }
 

@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import { apiServer } from '../constant/util';
 import translate from '../constant/lang'
+import { getTagsList } from '../Service/PostService'
 export default class Poll extends Component {
     constructor(props) {
         super(props)
@@ -25,7 +26,7 @@ export default class Poll extends Component {
             token: '',
             text: '',
             visibleSearch: false,
-            list_search : [],
+            list_search: [],
             lng: {}
         }
     }
@@ -33,7 +34,7 @@ export default class Poll extends Component {
     async UNSAFE_componentWillMount() {
         await this.getLang();
     }
-    
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
@@ -52,16 +53,16 @@ export default class Poll extends Component {
         }
     }
 
-    async UNSAFE_componentWillMount(){
+    async UNSAFE_componentWillMount() {
         this.onGetListTags()
     }
 
     async onGetListTags() {
         try {
             let { data } = await getTagsList()
-            
+            console.log('data list tags : ', data)
         } catch (error) {
-
+            console.log('Get list tags in search error : ', error)
         }
     }
 
@@ -100,7 +101,7 @@ export default class Poll extends Component {
 
     };
     render() {
-        const {lng} = this.state
+        const { lng } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -116,8 +117,8 @@ export default class Poll extends Component {
                             <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
                             <TextInput style={{ padding: 0, fontSize: hp('2%') }} placeholder="Search..."
                                 onChangeText={(value) => {
-                                this.callSearch(value)
-                            }}
+                                    this.callSearch(value)
+                                }}
                             ></TextInput>
                         </View>
                         <View style={{ marginTop: hp('2%') }}>

@@ -4,13 +4,14 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Image
 } from 'react-native';
 
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { Image } from 'react-native-elements';
-
+// import { Image } from 'react-native-elements';
+import FastImage from 'react-native-fast-image'
 
 
 export default class ImageGrid extends Component {
@@ -54,8 +55,8 @@ export default class ImageGrid extends Component {
                             >
 
                                 <TouchableOpacity onPress={() => this.onPressImage(index)}>
-                                    <Image
-                                        source={{ uri: el }}
+                                    <FastImage
+                                        source={{ uri: el ,  priority: FastImage.priority.normal}}
                                         style={{ height: '100%', width: '100%', resizeMode: 'cover', borderRadius: 4 }}
                                         PlaceholderContent={<ActivityIndicator color="white" />}
                                     />
