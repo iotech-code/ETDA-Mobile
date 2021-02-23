@@ -401,7 +401,7 @@ export default class Post extends Component {
                 </TouchableOpacity>
 
                 {this.renderBottomSheet()}
-                {this.renderModalReport()}
+                {/* {this.renderModalReport()} */}
             </View>
         );
     }
