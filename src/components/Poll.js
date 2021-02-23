@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
     SafeAreaView,
@@ -10,6 +9,7 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
+    Alert,
     Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,8 +19,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import axios from 'axios';
-import { apiServer } from '../constant/util';
+import {actionDeletePost} from '../Service/PostService'
 export default class MessagsPost extends Component {
 
     constructor(props) {
@@ -34,6 +33,7 @@ export default class MessagsPost extends Component {
             choice: [],
             token: '',
             default_avatar: require('../assets/images/default_avatar.jpg'),
+            userInfo: ''
         }
     }
 
@@ -42,15 +42,41 @@ export default class MessagsPost extends Component {
         this.RBSheet.open()
     }
 
-    async componentDidMount() {
+    async UNSAFE_componentWillMount() {
+        this.getUserInfo()
+    }
+
+    async getUserInfo() {
+        let user = await AsyncStorage.getItem('user_data')
+        user = JSON.parse(user)
+        this.setState({ userInfo: user })
+    }
+
+    async onDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure!",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "Confirm", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost(){
         try {
-            const token = await AsyncStorage.getItem('token')
-            console.log('token 1 : ', token)
-            this.setState({
-                token: token
-            })
-        } catch (err) {
-            // handle errors
+            const { post_id } = this.props.data
+            console.log(post_id)
+            // let {status} =  await actionDeletePost()
+
+        } catch (error) {
+            
         }
     }
 
@@ -61,7 +87,7 @@ export default class MessagsPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('18%') : hp('16%')}
+                height={Platform.OS === 'ios' ? hp('10%') : hp('8%')}
                 openDuration={250}
                 customStyles={{
                     container: {
@@ -73,29 +99,18 @@ export default class MessagsPost extends Component {
                     }
                 }}
             >
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Join Poll</Text>
+                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onDeletePost()}>
+                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete</Text>
                 </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Unjoin Poll</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-
             </RBSheet>
         )
     }
 
-
     render() {
-        const { default_avatar } = this.state
+        const { default_avatar, userInfo } = this.state
         const { title, author, post_date } = this.props.data
+        console.log('author', author, userInfo)
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -124,13 +139,18 @@ export default class MessagsPost extends Component {
                                 <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > {post_date}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={() => this.openOption()} >
-                            <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
-                        </TouchableOpacity>
+                        {
+                            userInfo.userid == author.id ?
+                                <TouchableOpacity onPress={() => this.openOption()} >
+                                    <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
+                                </TouchableOpacity>
+                                : null
+                        }
+
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
-                        <TouchableOpacity onPress={() => Actions.PollDetail({ data: this.props.data }) }>
+                        <TouchableOpacity onPress={() => Actions.PollDetail({ data: this.props.data })}>
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
                     </View>

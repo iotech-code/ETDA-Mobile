@@ -64,7 +64,7 @@ export default class PollDetail extends Component {
                 Actions.pop({ refresh: {} });
             }
         } catch (error) {
-            console.log('Save anser error : ', error)
+            console.log('Save anwser error : ', error)
         }
 
     }
@@ -91,9 +91,9 @@ export default class PollDetail extends Component {
                     />
                     <Text style={{ fontSize: hp('3%') }}>{title}</Text>
                 </View>
+
+                
                 {/* section content */}
-
-
 
                 <View style={{ ...style.container, marginTop: hp('3%') }}>
                     <Text style={{ fontSize: hp('2%') }}>{post_addition_data.question}</Text>
