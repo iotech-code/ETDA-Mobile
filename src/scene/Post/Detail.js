@@ -118,6 +118,7 @@ export default class EventDetail extends Component {
     }
 
     sharePOST(post_url) {
+        console.log(post_url)
         showMessage({
             message: "Share url copied!",
             description: post_url,

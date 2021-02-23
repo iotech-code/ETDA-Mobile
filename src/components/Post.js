@@ -7,7 +7,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
@@ -19,7 +20,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import { fonts } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
-import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
+import { actionLikePost, actionDeletePost, actionFollowPost  } from '../Service/PostService'
 import translate from '../constant/lang'
 
 export default class Post extends Component {
@@ -40,7 +41,9 @@ export default class Post extends Component {
             like_count: 0,
             lng: {},
             is_follow: 0,
-            user_data: {}
+            user_data: {},
+            user_id: '',
+            user_role: ''
         }
     }
 
@@ -57,11 +60,8 @@ export default class Post extends Component {
     }
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
-        let info = JSON.parse(user_json);
-
-        this.setState({
-            user_data: info
-        })
+        let userInfo = await JSON.parse(user_json);
+        await this.setState({ user_id: userInfo.userid, user_role: userInfo.user_role })
     };
     async componentDidMount() {
         let { is_like, like, is_follow } = this.props.data
@@ -85,6 +85,39 @@ export default class Post extends Component {
         setTimeout(() => {
             self.props.onPostReport(this.props.data.post_id)
         }, 300);
+    }
+
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            let { data } = await actionDeletePost(post_id)
+            if(data.status == 'success'){
+                this.props.onDeletePost()
+            }
+        } catch (error) {
+            console.log('Delete poll error : ' , error)
+        }
     }
 
     renderModalReport() {
@@ -159,8 +192,10 @@ export default class Post extends Component {
         )
     }
 
+
+
     renderBottomSheet() {
-        const { visibleBottomSheet, is_follow, lng } = this.state
+        const { visibleBottomSheet, is_follow, lng, user_id ,user_role } = this.state
         const { report } = this.props
         let height = Platform.OS === 'ios' ? hp('32%') : hp('30%')
         height = report ? height : Platform.OS === 'ios' ? hp('25%') : hp('23%')
@@ -176,6 +211,7 @@ export default class Post extends Component {
                         borderTopRightRadius: 30,
                         borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
+                        paddingBottom:hp('2%'),
                         backgroundColor: 'white',
                         ...style.shadowCard,
                         height: 'auto'
@@ -194,7 +230,7 @@ export default class Post extends Component {
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.follow_blog}</Text>
                 </TouchableOpacity>
                 {
-                    this.state.user_data.user_role == 'Admin' || this.state.user_data.userid == this.props.data.author.id ?
+                    user_role == 'Admin' || user_id == this.props.data.author.id ?
                     <>
                         <View style={{ ...style.divider }}></View>
                         <TouchableOpacity style={{
@@ -221,15 +257,15 @@ export default class Post extends Component {
                         <TouchableOpacity style={{
                             ...styleScoped.listMore
                         }}
-                            onPress={() => this.callDeletePost(this.props.data.post_id)}
+                            onPress={() => this.onConfirmDeletePost()}
                         >
                             <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                             <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
                         </TouchableOpacity>
                         <View style={{ ...style.divider }}></View>
-                        
-                    </>
-                    : <></>
+
+                    </> 
+                    : null
                 }
                 {
                     report && this.state.user_data.userid != this.props.data.author.id ?
@@ -246,19 +282,6 @@ export default class Post extends Component {
     }
 
 
-    async callDeletePost(post_id) {
-        this.setState({ visibleBottomSheet: false })
-        this.RBSheet.close()
-        try {
-            let response = await actionDeletePost(post_id)
-            let { status } = response.data
-            if (status == 'success') {
-                this.props.onPostUpdate()
-            }
-        } catch (error) {
-            console.log('Delete post error : ', error)
-        }
-    };
 
     async callPostLike(post_id) {
         try {
@@ -381,14 +404,14 @@ export default class Post extends Component {
                 </TouchableOpacity>
 
                 <View style={{
-                        justifyContent: 'flex-start',
-                        marginTop: hp('2%'),
-                        paddingTop: hp('1.5%'),
-                        flexDirection: 'row',
-                        width: wp('100%'),
-                        paddingHorizontal: hp('2%'),
-                    }}>
-                    <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{flexDirection: 'row'}}>
+                    justifyContent: 'flex-start',
+                    marginTop: hp('2%'),
+                    paddingTop: hp('1.5%'),
+                    flexDirection: 'row',
+                    width: wp('100%'),
+                    paddingHorizontal: hp('2%'),
+                }}>
+                    <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{ flexDirection: 'row' }}>
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                         <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like_count}</Text>
                     </TouchableOpacity>
