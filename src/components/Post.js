@@ -374,8 +374,8 @@ export default class Post extends Component {
                         paddingHorizontal: hp('2%'),
                     }}>
                     <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{flexDirection: 'row'}}>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like_count}</Text>
                     </TouchableOpacity>
 
                     <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />

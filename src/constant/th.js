@@ -4,7 +4,7 @@ export const th = {
     new_post: "เขียนเรื่องใหม่",
     etda_blog: "จาก ETDA",
     home: "หน้าแรก",
-    message_board: "แมสเสจบอร์ด",
+    message_board: "กระดานข้อความ",
     community_board: "คอมมูนิตี้บอร์ด",
     my_board: "ของฉัน",
     activity: "กิจกรรม",
@@ -39,7 +39,6 @@ export const th = {
     start_event: "เริ่มกิจกรรม",
     work_shop: "เวิร์คช็อป",
     add_schedule: "เพิ่มกำหนดการ",
-    edit_event: "แก้ไขกิจกรร",
     notifications: "การแจ้งเตือน",
     event_today: "กิจกรรมวันนี้",
     see_upcomming_events: "ดูกิจกรรมที่กำลังจะมาถึง",
@@ -129,5 +128,6 @@ export const th = {
     event: "กิจกรรม",
     schedule: "กำหนดการ",
     edit: "แก้ไข",
-    create_event: "สร้างกิจกรรม"
+    create_event: "สร้างกิจกรรม",
+    select_language: "เลือกภาษา"
 }

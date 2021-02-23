@@ -28,13 +28,26 @@ export default class MessagsPost extends Component {
             default_avatar: require('../assets/images/default_avatar.jpg'),
             is_like: 0,
             like_count: 0,
-            lng: {}
+            lng: {},
+            user_type: '',
+            user_role: ''
         }
     }
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        await this.getUserInfo();
     }
+
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+
+        this.setState({
+            user_type: user_data.user_type,
+            user_role: user_data.user_role
+        })
+    };
     
     async getLang() {
         this.setState({ isFetching: true })
@@ -81,7 +94,7 @@ export default class MessagsPost extends Component {
     };
 
     renderBottomSheet() {
-        const { visibleBottomSheet, lng } = this.state
+        const { visibleBottomSheet, lng, user_role, user_type } = this.state
 
         return (
             <RBSheet
@@ -112,20 +125,23 @@ export default class MessagsPost extends Component {
                     <Icon name="star-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.unjoin_event}</Text>
                 </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
                 {/* section admin */}
-                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onEdit()}>
-                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_event}</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
+                {
+                    user_role == "Admin" &&
+                    <>
+                    <View style={{ ...style.divider }}></View>
+                    <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onEdit()}>
+                        <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                        <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_event}</Text>
+                    </TouchableOpacity>
+                    <View style={{ ...style.divider }}></View>
 
-                <TouchableOpacity style={{ ...styleScoped.listMore }}>
-                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_event}</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-                {/* section admin */}
+                    <TouchableOpacity style={{ ...styleScoped.listMore }}>
+                        <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                        <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_event}</Text>
+                    </TouchableOpacity>
+                    </>
+                }
 
 
             </RBSheet>

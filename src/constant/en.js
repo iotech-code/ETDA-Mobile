@@ -39,7 +39,6 @@ export const en = {
     start_event: "Start event",
     work_shop: "Work shop",
     add_schedule: "Add schedule",
-    edit_event: "Edit Event",
     notifications: "Notifications",
     event_today: "Your events today",
     see_upcomming_events: "See upcomming events",
@@ -129,5 +128,6 @@ export const en = {
     event: "Event",
     schedule: "Schedule",
     edit: "Edit",
-    create_event: "สร้างกิจกรรม"
+    create_event: "Create event",
+    select_language: "Select Language"
 }

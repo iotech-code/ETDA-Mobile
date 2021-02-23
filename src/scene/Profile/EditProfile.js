@@ -24,7 +24,7 @@ import Icons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImgToBase64 from 'react-native-image-base64';
 import translate from '../../constant/lang'
-
+ 
 const http = new HttpRequest();
 
 const options = {

@@ -19,9 +19,6 @@ export const getListPostSurvey = async (cr = 0, next = 0) => {
 };
 
 
-
-
-
 export const communityFeed = async (cr = 0, next = 0) => {
     await http.setTokenHeader();
     return await http.post('/api/backend/post/community-feed', { "currentPage": cr, "nextPage": next });
@@ -100,15 +97,6 @@ export const createSurvey = async (
     return await http.post(`/api/backend/post/create-survey`, formData);
 };
 
-
-
-
-
-
-
-
-
-
 export const updatePost = async (params) => {
     await http.setTokenHeader()
     return await http.put(`/api/backend/post/update/${params.post_id}`, params)
@@ -130,10 +118,6 @@ export const getListApprove = async (cr = 0, next = 0) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/approve-list', { "currentPage": cr, "nextPage": next })
 }
-
-
-
-
 
 export const approvePost = async (params) => {
     // params is  post_id in array such {post_id: [1,2,4]}

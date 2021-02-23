@@ -25,6 +25,7 @@ import ImageView from 'react-native-image-view';
 import ImagePicker from 'react-native-image-crop-picker';
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import translate from '../../constant/lang'
+import { actionLikePost } from '../../Service/PostService'
 
 export default class EventDetail extends Component {
 
@@ -42,7 +43,9 @@ export default class EventDetail extends Component {
             isImageViewVisible: false,
             commentImage: null,
             commentImage64: null,
-            lng: {}
+            lng: {},
+            is_like: 0, 
+            like_count: this.props.data.like 
         }
     }
 
@@ -123,10 +126,26 @@ export default class EventDetail extends Component {
         Clipboard.setString(post_url)
     }
 
+    async callPostLike(post_id) {
+        try {
+            let { is_like, like_count } = this.state
+            let response = await actionLikePost({ post_id })
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_like: is_like ? 0 : 1,
+                    like_count: is_like ? like_count - 1 : like_count + 1
+                })
+            }
+        } catch (error) {
+            console.log('Like post error : ', error)
+        }
+    };
+
     render() {
-        const { author, post_date, tags, post_description, post_images, like, title, share_url, view } = this.props.data;
+        const { author, post_date, tags, post_description, post_images, post_id, title, share_url, view } = this.props.data;
         // console.log(this.props.data)
-        const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible, lng } = this.state
+        const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible, lng, is_like, like_count } = this.state
         let imageForView = []
         for (let index = 0; index < post_images.length; index++) {
             const element = post_images[index];
@@ -227,9 +246,9 @@ export default class EventDetail extends Component {
                             width: wp('100%'),
                             paddingHorizontal: hp('2%'),
                         }}>
-                            <TouchableOpacity onPress={() => this.likePost()} style={{flexDirection: 'row'}}>
-                                <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like}</Text>
+                            <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{flexDirection: 'row'}}>
+                                <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like_count}</Text>
                             </TouchableOpacity>
 
                             <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />

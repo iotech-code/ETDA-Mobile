@@ -29,6 +29,10 @@ export default class ProfileSetting extends Component {
         await this.getLang();
     }
 
+    async UNSAFE_componentWillReceiveProps(props){
+        await this.getLang();
+    }
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
@@ -50,7 +54,7 @@ export default class ProfileSetting extends Component {
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('MyProfile', {refresh: {}})} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.setting}</Text>
                             <View></View>
                         </View>

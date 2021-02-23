@@ -14,7 +14,7 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { colors } from '../../constant/util';
-
+import translate from '../../constant/lang'
 
 
 export default class Language extends Component {
@@ -22,23 +22,35 @@ export default class Language extends Component {
         super();
         this.state = {
             currentLanguage: 'en',
+            lng: {}
         }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     async saveLanguage(lang) {
         await AsyncStorage.setItem('default_language', lang)
-        Actions.pop();
+        Actions.pop({refresh: {}});
     }
 
     render() {
-        const {socialID} = this.state
+        const {socialID, lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Select Language</Text>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.select_language}</Text>
                             <View>
                             </View>
                         </View>

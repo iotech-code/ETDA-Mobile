@@ -29,7 +29,6 @@ export default class MyProfile extends Component {
 
     async UNSAFE_componentWillMount() {
         await this.getUserInfo();
-        await console.log("before_render", this.state)
         await this.getLang();
     }
 
@@ -43,6 +42,7 @@ export default class MyProfile extends Component {
 
     UNSAFE_componentWillReceiveProps(props){
         this.getUserInfo();
+        this.getLang();
     }
 
     async getUserInfo () {
@@ -51,8 +51,6 @@ export default class MyProfile extends Component {
         await this.setState({
             user_data: user_info
         });
-        console.log(this.state)
-        
     }
 
     async logout () {

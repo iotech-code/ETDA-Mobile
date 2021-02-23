@@ -22,9 +22,12 @@ export default class RegisterSuccess extends Component {
 
     callLogin = async () => {
         const data = {
-            "user_email": this.props.email,
-            "user_password": this.props.password,
-            "authen_method": "local",
+            "user_email": this.props.authen_method == 'local' ? this.props.email : '',
+            "user_password": "",
+            "authen_method": this.props.authen_method,
+            "google_id": this.props.authen_method == 'google' && this.props.email,
+            "facebook_id": !this.props.authen_method && this.props.email,
+            "line_id": this.props.authen_method == 'line' && this.props.email,
             "device": Platform.OS
         }
         let loginRequest = await http.post(apiServer.url+'/api/backend/user/login', data);

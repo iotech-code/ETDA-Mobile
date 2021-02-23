@@ -283,7 +283,11 @@ export default class ChooseUserType extends Component {
             if (this.state.rType == 'read') {
                 this.callLogin();
             } else {
-                Actions.RegisterSuccess({ 'email': this.props.email, 'password': this.props.password });
+                Actions.replace('RegisterSuccess', { 
+                    'email': this.props.email, 
+                    'password': this.props.password,
+                    'authen_method':  this.props.source
+                });
             }
         }
     }
