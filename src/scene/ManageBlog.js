@@ -22,6 +22,7 @@ import BlogManager from '../components/ManageBlog'
 import { fonts } from '../constant/util';
 import { getListApprove, approvePost } from '../Service/PostService'
 import translate from '../constant/lang'
+import { Alert } from 'react-native';
 export default class ManageBlog extends Component {
     state = {
         visibleSearch: false,
@@ -81,6 +82,7 @@ export default class ManageBlog extends Component {
                 await this.setState({ list_data: [] })
                 await this.setState({ count_selected: 0 })
                 this.callApproveList()
+                Alert.alert("Post was approved!")
             }
         } catch (error) {
             console.log('Approve post  error : ', error)
@@ -97,6 +99,7 @@ export default class ManageBlog extends Component {
                     post_id.push(element.post_id)
                 }
             }
+            Alert.alert("Post was rejected!")
             await this.setState({ list_data: [] })
             await this.setState({ count_selected: 0 })
             this.callApproveList()
@@ -141,6 +144,7 @@ export default class ManageBlog extends Component {
                 count_selected = element.selected ? count_selected + 1 : count_selected - 1
             }
         }
+        
         await this.setState({ list_data })
         await this.setState({ count_selected })
     }

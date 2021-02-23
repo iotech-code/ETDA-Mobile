@@ -27,7 +27,6 @@ export default class ManageBlog extends Component {
             view: 22
         },
         selected: false
-
     }
     updatePostSelected(index) {
         this.props.onPressSelectBox(index)

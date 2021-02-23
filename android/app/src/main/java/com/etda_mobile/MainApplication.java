@@ -7,6 +7,7 @@ import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.FacebookSdk;
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.beefe.picker.PickerViewPackage;
 import fr.snapp.imagebase64.RNImgToBase64Package;
 import com.xmartlabs.rnline.RNLinePackage;

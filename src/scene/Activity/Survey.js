@@ -96,22 +96,22 @@ export default class Survey extends Component {
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.survey}</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
-
-                        <View style={{ ...style.container }}>
-                            <Button
-                                title={lng.create_new_survey}
-                                Outline={true}
-                                titleStyle={{ color: '#003764', }}
-                                buttonStyle={{
-                                    padding: hp('1%'),
-                                    ...style.btnPrimaryOutline,
-                                    ...style.btnRounded,
-                                }}
-                                onPress={() => Actions.replace('SurveyCreate')}
-                            />
-                        </View>
-
-
+                        {
+                            this.state.user_role == 'Admin' &&
+                            <View style={{ ...style.container }}>
+                                <Button
+                                    title={lng.create_new_survey}
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded,
+                                    }}
+                                    onPress={() => Actions.replace('SurveyCreate')}
+                                />
+                            </View>
+                        }
                         <View style={{ marginTop: hp('2%') }}>
                             {
                                 list_data.map((el, index) => {

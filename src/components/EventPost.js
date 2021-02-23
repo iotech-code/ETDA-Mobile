@@ -108,7 +108,8 @@ export default class MessagsPost extends Component {
                         borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
                         backgroundColor: 'white',
-                        ...style.shadowCard
+                        ...style.shadowCard,
+                        height: 'auto'
                     }
                 }}
             >

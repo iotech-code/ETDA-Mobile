@@ -39,12 +39,14 @@ export default class Post extends Component {
             is_like: 0,
             like_count: 0,
             lng: {},
-            is_follow: 0
+            is_follow: 0,
+            user_data: {}
         }
     }
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        await this.getUserInfo();
     }
 
     async getLang() {
@@ -53,7 +55,14 @@ export default class Post extends Component {
         this.setState({ lng: vocap })
         this.setState({ isFetching: false })
     }
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
 
+        this.setState({
+            user_data: user_data
+        })
+    };
     async componentDidMount() {
         let { is_like, like, is_follow } = this.props.data
         // console.log(this.props.data)
@@ -160,7 +169,7 @@ export default class Post extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={height}
+                // height={height}
                 openDuration={250}
                 customStyles={{
                     container: {
@@ -168,7 +177,8 @@ export default class Post extends Component {
                         borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
                         backgroundColor: 'white',
-                        ...style.shadowCard
+                        ...style.shadowCard,
+                        height: 'auto'
                     }
                 }}
             >
@@ -183,47 +193,52 @@ export default class Post extends Component {
                         style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.follow_blog}</Text>
                 </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}
-                    onPress={() => {
-                        Actions.replace('CreatePost', {
-                            'type_value': 'edit',
-                            'title': this.props.data.title,
-                            'description': this.props.data.description,
-                            'post_images': this.props.data.post_images,
-                            'post_tag': this.props.data.tags,
-                            'post_id': this.props.data.post_id
-                        })
-                        this.setState({ visibleBottomSheet: false }),
-                            this.RBSheet.close()
-                    }}
-                >
-                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_blog}</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}
-                    onPress={() => this.callDeletePost(this.props.data.post_id)}
-                >
-                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
                 {
-                    report ?
-                        <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
-                            <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.report}</Text>
+                    this.state.user_data.user_role == 'Admin' &&
+                    <>
+                        <View style={{ ...style.divider }}></View>
+                        <TouchableOpacity style={{
+                            ...styleScoped.listMore
+                        }}
+                            onPress={() => {
+                                Actions.replace('CreatePost', {
+                                    'type_value': 'edit',
+                                    'title': this.props.data.title,
+                                    'description': this.props.data.description,
+                                    'post_images': this.props.data.post_images,
+                                    'post_tag': this.props.data.tags,
+                                    'post_id': this.props.data.post_id
+                                })
+                                this.setState({ visibleBottomSheet: false }),
+                                    this.RBSheet.close()
+                            }}
+                        >
+                            <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_blog}</Text>
                         </TouchableOpacity>
-                        : null
+                        <View style={{ ...style.divider }}></View>
+
+                        <TouchableOpacity style={{
+                            ...styleScoped.listMore
+                        }}
+                            onPress={() => this.callDeletePost(this.props.data.post_id)}
+                        >
+                            <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
+                        </TouchableOpacity>
+                        <View style={{ ...style.divider }}></View>
+                        {
+                            report ?
+                                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
+                                    <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.report}</Text>
+                                </TouchableOpacity>
+                                : null
+                        }
+                        <View style={{ ...style.divider }}></View>
+                    </>
                 }
 
-                <View style={{ ...style.divider }}></View>
 
             </RBSheet>
         )
@@ -426,5 +441,3 @@ const styleScoped = StyleSheet.create({
 
     }
 });
-
-
