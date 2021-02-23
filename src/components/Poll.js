@@ -96,8 +96,6 @@ export default class MessagsPost extends Component {
                 openDuration={250}
                 customStyles={{
                     container: {
-                        borderTopRightRadius: 30,
-                        borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
                         backgroundColor: 'white',
                         ...style.shadowCard

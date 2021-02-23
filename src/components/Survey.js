@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    Platform
+    Platform,
+    Alert
 } from 'react-native';
 
 import { Button, ListItem } from 'react-native-elements';
@@ -19,7 +20,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { apiServer } from '../constant/util';
+import { actionDeletePost } from '../Service/PostService'
 
 export default class MessagsPost extends Component {
 
@@ -47,6 +48,40 @@ export default class MessagsPost extends Component {
         await this.setState({ data: this.props.data })
     }
 
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            console.log(post_id)
+            let { data } = await actionDeletePost(post_id)
+            if (data.status == 'success') {
+                this.props.onDeletePost()
+            }
+        } catch (error) {
+            console.log('Delete survey error : ', error)
+        }
+    }
+    
     renderBottomSheet() {
         const { visibleBottomSheet } = this.state
         return (
@@ -54,31 +89,13 @@ export default class MessagsPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('24%') : hp('22%')}
+                height={Platform.OS === 'ios' ? hp('10%') : hp('8%')}
                 openDuration={250}
             >
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
+                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onConfirmDeletePost()}>
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete</Text>
                 </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
 
             </RBSheet>
         )
@@ -120,7 +137,7 @@ export default class MessagsPost extends Component {
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
-                        <TouchableOpacity onPress={() => Actions.SurveyDetail({data : this.state.data})}>
+                        <TouchableOpacity onPress={() => Actions.SurveyDetail({ data: this.state.data })}>
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
                     </View>
