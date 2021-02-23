@@ -19,7 +19,7 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import {actionDeletePost} from '../Service/PostService'
+import { actionDeletePost } from '../Service/PostService'
 export default class MessagsPost extends Component {
 
     constructor(props) {
@@ -52,31 +52,36 @@ export default class MessagsPost extends Component {
         this.setState({ userInfo: user })
     }
 
-    async onDeletePost() {
+    async onConfirmDeletePost() {
         Alert.alert(
             "Confirm",
-            "Are you sure!",
+            "Are you sure to delete this post ? ",
             [
                 {
                     text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
+                    onPress: () => console.log("Cancel delete post"),
                     style: "cancel"
                 },
-                { text: "Confirm", onPress: () => console.log("OK Pressed") }
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
             ],
             { cancelable: false }
         );
         this.RBSheet.close()
     }
 
-    async onDeletePost(){
+    async onDeletePost() {
         try {
             const { post_id } = this.props.data
             console.log(post_id)
-            // let {status} =  await actionDeletePost()
-
+            let { data } = await actionDeletePost(post_id)
+            if(data.status == 'success'){
+                this.props.onDeletePost()
+            }
         } catch (error) {
-            
+            console.log('Delete poll error : ' , error)
         }
     }
 
@@ -99,7 +104,7 @@ export default class MessagsPost extends Component {
                     }
                 }}
             >
-                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onDeletePost()}>
+                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onConfirmDeletePost()}>
                     <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete</Text>
                 </TouchableOpacity>
