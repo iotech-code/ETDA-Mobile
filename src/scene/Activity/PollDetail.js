@@ -10,7 +10,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    Alert
 } from 'react-native';
 
 import { Button, BottomSheet, CheckBox } from 'react-native-elements';
@@ -21,6 +22,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors, fonts } from '../../constant/util';
 import * as Progress from 'react-native-progress';
 import { postAction } from '../../Service/PostService'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RBSheet from "react-native-raw-bottom-sheet";
+import {actionDeletePost} from '../../Service/PostService'
 export default class PollDetail extends Component {
     constructor(props) {
         super()
@@ -29,7 +33,8 @@ export default class PollDetail extends Component {
             data: null,
             answer_id: null,
             progress: 0,
-            is_play: 0
+            is_play: 0,
+            user_id: null
         }
     }
 
@@ -38,6 +43,13 @@ export default class PollDetail extends Component {
         const { data } = this.props
         await this.setState({ data })
         await this.setState({ is_play: data.is_play })
+        await this.getUserId()
+    }
+
+    async getUserId() {
+        let user = await AsyncStorage.getItem('user_data')
+        user = JSON.parse(user)
+        this.setState({ user_id: user.userid })
     }
 
 
@@ -69,6 +81,68 @@ export default class PollDetail extends Component {
 
     }
 
+    openBottomOption(){
+        this.RBSheet.open()
+    }
+
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            console.log(post_id)
+            let { data } = await actionDeletePost(post_id)
+            if(data.status == 'success'){
+                Actions.pop({refresh:{}})
+            }
+        } catch (error) {
+            console.log('Delete poll error : ' , error)
+        }
+    }
+
+    renderBottomSheet() {
+        return (
+            <RBSheet
+                ref={ref => {
+                    this.RBSheet = ref;
+                }}
+                height={Platform.OS === 'ios' ? hp('10%') : hp('8%')}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        paddingTop: hp('1%'),
+                        backgroundColor: 'white',
+                        ...style.shadowCard
+                    }
+                }}
+            >
+                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.onConfirmDeletePost()}>
+                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete</Text>
+                </TouchableOpacity>
+            </RBSheet>
+        )
+    }
+
 
     renderTakePoll() {
         const { answer_id, progress } = this.state
@@ -92,7 +166,7 @@ export default class PollDetail extends Component {
                     <Text style={{ fontSize: hp('3%') }}>{title}</Text>
                 </View>
 
-                
+
                 {/* section content */}
 
                 <View style={{ ...style.container, marginTop: hp('3%') }}>
@@ -169,7 +243,7 @@ export default class PollDetail extends Component {
 
     render() {
         const { title, author, post_date, post_addition_data } = this.state.data
-
+        const { user_id } = this.state
         return (
             <View style={{
                 flex: 1,
@@ -203,9 +277,14 @@ export default class PollDetail extends Component {
                                     <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > {post_date} </Text>
                                 </View>
                             </View>
-                            <TouchableOpacity  >
-                                <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
-                            </TouchableOpacity>
+                            {
+                                user_id == author.id ?
+                                    <TouchableOpacity  onPress={()=>this.openBottomOption()}>
+                                        <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
+                                    </TouchableOpacity>
+                                    : null
+                            }
+
                         </View>
                         <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
@@ -216,6 +295,7 @@ export default class PollDetail extends Component {
 
                     </View>
                 </ScrollView>
+                {this.renderBottomSheet()}
             </View>
         );
     }
@@ -270,6 +350,13 @@ const styleScoped = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         marginRight: hp('3%')
+    },
+    listMore: {
+        width: '100%',
+        padding: hp('2%'),
+        flexDirection: 'row',
+        alignItems: 'center',
+
     }
 });
 

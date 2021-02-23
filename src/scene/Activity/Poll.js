@@ -6,7 +6,8 @@ import {
     View,
     Text,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    
 } from 'react-native';
 
 import { Button, BottomSheet } from 'react-native-elements';
