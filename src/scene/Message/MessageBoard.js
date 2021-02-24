@@ -24,10 +24,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import Post from '../../components/Post'
-import { communityFeed, myFeed } from '../../Service/PostService'
+import { communityFeed, myFeed, reportPost } from '../../Service/PostService'
 import { colors, fonts } from '../../constant/util'
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import translate from '../../constant/lang'
+import { Fragment } from 'react';
+import { Alert } from 'react-native';
 
 export default class MessageBoard extends Component {
     constructor() {
@@ -47,7 +49,39 @@ export default class MessageBoard extends Component {
             loading: false,
             feedCurrentPage: 0,
             isFinish: false,
-            isFetching: false
+            isFetching: false,
+            tagReport: [
+                {
+                    choose: false,
+                    title: 'Fake news'
+                },
+                {
+                    choose: false,
+                    title: 'Cyber bully'
+                },
+                {
+                    choose: false,
+                    title: 'Threat'
+                },
+                {
+                    choose: false,
+                    title: 'Spam'
+                },
+                {
+                    choose: false,
+                    title: 'Legal'
+                },
+                {
+                    choose: false,
+                    title: 'Conflict members'
+                },
+                {
+                    choose: false,
+                    title: 'Other'
+                }
+            ],
+            reason: '',
+            id_for_report: null
         }
     }
 
@@ -82,8 +116,8 @@ export default class MessageBoard extends Component {
     }
 
 
-    async componentWillUnmount () {
-        await this.setState({list_data: false})
+    async componentWillUnmount() {
+        await this.setState({ list_data: false })
     }
 
     setBoard = (value) => {
@@ -106,48 +140,48 @@ export default class MessageBoard extends Component {
     };
 
     async updateCommunityFeed() {
-  
+
         try {
-            let {communityFeedCurrentPage, isFinish} = this.state
-            await this.setState({loading: true})
-            if(isFinish === false) {
+            let { communityFeedCurrentPage, isFinish } = this.state
+            await this.setState({ loading: true })
+            if (isFinish === false) {
                 let { data } = await communityFeed(communityFeedCurrentPage, communityFeedCurrentPage + 1);
-                if(communityFeedCurrentPage < Math.ceil(data.post_count/10)) {
+                if (communityFeedCurrentPage < Math.ceil(data.post_count / 10)) {
                     let new_data = [...this.state.list_data, ...data.post_data]
                     await this.setState({
                         list_data: new_data,
                         communityFeedCurrentPage: communityFeedCurrentPage + 1
                     })
                 } else {
-                    this.setState({isFinish: true})
+                    this.setState({ isFinish: true })
                 }
             }
-                
-            await this.setState({loading: true})
+
+            await this.setState({ loading: true })
         } catch (error) {
             console.log("Main scene error : ", error)
         }
     }
 
     async updateMyFeed() {
-       
+
         try {
-            let {myFeedCurrentPage, isFinish} = this.state
-            await this.setState({loading: true})
-            if(isFinish === false) {
+            let { myFeedCurrentPage, isFinish } = this.state
+            await this.setState({ loading: true })
+            if (isFinish === false) {
                 let { data } = await communityFeed(myFeedCurrentPage, myFeedCurrentPage + 1);
-                if(myFeedCurrentPage < Math.ceil(data.post_count/10)) {
+                if (myFeedCurrentPage < Math.ceil(data.post_count / 10)) {
                     let new_data = [...this.state.list_data, ...data.post_data]
                     await this.setState({
                         list_data: new_data,
                         myFeedCurrentPage: myFeedCurrentPage + 1
                     })
                 } else {
-                    this.setState({isFinish: true})
+                    this.setState({ isFinish: true })
                 }
             }
-                
-            await this.setState({loading: true})
+
+            await this.setState({ loading: true })
         } catch (error) {
             console.log("Main scene error : ", error)
         }
@@ -167,15 +201,42 @@ export default class MessageBoard extends Component {
     }
 
     openReport(data) {
-        console.log('open report : ', data)
+        this.setState({ id_for_report: data })
         this.setState({ visibleModalReport: true })
     }
 
-    renderTypeInFlatlist ({item}) {
-        if(this.state.board === 'community') {
-            return(
-                <Post 
-                    data={item} 
+    chooseTagReport(title) {
+        const { tagReport } = this.state
+        tagReport.forEach(element => {
+            element.choose = element.title == title ? true : false
+        });
+        this.setState({ tagReport })
+    }
+
+    async onReportPost() {
+        try {
+            let { reason, tagReport, id_for_report } = this.state
+            let report_tag = await tagReport.find(el => {
+                return el.choose == true
+            })
+            if (!report_tag) {
+                Alert('Please choose type report !')
+                return
+            }
+            let { data } = await reportPost(id_for_report, report_tag.title, reason)
+            if (data.status == 'success') {
+                this.setState({ visibleModalReport: false })
+            }
+        } catch (error) {
+            console.log('Report post error : ', error)
+        }
+    }
+
+    renderTypeInFlatlist({ item }) {
+        if (this.state.board === 'community') {
+            return (
+                <Post
+                    data={item}
                     page="message_board"
                     sharePressButton={(url) => this.shareCallback(url)}
                     onPostUpdate={() => this.callCommunityFeed()}
@@ -185,9 +246,9 @@ export default class MessageBoard extends Component {
                 ></Post>
             )
         } else {
-            return(
-                <Post 
-                    data={item} 
+            return (
+                <Post
+                    data={item}
                     page="message_board"
                     sharePressButton={(url) => this.shareCallback(url)}
                     onPostUpdate={() => this.callMYFeed()}
@@ -200,16 +261,16 @@ export default class MessageBoard extends Component {
     }
 
     renderFooter = () => {
-         if (!this.state.loading) return null;
-         return (
-           <ActivityIndicator
-             style={{ color: '#000' }}
-           />
-         );
-       };
+        if (!this.state.loading) return null;
+        return (
+            <ActivityIndicator
+                style={{ color: '#000' }}
+            />
+        );
+    };
 
-    renderModalReport() {
-        const { visibleModalReport, lng } = this.state
+    renderModalReport(post_id) {
+        const { visibleModalReport, lng, tagReport } = this.state
         return (
             <Overlay
                 isVisible={visibleModalReport}
@@ -237,21 +298,25 @@ export default class MessageBoard extends Component {
                     <View style={{ marginVertical: hp('1%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{lng.select_topic_for_report}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-                            <Button
-                                title={lng.fake_news}
-                                titleStyle={{ fontSize: hp('2%') }}
-                                buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
-                            />
-                            <Button
-                                title={lng.cyber_bully}
-                                titleStyle={{ fontSize: hp('2%') }}
-                                buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
-                            />
-                            <Button
-                                title={lng.threat}
-                                titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
-                                buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
-                            />
+                            {
+                                tagReport.map((el, index) => {
+                                    let tagStyle = el.choose ? style.btnPrimary : style.btnPrimaryOutline
+                                    return (
+                                        <Fragment key={index}>
+                                            <Button
+                                                title={el.title}
+                                                titleStyle={{
+                                                    fontSize: hp('2%'),
+                                                    color: !el.choose ? fonts.color.primary : 'white'
+                                                }}
+                                                buttonStyle={{ ...tagStyle, margin: hp('0.5%') }}
+                                                onPress={() => this.chooseTagReport(el.title)}
+                                            />
+                                        </Fragment>
+
+                                    )
+                                })
+                            }
                         </View>
                         <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>{lng.report_reason}</Text>
                     </View>
@@ -261,6 +326,7 @@ export default class MessageBoard extends Component {
                             style={{ fontSize: hp('2%'), padding: 0 }}
                             placeholder={lng.enter_reason}
                             multiline={true}
+                            onChangeText={(text) => this.setState({ reason: text })}
                         />
                     </View>
 
@@ -273,7 +339,7 @@ export default class MessageBoard extends Component {
                                 ...style.btnRounded,
                                 ...style.btnPrimary
                             }}
-                            onPress={() => this.setState({ visibleModalReport: false })}
+                            onPress={() => this.onReportPost()}
                         />
                     </View>
                 </KeyboardAvoidingView>
@@ -286,9 +352,9 @@ export default class MessageBoard extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                 <FlashMessage position="top"
-                style={{
-                    backgroundColor: '#5b5b5b'
-                }} />
+                    style={{
+                        backgroundColor: '#5b5b5b'
+                    }} />
                 <View style={{ flex: 1 }}>
                     {this.state.user_role == "Member" ?
                         <HeaderNavbar value={'member'}></HeaderNavbar>
@@ -296,9 +362,9 @@ export default class MessageBoard extends Component {
                         <HeaderNavbar value={'admin'}></HeaderNavbar>
                     }
                     <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                        
+
                         <>
-                                <View style={{
+                            <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 padding: hp('2%'),
@@ -311,7 +377,7 @@ export default class MessageBoard extends Component {
                             </View>
                             {
                                 this.state.user_type != 'read' || this.state.user_role == 'Admin' &&
-                                <View  style={{ ...style.container }}>
+                                <View style={{ ...style.container }}>
                                     <Button
                                         title={lng.new_post}
                                         Outline={true}
@@ -321,9 +387,11 @@ export default class MessageBoard extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
-                                        'description': '',
-                                        'post_images': []})}
+                                        onPress={() => Actions.CreatePost({
+                                            'type_value': 'create', 'title': '',
+                                            'description': '',
+                                            'post_images': []
+                                        })}
                                     />
                                 </View>
                             }
@@ -350,35 +418,35 @@ export default class MessageBoard extends Component {
 
                         {
                             this.state.isFetching ?
-                            <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
-                            : 
-                            <View style={{marginTop: 20}}>
-                                <FlatList
-                                    data={this.state.list_data}
-                                    renderItem={this.renderTypeInFlatlist.bind(this)}
-                                    keyExtractor={item => item.id}
-                                    onEndReached={() => {
-                                        if(this.state.board == 'community')
-                                            !this.state.isFinish&&this.updateCommunityFeed.bind(this)
-                                        else
-                                            !this.state.isFinish&&this.updateMyFeed.bind(this)
-                                    }}
-                                    ListFooterComponent={this.renderFooter.bind(this)}
-                                    onEndThreshold={0.4}
-                                    refreshControl={
-                                        <RefreshControl
-                                        refreshing={this.state.isFetching}
-                                        onRefresh={() => {
-                                            if(this.state.board == 'community')
-                                                !this.state.isFinish&&this.updateCommunityFeed.bind(this)
+                                <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
+                                :
+                                <View style={{ marginTop: 20 }}>
+                                    <FlatList
+                                        data={this.state.list_data}
+                                        renderItem={this.renderTypeInFlatlist.bind(this)}
+                                        keyExtractor={item => item.id}
+                                        onEndReached={() => {
+                                            if (this.state.board == 'community')
+                                                !this.state.isFinish && this.updateCommunityFeed.bind(this)
                                             else
-                                                !this.state.isFinish&&this.updateMyFeed.bind(this)
+                                                !this.state.isFinish && this.updateMyFeed.bind(this)
                                         }}
-                                        />
-                                    }
-                                />
-                            </View>
-                        }       
+                                        ListFooterComponent={this.renderFooter.bind(this)}
+                                        onEndThreshold={0.4}
+                                        refreshControl={
+                                            <RefreshControl
+                                                refreshing={this.state.isFetching}
+                                                onRefresh={() => {
+                                                    if (this.state.board == 'community')
+                                                        !this.state.isFinish && this.updateCommunityFeed.bind(this)
+                                                    else
+                                                        !this.state.isFinish && this.updateMyFeed.bind(this)
+                                                }}
+                                            />
+                                        }
+                                    />
+                                </View>
+                        }
                     </View>
                 </View>
                 {this.renderModalReport()}

@@ -213,3 +213,10 @@ export const getListNoti = async () => {
     await http.setTokenHeader();
     return await http.get('/api/backend/noti/noti-list')
 }
+
+
+export const reportPost = async (post_id, topic, reason) => {
+    let formData = { post_id, topic, reason }
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/report', formData)
+}

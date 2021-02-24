@@ -46,7 +46,8 @@ export default class MessagsPost extends Component {
             default_avatar: require('../assets/images/default_avatar.jpg'),
             isImageViewVisible: false,
             isIndeximageForshow: 0,
-            like: 0
+            like: 0,
+         
         }
     }
 

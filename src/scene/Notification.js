@@ -19,6 +19,8 @@ import { Fragment } from 'react';
 import HttpRequest from '../Service/HttpRequest'
 import translate from '../constant/lang'
 import { getListNoti } from '../Service/PostService'
+import moment from 'moment'
+import { Avatar } from 'react-native-elements';
 const http = new HttpRequest();
 export default class Notification extends Component {
     constructor(props) {
@@ -26,11 +28,11 @@ export default class Notification extends Component {
         this.state = {
             lng: {},
             dataEvent: [
-            {}
             ],
             dataNoti: [
 
-            ]
+            ],
+            default_avatar: require('../assets/images/default_avatar.jpg')
         }
     }
 
@@ -52,7 +54,8 @@ export default class Notification extends Component {
     async getListNotification() {
         try {
             let { data } = await getListNoti()
-            this.setState({})
+            this.setState({ dataEvent: data.post_data.event })
+            this.setState({ dataNoti: data.post_data.notification })
         } catch (error) {
             console.log('Error list Notification : ', error)
         }
@@ -60,7 +63,7 @@ export default class Notification extends Component {
     }
 
     render() {
-        const { dataEvent, dataNoti, lng } = this.state
+        const { dataEvent, dataNoti, lng, default_avatar } = this.state
         return (
             <View
                 style={{
@@ -110,16 +113,22 @@ export default class Notification extends Component {
                         {
                             dataEvent.map((el, index) => {
                                 return (
-                                    <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`}>
-                                        <View style={{ ...styleScoped.wrapperImageAvatar }}>
-                                            <Image source={el.imageAvatar} style={{ ...styleScoped.imageAvatar }} />
+                                    <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`} onPress={() => Actions.EventDetail({ data: el })}>
+                                        <View style={{ marginRight: hp('1.5%') }}>
+                                            <Avatar source={!el.author.photo ? default_avatar : { uri: el.author.photo }} rounded size="medium" />
+                                            {/* <Image source={el.imageAvatar} style={{ ...styleScopsed.imageAvatar }} /> */}
                                         </View>
                                         <View >
                                             <Text style={{ ...styleScoped.textTtile }}>
                                                 {el.title}
                                             </Text>
                                             <Text style={{ ...styleScoped.textTime }}>
-                                                {el.time}
+                                                {
+                                                    el.post_addition_data ?
+                                                        moment(el.post_addition_data.event_date).format('DD/MM/YYYY')
+                                                        : ''
+                                                } {el.post_addition_data && el.post_addition_data.event_schedule[0].time}
+
                                             </Text>
                                         </View>
                                     </TouchableOpacity>
@@ -127,11 +136,11 @@ export default class Notification extends Component {
                             })
                         }
                     </View>
-                    <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
+                    {/* <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
                     <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ ...styleScoped.textSeeMore }}>{lng.see_upcomming_events}</Text>
                         <Icon name="chevron-right" size={hp('2.5%')} color="#707070" />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 {/* Notification */}
@@ -151,18 +160,29 @@ export default class Notification extends Component {
                     <ScrollView>
                         {
                             dataNoti.map((el, index) => {
+                                let action_to = null
+                                if (el.post_type == 'blog') {
+                                    action_to = 'PostDetail'
+                                } else if (el.post_type == 'poll') {
+                                    action_to = 'PollDetail'
+                                } else if (el.post_type == 'event') {
+                                    action_to = 'EventDetail'
+                                } else if (el.post_type == 'survey') {
+                                    action_to = 'SurveyDetail'
+                                }
+                                let post_type = el.post_type.toUpperCase()
                                 return (
                                     <Fragment>
-                                        <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`}>
-                                            <View style={{ ...styleScoped.wrapperImageAvatar }}>
-                                                <Image source={el.imageAvatar} style={{ ...styleScoped.imageAvatar }} />
+                                        <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`} onPress={() => Actions.push(action_to, { data: el })}>
+                                            <View style={{ marginRight: hp('1%') }}>
+                                                <Avatar source={!el.author.photo ? default_avatar : { uri: el.author.photo }} rounded size="medium" />
                                             </View>
                                             <View >
                                                 <Text style={{ ...styleScoped.textTtile, color: '#0D1F2D' }}>
-                                                    {el.user} <Text style={{ fontWeight: '400' }}>{el.title}</Text>
+                                                    {el.author.full_name} <Text style={{ fontWeight: '400' }} ellipsizeMode="tail" numberOfLines={0.5}>CREATE {post_type} </Text>
                                                 </Text>
                                                 <Text style={{ ...styleScoped.textTime, fontWeight: '300' }}>
-                                                    {el.time}
+                                                    {el.post_date}
                                                 </Text>
                                             </View>
                                         </TouchableOpacity>
