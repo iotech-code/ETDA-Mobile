@@ -148,6 +148,11 @@ export const approvePost = async (params) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/approve', params)
 }
+export const rejectPost = async (params) => {
+    // params is  post_id in array such {post_id: [1,2,4]}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/reject', params)
+}
 
 export const actionLikePost = async (params) => {
     // params is post_id of action like post. Example => {post_id:1}
