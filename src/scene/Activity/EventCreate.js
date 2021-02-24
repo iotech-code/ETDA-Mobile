@@ -25,6 +25,7 @@ import { Fragment } from 'react';
 import moment from 'moment'
 import { createPost, updateEvent } from '../../Service/PostService'
 import translate from '../../constant/lang'
+import { Alert } from 'react-native';
 
 export default class EventCreate extends Component {
     state = {
@@ -140,7 +141,11 @@ export default class EventCreate extends Component {
     async onCreateEvent() {
         try {
             const { data } = this.props
-            let { topic, detail, post_to_feed, schedule, date_event } = this.state
+            let { topic, detail, post_to_feed, schedule, event_date } = this.state
+            if(!event_date){
+                Alert('Please input event date')
+                return 
+            }
             let post_addition_data = {
                 event_date: date_event,
                 event_schedule: schedule,

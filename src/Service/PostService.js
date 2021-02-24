@@ -207,3 +207,9 @@ export const searchPost = async (query, tags, date = "", type = "") => {
     }
     return await http.post('/api/backend/post/search', formData)
 }
+
+
+export const getListNoti = async () => {
+    await http.setTokenHeader();
+    return await http.get('/api/backend/noti/noti-list')
+}

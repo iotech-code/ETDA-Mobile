@@ -44,7 +44,6 @@ target 'LOOKs' do
   pod 'Picker', :path => '../node_modules/react-native-picker'
 
   pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
-  pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
 
   target 'LOOKsTests' do
     inherit! :complete

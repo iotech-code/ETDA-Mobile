@@ -18,7 +18,7 @@ import IconMaterail from 'react-native-vector-icons/MaterialIcons';
 import { Fragment } from 'react';
 import HttpRequest from '../Service/HttpRequest'
 import translate from '../constant/lang'
-
+import { getListNoti } from '../Service/PostService'
 const http = new HttpRequest();
 export default class Notification extends Component {
     constructor(props) {
@@ -26,8 +26,10 @@ export default class Notification extends Component {
         this.state = {
             lng: {},
             dataEvent: [
+            {}
             ],
             dataNoti: [
+
             ]
         }
     }
@@ -35,7 +37,7 @@ export default class Notification extends Component {
     async UNSAFE_componentWillMount() {
         await this.getLang();
     }
-    
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
@@ -49,11 +51,10 @@ export default class Notification extends Component {
 
     async getListNotification() {
         try {
-            await http.setTokenHeader();
-            let respons = await http.get('/api/backend/noti/noti-list')
-            console.log('',respons)
+            let { data } = await getListNoti()
+            this.setState({})
         } catch (error) {
-            console.log('Error list Notification : ',error)
+            console.log('Error list Notification : ', error)
         }
 
     }
