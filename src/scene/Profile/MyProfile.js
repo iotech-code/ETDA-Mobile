@@ -154,8 +154,6 @@ export default class MyProfile extends Component {
                                 onPress={ () => this.logout() }
                             />
                         </View>
-
-
                     </View>
                 </ScrollView>
             </View >

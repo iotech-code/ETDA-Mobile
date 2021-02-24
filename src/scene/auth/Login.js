@@ -172,7 +172,7 @@ export default class Login extends Component {
             let { status, data } = getInfo.data;
 
             if (status == 'success') {
-                await AsyncStorage.setItem('user_data', JSON.stringify(data));
+                await AsyncStorage.setItq1em('user_data', JSON.stringify(data));
                 await this.setState({ spinner: false });
                 await Actions.replace('Main');
             } else {
