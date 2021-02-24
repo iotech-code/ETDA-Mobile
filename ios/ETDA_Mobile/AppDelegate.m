@@ -15,6 +15,10 @@
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
 
+
+
+
+
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
   SKDescriptorMapper *layoutDescriptorMapper = [[SKDescriptorMapper alloc] initWithDefaults];
@@ -52,6 +56,12 @@ static void InitializeFlipper(UIApplication *application) {
   return YES;
 }
 
+
+
+
+
+//- (NS
+
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
 #if DEBUG
@@ -61,6 +71,18 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 }
 //
+//- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+//{
+//  return [LineLogin application:app open:url options:options];
+//}
+//
+//- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+//{
+//  BOOL handledLine = [LineLogin application:application continue:userActivity restorationHandler:restorationHandler];
+//  return handledLine;
+//}
+
+
 //- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 //{
 //  return [LineLogin application:app open:url options:options];

@@ -78,8 +78,6 @@ export default class MessagsPost extends Component {
         Actions.push('EventCreate', { data: this.props.data })
     }
 
-
-
     async callPostLike(post_id) {
         try {
             let { is_like, like_count } = this.state
