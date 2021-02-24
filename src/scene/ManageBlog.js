@@ -104,7 +104,7 @@ export default class ManageBlog extends Component {
                 await this.setState({ list_data: [] })
                 await this.setState({ count_selected: 0 })
                 this.callApproveList()
-                alert("Post was approved!")
+                alert("Post was rejected!")
             }
         } catch (error) {
             console.log('Reject post is error : ', error)
