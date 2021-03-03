@@ -50,10 +50,10 @@ class HttpRequest {
         );
       }
       else if (error.response.status == 500) {
-         Alert.alert('Service unavailable please try again.')
+         alert('Service unavailable please try again.')
       } 
       else if(error.response.status == 403) {
-        Alert.alert('Sorry system failed please contact adminitrator.')
+        alert('Sorry system failed please contact adminitrator.')
       }
 
 
