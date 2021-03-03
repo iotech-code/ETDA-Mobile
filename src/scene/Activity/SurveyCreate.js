@@ -68,7 +68,7 @@ export default class PollCreate extends Component {
     }
 
 
-    async onCreatePoll() {
+    async onCreateSurvey() {
         try {
             let { topic, detail, question } = this.state
             let post_addition_data = {
@@ -76,13 +76,13 @@ export default class PollCreate extends Component {
                 post_to_etda: true
             }
             let { data } = await createSurvey(topic, 'survey', [], '', [], post_addition_data)
-            console.log('create poll : ', data)
+            console.log('create survey : ', data)
             let { status } = data
             if (status == 'success') {
-                Actions.replace('Poll')
+                Actions.replace('Survey')
             }
         } catch (error) {
-            console.log('Create poll error : ', error)
+            console.log('Create survey error : ', error)
         }
     }
 
@@ -235,7 +235,7 @@ export default class PollCreate extends Component {
                                         ...style.btnPrimary,
                                         ...style.btnRounded
                                     }}
-                                    onPress={() => this.onCreatePoll()}
+                                    onPress={() => this.onCreateSurvey()}
                                 />
                             </View>
                         </View>

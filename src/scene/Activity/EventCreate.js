@@ -111,8 +111,9 @@ export default class EventCreate extends Component {
         }
     }
 
-    addSchedule() {
+    addSchedule(t) {
         const { schedule } = this.state
+        console.log(t)
         schedule.push({
             time: null,
             detail: null,
@@ -342,7 +343,7 @@ export default class EventCreate extends Component {
                                             ...style.btnPrimaryOutline,
                                             ...style.btnRounded
                                         }}
-                                        onPress={() => this.addSchedule()}
+                                        onPress={(t) => this.addSchedule(t)}
                                     />
                                 </View>
 
