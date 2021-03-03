@@ -57,13 +57,13 @@
 	<array>
 		<string>lineauth2</string>
 	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>LineSDKConfig</key>
 	<dict>
 		<key>ChannelID</key>
 		<string>1655665695</string>
 	</dict>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -113,8 +113,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
