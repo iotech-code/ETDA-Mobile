@@ -34,20 +34,22 @@ export default class Poll extends Component {
             lng: {},
             listTags: [],
             tags: [],
+            search_date: '',
             default_avatar: require('../assets/images/default_avatar.jpg'),
             keyword: ''
         }
     }
 
     async UNSAFE_componentWillMount() {
-        await this.getLang();
+        
     }
 
     async getLang() {
-        this.setState({ isFetching: true })
+        await this.setState({ isFetching: true })
         let vocap = await translate()
-        this.setState({ lng: vocap })
-        this.setState({ isFetching: false })
+        // console.log("vocap", vocap)
+        await this.setState({ lng: vocap })
+        await this.setState({ isFetching: false })
     }
 
     async componentDidMount() {
@@ -56,13 +58,28 @@ export default class Poll extends Component {
             this.setState({
                 token: token
             })
+            await this.getLang();
+            await this.onGetListTags();
+
+            if(this.props.search_type) {
+                switch(this.props.search_type){
+                    case 'tag':
+                        await this.setState({ tags: [this.props.search_txt] })
+                        this.onSearchPost()
+                        break;
+                    case 'date':
+                        await this.setState({search_date: this.props.search_txt})
+                        this.onSearchPost()
+                    break;
+                }
+            }
         } catch (err) {
             // handle errors
         }
     }
 
     async UNSAFE_componentWillMount() {
-        this.onGetListTags()
+        
     }
 
     async onGetListTags() {
@@ -95,6 +112,10 @@ export default class Poll extends Component {
                 listTagSelected.push(element.tag)
             }
         }
+        if(listTagSelected.length === 0)
+        {
+            listTagSelected = []
+        }
         await this.setState({ originalTag })
         await this.setState({ tags: listTagSelected })
         this.onSearchPost()
@@ -126,14 +147,12 @@ export default class Poll extends Component {
                     <View style={{ ...style.navbar }}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.search}</Text>
-                        <TouchableOpacity onPress={() => Actions.pop()}>
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.done}</Text>
-                        </TouchableOpacity>
+                        <View></View>
                     </View>
                     <View style={{ ...style.container, marginTop: hp('2%') }}>
                         <View style={{ ...styleScoped.customInputSearch }}>
                             <Icon name="magnify" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
-                            <TextInput style={{ padding: 0, fontSize: hp('2%'), width: '100%' }} placeholder="Search..."
+                            <TextInput style={{ padding: 0, fontSize: hp('2%'), width: '100%' }} placeholder={lng.search+"..."}
                                 onChangeText={(value) => { this.onSearchPost(value) }}
                             ></TextInput>
                         </View>
@@ -149,6 +168,9 @@ export default class Poll extends Component {
                     }}>
 
                         {
+                            listTags.length === 0 ?
+                                <Text style={{color: '#ccc'}}>{lng.notaglist}</Text>
+                            :
                             listTags.map((el, index) => {
                                 let tagStyle = el.selected ? style.btnPrimary : style.btnPrimaryOutline
                                 return (
@@ -170,6 +192,9 @@ export default class Poll extends Component {
                     <View style={{ marginVertical: hp('2%'), ...style.divider }}></View>
                     <View style={{ ...style.container }}>
                         {
+                            list_search.length === 0 ?
+                                <Text style={{color: '#ccc'}}>{lng.search_result}</Text>
+                            :
                             list_search.map((l, i) => {
                                 let action_to = null
                                 if (l.post_type == 'blog') {
@@ -188,6 +213,7 @@ export default class Poll extends Component {
                                             <ListItem.Title>{l.title}</ListItem.Title>
                                             <ListItem.Subtitle style={{ color: fonts.color.secondary }}>{l.post_date}</ListItem.Subtitle>
                                         </ListItem.Content>
+                                        <Icon name="arrow-right" size={hp('2.2%')} style={{ marginRight: hp('1%'), }} color={'rgba(0,0,0,0.16)'} />
                                     </ListItem>
                                 )
                             })

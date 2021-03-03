@@ -25,7 +25,7 @@ import ImageView from 'react-native-image-view';
 import ImagePicker from 'react-native-image-crop-picker';
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import translate from '../../constant/lang'
-import { actionLikePost } from '../../Service/PostService'
+import { actionLikePost, updatePostView, getPost } from '../../Service/PostService'
 
 export default class EventDetail extends Component {
 
@@ -44,13 +44,15 @@ export default class EventDetail extends Component {
             commentImage: null,
             commentImage64: null,
             lng: {},
-            is_like: 0, 
-            like_count: this.props.data.like 
+            is_like: this.props.data.is_like, 
+            like_count: this.props.data.like,
+            post_data: this.props.data
         }
     }
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        
     }
     
     async getLang() {
@@ -64,7 +66,19 @@ export default class EventDetail extends Component {
         const { post_id } = this.props.data
         await this.setState({ post_id })
         this.callGetComment(post_id)
+        await updatePostView({"post_id": post_id})
+        setTimeout(() => {
+            this.getPostDetail();
+        }, 1000)
     }
+
+    async getPostDetail () {
+        const { post_id } = this.props.data
+        let post_data = await getPost({"post_id": post_id});
+        let data = post_data.data.post_data
+        this.setState({post_data: data})
+    }
+
     async callGetComment(post_id) {
 
         try {
@@ -144,7 +158,8 @@ export default class EventDetail extends Component {
     };
 
     render() {
-        const { author, post_date, tags, post_description, post_images, post_id, title, share_url, view } = this.props.data;
+        const { post_date, tags, post_description, post_images, post_id, title, share_url, total_view } = this.state.post_data;
+        const { author } = this.props.data;
         // console.log(this.props.data)
         const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible, lng, is_like, like_count } = this.state
         let imageForView = []
@@ -175,7 +190,7 @@ export default class EventDetail extends Component {
                         marginBottom: hp('2%'),
                     }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop({"data": this.state.post_data})} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }} numberOfLines={1}>{title}</Text>
                             <View></View>
                         </View>
@@ -253,7 +268,7 @@ export default class EventDetail extends Component {
                             </TouchableOpacity>
 
                             <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {view === undefined?0:view}</Text>
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined?0:total_view}</Text>
 
                             <TouchableOpacity onPress={() => this.sharePOST(share_url)}>
                                 <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />

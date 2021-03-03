@@ -24,7 +24,7 @@ import MenuFooter from '../../components/MenuFooter'
 import MenuFooterUser from '../../components/MenuFooterUser'
 import EventPost from '../../components/EventPost'
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { homeFeed } from '../../Service/PostService'
+import { allEvent, myEvent } from '../../Service/PostService'
 import moment from 'moment'
 import translate from '../../constant/lang'
 
@@ -57,6 +57,7 @@ export default class Activity extends Component {
         this.state = {
             visibleSearch: false,
             eventList: [],
+            myeventList: [],
             markedDates: null,
             isFetching: false,
             user_role: '',
@@ -93,7 +94,7 @@ export default class Activity extends Component {
     async onGetEventList() {
         this.setState({ isFetching: true })
         try {
-            let res = await homeFeed();
+            let res = await allEvent();
             let { post_data } = res.data
             let event = []
             let markedDates = {}
@@ -104,7 +105,7 @@ export default class Activity extends Component {
                     if (element.post_addition_data.event_date) {
                         let data = new Date(element.post_addition_data.event_date)
                         let date_converted = moment(data).format('YYYY-MM-DD')
-                        markedDates[date_converted] = { marked: true }
+                        markedDates[date_converted] = { marked: true, selectedColor: 'blue' }
                     }
                 }
             }
@@ -116,9 +117,35 @@ export default class Activity extends Component {
         this.setState({ isFetching: false })
     }
 
+    async getMyEventList() {
+        this.setState({ isFetching: true })
+        try {
+            let res = await myEvent();
+            let { post_data } = res.data
+            let event = []
+            let markedDates = {}
+            for (let index = 0; index < post_data.length; index++) {
+                const element = post_data[index];
+                if (element.post_type == 'event') {
+                    event.push(element)
+                    if (element.post_addition_data.event_date) {
+                        let data = new Date(element.post_addition_data.event_date)
+                        let date_converted = moment(data).format('YYYY-MM-DD')
+                        markedDates[date_converted] = { marked: true, selectedColor: 'blue' }
+                    }
+                }
+            }
+            await this.setState({ markedDates })
+            await this.setState({ myeventList: event })
+        } catch (error) {
+            console.log('Get list Event error : ', error)
+        }
+        this.setState({ isFetching: false })
+    }
+
 
     render() {
-        const { eventList, markedDates, isFetching, lng } = this.state
+        const { eventList, myeventList, markedDates, isFetching, lng } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
@@ -165,6 +192,8 @@ export default class Activity extends Component {
                             <Calendar
                                 markingType={'period'}
                                 markedDates={markedDates}
+                                onDayPress={(day) => {console.log('selected day', day)}}
+                                enableSwipeMonths={true}
                             />
 
                         </View>
@@ -182,7 +211,13 @@ export default class Activity extends Component {
                                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.my_events}</Text>
                                         </View>
                                         <View style={{ marginTop: hp('2%') }}>
-                                            {/* <EventPost></EventPost> */}
+                                            {
+                                                myeventList.map((el, index) => {
+                                                    return (
+                                                        <EventPost key={`myEventList_${index}`} data={el}></EventPost>
+                                                    )
+                                                })
+                                            }
                                         </View>
 
                                         <View style={{ ...style.container, marginTop: hp('2%') }}>

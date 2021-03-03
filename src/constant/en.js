@@ -129,5 +129,9 @@ export const en = {
     schedule: "Schedule",
     edit: "Edit",
     create_event: "Create event",
-    select_language: "Select Language"
+    select_language: "Select Language",
+    notaglist: "No tag available.",
+    search_result: "Search result here.",
+    no_notification: "No new notification",
+    no_new_event: "No new event"
 }

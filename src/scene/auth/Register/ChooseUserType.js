@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     TextInput,
     Platform,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
 import HttpRequest from '../../../Service/HttpRequest';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -277,7 +278,7 @@ export default class ChooseUserType extends Component {
         }
         
         let registerReq = await http.post(apiServer.url + '/api/backend/user/register', data);
-        let { status } = await registerReq.data;
+        let { status, message } = await registerReq.data;
        
         if (status == 'success') {
             if (this.state.rType == 'read') {
@@ -289,6 +290,10 @@ export default class ChooseUserType extends Component {
                     'authen_method':  this.props.source
                 });
             }
+        } else {
+            Alert.alert('Sorry', message, () => {
+                Actions.pop();
+            })
         }
     }
 

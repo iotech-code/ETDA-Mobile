@@ -82,6 +82,7 @@ export default class Login extends Component {
         }
 
         try {
+            http.customtHeader({"ignore_check": true});
             let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
             let { token } = loginRequest.data;
             await AsyncStorage.setItem('token', token);
@@ -89,7 +90,8 @@ export default class Login extends Component {
             await this.callInfomation();
 
         } catch (e) {
-            console.log(e)
+            // console.log(e)
+            Alert.alert('Sorry', 'User not found!');
         }
     }
 
@@ -158,7 +160,7 @@ export default class Login extends Component {
 
     async checkLogin() {
         let token = await AsyncStorage.getItem('token');
-        console.log(token)
+        console.log('TOKEN', token)
         if (token) {
             await this.refreshToken();
         }
@@ -168,23 +170,15 @@ export default class Login extends Component {
     async refreshToken() {
         try {
             await http.setTokenHeader();
-            let getInfo = await http.post(apiServer.url + '/api/backend/user/information');
-            let { status, data } = getInfo.data;
-
+            let refreshing = await http.post(apiServer.url + '/api/backend/user/refresh-token');
+            let { status, token } = await refreshing.data;
             if (status == 'success') {
-                await AsyncStorage.setItq1em('user_data', JSON.stringify(data));
-                await this.setState({ spinner: false });
-                await Actions.replace('Main');
-            } else {
-                let refreshing = await http.post(apiServer.url + '/api/backend/user/refresh-token');
-                let { status, token } = await refreshing.data;
-                if (status == 'success') {
-                    await AsyncStorage.setItem('token', token);
-                    await this.callInfomation();
-                }
+                await AsyncStorage.setItem('token', token);
+                await this.callInfomation();
             }
         } catch (e) {
             this.setState({ spinner: false });
+            console.log(e.response.data.message)
         }
     }
 

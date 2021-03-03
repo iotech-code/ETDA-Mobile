@@ -25,14 +25,15 @@ class HttpRequest {
     // Add a response interceptor
     this.axiosInstance.interceptors.response.use(function (response) {
       // Do something with response data
-      console.log(`Result ${response.config.url} : `, response)
+      console.log(`response ${response.config.url} : `, response)
       return response
     }, function (error) {
       console.log(`error ${error.config.url} : `, error.response)
-
-
-      // Alert.alert('Something worng!')
-      if (error.response.status == 401) {
+      console.log(apiServer.url+'/api/backend/user/login')
+      if (error.response.status == 401 && 
+        error.config.url !== apiServer.url+'/api/backend/user/login' &&
+        error.config.url !== apiServer.url+'/api/backend/user/refresh-token'
+        ) {
         Alert.alert(
           'Sorry!',
           'Session timeout. Please login again.',
@@ -48,8 +49,7 @@ class HttpRequest {
           ],
           { cancelable: false }
         );
-      }
-      else if (error.response.status == 500) {
+      }else if (error.response.status == 500) {
          alert('Service unavailable please try again.')
       } 
       else if(error.response.status == 403) {
@@ -63,10 +63,12 @@ class HttpRequest {
 
   }
 
-
   setHeader(header) {
     this.axiosInstance.defaults.headers.common = header
     this.axiosInstance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+  }
+  customtHeader(header) {
+    this.axiosInstance.defaults.headers.common = header
   }
 
   async setTokenHeader() {

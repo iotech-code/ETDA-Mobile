@@ -50,6 +50,10 @@ export default class Main extends Component {
         await this.setState({ list_data: false })
     }
 
+    async UNSAFE_componentWillReceiveProps() {
+        
+    }
+
     async UNSAFE_componentWillMount() {
         // console.log('test : ',  global.lng) // แสดงค่า gobal testGobal
         await this.getUserInfo();

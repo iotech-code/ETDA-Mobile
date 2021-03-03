@@ -136,6 +136,11 @@ export default class CreatePost extends Component {
         this.setState({ spinner: true })
         try {
             let { title, type, images, description, tag, addition } = this.state
+            if(!tag) 
+            {
+                tag = [];
+            }
+            
             if (this.validateFrom()) {
                 let res = await createPost(title, type, images, description, tag, addition)
                 let { status } = res.data

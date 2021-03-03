@@ -37,8 +37,8 @@ export default class Post extends Component {
             default_avatar: require('../assets/images/default_avatar.jpg'),
             visibleBottomSheet: false,
             visibleModalReport: false,
-            is_like: 0,
-            like_count: 0,
+            is_like: this.props.is_like,
+            like_count: this.props.like_count,
             lng: {},
             is_follow: 0,
             user_data: {},
@@ -338,7 +338,7 @@ export default class Post extends Component {
             comment_number,
             share_url,
             author,
-            view
+            total_view
         } = this.props.data
 
         let { is_like, like_count, default_avatar, lng } = this.state
@@ -387,6 +387,7 @@ export default class Post extends Component {
                                         title={item}
                                         titleStyle={{ fontSize: hp('1.5%') }}
                                         buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
+                                        onPress={() => Actions.push('Search', { 'search_type': 'tag', 'search_txt': item })}
                                         key={index}
                                     />
                                 )
@@ -417,7 +418,7 @@ export default class Post extends Component {
                     </TouchableOpacity>
 
                     <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                    <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {view === undefined ? 0 : view}</Text>
+                    <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined ? 0 : total_view}</Text>
 
                     <TouchableOpacity onPress={() => this.sharePOST(share_url)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />

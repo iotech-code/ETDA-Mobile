@@ -98,25 +98,27 @@ export default class Notification extends Component {
                             />
                             <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>{lng.event_today}</Text>
                         </View>
-                        <TouchableOpacity>
+                        {/* <TouchableOpacity>
                             <Icon
                                 name="chevron-down"
                                 size={hp('2.5%')}
                                 color="#B5B5B5"
                                 style={{ marginRight: hp('1%') }}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
 
                     {/* content */}
                     <View style={{ marginTop: hp('2%') }}>
                         {
+                            !dataEvent ?
+                            <Text>{lng.no_new_event}</Text>
+                            :
                             dataEvent.map((el, index) => {
                                 return (
                                     <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`} onPress={() => Actions.EventDetail({ data: el })}>
                                         <View style={{ marginRight: hp('1.5%') }}>
                                             <Avatar source={!el.author.photo ? default_avatar : { uri: el.author.photo }} rounded size="medium" />
-                                            {/* <Image source={el.imageAvatar} style={{ ...styleScopsed.imageAvatar }} /> */}
                                         </View>
                                         <View >
                                             <Text style={{ ...styleScoped.textTtile }}>
@@ -136,11 +138,6 @@ export default class Notification extends Component {
                             })
                         }
                     </View>
-                    {/* <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
-                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styleScoped.textSeeMore }}>{lng.see_upcomming_events}</Text>
-                        <Icon name="chevron-right" size={hp('2.5%')} color="#707070" />
-                    </TouchableOpacity> */}
                 </View>
 
                 {/* Notification */}
@@ -159,6 +156,9 @@ export default class Notification extends Component {
                     <View style={{ ...style.divider, marginVertical: hp('2.5%') }}></View>
                     <ScrollView>
                         {
+                            !dataNoti ?
+                            <Text>{lng.no_notification}</Text>
+                            :
                             dataNoti.map((el, index) => {
                                 let action_to = null
                                 if (el.post_type == 'blog') {

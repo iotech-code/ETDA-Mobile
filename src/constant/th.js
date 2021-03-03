@@ -129,5 +129,9 @@ export const th = {
     schedule: "กำหนดการ",
     edit: "แก้ไข",
     create_event: "สร้างกิจกรรม",
-    select_language: "เลือกภาษา"
+    select_language: "เลือกภาษา",
+    notaglist: "ไม่มีแท็กแสดง",
+    search_result: "ผลการค้นหา",
+    no_notification: "ไม่มีการแจ้งเตือนใหม่",
+    no_new_event: "ไม่มีกิจกรรมใหม่"
 }

@@ -7,6 +7,16 @@ export const homeFeed = async (cr = 0, next = 0) => {
     return await http.post('/api/backend/post/home-feed', { "currentPage": cr, "nextPage": next });
 };
 
+export const myEvent = async (cr = 0, next = 0) => {
+    await http.setTokenHeader();
+    return await http.post('/api/backend/post/list-my-event', { "currentPage": cr, "nextPage": next });
+};
+
+export const allEvent = async (cr = 0, next = 0) => {
+    await http.setTokenHeader();
+    return await http.post('/api/backend/post/list-event', { "currentPage": cr, "nextPage": next });
+};
+
 export const getListPostPoll = async (cr = 0, next = 0) => {
     await http.setTokenHeader();
     return await http.post('/api/backend/post/list-poll', { "currentPage": cr, "nextPage": next });
@@ -158,6 +168,18 @@ export const actionLikePost = async (params) => {
     // params is post_id of action like post. Example => {post_id:1}
     await http.setTokenHeader()
     return await http.post('/api/backend/post/like', params)
+}
+
+export const updatePostView = async (params) => {
+    // params is post_id of action update view counter. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/view', params)
+}
+
+export const getPost = async (params) => {
+    // params is post_id of action get post. Example => {post_id:1}
+    await http.setTokenHeader()
+    return await http.post('/api/backend/post/detail', params)
 }
 
 export const actionFollowPost = async (params) => {
