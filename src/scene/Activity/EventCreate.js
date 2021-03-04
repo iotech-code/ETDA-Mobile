@@ -11,7 +11,7 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
 } from 'react-native';
 
 import { Button, BottomSheet, Overlay } from 'react-native-elements';
@@ -26,6 +26,8 @@ import moment from 'moment'
 import { createPost, updateEvent } from '../../Service/PostService'
 import translate from '../../constant/lang'
 import { Alert } from 'react-native';
+import ImageGrid from '../../components/ImageGrid';
+import { Platform } from 'react-native';
 
 export default class EventCreate extends Component {
     state = {
@@ -93,6 +95,11 @@ export default class EventCreate extends Component {
             this.setState({ datepicker: date })
             this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
         }
+        if (Platform.os != 'ios') {
+            console.log('YES')
+
+            this.setState({ showDatePicker: false })
+        }
     }
 
     onChangeTime(event, time, btn) {
@@ -106,6 +113,9 @@ export default class EventCreate extends Component {
         }
         this.setState({ timepicker: time })
         this.setState({ schedule })
+        if (Platform.os != 'ios') {
+            this.setState({ showTimePicker: false })
+        }
         if (btn) {
             this.setState({ showTimePicker: false })
         }
@@ -172,71 +182,102 @@ export default class EventCreate extends Component {
     renderTimeOverlay() {
         const { showTimePicker, timepicker, lng } = this.state
         return (
-            <Overlay
-                isVisible={showTimePicker}
-                overlayStyle={{
-                    width: wp('90%'),
-                    paddingVertical: hp('2%'),
-                    paddingHorizontal: hp('2%'),
-                    borderRadius: 10
-                }}
-            >
-                <View>
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={timepicker}
-                        mode="time"
-                        display="spinner"
-                        is24Hour={true}
-                        onChange={(event, selectedDate) => this.onChangeTime(event, selectedDate)}
-                    />
+
+            <View>
+                {
+                    Platform.os === 'ios' ?
+                        <Overlay
+                            isVisible={showTimePicker}
+                            overlayStyle={{
+                                width: wp('90%'),
+                                paddingVertical: hp('2%'),
+                                paddingHorizontal: hp('2%'),
+                                borderRadius: 10
+                            }}
+                        >
+
+                            <View>
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={timepicker}
+                                    mode="time"
+                                    display="spinner"
+                                    is24Hour={true}
+                                    onChange={(event, selectedDate) => this.onChangeTime(event, selectedDate)}
+                                />
 
 
-                    <Button
-                        title="Confirm"
-                        buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                        onPress={() => this.onChangeTime(null, timepicker, true)}
-                    />
-                </View>
+                                <Button
+                                    title="Confirm"
+                                    buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
+                                    onPress={() => this.onChangeTime(null, timepicker, true)}
+                                />
+                            </View>
 
 
-            </Overlay>
+
+                        </Overlay>
+                        : showTimePicker ?  <DateTimePicker
+                            testID="dateTimePicker"
+                            value={timepicker}
+                            mode="time"
+                            display="spinner"
+                            is24Hour={true}
+                            onChange={(event, selectedDate) => this.onChangeTime(event, selectedDate)}
+                        /> : null
+                }
+            </View>
         )
     }
 
     renderDateOverlay() {
         const { datepicker, showDatePicker } = this.state
         return (
-            <Overlay
-                isVisible={showDatePicker}
-                overlayStyle={{
-                    width: wp('90%'),
-                    paddingVertical: hp('2%'),
-                    paddingHorizontal: hp('2%'),
-                    borderRadius: 10
-                }}
-            >
+            <View>
+                {
+                    Platform.os === 'ios' ?
+                        <Overlay
+                            isVisible={showDatePicker}
+                            overlayStyle={{
+                                width: wp('90%'),
+                                paddingVertical: hp('2%'),
+                                paddingHorizontal: hp('2%'),
+                                borderRadius: 10
+                            }}
+                        >
 
-                <View>
+                            <View>
 
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={datepicker}
-                        mode="date"
-                        display="spinner"
-                        onChange={(event, selectedDate) => this.onChangeDate(event, selectedDate)}
-                    />
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={datepicker}
+                                    mode="date"
+                                    display="spinner"
+                                    onChange={(event, selectedDate) => this.onChangeDate(event, selectedDate)}
+                                />
 
 
-                    <Button
-                        title="Confirm"
-                        buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
-                        onPress={() => this.onChangeDate(null, datepicker, true)}
-                    />
+                                <Button
+                                    title="Confirm"
+                                    buttonStyle={{ padding: hp('1.5%'), ...style.btnPrimary, ...style.btnRounded }}
+                                    onPress={() => this.onChangeDate(null, datepicker, true)}
+                                />
 
-                </View>
+                            </View>
 
-            </Overlay>
+
+                        </Overlay>
+                        :
+                        showDatePicker ? <DateTimePicker
+                            testID="dateTimePicker"
+                            value={datepicker}
+                            mode="date"
+                            display="spinner"
+                            onChange={(event, selectedDate) => this.onChangeDate(event, selectedDate)}
+                        /> : null
+                }
+            </View>
+
         )
 
     }
@@ -252,9 +293,9 @@ export default class EventCreate extends Component {
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                
+
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', marginBottom: hp('3%') }}>
-           
+
                     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ ...style.navbar }}>
                             <TouchableOpacity onPress={() => Actions.pop()}>
