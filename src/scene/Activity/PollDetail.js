@@ -25,6 +25,7 @@ import { postAction } from '../../Service/PostService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { actionDeletePost, getPollStat } from '../../Service/PostService'
+import ProgressCircle from 'react-native-progress-circle'
 export default class PollDetail extends Component {
     constructor(props) {
         super()
@@ -72,7 +73,7 @@ export default class PollDetail extends Component {
 
     onChooseAnswer(answer) {
         this.setState({ answer_id: answer.id })
-        this.setState({ progress: 1 })
+        this.setState({ progress: 100 })
     }
 
     async onSaveAnswer() {
@@ -170,7 +171,7 @@ export default class PollDetail extends Component {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', ...style.container }}>
 
-                    <Progress.Circle
+                    {/* <Progress.Circle
                         size={80}
                         thickness={4}
                         color={fonts.color.primary}
@@ -179,7 +180,24 @@ export default class PollDetail extends Component {
                         showsText={true}
                         style={{ marginRight: hp('3%') }}
 
-                    />
+                    /> */}
+                    <View style={{ marginRight: hp('3%') }}>
+                        <ProgressCircle
+                            percent={progress}
+                            radius={50}
+                            borderWidth={8}
+                            color={fonts.color.primary}
+                            shadowColor="#999"
+                            bgColor="#fff"
+
+                        >
+                    <Text style={{ fontSize: 18 }}>{`${progress}%`}</Text>
+
+                        </ProgressCircle>
+                    </View>
+
+
+
                     <Text style={{ fontSize: hp('3%') }}>{title}</Text>
                 </View>
 
