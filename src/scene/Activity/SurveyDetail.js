@@ -22,6 +22,8 @@ import { colors, fonts } from '../../constant/util';
 import * as Progress from 'react-native-progress';
 import { Fragment } from 'react';
 import { postAction, getSurveyStat } from '../../Service/PostService'
+import ProgressCircle from 'react-native-progress-circle'
+
 export default class SurveyDetail extends Component {
 
     constructor(props) {
@@ -95,7 +97,7 @@ export default class SurveyDetail extends Component {
                 }
             }
         }
-        let progress = countProgress / survey_data.length
+        let progress = (countProgress / survey_data.length) * 100
         await this.setState({ survey_data })
         await this.setState({ progress: progress })
     }
@@ -141,16 +143,33 @@ export default class SurveyDetail extends Component {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', ...style.container }}>
 
-                    <Progress.Circle
-                        size={80}
-                        thickness={4}
-                        color={fonts.color.primary}
-                        progress={progress}
-                        indeterminate={false}
-                        showsText={true}
-                        style={{ marginRight: hp('3%') }}
+                    {/* <Progress.Circle
+                            size={80}
+                            thickness={4}
+                            color={fonts.color.primary}
+                            progress={progress}
+                            indeterminate={false}
+                            showsText={true}
+                            style={{ marginRight: hp('3%') }}
 
-                    />
+                        /> */}
+
+                    <View style={{ marginRight: hp('3%') }}>
+                        <ProgressCircle
+                            percent={progress}
+                            radius={50}
+                            borderWidth={8}
+                            color={fonts.color.primary}
+                            shadowColor="#999"
+                            bgColor="#fff"
+
+                        >
+                            <Text style={{ fontSize: 18 }}>{`${progress}%`}</Text>
+
+                        </ProgressCircle>
+                    </View>
+
+
                     <Text style={{ fontSize: hp('3%') }}>{title}</Text>
                 </View>
                 {/* section content */}

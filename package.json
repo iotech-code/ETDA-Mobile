@@ -36,6 +36,7 @@
     "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-picker": "^4.3.7",
     "react-native-progress": "^4.1.2",
+    "react-native-progress-circle": "^2.1.0",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "^1.13.2",
     "react-native-responsive-screen": "^1.4.2",
