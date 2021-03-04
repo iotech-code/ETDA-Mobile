@@ -264,6 +264,7 @@ export default class Activity extends Component {
     }
 };
 
+
 const styleScoped = StyleSheet.create({
     imageLogo: {
         height: hp('15%'),

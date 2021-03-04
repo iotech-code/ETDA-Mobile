@@ -97,6 +97,14 @@ export default class MessageBoard extends Component {
     }
 
     async UNSAFE_componentWillMount() {
+        await this.initFeed();
+    }
+
+    async UNSAFE_componentWillReceiveProps() {
+        await this.initFeed();
+    }
+
+    async initFeed() {
         try {
             const token = await AsyncStorage.getItem('token');
             const user = await AsyncStorage.getItem('user_data');
@@ -107,14 +115,13 @@ export default class MessageBoard extends Component {
                 token: token,
                 user_role: user_role
             })
-
+            // console.log(user)
             this.callCommunityFeed(token);
 
         } catch (err) {
             console.log('err : ', err)
         }
     }
-
 
     async componentWillUnmount() {
         await this.setState({ list_data: false })
@@ -375,8 +382,9 @@ export default class MessageBoard extends Component {
                                     <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                 </TouchableOpacity>
                             </View>
+                            
                             {
-                                this.state.user_type != 'read' || this.state.user_role == 'Admin' &&
+                                (this.state.user_type == 'read,post_read' || this.state.user_role == 'Admin') &&
                                 <View style={{ ...style.container }}>
                                     <Button
                                         title={lng.new_post}
@@ -420,7 +428,7 @@ export default class MessageBoard extends Component {
                             this.state.isFetching ?
                                 <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
                                 :
-                                <View style={{ marginTop: 20 }}>
+                                <View style={{ marginTop: 20, height: hp('56%') }}>
                                     <FlatList
                                         data={this.state.list_data}
                                         renderItem={this.renderTypeInFlatlist.bind(this)}

@@ -3,6 +3,7 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 use_frameworks!
 
+
 target 'LOOKs' do
   config = use_native_modules!
 
@@ -45,10 +46,8 @@ target 'LOOKs' do
 
   pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
 
-  target 'LOOKsTests' do
-    inherit! :complete
-    # Pods for testing
-  end
+  # pod 'LineSDKSwift', '~> 5.0'
+
 
   # Enables Flipper.
   #
@@ -60,11 +59,3 @@ target 'LOOKs' do
   # end
 end
 
-target 'LOOKs-tvOS' do
-  # Pods for ETDA_Mobile-tvOS
-
-  target 'LOOKs-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-end

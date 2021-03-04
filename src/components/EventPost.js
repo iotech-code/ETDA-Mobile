@@ -288,7 +288,7 @@ export default class MessagsPost extends Component {
                 {this.renderBottomSheet()}
             </View>
         );
-    }
+    } 
 };
 
 const styleScoped = StyleSheet.create({

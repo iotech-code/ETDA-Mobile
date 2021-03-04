@@ -23,7 +23,7 @@ export default class RegisterSuccess extends Component {
     callLogin = async () => {
         const data = {
             "user_email": this.props.authen_method == 'local' ? this.props.email : '',
-            "user_password": "",
+            "user_password": this.props.authen_method == 'local' ? this.props.password : '',
             "authen_method": this.props.authen_method,
             "google_id": this.props.authen_method == 'google' && this.props.email,
             "facebook_id": !this.props.authen_method && this.props.email,
