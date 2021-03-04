@@ -7,7 +7,8 @@ import {
     Text,
     Image,
     TouchableOpacity,
-    Alert
+    Alert,
+    Clipboard,
 } from 'react-native';
 
 
@@ -20,6 +21,8 @@ import { actionLikePost, actionPostUnJoin, actionPostJoin, actionDeletePost } fr
 import translate from '../constant/lang'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment'
+import FlashMessage, { showMessage } from "react-native-flash-message";
+
 export default class MessagsPost extends Component {
 
     constructor(props) {
@@ -150,6 +153,10 @@ export default class MessagsPost extends Component {
         }
     }
 
+    shareUrl(url){
+        this.props.shareUrl(url)
+    }
+
     renderBottomSheet() {
         const { visibleBottomSheet, lng, user_role, user_type, is_join } = this.state
 
@@ -212,7 +219,7 @@ export default class MessagsPost extends Component {
     render() {
         // console.log(this.props.data)
         const { default_avatar, is_like, like_count } = this.state
-        const { author, title, post_description, post_addition_data, comment_number, post_id } = this.props.data
+        const { author, title, post_description, post_addition_data, comment_number, post_id , share_url } = this.props.data
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -220,6 +227,7 @@ export default class MessagsPost extends Component {
                 paddingVertical: hp('1%'),
                 marginBottom: hp('2%')
             }}>
+              
                 <View style={{ paddingHorizontal: hp('2%') }}>
                     <View style={{
                         flexDirection: 'row',
@@ -272,7 +280,7 @@ export default class MessagsPost extends Component {
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                         <Text style={{ color: '#B5B5B5' }}>{like_count}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this.shareUrl(share_url)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                 </View>
