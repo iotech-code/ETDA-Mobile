@@ -12,6 +12,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../styles/base'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImageGrid from '../components/ImageGrid'
+import { Actions } from 'react-native-router-flux'
 
 export default class ManageBlog extends Component {
     state = {
@@ -41,7 +42,7 @@ export default class ManageBlog extends Component {
                 paddingVertical: hp('1%'),
                 marginBottom: hp('2%')
             }}>
-                <View style={{ paddingHorizontal: hp('2%'), paddingBottom: hp('1%') }}>
+                <TouchableOpacity onPress={() => Actions.PostDetail({ data: { ...this.props.data } }) } style={{ paddingHorizontal: hp('2%'), paddingBottom: hp('1%') }}>
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -87,7 +88,7 @@ export default class ManageBlog extends Component {
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
                     </TouchableOpacity>
 
-                </View>
+                </TouchableOpacity>
 
             </View>
         );

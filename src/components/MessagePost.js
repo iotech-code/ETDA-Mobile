@@ -81,20 +81,19 @@ export default class MessagsPost extends Component {
         axios.delete(apiServer.url + '/api/backend/post/delete/' + post_id, {
             headers
         })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    Actions.MessageBoard()
-                } else {
+        .then((response) => {
+            console.log('data : ', response.data)
+            if (response.data.status == "success") {
+                Actions.MessageBoard()
+            } else {
 
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
+            }
+        })
+        .catch((error) => {
+            console.log('data : ', error)
+        })
+        .finally(function () {
+        });
     };
 
     callPostLike = async (post_id) => {

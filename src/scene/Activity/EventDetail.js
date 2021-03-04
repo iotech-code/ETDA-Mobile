@@ -127,34 +127,15 @@ export default class EventDetail extends Component {
                         </View>
                     </View>
 
-                    {
+                    {/* {
                         list_comment.map((item, index) => {
                             return (
                                 <Comment data={item} key={`comment_${index}`} fnPressButton={() => this.onPressButtonChildren.bind(this)}></Comment>
                             )
                         })
-                    }
+                    } */}
                 </ScrollView>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
-                    <View style={{ ...styleScoped.warpperComment }}>
-                        {/* <TouchableOpacity>
-                            <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
-                        </TouchableOpacity> */}
-                        <View style={{ ...styleScoped.boxInputCommment }}>
-                            <TextInput
-                                placeholder={lng.comment_here}
-                                style={{ padding: 0, fontSize: hp('2%') }}
-                                value={comment}
-                                onChangeText={(comment) => this.setState({ comment })} >
-                            </TextInput>
-                        </View>
-                        <Button
-                            title={lng.send}
-                            buttonStyle={{ ...style.btnPrimary, minWidth: wp("13%") }}
-                            onPress={() => this.createComment()}
-                        />
-                    </View>
-                </KeyboardAvoidingView>
+                
             </View>
         );
     }
