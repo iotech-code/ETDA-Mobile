@@ -27,6 +27,7 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { allEvent, myEvent } from '../../Service/PostService'
 import moment from 'moment'
 import translate from '../../constant/lang'
+import FlashMessage, { showMessage } from "react-native-flash-message";
 
 LocaleConfig.locales['en'] = {
     formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
@@ -143,11 +144,24 @@ export default class Activity extends Component {
         this.setState({ isFetching: false })
     }
 
+    shareCallback(url) {
+        showMessage({
+            message: "Share url copied!",
+            description: url,
+            type: "info",
+        });
+        Clipboard.setString(url)
+    }
+
 
     render() {
         const { eventList, myeventList, markedDates, isFetching, lng } = this.state
         return (
             <View style={{ flex: 1 }}>
+                <FlashMessage position="top"
+                    style={{
+                        backgroundColor: '#5b5b5b'
+                    }} />
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
                         <TouchableOpacity onPress={() => Actions.replace('Activity')}>
@@ -214,7 +228,7 @@ export default class Activity extends Component {
                                             {
                                                 myeventList.map((el, index) => {
                                                     return (
-                                                        <EventPost key={`myEventList_${index}`} data={el}></EventPost>
+                                                        <EventPost key={`myEventList_${index}`} data={el} sharePressButton={(url) => this.shareCallback(url)}></EventPost>
                                                     )
                                                 })
                                             }
@@ -248,6 +262,7 @@ export default class Activity extends Component {
         );
     }
 };
+
 
 const styleScoped = StyleSheet.create({
     imageLogo: {

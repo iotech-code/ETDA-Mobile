@@ -107,7 +107,7 @@ export default class MessageBoard extends Component {
                 token: token,
                 user_role: user_role
             })
-
+            // console.log(user)
             this.callCommunityFeed(token);
 
         } catch (err) {
@@ -375,8 +375,9 @@ export default class MessageBoard extends Component {
                                     <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                                 </TouchableOpacity>
                             </View>
+                            
                             {
-                                this.state.user_type != 'read' || this.state.user_role == 'Admin' &&
+                                (this.state.user_type == 'read,post_read' || this.state.user_role == 'Admin') &&
                                 <View style={{ ...style.container }}>
                                     <Button
                                         title={lng.new_post}
