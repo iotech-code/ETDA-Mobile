@@ -141,12 +141,12 @@ export default class EventCreate extends Component {
 
     async onCreateEvent() {
         try {
-            
+
             const { data } = this.props
-            let { topic, detail, post_to_feed, schedule, event_date ,date_event} = this.state
-            if(!date_event){
+            let { topic, detail, post_to_feed, schedule, event_date, date_event } = this.state
+            if (!date_event) {
                 Alert.alert('Please input event date')
-                return 
+                return
             }
             let post_addition_data = {
                 event_date: date_event,
@@ -252,7 +252,9 @@ export default class EventCreate extends Component {
         } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
+                
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', marginBottom: hp('3%') }}>
+           
                     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ ...style.navbar }}>
                             <TouchableOpacity onPress={() => Actions.pop()}>

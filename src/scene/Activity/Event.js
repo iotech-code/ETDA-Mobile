@@ -11,7 +11,8 @@ import {
     TextInput,
     TouchableOpacity,
     FlatList,
-    ActivityIndicator
+    ActivityIndicator,
+    Clipboard
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -69,7 +70,7 @@ export default class Activity extends Component {
     async UNSAFE_componentWillMount() {
         await this.getLang();
     }
-    
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
@@ -182,7 +183,7 @@ export default class Activity extends Component {
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.event}</Text>
                             <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
                         </View>
-                        
+
                         {
                             this.state.user_role == 'Admin' &&
                             <View style={{ ...style.container, marginBottom: hp('1%') }}>
@@ -206,7 +207,7 @@ export default class Activity extends Component {
                             <Calendar
                                 markingType={'period'}
                                 markedDates={markedDates}
-                                onDayPress={(day) => {console.log('selected day', day)}}
+                                onDayPress={(day) => { console.log('selected day', day) }}
                                 enableSwipeMonths={true}
                             />
 
@@ -228,7 +229,7 @@ export default class Activity extends Component {
                                             {
                                                 myeventList.map((el, index) => {
                                                     return (
-                                                        <EventPost key={`myEventList_${index}`} data={el} sharePressButton={(url) => this.shareCallback(url)}></EventPost>
+                                                        <EventPost key={`myEventList_${index}`} data={el} shareUrl={(url)=>this.shareCallback(url)}></EventPost>
                                                     )
                                                 })
                                             }
@@ -242,22 +243,22 @@ export default class Activity extends Component {
                                             {
                                                 eventList.map((el, index) => {
                                                     return (
-                                                        <EventPost key={`EventList_${index}`} data={el}></EventPost>
+                                                        <EventPost key={`EventList_${index}`} data={el} shareUrl={(url)=>this.shareCallback(url)}></EventPost>
                                                     )
                                                 })
                                             }
                                         </View>
-                                        
+
                                     </Fragment>
                             }
                         </View>
                     </View>
                 </ScrollView>
-                    {this.state.user_role == "Member" ?
-                        <MenuFooterUser value={'activity'}></MenuFooterUser>
-                        :
-                        <MenuFooter value={'activity'}></MenuFooter>
-                    }
+                {this.state.user_role == "Member" ?
+                    <MenuFooterUser value={'activity'}></MenuFooterUser>
+                    :
+                    <MenuFooter value={'activity'}></MenuFooter>
+                }
             </View>
         );
     }

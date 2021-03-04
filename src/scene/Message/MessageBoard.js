@@ -97,6 +97,14 @@ export default class MessageBoard extends Component {
     }
 
     async UNSAFE_componentWillMount() {
+        await this.initFeed();
+    }
+
+    async UNSAFE_componentWillReceiveProps() {
+        await this.initFeed();
+    }
+
+    async initFeed() {
         try {
             const token = await AsyncStorage.getItem('token');
             const user = await AsyncStorage.getItem('user_data');
@@ -114,7 +122,6 @@ export default class MessageBoard extends Component {
             console.log('err : ', err)
         }
     }
-
 
     async componentWillUnmount() {
         await this.setState({ list_data: false })
@@ -421,7 +428,7 @@ export default class MessageBoard extends Component {
                             this.state.isFetching ?
                                 <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
                                 :
-                                <View style={{ marginTop: 20 }}>
+                                <View style={{ marginTop: 20, height: hp('56%') }}>
                                     <FlatList
                                         data={this.state.list_data}
                                         renderItem={this.renderTypeInFlatlist.bind(this)}
