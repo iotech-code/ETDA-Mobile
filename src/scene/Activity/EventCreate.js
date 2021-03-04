@@ -90,7 +90,7 @@ export default class EventCreate extends Component {
             }
             this.setState({ showDatePicker: false })
         } else {
-            this.setState({ datepicker: newDate })
+            this.setState({ datepicker: date })
             this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
         }
     }
@@ -141,10 +141,11 @@ export default class EventCreate extends Component {
 
     async onCreateEvent() {
         try {
+            
             const { data } = this.props
-            let { topic, detail, post_to_feed, schedule, event_date } = this.state
-            if(!event_date){
-                Alert('Please input event date')
+            let { topic, detail, post_to_feed, schedule, event_date ,date_event} = this.state
+            if(!date_event){
+                Alert.alert('Please input event date')
                 return 
             }
             let post_addition_data = {
