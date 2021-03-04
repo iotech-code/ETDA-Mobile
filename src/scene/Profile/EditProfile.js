@@ -405,6 +405,7 @@ export default class EditProfile extends Component {
             "user_photo": this.state.updatePhoto ? userObject.photo : '',
             "mobile_number": userObject.mobile_number,
             "organization": userObject.organization,
+            "bio": userObject.bio?userObject.bio:'',
             "position": userObject.position,
             "professional": userObject.professional,
             "user_rq_type": userObject.user_type,
@@ -490,6 +491,23 @@ export default class EditProfile extends Component {
                                 />
                             </View>
 
+                        </View>
+
+                        <View style={{ marginTop: hp('4%') }}>
+                            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
+                                <Icon name="badge-account" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.bio}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                
+                                <TextInput
+                                    style={{ ...style.customInput, width: '100%' }}
+                                    placeholder={this.props.bio}
+                                    keyboardType='number-pad'
+                                    value={userObject.bio?userObject.bio:''}
+                                    onChangeText={ (value) => this.setState({userObject: { ...userObject, bio: value } }) }
+                                />
+                            </View>
                         </View>
 
                         <View style={{ marginTop: hp('4%') }}>

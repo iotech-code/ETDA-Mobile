@@ -133,5 +133,6 @@ export const th = {
     notaglist: "ไม่มีแท็กแสดง",
     search_result: "ผลการค้นหา",
     no_notification: "ไม่มีการแจ้งเตือนใหม่",
-    no_new_event: "ไม่มีกิจกรรมใหม่"
+    no_new_event: "ไม่มีกิจกรรมใหม่",
+    bio: "ประวัติ"
 }

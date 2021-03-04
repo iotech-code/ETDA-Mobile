@@ -101,6 +101,14 @@ export default class MyProfile extends Component {
 
                         <View style={{ marginTop: hp('4%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
+                                <Icon name="badge-account" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.bio}</Text>
+                            </View>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{user_data.bio?user_data.bio:''}</Text>
+                        </View>
+
+                        <View style={{ marginTop: hp('4%') }}>
+                            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>{lng.contact_me}</Text>
                             </View>

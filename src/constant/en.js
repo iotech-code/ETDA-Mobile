@@ -133,5 +133,6 @@ export const en = {
     notaglist: "No tag available.",
     search_result: "Search result here.",
     no_notification: "No new notification",
-    no_new_event: "No new event"
+    no_new_event: "No new event",
+    bio: "Bio"
 }
