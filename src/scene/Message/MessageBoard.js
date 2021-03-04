@@ -428,7 +428,7 @@ export default class MessageBoard extends Component {
                             this.state.isFetching ?
                                 <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
                                 :
-                                <View style={{ marginTop: 20, height: hp('56%') }}>
+                                <View style={{ marginTop: 20, height: Platform.OS == 'ios' ? hp('56%') : 'auto'}}>
                                     <FlatList
                                         data={this.state.list_data}
                                         renderItem={this.renderTypeInFlatlist.bind(this)}

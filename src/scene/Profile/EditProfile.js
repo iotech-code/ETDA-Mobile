@@ -498,12 +498,9 @@ export default class EditProfile extends Component {
                                 <Text style={{ fontSize: hp('2.2%') }}>{lng.contact_me}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                
                                 <TextInput
-                                    style={{ ...style.customInput, marginRight: hp('1%') }}
-                                    placeholder="TH 66+"
-                                />
-                                <TextInput
-                                    style={{ ...style.customInput, width: '80%' }}
+                                    style={{ ...style.customInput, width: '100%' }}
                                     placeholder={this.props.mobile_number}
                                     keyboardType='number-pad'
                                     value={userObject.mobile_number}
