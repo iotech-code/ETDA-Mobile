@@ -242,7 +242,7 @@ export default class PollDetail extends Component {
             <View style={{ ...style.container, marginTop: hp('1%') }}>
                 <Text style={{ fontSize: hp('2%') }}>{data_stat_poll.question}</Text>
 
-                {
+                {/* {
                     data_stat_poll.answer.map((el, index) => {
                         return (
                             <View style={{ marginTop: hp('2%'), ...style.space__between, alignItems: 'flex-start' }} key={`percen_${index}`}>
@@ -251,22 +251,24 @@ export default class PollDetail extends Component {
                             </View>
                         )
                     })
-                }
+                } */}
 
                 <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
                 {
                     data_stat_poll.answer.map((el, index) => {
                         return (
-                            <View style={{ marginTop: hp('1%') }} key={`progressbar_${index}`}>
+                            <View style={{marginTop: 10}} key={`progressbar_${index}`}>
                                 <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                <Progress.Bar progress={parseInt(el.percent) / 100} width={wp('80%')} height={10} />
+                                <View style={{justifyContent: 'space-between', flexDirection: 'row', marginTop: 8}}>
+                                <Progress.Bar progress={parseInt(el.percent) / 100} width={wp('80%')} height={20} />
+                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{el.percent}%</Text>
+                                </View>
                             </View>
                         )
                     })
+                    
                 }
-
-
             </View>
         )
     }
@@ -318,12 +320,9 @@ export default class PollDetail extends Component {
 
                         </View>
                         <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
-
-
                         {
                             !this.state.is_play ? this.renderTakePoll() : this.renderFinishPoll()
                         }
-
                     </View>
                 </ScrollView>
                 {this.renderBottomSheet()}

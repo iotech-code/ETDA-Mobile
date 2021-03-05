@@ -233,7 +233,7 @@ export default class SurveyDetail extends Component {
         return (
             <View style={{ ...style.container, marginTop: hp('1%'), marginBottom: hp('10%') }}>
 
-                {
+                {/* {
                     survey_data_stat.map((element, i) => {
                         return (
                             <Fragment key={`qqq_${i}`}>
@@ -255,27 +255,25 @@ export default class SurveyDetail extends Component {
                         )
                     })
                 }
-
-
-
-
-
-                <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
+ */}
 
                 {
                     survey_data_stat.map((element, i) => {
                         return (
                             <Fragment key={`qq_${i}`}>
                                 <Text style={{
-                                    fontSize: hp('2%'), marginTop: hp('3%'),
+                                    fontSize: hp('3%'), marginTop: hp('3%'),
                                     marginBottom: hp('1%')
                                 }}>{element.question}</Text>
                                 {
                                     element.answer.map((el, index) => {
                                         return (
-                                            <View style={{}} key={`progressbar_${index}`}>
+                                            <View style={{marginTop: 10}} key={`progressbar_${index}`}>
                                                 <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                                <Progress.Bar progress={parseInt(el.percent) / 100} width={wp('80%')} height={10} />
+                                                <View style={{justifyContent: 'space-between', flexDirection: 'row', marginTop: 8}}>
+                                                <Progress.Bar progress={parseInt(el.percent) / 100} width={wp('80%')} height={20} />
+                                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{el.percent}%</Text>
+                                                </View>
                                             </View>
                                         )
                                     })
