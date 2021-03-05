@@ -82,6 +82,9 @@ export default class EventCreate extends Component {
     }
 
     onChangeDate(event, date, btn) {
+        if(event.type == "dismissed"){
+            return
+        }
         let newDate = moment(date).format()
         let date_arr = newDate.split('+')
         const { date_event, date_event_to_show } = this.state
@@ -103,6 +106,9 @@ export default class EventCreate extends Component {
     }
 
     onChangeTime(event, time, btn) {
+        if(event.type == "dismissed"){
+            return
+        }
         let { schedule, indexSchedule } = this.state
         for (let index = 0; index < schedule.length; index++) {
             const element = schedule[index];
@@ -123,7 +129,6 @@ export default class EventCreate extends Component {
 
     addSchedule(t) {
         const { schedule } = this.state
-        console.log(t)
         schedule.push({
             time: null,
             detail: null,
@@ -185,7 +190,7 @@ export default class EventCreate extends Component {
 
             <View>
                 {
-                    Platform.os === 'ios' ?
+                    Platform.OS === 'ios' ?
                         <Overlay
                             isVisible={showTimePicker}
                             overlayStyle={{
@@ -232,10 +237,11 @@ export default class EventCreate extends Component {
 
     renderDateOverlay() {
         const { datepicker, showDatePicker } = this.state
+
         return (
             <View>
                 {
-                    Platform.os === 'ios' ?
+                    Platform.OS === 'ios' ?
                         <Overlay
                             isVisible={showDatePicker}
                             overlayStyle={{
