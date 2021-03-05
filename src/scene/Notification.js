@@ -72,7 +72,7 @@ export default class Notification extends Component {
                     backgroundColor: '#F9FCFF'
                 }}>
                 <View style={{ ...style.navbar }}>
-                    <TouchableOpacity onPress={() => Actions.replace('Main')}>
+                    <TouchableOpacity onPress={() => Actions.replace('MainScene')}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
                     <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>

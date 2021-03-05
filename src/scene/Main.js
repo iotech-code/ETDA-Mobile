@@ -239,13 +239,13 @@ export default class Main extends Component {
 
                 </View>
 
-                <View style={{ backgroundColor: null }}>
+                {/* <View style={{ backgroundColor: null }}>
                     {this.state.user_role == "Member" ?
                         <MenuFooterUser value={'home'}></MenuFooterUser>
                         :
                         <MenuFooter value={'home'}></MenuFooter>
                     }
-                </View>
+                </View> */}
             </View>
         );
     }

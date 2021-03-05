@@ -227,11 +227,11 @@ export default class ManageBlog extends Component {
 
 
 
-                {this.state.user_role == "Member" ?
+                {/* {this.state.user_role == "Member" ?
                     <MenuFooterUser value={'home'}></MenuFooterUser>
                     :
                     <MenuFooter value={'manage'}></MenuFooter>
-                }
+                } */}
             </View>
         );
     }

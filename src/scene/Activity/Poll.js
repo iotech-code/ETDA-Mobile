@@ -84,7 +84,7 @@ export default class Poll extends Component {
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
-                        <TouchableOpacity onPress={() => Actions.replace('Activity')}>
+                        <TouchableOpacity onPress={() => Actions.replace('MainScene', { menu: 'activity' , sub_menu: 'no' })}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" />
                         </TouchableOpacity>
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.poll}</Text>
@@ -159,11 +159,11 @@ export default class Poll extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                {this.state.user_role == "Member" ?
+                {/* {this.state.user_role == "Member" ?
                     <MenuFooterUser value={'activity'}></MenuFooterUser>
                     :
                     <MenuFooter value={'activity'}></MenuFooter>
-                }
+                } */}
             </View>
         );
     }

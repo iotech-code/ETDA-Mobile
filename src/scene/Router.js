@@ -32,6 +32,7 @@ import EventEdit from './Activity/EventEdit'
 import Notification from './Notification'
 import PollCreate from './Activity/PollCreate'
 import SurveyCreate from './Activity/SurveyCreate'
+import MainScene from './MainScene'
 const RouterPage = () => {
     return (
 
@@ -66,8 +67,10 @@ const RouterPage = () => {
                 <Scene key="EventCreate" component={EventCreate} title="EventCreate" hideNavBar />
                 <Scene key="EventEdit" component={EventEdit} title="EventEdit" hideNavBar />
                 <Scene key="Notification" component={Notification} title="Notification" hideNavBar />
+                <Scene key="MainScene" component={MainScene} title="MainScene" hideNavBar />
 
 
+                
             </Stack>
         </Router>
 

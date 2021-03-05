@@ -224,7 +224,7 @@ export default class Login extends Component {
             if (status == "success") {
                 await AsyncStorage.setItem('user_data', JSON.stringify(data));
                 await this.setState({ spinner: false });
-                await Actions.replace('Main');
+                await Actions.replace('MainScene');
             }
 
         } catch (e) {

@@ -70,7 +70,7 @@ export default class Activity extends Component {
                     <HeaderNavbar  value={'admin'}></HeaderNavbar>
         }
                     <View style={{ ...style.container, marginTop: hp('4%') }}>
-                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={() => Actions.replace('Event')}>
+                        <TouchableOpacity style={{ ...styleScoped.warpperMenuEvent }} onPress={() => Actions.replace('MainScene',{ menu: 'activity',sub_menu:'event'})}>
                             <Text style={{ ...styleScoped.menuName }}>
                                 {lng.event}
                             </Text>
@@ -98,11 +98,11 @@ export default class Activity extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {this.state.user_role == "Member" ? 
+                {/* {this.state.user_role == "Member" ? 
                          <MenuFooterUser value={'activity'}></MenuFooterUser>
                         :
                         <MenuFooter value={'activity'}></MenuFooter>
-                    }
+                    } */}
                
                 {/* <MenuFooter></MenuFooter> */}
             </View>

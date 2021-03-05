@@ -81,7 +81,7 @@ export default class DeleteAccount extends Component {
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.delete_account}</Text>
-                            <TouchableOpacity onPress={() => Actions.replace('Main')}>
+                            <TouchableOpacity onPress={() => Actions.replace('MainScene')}>
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.confirm}</Text>
                             </TouchableOpacity>
                         </View>

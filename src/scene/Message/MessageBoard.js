@@ -458,11 +458,11 @@ export default class MessageBoard extends Component {
                     </View>
                 </View>
                 {this.renderModalReport()}
-                {this.state.user_role == "Member" ?
+                {/* {this.state.user_role == "Member" ?
                     <MenuFooterUser value={'message'}></MenuFooterUser>
                     :
                     <MenuFooter value={'message'}></MenuFooter>
-                }
+                } */}
             </View>
         );
     }

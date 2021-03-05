@@ -46,7 +46,7 @@ export default class RegisterSuccess extends Component {
 
         if (status == "success") {
             await AsyncStorage.setItem('user_data', JSON.stringify(data));
-            Actions.replace('Main');
+            Actions.replace('MainScene');
         } else {
             alert('Can\'t login: issue about server response data please try again.')
         }
