@@ -242,17 +242,6 @@ export default class PollDetail extends Component {
             <View style={{ ...style.container, marginTop: hp('1%') }}>
                 <Text style={{ fontSize: hp('2%') }}>{data_stat_poll.question}</Text>
 
-                {/* {
-                    data_stat_poll.answer.map((el, index) => {
-                        return (
-                            <View style={{ marginTop: hp('2%'), ...style.space__between, alignItems: 'flex-start' }} key={`percen_${index}`}>
-                                <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
-                                <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>{el.percent}%</Text>
-                            </View>
-                        )
-                    })
-                } */}
-
                 <View style={{ ...style.divider, marginVertical: hp('2%') }}></View>
 
                 {
