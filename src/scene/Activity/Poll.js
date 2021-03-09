@@ -78,6 +78,13 @@ export default class Poll extends Component {
         }
     }
 
+    sortPoll() {
+        let {list_data_student, list_data_general} = this.state
+        this.setState({ list_data_student: list_data_student.reverse() });
+        this.setState({ list_data_general: list_data_general.reverse() });
+
+    }
+
     render() {
         const { list_data_student, list_data_general, lng, user_role } = this.state
         return (
@@ -100,7 +107,9 @@ export default class Poll extends Component {
                             alignItems: 'center'
                         }}>
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.poll}</Text>
-                            <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            <TouchableOpacity onPress={()=>this.sortPoll()}>
+                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            </TouchableOpacity>
                         </View>
 
                         {

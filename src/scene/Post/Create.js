@@ -145,12 +145,12 @@ export default class CreatePost extends Component {
                 let res = await createPost(title, type, images, description, tag, addition)
                 let { status } = res.data
                 if (status == 'success') {
-                    Actions.pop({refresh: {}})
+                    Actions.replace('MainScene',{menu:'main'})
                 }
             }
 
         } catch (error) {
-            console.log('Create post error: ', error.status)
+            console.log('Create post error: ', error)
             Alert.alert('Someting wrong!')
         }
         this.setState({ spinner: false })

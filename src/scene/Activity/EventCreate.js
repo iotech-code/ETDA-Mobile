@@ -99,8 +99,7 @@ export default class EventCreate extends Component {
             this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
         }
         if (Platform.os != 'ios') {
-            console.log('YES')
-
+        
             this.setState({ showDatePicker: false })
         }
     }
@@ -176,7 +175,7 @@ export default class EventCreate extends Component {
             }
             let { status } = response.data
             if (status == 'success') {
-                Actions.replace('Event')
+                Actions.replace('MainScene',{menu:'activity',sub_menu:'event'})
             }
         } catch (error) {
             console.log('Create event error : ', error)

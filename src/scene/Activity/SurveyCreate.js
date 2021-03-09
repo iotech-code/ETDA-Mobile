@@ -61,7 +61,7 @@ export default class PollCreate extends Component {
     async UNSAFE_componentWillMount() {
         await this.getLang();
     }
-    
+
     async getLang() {
         let vocap = await translate()
         this.setState({ lng: vocap })
@@ -72,11 +72,28 @@ export default class PollCreate extends Component {
         try {
             let { topic, detail, question } = this.state
             let post_addition_data = {
-                survey_date :question,
+                survey_date: question,
                 post_to_etda: true
             }
+            console.log(question)
+            let is_validate = true
+            for (let index = 0; index < question.length; index++) {
+                const el = question[index];
+                if (el.question == '') {
+                    is_validate = false
+                }
+                for (let index = 0; index < el.answer.length; index++) {
+                    const element = el.answer[index];
+                    if (!element.detail) {
+                        is_validate = false
+                    }
+                }
+            }
+            if (!is_validate) {
+                Alert.alert('Please check data again.')
+                return
+            }
             let { data } = await createSurvey(topic, 'survey', [], '', [], post_addition_data)
-            console.log('create survey : ', data)
             let { status } = data
             if (status == 'success') {
                 Actions.replace('Survey')
@@ -108,7 +125,7 @@ export default class PollCreate extends Component {
         question[index].answer.push(objAnswer)
         this.setState({ question: question })
     }
-    onChangeTextQuestion(text , index) {
+    onChangeTextQuestion(text, index) {
         let { question } = this.state
         question[index].question = text
         this.setState({ question })
@@ -155,7 +172,7 @@ export default class PollCreate extends Component {
 
                                 <View style={{ ...style.container }}>
                                     <Text style={{ marginTop: hp('3%'), fontSize: hp('2%') }}>
-                                    {lng.survey_question}
+                                        {lng.survey_question}
                                     </Text>
                                 </View>
 
@@ -169,7 +186,7 @@ export default class PollCreate extends Component {
                                                         style={{ paddingVertical: hp('2%'), fontSize: hp('2%') }}
                                                         value={element.question}
                                                         multiline
-                                                        onChangeText={(text) => this.onChangeTextQuestion(text , index)}
+                                                        onChangeText={(text) => this.onChangeTextQuestion(text, index)}
                                                     ></TextInput>
                                                     <View style={{ ...style.divider }}></View>
                                                     {

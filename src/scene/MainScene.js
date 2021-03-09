@@ -57,18 +57,20 @@ export default class MainScene extends Component {
     }
 
     async onChangeMenu(value) {
-        this.setState({ menu: value })
+        await this.setState({ menu: value })
+        if(value == 'activity'){
+            await this.setState({ sub_menu: null })
+        }
     }
     async UNSAFE_componentWillReceiveProps(props){
-        console.log(props)
+        await this.setState({sub_menu:null})
         if (props.menu) {
-            console.log('change menu :' , props.menu)
             await this.setState({ menu: this.props.menu })
         }
         if(props.sub_menu !=  undefined){
-            console.log('change sub_menu :' , props.sub_menu)
             await this.setState({sub_menu:this.props.sub_menu})
         }
+       
     }
     renderSubMenu(sub_menu){
         if(sub_menu == 'event'){

@@ -94,7 +94,6 @@ export default class EventDetail extends Component {
             const { post_id, reply_to, comment } = this.state
             let res = await createCommentPost(post_id, reply_to, comment)
             let { status } = res.data
-            console.log(status)
             if (status == "success") {
                 await this.callGetComment(post_id)
                 this.setState({ comment: '' })
