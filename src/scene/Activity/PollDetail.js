@@ -274,7 +274,7 @@ export default class PollDetail extends Component {
 
                 <ScrollView style={{ flex: 1, ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
-                        <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => 'MainScene',{menu:'activity',sub_menu:'poll'}} />
+                        <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('MainScene',{menu:'activity',sub_menu:'poll'})} />
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Poll detail</Text>
                         <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                     </View>

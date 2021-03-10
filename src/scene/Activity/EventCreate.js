@@ -82,48 +82,50 @@ export default class EventCreate extends Component {
     }
 
     onChangeDate(event, date, btn) {
-        if(event.type == "dismissed"){
-            return
-        }
-        let newDate = moment(date).format()
-        let date_arr = newDate.split('+')
-        const { date_event, date_event_to_show } = this.state
-        this.setState({ date_event: date_arr[0] })
-        if (btn) {
-            if (!date_event_to_show) {
+        if (!event) {
+            let newDate = moment(date).format()
+            let date_arr = newDate.split('+')
+            const { date_event, date_event_to_show } = this.state
+            this.setState({ date_event: date_arr[0] })
+            if (btn) {
+                if (!date_event_to_show) {
+                    this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
+                }
+                this.setState({ showDatePicker: false })
+            } else {
+                this.setState({ datepicker: date })
                 this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
             }
-            this.setState({ showDatePicker: false })
-        } else {
-            this.setState({ datepicker: date })
-            this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
+            if (Platform.os != 'ios') {
+
+                this.setState({ showDatePicker: false })
+            }
         }
-        if (Platform.os != 'ios') {
-        
-            this.setState({ showDatePicker: false })
-        }
+
     }
 
     onChangeTime(event, time, btn) {
-        if(event.type == "dismissed"){
-            return
-        }
-        let { schedule, indexSchedule } = this.state
-        for (let index = 0; index < schedule.length; index++) {
-            const element = schedule[index];
-            if (index == indexSchedule) {
-                element.time = moment(time).format('HH:mm')
-                element.time_default = time
+
+        if (!event) {
+            let { schedule, indexSchedule } = this.state
+            for (let index = 0; index < schedule.length; index++) {
+                const element = schedule[index];
+                if (index == indexSchedule) {
+                    element.time = moment(time).format('HH:mm')
+                    element.time_default = time
+                }
+            }
+            this.setState({ timepicker: time })
+            this.setState({ schedule })
+            if (Platform.os != 'ios') {
+                this.setState({ showTimePicker: false })
+            }
+            if (btn) {
+                this.setState({ showTimePicker: false })
             }
         }
-        this.setState({ timepicker: time })
-        this.setState({ schedule })
-        if (Platform.os != 'ios') {
-            this.setState({ showTimePicker: false })
-        }
-        if (btn) {
-            this.setState({ showTimePicker: false })
-        }
+
+
     }
 
     addSchedule(t) {
@@ -175,7 +177,7 @@ export default class EventCreate extends Component {
             }
             let { status } = response.data
             if (status == 'success') {
-                Actions.replace('MainScene',{menu:'activity',sub_menu:'event'})
+                Actions.replace('MainScene', { menu: 'activity', sub_menu: 'event' })
             }
         } catch (error) {
             console.log('Create event error : ', error)
@@ -221,7 +223,7 @@ export default class EventCreate extends Component {
 
 
                         </Overlay>
-                        : showTimePicker ?  <DateTimePicker
+                        : showTimePicker ? <DateTimePicker
                             testID="dateTimePicker"
                             value={timepicker}
                             mode="time"
