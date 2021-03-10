@@ -28,7 +28,10 @@ export default class PollCreate extends Component {
             visibleSearch: false,
             post_to_feed: false,
             topic: null,
-            lng: {},
+            lng: {
+                survey_answer_here: 'Enter your answer here…',
+                survey_question_here:'Enter your question here…'
+            },
             detail: null,
             date_event: null,
             schedule: [
@@ -64,7 +67,7 @@ export default class PollCreate extends Component {
 
     async getLang() {
         let vocap = await translate()
-        this.setState({ lng: vocap })
+        await this.setState({ lng: vocap })
     }
 
 
@@ -79,7 +82,7 @@ export default class PollCreate extends Component {
             let is_validate = true
             for (let index = 0; index < question.length; index++) {
                 const el = question[index];
-                if (el.question == '') {
+                if (!el.question) {
                     is_validate = false
                 }
                 for (let index = 0; index < el.answer.length; index++) {
@@ -145,6 +148,7 @@ export default class PollCreate extends Component {
             question,
             lng
         } = this.state;
+       
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', marginBottom: hp('3%') }}>

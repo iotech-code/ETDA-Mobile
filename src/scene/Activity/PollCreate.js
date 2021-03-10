@@ -100,6 +100,21 @@ export default class PollCreate extends Component {
                 ...question,
                 post_to_etda: true
             }
+            let is_validate = true
+            for (let index = 0; index < post_addition_data.answer.length; index++) {
+                const element = post_addition_data.answer[index];
+                if(!element.detail){
+                    is_validate = false
+                }
+            }
+            if(!post_addition_data.question){
+                is_validate = false
+            }
+            if(!is_validate){
+                Alert.alert('Please check data again.')
+                return
+            }
+
             let { data } = await createPoll(topic, 'poll', [], '', [], post_addition_data)
             console.log('create poll : ', data)
             let { status } = data
