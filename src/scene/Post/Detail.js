@@ -189,7 +189,7 @@ export default class EventDetail extends Component {
                         marginBottom: hp('2%'),
                     }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop({"data": this.state.post_data})} />
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('MainScene',{menu:'main'})} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }} numberOfLines={1}>{title}</Text>
                             <View></View>
                         </View>
