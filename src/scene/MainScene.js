@@ -64,6 +64,8 @@ export default class MainScene extends Component {
     }
     async UNSAFE_componentWillReceiveProps(props){
         await this.setState({sub_menu:null})
+        await this.setState({menu:null})
+
         if (props.menu) {
             await this.setState({ menu: this.props.menu })
         }
