@@ -97,7 +97,7 @@ export default class SurveyDetail extends Component {
                 }
             }
         }
-        let progress = (countProgress / survey_data.length) * 100
+        let progress = Math.floor( (countProgress / survey_data.length) * 100)
         await this.setState({ survey_data })
         await this.setState({ progress: progress })
     }
