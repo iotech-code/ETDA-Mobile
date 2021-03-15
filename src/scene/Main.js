@@ -71,7 +71,7 @@ export default class Main extends Component {
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
         let user_data = JSON.parse(user_json);
-
+        console.log('user_data : ' , user_data)
         this.setState({
             user_type: user_data.user_type,
             user_role: user_data.user_role
@@ -165,8 +165,7 @@ export default class Main extends Component {
     };
 
     render() {
-        const { isFetching, user_role, list_data, lng } = this.state
-
+        const { isFetching, user_role, list_data, lng , user_type } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
@@ -196,7 +195,7 @@ export default class Main extends Component {
                                     </TouchableOpacity>
                                 </View>
                                 {
-                                    user_role !== 'Member' &&
+                                    user_role !== 'Member' || user_type == "read,post_read" ?
                                     <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                         <Button
                                             title={lng.new_post}
@@ -209,7 +208,7 @@ export default class Main extends Component {
                                             }}
                                             onPress={() => this.createPost()}
                                         />
-                                    </View>
+                                    </View> : null
                                 }
                                 {/* end section create post  */}
 

@@ -103,9 +103,10 @@ export default class EventCreate extends Component {
 
     }
 
-    onChangeTime(event, time, btn) {
+    async onChangeTime(event, time, btn) {
 
         if (event) {
+            await  this.setState({ showTimePicker: false })
             if (event.type != "dismissed") {
                 let { schedule, indexSchedule } = this.state
                 for (let index = 0; index < schedule.length; index++) {
