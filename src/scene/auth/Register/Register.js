@@ -45,6 +45,7 @@ export default class Register extends Component {
             statusSecureConfirmText: true,
             disable: true,
             emailBorder: '#CADAFB',
+            nameBorder: '#CADAFB',
             passwordBorder: '#CADAFB',
             passwordConfirmBorder: '#CADAFB',
             defaultBorder: '#CADAFB'
@@ -176,16 +177,25 @@ export default class Register extends Component {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         
         if (reg.test(value) === false) {
-            await this.setState({emailBorder: 'red', rEmail: value.toLowerCase() });
+            await this.setState({emailBorder: 'red', rEmail: value.toLowerCase(), disable: true });
         } else {
             await this.setState({emailBorder: this.state.defaultBorder, rEmail: value.toLowerCase() });
             this.validate();
         }
     }
 
+    async nameValidate (value) {
+        if (value == '') {
+            await this.setState({nameBorder: 'red', disable: true, fullname: value });
+        } else {
+            await this.setState({nameBorder: this.state.defaultBorder, fullname: value });
+            await this.validate();
+        }
+    }
+
     async passwordValidate (value) {
         if (value.length <= 3) {
-            await this.setState({passwordBorder: 'red', rPass: value });
+            await this.setState({passwordBorder: 'red', rPass: value, disable: true });
         } else {
             await this.setState({passwordBorder: this.state.defaultBorder, rPass: value });
             await this.validate();
@@ -193,7 +203,7 @@ export default class Register extends Component {
     }
     async passwordConfirmValidate (value) {
         if (value.length <= 3) {
-            await this.setState({passwordConfirmBorder: 'red', rCPass: value });
+            await this.setState({passwordConfirmBorder: 'red', rCPass: value, disable: true });
         } else {
             await this.setState({passwordConfirmBorder: this.state.defaultBorder, rCPass: value });
             await this.validate();
@@ -207,9 +217,11 @@ export default class Register extends Component {
 
     validate () {
         if ( this.state.rEmail === '' || this.state.rPass !== this.state.rCPass || !this.state.rPolicy ) {
+            this.setState({ disable: true });
             return false
+        } else {
+            this.setState({ disable: false });
         }
-        this.setState({ disable: false });
     }
 
     render() {
@@ -248,12 +260,12 @@ export default class Register extends Component {
                                 </View>
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
-                                <View style={{...style.customInput, borderColor: this.state.defaultBorder}}>
+                                <View style={{...style.customInput, borderColor: this.state.nameBorder}}>
                                     <TextInput
                                         value={this.state.fullname}
                                         style={[style.input, { color: 'black', width: wp(81), paddingVertical: 3, paddingHorizontal: 10 }]}
                                         placeholder="Name"
-                                        onChangeText={ value =>  this.setState({fullname: value}) }
+                                        onChangeText={ value =>  this.nameValidate(value) }
                                     />
                                 </View>
                             </View>

@@ -443,7 +443,7 @@ export default class EditProfile extends Component {
                 {
                     this.showSuccessModal()
                 }
-                <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+                <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%'), marginBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop({refresh:{}})} />
@@ -455,7 +455,7 @@ export default class EditProfile extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ ...style.container }}>
+                    <ScrollView style={{ ...style.container }}>
                     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
@@ -503,7 +503,6 @@ export default class EditProfile extends Component {
                                 <TextInput
                                     style={{ ...style.customInput, width: '100%' }}
                                     placeholder={this.props.bio}
-                                    keyboardType='number-pad'
                                     value={userObject.bio?userObject.bio:''}
                                     onChangeText={ (value) => this.setState({userObject: { ...userObject, bio: value } }) }
                                 />
@@ -587,8 +586,8 @@ export default class EditProfile extends Component {
                                 </>
                             }
                     </KeyboardAvoidingView>
-                    </View>
-                </ScrollView>
+                    </ScrollView>
+                </View>
                 {this.renderChangeTypeOfUser()}
                 {this.renderModalPostandRead()}
             </View >
