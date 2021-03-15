@@ -20,7 +20,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import { fonts } from '../constant/util';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageGrid from './ImageGrid'
-import { actionLikePost, actionDeletePost, actionFollowPost  } from '../Service/PostService'
+import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
 import translate from '../constant/lang'
 
 export default class Post extends Component {
@@ -112,11 +112,11 @@ export default class Post extends Component {
         try {
             const { post_id } = this.props.data
             let { data } = await actionDeletePost(post_id)
-            if(data.status == 'success'){
+            if (data.status == 'success') {
                 this.props.onDeletePost()
             }
         } catch (error) {
-            console.log('Delete poll error : ' , error)
+            console.log('Delete poll error : ', error)
         }
     }
 
@@ -195,7 +195,7 @@ export default class Post extends Component {
 
 
     renderBottomSheet() {
-        const { visibleBottomSheet, is_follow, lng, user_id ,user_role } = this.state
+        const { visibleBottomSheet, is_follow, lng, user_id, user_role } = this.state
         const { report } = this.props
         let height = Platform.OS === 'ios' ? hp('32%') : hp('30%')
         height = report ? height : Platform.OS === 'ios' ? hp('25%') : hp('23%')
@@ -211,7 +211,7 @@ export default class Post extends Component {
                         borderTopRightRadius: 30,
                         borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
-                        paddingBottom:hp('2%'),
+                        paddingBottom: hp('2%'),
                         backgroundColor: 'white',
                         ...style.shadowCard,
                         height: 'auto'
@@ -231,41 +231,41 @@ export default class Post extends Component {
                 </TouchableOpacity>
                 {
                     user_role == 'Admin' || user_id == this.props.data.author.id ?
-                    <>
-                        <View style={{ ...style.divider }}></View>
-                        <TouchableOpacity style={{
-                            ...styleScoped.listMore
-                        }}
-                            onPress={() => {
-                                Actions.replace('CreatePost', {
-                                    'type_value': 'edit',
-                                    'title': this.props.data.title,
-                                    'description': this.props.data.post_description,
-                                    'post_images': this.props.data.post_images,
-                                    'post_tag': this.props.data.tags,
-                                    'post_id': this.props.data.post_id
-                                })
-                                this.setState({ visibleBottomSheet: false }),
-                                    this.RBSheet.close()
+                        <>
+                            <View style={{ ...style.divider }}></View>
+                            <TouchableOpacity style={{
+                                ...styleScoped.listMore
                             }}
-                        >
-                            <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_blog}</Text>
-                        </TouchableOpacity>
-                        <View style={{ ...style.divider }}></View>
+                                onPress={() => {
+                                    Actions.replace('CreatePost', {
+                                        'type_value': 'edit',
+                                        'title': this.props.data.title,
+                                        'description': this.props.data.post_description,
+                                        'post_images': this.props.data.post_images,
+                                        'post_tag': this.props.data.tags,
+                                        'post_id': this.props.data.post_id
+                                    })
+                                    this.setState({ visibleBottomSheet: false }),
+                                        this.RBSheet.close()
+                                }}
+                            >
+                                <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_blog}</Text>
+                            </TouchableOpacity>
+                            <View style={{ ...style.divider }}></View>
 
-                        <TouchableOpacity style={{
-                            ...styleScoped.listMore
-                        }}
-                            onPress={() => this.onConfirmDeletePost()}
-                        >
-                            <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
-                        </TouchableOpacity>
-                        <View style={{ ...style.divider }}></View>
+                            <TouchableOpacity style={{
+                                ...styleScoped.listMore
+                            }}
+                                onPress={() => this.onConfirmDeletePost()}
+                            >
+                                <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
+                            </TouchableOpacity>
+                            <View style={{ ...style.divider }}></View>
 
-                    </> 
-                    : null
+                        </>
+                        : null
                 }
                 {
                     report && this.state.user_data.userid != this.props.data.author.id ?
@@ -318,7 +318,8 @@ export default class Post extends Component {
     };
 
     postView() {
-        Actions.PostDetail({ data: { ...this.props.data } })
+        const { page } = this.props
+        Actions.PostDetail({ data: { ...this.props.data }, from_menu: page })
         // AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
     }
 

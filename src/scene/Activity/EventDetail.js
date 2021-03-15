@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import translate from '../../constant/lang'
 import moment from 'moment'
+import { actionLikePost } from '../../Service/PostService'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -31,28 +32,44 @@ export default class EventDetail extends Component {
         reply_to: null,
         default_avatar: require('../../assets/images/default_avatar.jpg'),
         etda_avatar: require('../../assets/images/etdaprofile.png'),
-        lng:{},
-        isFetching: false
+        lng: {},
+        isFetching: false,
+        like: 0,
+        is_like: 0
     }
 
     componentDidMount() {
-        
+
     }
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
+        const { like, is_like } = this.props.data
+        await this.setState({ like, is_like })
+
     }
-    
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
         this.setState({ lng: vocap })
         this.setState({ isFetching: false })
     }
-
+    async likePost() {
+        try {
+            const { post_id } = this.props.data
+            let { data } = await actionLikePost({ post_id })
+            if (data.status == 'success') {
+                await this.setState({ like: this.state.like == 0 ? 1 : 0 })
+                await this.setState({ is_like: this.state.is_like == 0 ? 1 : 0 })
+            }
+        } catch (error) {
+            console.log('Like event detail error : ', error)
+        }
+    }
     render() {
-        const { author, title, post_description, post_addition_data, comment_number, post_id, is_like, like } = this.props.data
-        const { default_avatar, list_comment, comment, lng } = this.state
+        const { author, title, post_description, post_addition_data, comment_number, post_id } = this.props.data
+        const { default_avatar, list_comment, comment, lng, like, is_like } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
@@ -119,7 +136,7 @@ export default class EventDetail extends Component {
                         </View>
 
                         <View style={{ ...styleScoped.sectionSocial }}>
-                            <TouchableOpacity style={{ ...style.flex__start, alignItems: 'center', marginRight: hp('3%') }}>
+                            <TouchableOpacity style={{ ...style.flex__start, alignItems: 'center', marginRight: hp('3%') }} onPress={() => this.likePost()}>
                                 <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                                 <Text style={{ color: is_like ? '#4267B2' : '#B5B5B5' }}>{like}</Text>
                             </TouchableOpacity>
@@ -135,7 +152,7 @@ export default class EventDetail extends Component {
                         })
                     } */}
                 </ScrollView>
-                
+
             </View>
         );
     }

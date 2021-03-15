@@ -9,7 +9,8 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    Keyboard
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -44,7 +45,7 @@ export default class EventDetail extends Component {
             commentImage: null,
             commentImage64: null,
             lng: {},
-            is_like: this.props.data.is_like, 
+            is_like: this.props.data.is_like,
             like_count: this.props.data.like,
             post_data: this.props.data
         }
@@ -52,9 +53,9 @@ export default class EventDetail extends Component {
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
-        
+
     }
-    
+
     async getLang() {
         this.setState({ isFetching: true })
         let vocap = await translate()
@@ -66,17 +67,17 @@ export default class EventDetail extends Component {
         const { post_id } = this.props.data
         await this.setState({ post_id })
         this.callGetComment(post_id)
-        await updatePostView({"post_id": post_id})
+        await updatePostView({ "post_id": post_id })
         setTimeout(() => {
             this.getPostDetail();
         }, 1000)
     }
 
-    async getPostDetail () {
+    async getPostDetail() {
         const { post_id } = this.props.data
-        let post_data = await getPost({"post_id": post_id});
+        let post_data = await getPost({ "post_id": post_id });
         let data = post_data.data.post_data
-        this.setState({post_data: data})
+        this.setState({ post_data: data })
     }
 
     async callGetComment(post_id) {
@@ -97,13 +98,14 @@ export default class EventDetail extends Component {
             if (status == "success") {
                 await this.callGetComment(post_id)
                 this.setState({ comment: '' })
+                Keyboard.dismiss()
             }
         } catch (error) {
             console.log('Create comment error : ', error)
         }
     };
     onPressButtonChildren(data) {
-        this.setState({ reply_to: data.User_id, comment: '@'+data.Fullname +' ' })
+        this.setState({ reply_to: data.User_id, comment: '@' + data.Fullname + ' ' })
         this.secondTextInput.focus()
 
     }
@@ -156,6 +158,15 @@ export default class EventDetail extends Component {
         }
     };
 
+    async goBack() {
+        const { from_menu } = this.props
+        if (from_menu == "message_board") {
+            Actions.replace('MainScene', { menu: 'message' })
+        } else {
+            Actions.replace('MainScene', { menu: 'main' })
+        }
+    }
+
     render() {
         const { post_date, tags, post_description, post_images, post_id, title, share_url, total_view } = this.state.post_data;
         const { author } = this.props.data;
@@ -173,7 +184,7 @@ export default class EventDetail extends Component {
             }
             imageForView.push(objImage)
         }
-        
+
         return (
             <View style={{ flex: 1 }}>
                 <FlashMessage position="top"
@@ -181,7 +192,7 @@ export default class EventDetail extends Component {
                         backgroundColor: '#5b5b5b'
                     }} />
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
-                    
+
                     <View style={{
                         ...styleScoped.shadowCard,
                         backgroundColor: 'white',
@@ -189,7 +200,7 @@ export default class EventDetail extends Component {
                         marginBottom: hp('2%'),
                     }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('MainScene',{menu:'main'})} />
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => this.goBack()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }} numberOfLines={1}>{title}</Text>
                             <View></View>
                         </View>
@@ -261,29 +272,29 @@ export default class EventDetail extends Component {
                             width: wp('100%'),
                             paddingHorizontal: hp('2%'),
                         }}>
-                            <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{flexDirection: 'row'}}>
+                            <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{ flexDirection: 'row' }}>
                                 <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                                 <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like_count}</Text>
                             </TouchableOpacity>
 
                             <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined?0:total_view}</Text>
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined ? 0 : total_view}</Text>
 
                             <TouchableOpacity onPress={() => this.sharePOST(share_url)}>
                                 <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity
-                        onPress={() => this.secondTextInput.focus()}
-                        style={{
-                            ...style.flex__start,
-                            marginTop: hp('2%'),
-                            paddingTop: hp('1.5%'),
-                            borderTopWidth: 1,
-                            borderTopColor: '#B5B5B5',
-                            alignItems: 'center',
-                            paddingHorizontal: hp('2%'),
-                        }}>
+                            onPress={() => this.secondTextInput.focus()}
+                            style={{
+                                ...style.flex__start,
+                                marginTop: hp('2%'),
+                                paddingTop: hp('1.5%'),
+                                borderTopWidth: 1,
+                                borderTopColor: '#B5B5B5',
+                                alignItems: 'center',
+                                paddingHorizontal: hp('2%'),
+                            }}>
                             <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                             <Text style={{ color: '#B5B5B5' }}>{list_comment.length}  {lng.comments}</Text>
                         </TouchableOpacity>
@@ -307,9 +318,9 @@ export default class EventDetail extends Component {
                         <View>
                             {
                                 this.state.commentImage &&
-                                <Image source={{uri: this.state.commentImage}}
-                                style={{ width: '50%', height: '25%', resizeMode: 'cover', borderRadius: 4 }} />
-                                
+                                <Image source={{ uri: this.state.commentImage }}
+                                    style={{ width: '50%', height: '25%', resizeMode: 'cover', borderRadius: 4 }} />
+
                             }
                         </View>
                         {/* <TouchableOpacity onPress={() => this.pickImage()}>
@@ -328,6 +339,7 @@ export default class EventDetail extends Component {
                             title={lng.send}
                             buttonStyle={{ ...style.btnPrimary, minWidth: wp('13%') }}
                             onPress={() => this.createComment()}
+                            disabled={comment ? false : true}
                         />
 
                     </View>

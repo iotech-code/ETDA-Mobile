@@ -81,47 +81,49 @@ export default class EventCreate extends Component {
         this.setState({ isFetching: false })
     }
 
-    onChangeDate(event, date, btn) {
-        if (!event) {
-            let newDate = moment(date).format()
-            let date_arr = newDate.split('+')
-            const { date_event, date_event_to_show } = this.state
-            this.setState({ date_event: date_arr[0] })
-            if (btn) {
-                if (!date_event_to_show) {
+    async onChangeDate(event, date, btn) {
+        if (event) {
+            await this.setState({ showDatePicker: false })
+            if (event.type != "dismissed") {
+                let newDate = moment(date).format()
+                let date_arr = newDate.split('+')
+                const { date_event, date_event_to_show } = this.state
+                this.setState({ date_event: date_arr[0] })
+                if (btn) {
+                    if (!date_event_to_show) {
+                        this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
+                    }
+                    this.setState({ showDatePicker: false })
+                } else {
+                    this.setState({ datepicker: date })
                     this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
                 }
-                this.setState({ showDatePicker: false })
-            } else {
-                this.setState({ datepicker: date })
-                this.setState({ date_event_to_show: moment(newDate).format('DD/MM/YYYY') })
-            }
-            if (Platform.os != 'ios') {
-
-                this.setState({ showDatePicker: false })
             }
         }
 
     }
 
-    onChangeTime(event, time, btn) {
+    async onChangeTime(event, time, btn) {
 
-        if (!event) {
-            let { schedule, indexSchedule } = this.state
-            for (let index = 0; index < schedule.length; index++) {
-                const element = schedule[index];
-                if (index == indexSchedule) {
-                    element.time = moment(time).format('HH:mm')
-                    element.time_default = time
+        if (event) {
+            await  this.setState({ showTimePicker: false })
+            if (event.type != "dismissed") {
+                let { schedule, indexSchedule } = this.state
+                for (let index = 0; index < schedule.length; index++) {
+                    const element = schedule[index];
+                    if (index == indexSchedule) {
+                        element.time = moment(time).format('HH:mm')
+                        element.time_default = time
+                    }
                 }
-            }
-            this.setState({ timepicker: time })
-            this.setState({ schedule })
-            if (Platform.os != 'ios') {
-                this.setState({ showTimePicker: false })
-            }
-            if (btn) {
-                this.setState({ showTimePicker: false })
+                this.setState({ timepicker: time })
+                this.setState({ schedule })
+                if (Platform.OS == 'android') {
+                    this.setState({ showTimePicker: false })
+                }
+                if (btn) {
+                    this.setState({ showTimePicker: false })
+                }
             }
         }
 
@@ -238,7 +240,7 @@ export default class EventCreate extends Component {
 
     renderDateOverlay() {
         const { datepicker, showDatePicker } = this.state
-
+        console.log(datepicker, showDatePicker)
         return (
             <View>
                 {
@@ -275,13 +277,13 @@ export default class EventCreate extends Component {
 
                         </Overlay>
                         :
-                        showDatePicker ? <DateTimePicker
+                        showDatePicker && (<DateTimePicker
                             testID="dateTimePicker"
                             value={datepicker}
                             mode="date"
                             display="spinner"
                             onChange={(event, selectedDate) => this.onChangeDate(event, selectedDate)}
-                        /> : null
+                        />)
                 }
             </View>
 
