@@ -90,9 +90,23 @@ export default class Login extends Component {
             await this.callInfomation();
 
         } catch (e) {
-            // console.log(e)
-            Alert.alert('Sorry', 'User not found!');
+            await this.clearSession()
+            Alert.alert('User not found', 'Do you want to register an account?',
+            [
+                {
+                  text: "No",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                },
+                { text: "Yes", onPress: () => Actions.push('Register') }
+            ]);
         }
+    }
+
+    async clearSession() {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('social_network');
+        await AsyncStorage.removeItem('user_data');
     }
 
     async LineAuthen() {
@@ -161,7 +175,7 @@ export default class Login extends Component {
     async checkLogin() {
         let token = await AsyncStorage.getItem('token');
         console.log('TOKEN', token)
-        if (token) {
+        if (token && token != null) {
             await this.refreshToken();
         }
         this.setState({ isShow : true })
@@ -177,6 +191,7 @@ export default class Login extends Component {
                 await this.callInfomation();
             }
         } catch (e) {
+            await this.clearSession()
             this.setState({ spinner: false });
             console.log(e.response.data.message)
         }
