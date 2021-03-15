@@ -21,14 +21,13 @@ import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MenuFooter from '../../components/MenuFooter'
-import MenuFooterUser from '../../components/MenuFooterUser'
 import EventPost from '../../components/EventPost'
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { allEvent, myEvent } from '../../Service/PostService'
 import moment from 'moment'
 import translate from '../../constant/lang'
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { colors } from '../../constant/util';
 
 LocaleConfig.locales['en'] = {
     formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
@@ -60,6 +59,7 @@ export default class Activity extends Component {
             visibleSearch: false,
             eventList: [],
             myeventList: [],
+            myeventListOriginal: [],
             markedDates: null,
             isFetching: false,
             user_role: '',
@@ -81,6 +81,7 @@ export default class Activity extends Component {
     componentDidMount() {
         this.onGetEventList();
         this.getUserInfo();
+        this.getMyEventList();
     }
 
     async getUserInfo() {
@@ -99,19 +100,12 @@ export default class Activity extends Component {
             let res = await allEvent();
             let { post_data } = res.data
             let event = []
-            let markedDates = {}
             for (let index = 0; index < post_data.length; index++) {
                 const element = post_data[index];
                 if (element.post_type == 'event') {
                     event.push(element)
-                    if (element.post_addition_data.event_date) {
-                        let data = new Date(element.post_addition_data.event_date)
-                        let date_converted = moment(data).format('YYYY-MM-DD')
-                        markedDates[date_converted] = { marked: true, selectedColor: 'blue' }
-                    }
                 }
             }
-            await this.setState({ markedDates })
             await this.setState({ eventList: event })
         } catch (error) {
             console.log('Get list Event error : ', error)
@@ -133,12 +127,18 @@ export default class Activity extends Component {
                     if (element.post_addition_data.event_date) {
                         let data = new Date(element.post_addition_data.event_date)
                         let date_converted = moment(data).format('YYYY-MM-DD')
-                        markedDates[date_converted] = { marked: true, selectedColor: 'blue' }
+                        markedDates[date_converted] = {
+                            selected: false,
+                            marked: true,
+                            selectedColor: colors.primary
+                        }
                     }
                 }
             }
             await this.setState({ markedDates })
             await this.setState({ myeventList: event })
+            await this.setState({ myeventListOriginal: event })
+
         } catch (error) {
             console.log('Get list Event error : ', error)
         }
@@ -154,9 +154,40 @@ export default class Activity extends Component {
         Clipboard.setString(url)
     }
 
+    async selectDateCalendar(day) {
+
+        const { markedDates, myeventListOriginal } = this.state
+        await this.setState({ markedDates: null })
+        let event = []
+        let is_have_date = false
+        for (const [key, value] of Object.entries(markedDates)) {
+            if (key == day.dateString) {
+                is_have_date = true
+                value.selected = true
+                for (let index = 0; index < myeventListOriginal.length; index++) {
+                    const element = myeventListOriginal[index];
+                    let date_converted = moment(element.post_addition_data.event_date).format('YYYY-MM-DD')
+                    if (key == date_converted) {
+                        event.push(element)
+                    }
+                }
+            } else {
+                value.selected = false
+            }
+        }
+        console.log(event)
+        if(is_have_date){
+            await this.setState({ myeventList: event })
+        }else{
+            await this.setState({ myeventList: myeventListOriginal })
+        }
+        await this.setState({ markedDates: markedDates })
+    }
+
 
     render() {
         const { eventList, myeventList, markedDates, isFetching, lng } = this.state
+        console.log(markedDates)
         return (
             <View style={{ flex: 1 }}>
                 <FlashMessage position="top"
@@ -165,7 +196,7 @@ export default class Activity extends Component {
                     }} />
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
-                        <TouchableOpacity onPress={() => Actions.replace('MainScene', { menu: 'activity' , sub_menu: 'no' })}>
+                        <TouchableOpacity onPress={() => Actions.replace('MainScene', { menu: 'activity', sub_menu: 'no' })}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" />
                         </TouchableOpacity>
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.event}</Text>
@@ -205,9 +236,9 @@ export default class Activity extends Component {
                         {/* calendar*/}
                         <View style={style.container}>
                             <Calendar
-                                markingType={'period'}
+                                markingType={'simple'}
                                 markedDates={markedDates}
-                                onDayPress={(day) => { console.log('selected day', day) }}
+                                onDayPress={(day) => { this.selectDateCalendar(day) }}
                                 enableSwipeMonths={true}
                             />
 

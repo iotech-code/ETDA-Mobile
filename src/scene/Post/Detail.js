@@ -318,14 +318,11 @@ export default class EventDetail extends Component {
                         <View>
                             {
                                 this.state.commentImage &&
-                                <Image source={{ uri: this.state.commentImage }}
+                                <Image
+                                    source={{ uri: this.state.commentImage }}
                                     style={{ width: '50%', height: '25%', resizeMode: 'cover', borderRadius: 4 }} />
-
                             }
                         </View>
-                        {/* <TouchableOpacity onPress={() => this.pickImage()}>
-                            <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
-                        </TouchableOpacity> */}
                         <View style={{ ...styleScoped.boxInputCommment }}>
                             <TextInput
                                 placeholder={lng.comment_here}

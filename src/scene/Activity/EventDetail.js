@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import translate from '../../constant/lang'
 import moment from 'moment'
-import { actionLikePost } from '../../Service/PostService'
+import { actionLikePost, getListCommentPost , createCommentPost } from '../../Service/PostService'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -35,7 +35,8 @@ export default class EventDetail extends Component {
         lng: {},
         isFetching: false,
         like: 0,
-        is_like: 0
+        is_like: 0,
+        commentImage:null
     }
 
     componentDidMount() {
@@ -44,8 +45,9 @@ export default class EventDetail extends Component {
 
     async UNSAFE_componentWillMount() {
         await this.getLang();
-        const { like, is_like } = this.props.data
+        const { like, is_like, post_id } = this.props.data
         await this.setState({ like, is_like })
+        await this.callGetComment(post_id)
 
     }
 
@@ -67,6 +69,35 @@ export default class EventDetail extends Component {
             console.log('Like event detail error : ', error)
         }
     }
+
+
+    async callGetComment(post_id) {
+
+        try {
+            let response = await getListCommentPost({ post_id })
+            this.setState({ list_comment: response.data.comments })
+        } catch (error) {
+            console.log('Get list comment error : ', error)
+        }
+
+    };
+
+    async createComment() {
+        try {
+            const { post_id, reply_to, comment } = this.state
+            let res = await createCommentPost(post_id, reply_to, comment)
+            let { status } = res.data
+            if (status == "success") {
+                await this.callGetComment(post_id)
+                this.setState({ comment: '' })
+                Keyboard.dismiss()
+            }
+        } catch (error) {
+            console.log('Create comment error : ', error)
+        }
+    };
+
+
     render() {
         const { author, title, post_description, post_addition_data, comment_number, post_id } = this.props.data
         const { default_avatar, list_comment, comment, lng, like, is_like } = this.state
@@ -144,14 +175,45 @@ export default class EventDetail extends Component {
                         </View>
                     </View>
 
-                    {/* {
+                    {/* comment */}
+                    {
                         list_comment.map((item, index) => {
                             return (
-                                <Comment data={item} key={`comment_${index}`} fnPressButton={() => this.onPressButtonChildren.bind(this)}></Comment>
+                                <Comment data={item} key={`comment_${index}`} fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
                             )
                         })
-                    } */}
+                    }
+                    {/* end comment */}
                 </ScrollView>
+
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                    <View style={{ ...styleScoped.warpperComment }}>
+                        <View>
+                            {
+                                this.state.commentImage &&
+                                <Image
+                                    source={{ uri: this.state.commentImage }}
+                                    style={{ width: '50%', height: '25%', resizeMode: 'cover', borderRadius: 4 }} />
+                            }
+                        </View>
+                        <View style={{ ...styleScoped.boxInputCommment }}>
+                            <TextInput
+                                placeholder={lng.comment_here}
+                                style={{ padding: 0, fontSize: hp('2%') }}
+                                value={comment}
+                                ref={(input) => { this.secondTextInput = input; }}
+                                onChangeText={(comment) => this.setState({ comment })} >
+                            </TextInput>
+                        </View>
+                        <Button
+                            title={lng.send}
+                            buttonStyle={{ ...style.btnPrimary, minWidth: wp('13%') }}
+                            onPress={() => this.createComment()}
+                            disabled={comment ? false : true}
+                        />
+
+                    </View>
+                </KeyboardAvoidingView>
 
             </View>
         );

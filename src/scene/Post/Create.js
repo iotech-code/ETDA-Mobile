@@ -267,7 +267,7 @@ export default class CreatePost extends Component {
                         </TextInput>
                     </View>
                     <View style={{ ...style.divider }}></View>
-                    <View style={{ height: hp('25%') }}>
+                    <View style={{ minHeight: hp('10%') }}>
                         <TextInput
                             placeholder={lng.enter_post_detail==null?"Enter post description":lng.enter_post_detail}
                             style={{
