@@ -97,6 +97,12 @@ export default class EventDetail extends Component {
         }
     };
 
+    onPressButtonChildren(data) {
+        this.setState({ reply_to: data.User_id, comment: '@' + data.Fullname + ' ' })
+        this.secondTextInput.focus()
+
+    }
+
 
     render() {
         const { author, title, post_description, post_addition_data, comment_number, post_id } = this.props.data

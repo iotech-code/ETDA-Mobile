@@ -159,10 +159,9 @@ export default class Activity extends Component {
         const { markedDates, myeventListOriginal } = this.state
         await this.setState({ markedDates: null })
         let event = []
-        let is_have_date = false
+
         for (const [key, value] of Object.entries(markedDates)) {
             if (key == day.dateString) {
-                is_have_date = true
                 value.selected = true
                 for (let index = 0; index < myeventListOriginal.length; index++) {
                     const element = myeventListOriginal[index];
@@ -175,19 +174,16 @@ export default class Activity extends Component {
                 value.selected = false
             }
         }
-        console.log(event)
-        if(is_have_date){
-            await this.setState({ myeventList: event })
-        }else{
-            await this.setState({ myeventList: myeventListOriginal })
-        }
+
+        await this.setState({ myeventList: event })
+        // await this.setState({ myeventList: myeventListOriginal })
+
         await this.setState({ markedDates: markedDates })
     }
 
 
     render() {
         const { eventList, myeventList, markedDates, isFetching, lng } = this.state
-        console.log(markedDates)
         return (
             <View style={{ flex: 1 }}>
                 <FlashMessage position="top"
@@ -238,8 +234,8 @@ export default class Activity extends Component {
                             <Calendar
                                 markingType={'simple'}
                                 markedDates={markedDates}
-                                onDayPress={(day) => { this.selectDateCalendar(day) }}
-                                enableSwipeMonths={true}
+                                onDayPress={(day) => this.selectDateCalendar(day)}
+                            // enableSwipeMonths={true}
                             />
 
                         </View>
