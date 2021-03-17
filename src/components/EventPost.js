@@ -153,7 +153,7 @@ export default class MessagsPost extends Component {
         }
     }
 
-    shareUrl(url){
+    shareUrl(url) {
         this.props.shareUrl(url)
     }
 
@@ -219,7 +219,7 @@ export default class MessagsPost extends Component {
     render() {
         // console.log(this.props.data)
         const { default_avatar, is_like, like_count } = this.state
-        const { author, title, post_description, post_addition_data, comment_number, post_id , share_url } = this.props.data
+        const { author, title, post_description, post_addition_data, comment_number, post_id, share_url } = this.props.data
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -227,7 +227,7 @@ export default class MessagsPost extends Component {
                 paddingVertical: hp('1%'),
                 marginBottom: hp('2%')
             }}>
-              
+
                 <View style={{ paddingHorizontal: hp('2%') }}>
                     <View style={{
                         flexDirection: 'row',
@@ -254,7 +254,7 @@ export default class MessagsPost extends Component {
                     </View>
 
 
-                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail', { data : this.props.data })}>
+                    <TouchableOpacity style={{ marginTop: hp('1.5%') }} onPress={() => Actions.push('EventDetail', { data: this.props.data })}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>
                         <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{moment(post_addition_data.event_date).format('DD/MM/YYYY')}</Text>
                         {
@@ -280,7 +280,13 @@ export default class MessagsPost extends Component {
                         <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
                         <Text style={{ color: '#B5B5B5' }}>{like_count}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>this.shareUrl(share_url)}>
+                    <TouchableOpacity
+                        style={{ ...style.flex__start, alignItems: 'center', marginRight: hp('3%') }}
+                        onPress={() => Actions.push('EventDetail', { data: this.props.data })}>
+                        <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                        <Text style={{ color: '#B5B5B5' }}>{comment_number}  </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.shareUrl(share_url)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                 </View>
@@ -288,7 +294,7 @@ export default class MessagsPost extends Component {
                 {this.renderBottomSheet()}
             </View>
         );
-    } 
+    }
 };
 
 const styleScoped = StyleSheet.create({
