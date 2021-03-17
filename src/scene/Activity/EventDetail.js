@@ -12,7 +12,8 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     Platform,
-    FlatList
+    FlatList,
+    Keyboard
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -22,7 +23,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import translate from '../../constant/lang'
 import moment from 'moment'
-import { actionLikePost, getListCommentPost , createCommentPost } from '../../Service/PostService'
+import { actionLikePost, getListCommentPost, createCommentPost } from '../../Service/PostService'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -36,7 +37,7 @@ export default class EventDetail extends Component {
         isFetching: false,
         like: 0,
         is_like: 0,
-        commentImage:null
+        commentImage: null
     }
 
     componentDidMount() {
@@ -84,7 +85,8 @@ export default class EventDetail extends Component {
 
     async createComment() {
         try {
-            const { post_id, reply_to, comment } = this.state
+            const { reply_to, comment } = this.state
+            const { post_id } = this.props.data
             let res = await createCommentPost(post_id, reply_to, comment)
             let { status } = res.data
             if (status == "success") {
@@ -180,16 +182,18 @@ export default class EventDetail extends Component {
                             <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                         </View>
                     </View>
+                    <View style={{ marginTop: hp('2%') }}>
+                        {/* comment */}
+                        {
+                            list_comment.map((item, index) => {
+                                return (
+                                    <Comment data={item} key={`comment_${index}`} fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
+                                )
+                            })
+                        }
+                        {/* end comment */}
+                    </View>
 
-                    {/* comment */}
-                    {
-                        list_comment.map((item, index) => {
-                            return (
-                                <Comment data={item} key={`comment_${index}`} fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
-                            )
-                        })
-                    }
-                    {/* end comment */}
                 </ScrollView>
 
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
