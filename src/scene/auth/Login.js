@@ -174,7 +174,6 @@ export default class Login extends Component {
 
     async checkLogin() {
         let token = await AsyncStorage.getItem('token');
-        console.log('TOKEN', token)
         if (token && token != null) {
             await this.refreshToken();
         }

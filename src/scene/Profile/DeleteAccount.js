@@ -53,23 +53,20 @@ export default class DeleteAccount extends Component {
         this.setState({ lng: vocap })
         this.setState({ isFetching: false })
     }
-
+    // Delete data???
     callDelete = async () => {
         await http.setTokenHeader();
         const deleteAcc = await http.post( apiServer.url + '/api/backend/post/delete/' + this.state.user_data.userid , data);
         const { status } = await deleteAcc.data;
+        
         if (status == "success") {
             Alert.alert("Your account has been requested for deletion. If you wish to activate this account, Please contact ETDA within 90 days after deletion request has been submitted.")
-            await this.logout();
+            await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('user_data');
+            await AsyncStorage.removeItem('social_network');
             Actions.replace('Login');
         }
     };
-
-    async logout () {
-        await AsyncStorage.removeItem('token');
-        await AsyncStorage.removeItem('user_data');
-        await AsyncStorage.removeItem('social_network');
-    }
 
 
     render() {
@@ -81,7 +78,7 @@ export default class DeleteAccount extends Component {
                         <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
                             <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.delete_account}</Text>
-                            <TouchableOpacity onPress={() => Actions.replace('MainScene')}>
+                            <TouchableOpacity onPress={() => this.callDelete()  }>
                                 <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.confirm}</Text>
                             </TouchableOpacity>
                         </View>

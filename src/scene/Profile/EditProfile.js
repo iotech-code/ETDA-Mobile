@@ -24,6 +24,7 @@ import Icons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImgToBase64 from 'react-native-image-base64';
 import translate from '../../constant/lang'
+import { Alert } from 'react-native';
  
 const http = new HttpRequest();
 
@@ -425,6 +426,7 @@ export default class EditProfile extends Component {
         let update = await http.put(apiServer.url + '/api/backend/user/update/' + userObject.userid, data);
         let {status} = await update.data;
         if (status == "success") {
+            Alert.alert("success", "Update success!")
             await this.setState({
                 userObject: {
                         ...this.state.userObject,
