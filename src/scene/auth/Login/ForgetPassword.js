@@ -80,6 +80,7 @@ export default class ForgetPassword extends Component {
                                     style={{ ...style.input, borderColor: this.state.border }}
                                     placeholder="Email address"
                                     keyboardType='email-address'
+                                    placeholderTextColor="#ccc"
                                     onChangeText={ value => this.emailValidate( value.toLowerCase() ) }
                                 />
                             </View>

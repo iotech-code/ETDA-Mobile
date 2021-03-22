@@ -311,6 +311,7 @@ export default class Login extends Component {
                                                     style={[style.input, { color: 'black', paddingVertical: 3, paddingHorizontal: 8 }]}
                                                     placeholder="Email address"
                                                     keyboardType='email-address'
+                                                    placeholderTextColor="#ccc"
                                                     onChangeText={text => this.emailValidate(text)}
                                                 />
                                             </View>
@@ -321,6 +322,7 @@ export default class Login extends Component {
                                                     value={this.state.pass}
                                                     style={[style.input, { color: 'black', width: wp(70) }]}
                                                     placeholder="Password"
+                                                    placeholderTextColor="#ccc"
                                                     secureTextEntry={this.state.statusSecureText}
                                                     onChangeText={text => this.passwordValidate(text)}
                                                 />

@@ -261,6 +261,7 @@ export default class CreatePost extends Component {
                     <View style={{ height: hp('7%') }}>
                         <TextInput placeholder={lng.enter_topic} style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
                             defaultValue={this.state.title}
+                            placeholderTextColor="#ccc"
                             editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
                             onChangeText={(value) => { this.setState({ title: value }) }}
                         >
@@ -275,6 +276,7 @@ export default class CreatePost extends Component {
                                 paddingHorizontal: hp('2%'),
                                 fontSize: hp('2.2%')
                             }}
+                            placeholderTextColor="#ccc"
                             multiline={true}
                             defaultValue={this.state.description}
                             editable={this.props.type_value == 'detail' ? false : true}
@@ -342,6 +344,7 @@ export default class CreatePost extends Component {
                                     <TextInput
                                         style={{ ...style.customInput }}
                                         placeholder={lng.search_tags}
+                                        placeholderTextColor="#ccc"
                                         onChangeText={(text) => this.searchTags(text)}
                                     />
                                 </View>

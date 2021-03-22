@@ -61,6 +61,7 @@ export default class DeleteAccount extends Component {
         if (status == "success") {
             Alert.alert("Your account has been requested for deletion. If you wish to activate this account, Please contact ETDA within 90 days after deletion request has been submitted.")
             await this.logout();
+            Actions.replace('Login');
         }
     };
 
@@ -68,7 +69,6 @@ export default class DeleteAccount extends Component {
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('user_data');
         await AsyncStorage.removeItem('social_network');
-        Actions.replace('Login');
     }
 
 
@@ -102,6 +102,7 @@ export default class DeleteAccount extends Component {
                         <TextInput
                             value={this.state.password}
                             maxLength={20}
+                            placeholderTextColor="#ccc"
                             style={{ ...style.customInput, width: '100%', borderRadius: 30 }}
                             placeholder={lng.enter_password}
                             onChangeText = { v => this.setState({password: v}) }

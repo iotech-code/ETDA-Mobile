@@ -58,6 +58,10 @@ export default class ChangePassword extends Component {
         }
     }
 
+    componentWillUnmount() {
+        this.setState({})
+    }
+
     callChangePassword = async () => {
         const data = {
             "old_ps": this.state.oldPass,
@@ -68,7 +72,11 @@ export default class ChangePassword extends Component {
         const changeRequest = await http.post( apiServer.url + '/api/backend/user/change-password', data);
         const { status } = await changeRequest.data;
         if (status == "success") {
-            await Actions.MyProfile();
+            alert("Change password success!")
+            Actions.pop();
+        } else {
+            Alert.alert("Error", "Invalid password.")
+        
         }
     };
 
@@ -107,6 +115,7 @@ export default class ChangePassword extends Component {
                                 maxLength={20}
                                 style={[style.input, { color: 'black', width: wp(70) }]}
                                 placeholder={lng.current_password}
+                                placeholderTextColor="#ccc"
                                 secureTextEntry={this.state.statusSecureTextOld}
                                 onChangeText={text => this.setState({ oldPass: text })}
                             />
@@ -121,6 +130,7 @@ export default class ChangePassword extends Component {
                                 maxLength={20}
                                 style={[style.input, { color: 'black', width: wp(70) }]}
                                 placeholder={lng.enter_new_password}
+                                placeholderTextColor="#ccc"
                                 secureTextEntry={this.state.statusSecureTextNew}
                                 onChangeText={text => this.setState({ newPass: text })}
                             />
@@ -135,6 +145,7 @@ export default class ChangePassword extends Component {
                                 maxLength={20}
                                 style={[style.input, { color: 'black', width: wp(70) }]}
                                 placeholder={lng.confirm_your_password}
+                                placeholderTextColor="#ccc"
                                 secureTextEntry={this.state.statusSecureTextConfirm}
                                 onChangeText={text => this.setState({ confirmPass: text })}
                             />

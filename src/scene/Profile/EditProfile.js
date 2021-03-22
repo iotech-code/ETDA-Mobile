@@ -176,6 +176,7 @@ export default class EditProfile extends Component {
                         style={{ fontSize: hp('2%') }}
                         placeholder={lng.enter_reason}
                         multiline={true}
+                        placeholderTextColor="#ccc"
                         onChangeText={ (value) => this.setState({rReason: value}) }
                         numberOfLines={50}
                     />
@@ -199,6 +200,7 @@ export default class EditProfile extends Component {
                         value={this.state.rExp.exp1}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder={lng.enter_experience}
+                        placeholderTextColor="#ccc"
                         onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp1: value } } ) }
                     />
                 </View>
@@ -207,6 +209,7 @@ export default class EditProfile extends Component {
                         value={this.state.rExp.exp2}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder={lng.enter_experience}
+                        placeholderTextColor="#ccc"
                         onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp2: value} } ) }
                     />
                 </View>
@@ -215,6 +218,7 @@ export default class EditProfile extends Component {
                         value={this.state.rExp.exp3}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
                         placeholder={lng.enter_experience}
+                        placeholderTextColor="#ccc"
                         onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp3: value} } ) }
                     />
                 </View>
@@ -487,6 +491,7 @@ export default class EditProfile extends Component {
                                     value={userObject.fullname}
                                     style={{ ...style.customInput, minWidth: '60%', marginTop: 5, borderWidth: 0 }}
                                     placeholder="Fullname"
+                                    placeholderTextColor="#ccc"
                                     onChangeText={ (value) => this.setState({userObject: { ...userObject, fullname: value } }) }
                                 />
                             </View>
@@ -503,6 +508,7 @@ export default class EditProfile extends Component {
                                 <TextInput
                                     style={{ ...style.customInput, width: '100%' }}
                                     placeholder={this.props.bio}
+                                    placeholderTextColor="#ccc"
                                     value={userObject.bio?userObject.bio:''}
                                     onChangeText={ (value) => this.setState({userObject: { ...userObject, bio: value } }) }
                                 />
@@ -520,6 +526,7 @@ export default class EditProfile extends Component {
                                     style={{ ...style.customInput, width: '100%' }}
                                     placeholder={this.props.mobile_number}
                                     keyboardType='number-pad'
+                                    placeholderTextColor="#ccc"
                                     value={userObject.mobile_number}
                                     onChangeText={ (value) => this.setState({userObject: { ...userObject, mobile_number: value } }) }
                                 />
@@ -534,6 +541,7 @@ export default class EditProfile extends Component {
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
                                 value={userObject.professional}
+                                placeholderTextColor="#ccc"
                                 onChangeText={ (value) => this.setState({userObject: { ...userObject, professional: value } }) }
                             />
                         </View>
@@ -546,6 +554,7 @@ export default class EditProfile extends Component {
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
                                 value={userObject.organization}
+                                placeholderTextColor="#ccc"
                                 onChangeText={ (value) => this.setState({userObject: { ...userObject, organization: value } }) }
                             />
                         </View>
@@ -558,6 +567,7 @@ export default class EditProfile extends Component {
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
                                 value={userObject.position}
+                                placeholderTextColor="#ccc"
                                 onChangeText={ (value) => this.setState({userObject: { ...userObject, position: value } }) }
                             />
                         </View>

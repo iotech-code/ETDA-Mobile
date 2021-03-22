@@ -112,7 +112,7 @@ export default class MyProfile extends Component {
                                 <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
                                 <Text style={{ fontSize: hp('2.2%') }}>{lng.contact_me}</Text>
                             </View>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH +66 {user_data.mobile_number}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{user_data.mobile_number}</Text>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>

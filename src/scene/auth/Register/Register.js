@@ -255,6 +255,7 @@ export default class Register extends Component {
                                         style={[style.input, { color: 'black', width: wp(81), paddingVertical: 3, paddingHorizontal: 10 }]}
                                         keyboardType='email-address'
                                         placeholder="Email address"
+                                        placeholderTextColor="#ccc"
                                         onChangeText={ value =>  this.emailValidate(value) }
                                     />
                                 </View>
@@ -265,6 +266,7 @@ export default class Register extends Component {
                                         value={this.state.fullname}
                                         style={[style.input, { color: 'black', width: wp(81), paddingVertical: 3, paddingHorizontal: 10 }]}
                                         placeholder="Name"
+                                        placeholderTextColor="#ccc"
                                         onChangeText={ value =>  this.nameValidate(value) }
                                     />
                                 </View>
@@ -275,6 +277,7 @@ export default class Register extends Component {
                                         style={[style.input, { color: 'black', width: wp(70) }]}
                                         value={this.state.rPass}
                                         placeholder="Password"
+                                        placeholderTextColor="#ccc"
                                         secureTextEntry={this.state.statusSecureText}
                                         onChangeText={ value =>  this.passwordValidate(value) }
                                     />
@@ -287,6 +290,7 @@ export default class Register extends Component {
                                         style={[style.input, { color: 'black', width: wp(70) }]}
                                         value={this.state.rCPass}
                                         placeholder="Confirm Password"
+                                        placeholderTextColor="#ccc"
                                         secureTextEntry={this.state.statusSecureConfirmText}
                                         onChangeText={ value =>  this.passwordConfirmValidate(value) }
                                     />

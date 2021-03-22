@@ -110,6 +110,7 @@ export default class ChooseUserType extends Component {
                                 placeholder="Enter your reason…"
                                 multiline={true}
                                 value={this.state.rReason}
+                                placeholderTextColor="#ccc"
                                 onChangeText={ (value) => this.setState({rReason: value}) }
                                 numberOfLines={Platform.OS === 'ios' ? 50 : 0}
                             />
@@ -135,6 +136,7 @@ export default class ChooseUserType extends Component {
                                 value={this.state.rExp.exp1}
                                 style={{ ...style.customInput, fontSize: hp('2%') }}
                                 placeholder="Enter your experience…"
+                                placeholderTextColor="#ccc"
                                 onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp1: value } } ) }
                             />
                         </View>
@@ -143,6 +145,7 @@ export default class ChooseUserType extends Component {
                                 value={this.state.rExp.exp2}
                                 style={{ ...style.customInput, fontSize: hp('2%') }}
                                 placeholder="Enter your experience…"
+                                placeholderTextColor="#ccc"
                                 onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp2: value} } ) }
                             />
                         </View>
@@ -151,6 +154,7 @@ export default class ChooseUserType extends Component {
                                 value={this.state.rExp.exp3}
                                 style={{ ...style.customInput, fontSize: hp('2%') }}
                                 placeholder="Enter your experience…"
+                                placeholderTextColor="#ccc"
                                 onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp3: value} } ) }
                             />
                         </View>

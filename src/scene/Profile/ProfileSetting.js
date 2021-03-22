@@ -21,7 +21,8 @@ export default class ProfileSetting extends Component {
         this.state = {
             visibleSearch: false,
             socialID: 'no', 
-            lng: {}
+            lng: {},
+            user_data: {}
         }
     }
 
@@ -42,9 +43,18 @@ export default class ProfileSetting extends Component {
 
     async componentDidMount () {
         const social = await AsyncStorage.getItem('social_network');
+        await this.getUserInfo();
         await this.setState({
             socialID:  social
         })
+    }
+
+    async getUserInfo () {
+        let json_data = await AsyncStorage.getItem('user_data');
+        let user_info = await JSON.parse(json_data);
+        await this.setState({
+            user_data: user_info
+        });
     }
 
     render() {
@@ -84,7 +94,7 @@ export default class ProfileSetting extends Component {
                                         justifyContent: 'flex-start', 
                                         alignItems: 'center' 
                                     }}
-                                    onPress={() => Actions.replace('ChangePassword')}
+                                    onPress={() => Actions.push('ChangePassword')}
                                 >
                                     <Icon name="key" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
                                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.change_password}</Text>
@@ -94,19 +104,24 @@ export default class ProfileSetting extends Component {
                             :
                             <></>
                         }
-                        <TouchableOpacity
-                            style={{
-                                padding: hp('2%'),
-                                flexDirection: 'row',
-                                justifyContent: 'flex-start',
-                                alignItems: 'center'
-                            }}
-                            onPress={() => Actions.replace('DeleteAccount')}
-                        >
-                            <Icon name="close-octagon" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#FF0000' }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_account}</Text>
-                        </TouchableOpacity>
-                        <View style={{ ...style.divider }}></View>
+                        {
+                            (this.state.user_data.user_role != 'Admin') &&
+                            <>
+                            <TouchableOpacity
+                                style={{
+                                    padding: hp('2%'),
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}
+                                onPress={() => Actions.push('DeleteAccount')}
+                            >
+                                <Icon name="close-octagon" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#FF0000' }} />
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_account}</Text>
+                            </TouchableOpacity>
+                            <View style={{ ...style.divider }}></View>
+                            </>
+                        }
 
                     </View>
                 </ScrollView>
