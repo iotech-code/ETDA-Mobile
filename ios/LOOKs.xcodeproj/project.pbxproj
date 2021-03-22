@@ -238,7 +238,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8NK33KDX57;
 						LastSwiftMigration = 1230;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -513,7 +513,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 8NK33KDX57;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -548,7 +548,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: AMN CORPORATION COMPANY LIMITED (8NK33KDX57)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: AMN CORPORATION COMPANY LIMITED (8NK33KDX57)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 8NK33KDX57;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -565,7 +565,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.etdaapp.looks;
 				PRODUCT_NAME = LOOKs;
-				PROVISIONING_PROFILE_SPECIFIER = "ETDA App 2";
+				PROVISIONING_PROFILE_SPECIFIER = "ETDA App 4";
 				SWIFT_OBJC_BRIDGING_HEADER = "LOOKs-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
