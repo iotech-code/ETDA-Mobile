@@ -168,7 +168,7 @@ export default class EventDetail extends Component {
     }
 
     render() {
-        const { post_date, tags, post_description, post_images, post_id, title, share_url, total_view } = this.state.post_data;
+        const { post_date, tags, post_description, post_images, post_id, title, share_link, total_view } = this.state.post_data;
         const { author } = this.props.data;
         // console.log(this.props.data)
         const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible, lng, is_like, like_count } = this.state
@@ -280,7 +280,7 @@ export default class EventDetail extends Component {
                             <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                             <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined ? 0 : total_view}</Text>
 
-                            <TouchableOpacity onPress={() => this.sharePOST(share_url)}>
+                            <TouchableOpacity onPress={() => this.sharePOST(share_link)}>
                                 <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                             </TouchableOpacity>
                         </View>

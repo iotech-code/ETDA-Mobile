@@ -102,7 +102,8 @@ export default class MessagsPost extends Component {
             this.RBSheet.close()
             let { data } = await actionPostJoin(post_id)
             if (data.status == 'success') {
-                this.setState({ is_join: 1 })
+                await this.setState({ is_join: 1 })
+                Alert.alert(this.state.is_join == 1 ? 'Join Success' : 'Unjoin Success')
             }
         } catch (error) {
             console.log('Post join error : ', error)
@@ -219,7 +220,7 @@ export default class MessagsPost extends Component {
     render() {
         // console.log(this.props.data)
         const { default_avatar, is_like, like_count } = this.state
-        const { author, title, post_description, post_addition_data, comment_number, post_id, share_url } = this.props.data
+        const { author, title, post_description, post_addition_data, comment_number, post_id, share_link } = this.props.data
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -286,7 +287,7 @@ export default class MessagsPost extends Component {
                         <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                         <Text style={{ color: '#B5B5B5' }}>{comment_number}  </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.shareUrl(share_url)}>
+                    <TouchableOpacity onPress={() => this.shareUrl(share_link)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                 </View>
