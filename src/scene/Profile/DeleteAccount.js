@@ -56,7 +56,7 @@ export default class DeleteAccount extends Component {
     // Delete data???
     callDelete = async () => {
         await http.setTokenHeader();
-        const deleteAcc = await http.post( apiServer.url + '/api/backend/post/delete/' + this.state.user_data.userid , data);
+        const deleteAcc = await http.delete( apiServer.url + '/api/backend/user/delete/' + this.state.user_data.userid);
         const { status } = await deleteAcc.data;
         
         if (status == "success") {
