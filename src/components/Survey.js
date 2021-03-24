@@ -42,6 +42,7 @@ export default class SurveyPost extends Component {
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
         let user_data = JSON.parse(user_json);
+        console.log('user_data : ' , user_data)
         this.setState({
             user_data: user_data
         })
@@ -85,7 +86,7 @@ export default class SurveyPost extends Component {
             console.log('Delete survey error : ', error)
         }
     }
-    
+
     renderBottomSheet() {
         const { visibleBottomSheet, user_data } = this.state
         return (
@@ -93,19 +94,18 @@ export default class SurveyPost extends Component {
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('10%') : hp('8%')}
                 openDuration={250}
             >
-                <TouchableOpacity style={{
+                {/* <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
                     <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <View style={{ ...style.divider }}></View>
                 {
-                    user_data.user_role == 'Admin' || user_data.userid == this.props.data.author.id &&
+                    user_data.user_role == 'Admin' || user_data.userid == this.props.data.author.id ?
                     <>
                         <TouchableOpacity style={{
                             ...styleScoped.listMore
@@ -122,6 +122,7 @@ export default class SurveyPost extends Component {
                             <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
                         </TouchableOpacity>
                     </>
+                    :null
                 }
 
             </RBSheet>
@@ -129,7 +130,7 @@ export default class SurveyPost extends Component {
     }
     render() {
         const { title, author, post_date } = this.state.data
-        const { default_avatar } = this.state
+        const { default_avatar, user_data } = this.state
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -158,9 +159,16 @@ export default class SurveyPost extends Component {
                                 <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={() => this.openOption()} >
-                            <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
-                        </TouchableOpacity>
+                        {
+                            user_data.user_role == 'Admin' || user_data.userid == this.props.data.author.id ?
+                                <TouchableOpacity onPress={() => this.openOption()} >
+                                    <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
+                                </TouchableOpacity>
+                                    : null
+                        }
+
+
+
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
                         <Text style={{ fontSize: hp('2%') }}>{title}</Text>

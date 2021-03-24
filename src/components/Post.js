@@ -293,6 +293,8 @@ export default class Post extends Component {
                     is_like: is_like ? 0 : 1,
                     like_count: is_like ? like_count - 1 : like_count + 1
                 })
+                let like = is_like ? 0 : 1
+                this.props.updatePostLike(like , is_like ? like_count - 1 : like_count + 1 , post_id)
             }
         } catch (error) {
             console.log('Like post error : ', error)
@@ -308,9 +310,14 @@ export default class Post extends Component {
             let response = await actionFollowPost({ post_id })
             let { status } = response.data
             if (status == 'success') {
-                this.setState({
+                await this.setState({
                     is_follow: is_follow ? 0 : 1,
                 })
+                if (this.state.is_follow == 1) {
+                    Alert.alert('Follow blog success')
+                } else {
+                    Alert.alert('Unfollow blog success')
+                }
             }
         } catch (error) {
             console.log('Follow post error : ', error)
@@ -388,15 +395,15 @@ export default class Post extends Component {
                                         title={item}
                                         titleStyle={{ fontSize: hp('1.5%') }}
                                         buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
-                                        onPress={() => Actions.push('Search', { 'search_type': 'tag', 'search_txt': item })}
+                                        onPress={() => Actions.push('Search', { 'search_type': 'tag', 'search_txt': item , 'tag' : item })}
                                         key={index}
                                     />
                                 )
                             })
                         }
                     </View>
-                    <View style={{ maxHeight: hp('31%'), marginVertical: hp('1%') }}>
-                        <ImageGrid data={post_images} />
+                    <View style={{ maxHeight: hp('31%'), marginVertical: hp('1%') }} >
+                        <ImageGrid data={post_images} onPressImage={() => this.postView()} getIndexImage={true} />
                     </View>
                     <Text
                         style={{ fontSize: hp('2%'), fontWeight: '300' }}

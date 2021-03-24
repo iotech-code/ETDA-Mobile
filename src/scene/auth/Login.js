@@ -12,7 +12,8 @@ import {
     ScrollView,
     TouchableOpacity,
     KeyboardAvoidingView,
-    Alert
+    Alert,
+    Linking
 } from 'react-native';
 import { apiServer, configs } from '../../constant/util';
 import HttpRequest from '../../Service/HttpRequest';
@@ -49,7 +50,8 @@ export default class Login extends Component {
             passwordEnable: false,
             disableLogin: true,
             spinner: false,
-            isShow: false
+            isShow: false,
+            forgetpass_url:'https://etda.amn-corporation.com/reset-password'
         }
         this.socialSignIn = this.socialSignIn.bind(this);
     }
@@ -82,7 +84,7 @@ export default class Login extends Component {
         }
 
         try {
-            http.customtHeader({"ignore_check": true});
+            http.customtHeader({ "ignore_check": true });
             let loginRequest = await http.post(apiServer.url + '/api/backend/user/login', data);
             let { token } = loginRequest.data;
             await AsyncStorage.setItem('token', token);
@@ -92,14 +94,14 @@ export default class Login extends Component {
         } catch (e) {
             await this.clearSession()
             Alert.alert('User not found', 'Do you want to register an account?',
-            [
-                {
-                  text: "No",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel"
-                },
-                { text: "Yes", onPress: () => Actions.push('Register') }
-            ]);
+                [
+                    {
+                        text: "No",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                    },
+                    { text: "Yes", onPress: () => Actions.push('Register') }
+                ]);
         }
     }
 
@@ -177,7 +179,7 @@ export default class Login extends Component {
         if (token && token != null) {
             await this.refreshToken();
         }
-        this.setState({ isShow : true })
+        this.setState({ isShow: true })
     }
 
     async refreshToken() {
@@ -274,7 +276,7 @@ export default class Login extends Component {
     }
 
     render() {
-        const { spinner, isShow } = this.state;
+        const { spinner, isShow ,forgetpass_url} = this.state;
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar barStyle="dark-content" />
@@ -329,7 +331,8 @@ export default class Login extends Component {
                                             </View>
                                         </View>
                                         <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                            <TouchableOpacity onPress={() => Actions.push('ForgetPassword')}>
+                                            <TouchableOpacity
+                                                onPress={() => Linking.openURL(forgetpass_url)}>
                                                 <Text style={{
                                                     color: '#4267B2',
                                                     textAlign: 'right',

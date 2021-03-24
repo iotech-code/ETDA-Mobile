@@ -51,7 +51,7 @@ export default class Main extends Component {
     }
 
     async UNSAFE_componentWillReceiveProps() {
-        
+
     }
 
     async UNSAFE_componentWillMount() {
@@ -71,7 +71,7 @@ export default class Main extends Component {
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
         let user_data = JSON.parse(user_json);
-        console.log('user_data : ' , user_data)
+        console.log('user_data : ', user_data)
         this.setState({
             user_type: user_data.user_type,
             user_role: user_data.user_role
@@ -134,6 +134,18 @@ export default class Main extends Component {
         this.setState({ list_data: feed.reverse() });
     }
 
+    updatePostLike(like, like_count, post_id) {
+        console.log(like , post_id)
+        let { list_data } = this.state
+        list_data.forEach(el => {
+            if (el.post_id == post_id) {
+                el.is_like = like
+                el.like = like_count
+            }
+        })
+        this.setState({ list_data })
+    }
+
     renderTypeInFlatlist({ item }) {
         // console.log(item)
         if (item.post_type == 'event') {
@@ -148,6 +160,7 @@ export default class Main extends Component {
                     sharePressButton={(url) => this.shareCallback(url)}
                     onPostUpdate={async () => this.callHomeFeed()}
                     onDeletePost={() => this.callHomeFeed()}
+                    updatePostLike={(like,like_count, post_id) => this.updatePostLike(like,like_count, post_id)}
                 >
                 </Post>
             )
@@ -165,7 +178,7 @@ export default class Main extends Component {
     };
 
     render() {
-        const { isFetching, user_role, list_data, lng , user_type } = this.state
+        const { isFetching, user_role, list_data, lng, user_type } = this.state
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
@@ -196,19 +209,19 @@ export default class Main extends Component {
                                 </View>
                                 {
                                     user_role !== 'Member' || user_type == "read,post_read" ?
-                                    <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                                        <Button
-                                            title={lng.new_post}
-                                            Outline={true}
-                                            titleStyle={{ color: '#003764', }}
-                                            buttonStyle={{
-                                                padding: hp('1%'),
-                                                ...style.btnPrimaryOutline,
-                                                ...style.btnRounded
-                                            }}
-                                            onPress={() => this.createPost()}
-                                        />
-                                    </View> : null
+                                        <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                            <Button
+                                                title={lng.new_post}
+                                                Outline={true}
+                                                titleStyle={{ color: '#003764', }}
+                                                buttonStyle={{
+                                                    padding: hp('1%'),
+                                                    ...style.btnPrimaryOutline,
+                                                    ...style.btnRounded
+                                                }}
+                                                onPress={() => this.createPost()}
+                                            />
+                                        </View> : null
                                 }
                                 {/* end section create post  */}
 

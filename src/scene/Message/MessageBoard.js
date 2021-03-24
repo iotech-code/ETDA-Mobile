@@ -232,6 +232,7 @@ export default class MessageBoard extends Component {
             }
             let { data } = await reportPost(id_for_report, report_tag.title, reason)
             if (data.status == 'success') {
+                Alert.alert('Report post success.')
                 this.setState({ visibleModalReport: false })
             }
         } catch (error) {

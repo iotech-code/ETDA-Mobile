@@ -78,9 +78,9 @@ export default class Activity extends Component {
         this.setState({ isFetching: false })
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await this.getUserInfo();
         this.onGetEventList();
-        this.getUserInfo();
         this.getMyEventList();
     }
 
@@ -115,6 +115,7 @@ export default class Activity extends Component {
 
     async getMyEventList() {
         this.setState({ isFetching: true })
+        let {user_role} = this.state
         try {
             let res = await myEvent();
             let { post_data } = res.data
@@ -124,7 +125,7 @@ export default class Activity extends Component {
                 const element = post_data[index];
                 if (element.post_type == 'event') {
                     event.push(element)
-                    if (element.post_addition_data.event_date) {
+                    if (element.post_addition_data.event_date && user_role == 'Admin') {
                         let data = new Date(element.post_addition_data.event_date)
                         let date_converted = moment(data).format('YYYY-MM-DD')
                         markedDates[date_converted] = {
@@ -259,6 +260,13 @@ export default class Activity extends Component {
                                                         <EventPost key={`myEventList_${index}`} data={el} shareUrl={(url) => this.shareCallback(url)}></EventPost>
                                                     )
                                                 })
+                                            }
+                                            {
+                                                myeventList.length == 0  && !isFetching ?
+                                                <View style={{...style.container}}>
+                                                    <Text>No event</Text>
+                                                </View>
+                                                : null
                                             }
                                         </View>
 

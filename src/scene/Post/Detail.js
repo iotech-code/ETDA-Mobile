@@ -97,7 +97,7 @@ export default class EventDetail extends Component {
             let { status } = res.data
             if (status == "success") {
                 await this.callGetComment(post_id)
-                this.setState({ comment: '' })
+                this.setState({ comment: null })
                 Keyboard.dismiss()
             }
         } catch (error) {
@@ -165,6 +165,9 @@ export default class EventDetail extends Component {
         } else {
             Actions.replace('MainScene', { menu: 'main' })
         }
+    }
+    searchTag(item) {
+        Actions.push('Search', { tag: item })
     }
 
     render() {
@@ -237,6 +240,7 @@ export default class EventDetail extends Component {
                                                 titleStyle={{ fontSize: hp('1.5%') }}
                                                 buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
                                                 key={index}
+                                                onPress={() => this.searchTag(item)}
                                             />
                                         )
                                     })
