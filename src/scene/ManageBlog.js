@@ -101,6 +101,7 @@ export default class ManageBlog extends Component {
             }
             let respons = await rejectPost({ post_id })
             let { status } = respons.data
+            
             if (status == 'success') {
                 await this.setState({ list_data: [] })
                 await this.setState({ count_selected: 0 })
@@ -108,6 +109,8 @@ export default class ManageBlog extends Component {
                 Alert.alert("Post was rejected!")
             }
         } catch (error) {
+            
+            alert("Post rejection error!")
             console.log('Reject post is error : ', error)
         }
     }
