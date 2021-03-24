@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     FlatList,
     Platform,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, BottomSheet } from 'react-native-elements';
@@ -81,7 +82,7 @@ export default class ManageBlog extends Component {
                 await this.setState({ list_data: [] })
                 await this.setState({ count_selected: 0 })
                 this.callApproveList()
-                alert("Post was approved!")
+                Alert.alert("Post was approved!")
             }
         } catch (error) {
             console.log('Approve post  error : ', error)
@@ -105,7 +106,7 @@ export default class ManageBlog extends Component {
                 await this.setState({ list_data: [] })
                 await this.setState({ count_selected: 0 })
                 this.callApproveList()
-                alert("Post was rejected!")
+                Alert.alert("Post was rejected!")
             }
         } catch (error) {
             

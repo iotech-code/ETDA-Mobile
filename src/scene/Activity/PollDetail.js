@@ -89,6 +89,10 @@ export default class PollDetail extends Component {
                     }
                 ]
             }
+            if(!answer_id){
+                Alert.alert('Please choose answer!')
+                return
+            }
             let response = await postAction(data)
             if (response.data.status == 'success') {
                 this.setState({ is_play: 1 })

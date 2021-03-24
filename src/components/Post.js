@@ -337,7 +337,7 @@ export default class Post extends Component {
             post_id,
             like,
             comment_number,
-            share_url,
+            share_link,
             author,
             total_view
         } = this.props.data
@@ -421,7 +421,7 @@ export default class Post extends Component {
                     <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined ? 0 : total_view}</Text>
 
-                    <TouchableOpacity onPress={() => this.sharePOST(share_url)}>
+                    <TouchableOpacity onPress={() => this.sharePOST(share_link)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                 </View>

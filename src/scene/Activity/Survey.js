@@ -58,7 +58,7 @@ export default class Survey extends Component {
     }
 
     componentDidMount() {
-        
+
     }
 
 
@@ -72,13 +72,18 @@ export default class Survey extends Component {
         }
     }
 
+    sortSuvery() {
+        let { list_data } = this.state
+        this.setState({ list_data: list_data.reverse() });
+    }
+
     render() {
         const { lng, list_data } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
-                        <TouchableOpacity onPress={() => Actions.replace('MainScene', { menu: 'activity' , sub_menu: 'no' })}>
+                        <TouchableOpacity onPress={() => Actions.replace('MainScene', { menu: 'activity', sub_menu: 'no' })}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" />
                         </TouchableOpacity>
                         <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.survey}</Text>
@@ -94,7 +99,9 @@ export default class Survey extends Component {
                             alignItems: 'center'
                         }}>
                             <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.survey}</Text>
-                            <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            <TouchableOpacity onPress={() => this.sortSuvery()}>
+                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            </TouchableOpacity>
                         </View>
                         {
                             this.state.user_role == 'Admin' &&
