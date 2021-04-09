@@ -23,7 +23,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
 import translate from '../../constant/lang'
 import moment from 'moment'
-import { actionLikePost, getListCommentPost, createCommentPost } from '../../Service/PostService'
+import { actionLikePost, getListCommentPost, createCommentPost, deleteComment } from '../../Service/PostService'
 export default class EventDetail extends Component {
     state = {
         visibleSearch: false,
@@ -98,6 +98,18 @@ export default class EventDetail extends Component {
             console.log('Create comment error : ', error)
         }
     };
+
+    async onPressCommentDelete(ID) {
+        
+        const comments = await this.state.list_comment;
+        for(var i=0;i<comments.length;i++) {
+            if(comments[i].Comment_id == ID) {
+                comments.splice(i, 1);
+            }
+        }
+        await this.setState({ list_comment: comments})
+        await deleteComment(ID);
+    }
 
     onPressButtonChildren(data) {
         this.setState({ reply_to: data.User_id, comment: '@' + data.Fullname + ' ' })
@@ -187,7 +199,9 @@ export default class EventDetail extends Component {
                         {
                             list_comment.map((item, index) => {
                                 return (
-                                    <Comment data={item} key={`comment_${index}`} fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
+                                    <Comment data={item} key={`comment_${index}`} 
+                                    deleteButton={(ID) => this.onPressCommentDelete(ID)}
+                                    fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
                                 )
                             })
                         }

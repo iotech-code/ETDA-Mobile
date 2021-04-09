@@ -64,9 +64,6 @@ export default class HeaderNavbar extends Component {
                         <Icon name="search" size={hp('3%')} color="white" style={{ marginRight: hp('1.5%') }} />
                     </TouchableOpacity>
                     <></>
-                    {/* <TouchableOpacity onPress={() => Actions.push('Notification')}>
-                        <Icon name="notifications" size={hp('3%')} color="white" />
-                    </TouchableOpacity> */}
                 </View>
             </View>
         );

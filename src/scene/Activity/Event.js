@@ -155,6 +155,7 @@ export default class Activity extends Component {
         Clipboard.setString(url)
     }
 
+
     async selectDateCalendar(day) {
 
         const { markedDates, myeventListOriginal } = this.state
