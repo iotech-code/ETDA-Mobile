@@ -1,8 +1,6 @@
 import React from 'react';
 import { Scene, Stack, Router } from 'react-native-router-flux';
 
-
-// Auth
 import Login from './auth/Login'
 import Register from './auth/Register/Register'
 import ChooseUserType from './auth/Register/ChooseUserType'
@@ -33,6 +31,7 @@ import Notification from './Notification'
 import PollCreate from './Activity/PollCreate'
 import SurveyCreate from './Activity/SurveyCreate'
 import MainScene from './MainScene'
+
 const RouterPage = () => {
     return (
 
@@ -68,9 +67,6 @@ const RouterPage = () => {
                 <Scene key="EventEdit" component={EventEdit} title="EventEdit" hideNavBar />
                 <Scene key="Notification" component={Notification} title="Notification" hideNavBar />
                 <Scene key="MainScene" component={MainScene} title="MainScene" hideNavBar />
-
-
-                
             </Stack>
         </Router>
 

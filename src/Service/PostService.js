@@ -137,6 +137,11 @@ export const updateEvent = async (
 
 
 
+export const deleteComment = async (ID) => {
+    await http.setTokenHeader()
+    return await http.delete('/api/backend/post/del-comment/'+ID)
+}
+
 export const getListCommentPost = async (params) => {
     await http.setTokenHeader()
     return await http.post('/api/backend/post/get-comment', params)

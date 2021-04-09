@@ -30,6 +30,7 @@ import {
     GoogleSignin,
     statusCodes } from '@react-native-community/google-signin';
 import Line from '@xmartlabs/react-native-line'
+import { appleAuth } from '@invertase/react-native-apple-authentication';
 
 export default class Register extends Component {
 
@@ -110,6 +111,62 @@ export default class Register extends Component {
             }
           }
     }
+
+
+    // async AppleServerVerification(user,id) {
+    //     try {
+    //         const data = {
+    //                 "client_user": user,
+    //                 "identity_token": id
+    //             }
+    //         const verify_request = await http.post(apiServer.serververify, data);
+    //         return verify_request.data;
+    //     } catch(error) {
+    //         console.log('http request error on function', 'AppleServerVerification');
+    //     }
+    // }
+
+    async AppleLogin() {
+        try {
+            // performs login request
+            const appleAuthRequestResponse = await appleAuth.performRequest({
+                requestedOperation: appleAuth.Operation.LOGIN,
+                requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+            });
+
+            // get current authentication state for user
+            // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+            const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+            
+            
+            // use credentialState response to ensure the user is authenticated
+            if (credentialState === appleAuth.State.AUTHORIZED) {
+                const userInfo = {
+                    'email': appleAuthRequestResponse.user,
+                    'password': '',
+                    'source': 'apple',
+                    'fullname': appleAuthRequestResponse.givenName + ' ' + appleAuthRequestResponse.familyName 
+                }
+                // console.log(userInfo)
+                await Actions.push('ChooseUserType', userInfo)
+                // const loginInfo = {
+                //     id: verify.user,
+                //     authen_method: 'apple'
+                // }
+                // this.socialSignIn(false, loginInfo);
+            }
+        } catch (error) {
+            console.log(error)
+            if (error.code === AppleAuthError.CANCELED) {
+                // user cancelled Apple Sign-in
+                console.log("CANCELED")
+            } else {
+                // other unknown errors
+                console.log("UNKNOW ERROR")
+            }
+        }
+    }
+
 
     async facebookRegister(error, result) {
         if (error) {
@@ -351,6 +408,17 @@ export default class Register extends Component {
                                     buttonStyle={{ padding: hp('1.5%'), ...style.btnGoogle, ...style.btnRounded }}
                                 />
                             </View>
+
+                            {
+                                Platform.OS == 'ios' &&
+                                    <View style={{ marginTop: hp('2%') }}>
+                                        <Button
+                                            onPress={() => this.AppleLogin()}
+                                            title="Continue with Apple"
+                                            buttonStyle={{ padding: hp('1.5%'), ...style.btnApple, ...style.btnRounded }}
+                                        />
+                                    </View>
+                            }
 
                             <View style={{ marginTop: hp('2%'), flexDirection: 'row', justifyContent: 'center', marginBottom: 20 }}>
                                 <Text style={{ color: '#707070', fontSize: hp('1.7%'), marginRight: hp('1%') }}>Do have an account?</Text>

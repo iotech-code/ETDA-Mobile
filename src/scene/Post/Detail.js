@@ -26,7 +26,7 @@ import ImageView from 'react-native-image-view';
 import ImagePicker from 'react-native-image-crop-picker';
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import translate from '../../constant/lang'
-import { actionLikePost, updatePostView, getPost } from '../../Service/PostService'
+import { actionLikePost, updatePostView, getPost, deleteComment } from '../../Service/PostService'
 
 export default class EventDetail extends Component {
 
@@ -108,6 +108,19 @@ export default class EventDetail extends Component {
         this.setState({ reply_to: data.User_id, comment: '@' + data.Fullname + ' ' })
         this.secondTextInput.focus()
 
+    }
+
+
+    async onPressCommentDelete(ID) {
+        
+        const comments = await this.state.list_comment;
+        for(var i=0;i<comments.length;i++) {
+            if(comments[i].Comment_id == ID) {
+                comments.splice(i, 1);
+            }
+        }
+        await this.setState({ list_comment: comments})
+        await deleteComment(ID);
     }
 
     async pickImage() {
@@ -310,7 +323,9 @@ export default class EventDetail extends Component {
                         {
                             list_comment.map((item, index) => {
                                 return (
-                                    <Comment data={item} key={`comment_${index}`} fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
+                                    <Comment data={item} key={`comment_${index}`} 
+                                    deleteButton={(ID) => this.onPressCommentDelete(ID)}
+                                    fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
                                 )
                             })
                         }

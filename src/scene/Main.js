@@ -57,21 +57,18 @@ export default class Main extends Component {
     async UNSAFE_componentWillMount() {
         // console.log('test : ',  global.lng) // แสดงค่า gobal testGobal
         await this.getUserInfo();
-        await this.callHomeFeed();
         await this.getLang();
+        await this.callHomeFeed();
     }
 
     async getLang() {
-        this.setState({ isFetching: true })
         let vocap = await translate()
         this.setState({ lng: vocap })
-        this.setState({ isFetching: false })
     }
 
     async getUserInfo() {
         let user_json = await AsyncStorage.getItem('user_data');
         let user_data = JSON.parse(user_json);
-        console.log('user_data : ', user_data)
         this.setState({
             user_type: user_data.user_type,
             user_role: user_data.user_role
@@ -82,6 +79,7 @@ export default class Main extends Component {
         this.setState({ list_data: false })
         this.setState({ isFetching: true })
         try {
+            console.log('Refreshing...')
             let { data } = await homeFeed(0, 0);
             await this.setState({ list_data: data.post_data });
         } catch (error) {
@@ -89,6 +87,7 @@ export default class Main extends Component {
         }
         this.setState({ isFetching: false })
     };
+
 
     shareCallback(url) {
         showMessage({
@@ -103,8 +102,10 @@ export default class Main extends Component {
         try {
             let { feedCurrentPage, isFinish } = this.state
             await this.setState({ loading: true })
+            
             if (isFinish === false) {
                 let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
+                console.log('Loading more...', this.state.feedCurrentPage, this.state.feedCurrentPage + 1)
                 if (feedCurrentPage < Math.ceil(data.post_count / 10)) {
                     let new_data = [...this.state.list_data, ...data.post_data]
                     await this.setState({
@@ -135,7 +136,7 @@ export default class Main extends Component {
     }
 
     updatePostLike(like, like_count, post_id) {
-        console.log(like , post_id)
+        // console.log(like , post_id)
         let { list_data } = this.state
         list_data.forEach(el => {
             if (el.post_id == post_id) {
@@ -172,7 +173,7 @@ export default class Main extends Component {
         if (!this.state.loading) return null;
         return (
             <ActivityIndicator
-                style={{ color: '#000' }}
+                style={{ color: '#000'}}
             />
         );
     };
@@ -182,10 +183,7 @@ export default class Main extends Component {
         return (
             <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
-                <FlashMessage position="top"
-                    style={{
-                        backgroundColor: '#5b5b5b'
-                    }} />
+                <FlashMessage position="top" style={{ backgroundColor: '#5b5b5b'}} />
                 <View style={{ flex: 1, paddingBottom: hp('1%') }}>
                     {
                         user_role == "Member" ?
@@ -208,7 +206,7 @@ export default class Main extends Component {
                                     </TouchableOpacity>
                                 </View>
                                 {
-                                    user_role !== 'Member' || user_type == "read,post_read" ?
+                                    user_role == 'Admin'?
                                         <View style={{ ...style.container, marginBottom: hp('1%') }}>
                                             <Button
                                                 title={lng.new_post}
@@ -223,10 +221,6 @@ export default class Main extends Component {
                                             />
                                         </View> : null
                                 }
-                                {/* end section create post  */}
-
-
-                                {/*   show post  */}
                                 <SafeAreaView style={{ flex: 1 }}>
                                     <FlatList
                                         data={this.state.list_data}
@@ -235,7 +229,7 @@ export default class Main extends Component {
                                         // onEndReached={this.updateHomeFeed()}
                                         onEndReached={!this.state.isFinish && this.updateHomeFeed.bind(this)}
                                         ListFooterComponent={this.renderFooter.bind(this)}
-                                        onEndThreshold={0.4}
+                                        onEndReachedThreshold={0.4}
                                         refreshControl={
                                             <RefreshControl
                                                 refreshing={this.state.isFetching}
@@ -248,16 +242,7 @@ export default class Main extends Component {
                             </Fragment>
                     }
                     {/* end loading data */}
-
                 </View>
-
-                {/* <View style={{ backgroundColor: null }}>
-                    {this.state.user_role == "Member" ?
-                        <MenuFooterUser value={'home'}></MenuFooterUser>
-                        :
-                        <MenuFooter value={'home'}></MenuFooter>
-                    }
-                </View> */}
             </View>
         );
     }

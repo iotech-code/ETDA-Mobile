@@ -4,6 +4,7 @@ import {
     StyleSheet,
     View,
     Text,
+    Alert,
     Image,
     TouchableOpacity
 } from 'react-native';
@@ -20,9 +21,25 @@ export default class Comment extends Component {
         this.props.fnPressButton(reply_to)
     }
 
+    deleteComment(commentID) {
+        Alert.alert(
+            "Comment delete",
+            "Are you sure?",
+            [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                },
+                { text: "OK", onPress: () => this.props.deleteButton(commentID) }
+              ]
+          );
+    }
+
     render() {
-        const { User, Message, create_date, Reply_to } = this.props.data
+        const { User, Message, create_date, Reply_to, Comment_id } = this.props.data
         const { default_avatar } = this.state
+        console.log(this.props.data)
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -65,6 +82,11 @@ export default class Comment extends Component {
                         style={{flexDirection: 'row'}}>
                             <Icon name="reply" style={{ fontSize: hp('2%'), color: fonts.color.primary }}/>
                             <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Reply</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={ () => this.deleteComment(Comment_id) }
+                        style={{flexDirection: 'row', marginLeft: 10}}>
+                            <Icon name="trash-can-outline" style={{ fontSize: hp('2%'), color: fonts.color.primary }}/>
+                            <Text style={{ fontSize: hp('2%'), color: fonts.color.primary }}>Delete</Text>
                         </TouchableOpacity>
                     </View>
 

@@ -45,6 +45,9 @@ export default StyleSheet.create({
     btnGoogle: {
         backgroundColor: '#FF0000'
     },
+    btnApple: {
+        backgroundColor: '#333333'
+    },
     btnTagPrimary: {
         backgroundColor: colors.primary,
         paddingHorizontal: hp('1.5%'),

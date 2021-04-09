@@ -36,7 +36,7 @@ class HttpRequest {
         ) {
         Alert.alert(
           'Sorry!',
-          'Session timeout. Please login again.',
+          'Wrong username or password',
           [
             {
               text: 'OK', onPress: async () => {
@@ -49,12 +49,13 @@ class HttpRequest {
           ],
           { cancelable: false }
         );
-      }else if (error.response.status == 500) {
-         alert('Service unavailable please try again.')
-      } 
-      else if(error.response.status == 403) {
-        alert('Sorry system failed please contact adminitrator.')
       }
+      // else if (error.response.status == 500) {
+      //    alert('Service unavailable please try again.')
+      // } 
+      // else if(error.response.status == 403) {
+      //   alert('Sorry system failed please contact adminitrator.')
+      // }
 
 
       // Do something with response error

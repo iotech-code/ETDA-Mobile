@@ -441,7 +441,7 @@ export default class MessageBoard extends Component {
                                                 !this.state.isFinish && this.updateMyFeed.bind(this)
                                         }}
                                         ListFooterComponent={this.renderFooter.bind(this)}
-                                        onEndThreshold={0.4}
+                                        onEndReachedThreshold={0.4}
                                         refreshControl={
                                             <RefreshControl
                                                 refreshing={this.state.isFetching}

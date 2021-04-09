@@ -270,6 +270,7 @@ export default class ChooseUserType extends Component {
             "google_id" : (this.props.source == 'google') ? this.props.email : '',
             "facebook_id" : (this.props.source == 'facebook') ? this.props.email : '',
             "line_id" : (this.props.source == 'line') ? this.props.email : '',
+            "apple" : (this.props.source == 'apple') ? this.props.email : '',
             "authen_method": this.props.source,
             "user_rq_type" : this.state.rType,
             "rq_reason" : this.state.rReason,
@@ -309,6 +310,7 @@ export default class ChooseUserType extends Component {
             "google_id" : (this.props.source == 'google') ? this.props.email : '',
             "facebook_id" : (this.props.source == 'facebook') ? this.props.email : '',
             "line_id" : (this.props.source == 'line') ? this.props.email : '',
+            "apple" : (this.props.source == 'apple') ? this.props.email : '',
             "device": Platform.OS
         }
         this.setState({ spinner: true });
