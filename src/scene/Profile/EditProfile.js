@@ -1,111 +1,130 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
+    Platform,
     StyleSheet,
+    KeyboardAvoidingView,
     ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
     TextInput,
-    TouchableOpacity,
-    FlatList,
-    AsyncStorage
+    TouchableOpacity
 } from 'react-native';
-
-import { Button, BottomSheet, Overlay } from 'react-native-elements';
+import HttpRequest from '../../Service/HttpRequest';
+import { Button, Overlay } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-import axios from 'axios';
-import ImagePicker from 'react-native-image-picker';
-import { fonts, colors, apiServer } from '../../constant/util'
+import ImagePicker from 'react-native-image-crop-picker';
+import { colors, apiServer } from '../../constant/util'
 import Icons from 'react-native-vector-icons/MaterialIcons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ImgToBase64 from 'react-native-image-base64';
+import translate from '../../constant/lang'
+import { Alert } from 'react-native';
+ 
+const http = new HttpRequest();
 
 const options = {
-    // title: 'Select Avatar',
-    // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+    title: 'Select Avatar',
     quality: 1.0,
-    maxWidth: 1400,
-    maxHeight: 1400,
     storageOptions: {
         skipBackup: true,
         path: 'images',
-    },
-};
+    }
+}
+
+
 
 export default class EditProfile extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props)
         this.state = {
-            token:'',
-            phone: '',
-            professional: '',
-            position: '',
-            organization: '',
-            type: '',
-            name: '',
-            photo: '',
-            userId: '',
+            userObject: {},
+            ImagePath: '',
+            updatePhoto: false,
             visibleSearch: false,
             visibleChangeTypeOfUser: false,
+            readButtonColor: '#fff',
+            readTextColor: colors.primary,
+            postButtonColor: '#fff',
+            postTextColor: colors.primary,
             visibleModalPostandRead: false,
-            rReason: '', 
-            rExp: [], 
-            rExp1: '', 
-            rExp2: '', 
-            rExp3: '',
-            dafault_avatar:require('../../assets/images/default_avatar.jpg')
+            successModal: false,
+            rReason: '',
+            rExp: {
+                exp1: '',
+                exp2: '',
+                exp3: ''
+            },
+            lng: {},
+            dafault_avatar: require('../../assets/images/default_avatar.jpg')
         }
     }
 
-
-    async  componentDidMount() {
-        const { navigation } = this.props;
-        try {
-            const token = await AsyncStorage.getItem('token');
-
-            this.setState({
-                token : token,
-                phone: navigation.getParam('phone', ''),
-                professional: navigation.getParam('professional', ''),
-                position: navigation.getParam('position', ''),
-                organization: navigation.getParam('organization', ''),
-                type: navigation.getParam('type', ''),
-                name: navigation.getParam('name', ''),
-                photo: navigation.getParam('photo', ''),
-                userId: navigation.getParam('userId', ''),
-            })
-        } catch (err) {
-            console.log('err 1 : ' ,err)
-        }
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+        this.setUserObject();
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
-    chooseImageFileRegister = () => {
-        ImagePicker.showImagePicker(options, (response) => {
-           // console.log('Response = ', response);
+    componentDidMount() {
+        // console.log(this.props)
+    }
 
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            } else {
-                console.log('data image : ' , response ) 
-                var image = 'data:image/jpeg;base64,' + response.data
-                this.setState({
-                    photo : image
-                })
-              //  callDeleting(response.uri, token, "test1.jpg")
-            }
+    componentWillUnmount() {
+        this.setState({})
+    }
+
+    async setUserObject () {
+        const {user_data} = await this.props;
+        
+        await this.setState({
+            userObject: {...user_data}
         });
-    };
+    }
 
+    async requestChangeRole (type) {
+        await http.setTokenHeader();
+        const data = {
+            user_rq_type: type,
+            rq_reason: this.state.rReason,
+            rq_exp: this.state.rExp
+        }
+
+        http.post(apiServer.url + '/api/backend/user/change-role', data);
+    }
+
+    chooseImageFileRegister = async () => {
+        const imageFile = await ImagePicker.openPicker({
+            width: 400,
+            height: 400,
+            cropping: true
+        });
+        this.setState({
+            ImagePath: imageFile.path
+        });
+        ImgToBase64.getBase64String(imageFile.path)
+        .then(encodedImage => {
+            const imageData = 'data:image/jpeg;base64,' + encodedImage;
+            this.setState({
+                updatePhoto: true,
+                userObject: {
+                        ...this.state.userObject,
+                        photo: imageData
+                    }
+            });
+        })
+    }
 
     continueTypeOfUser(type ) {
         if (type == 'read'){
@@ -114,35 +133,10 @@ export default class EditProfile extends Component {
             this.setState({ visibleModalPostandRead: true })
         }
         this.setState({ visibleChangeTypeOfUser: false })
-       
     }
 
     renderModalPostandRead() {
-        onChangeTextReason = async (value) => {
-            this.setState({
-                rReason: value
-            })
-        }
-
-        onChangeTextExp1 = async (value) => {
-            this.setState({
-                rExp1: value
-            })
-        }
-
-
-        onChangeTextExp2 = async (value) => {
-            this.setState({
-                rExp2: value
-            })
-        }
-
-        onChangeTextExp3 = async (value) => {
-            this.setState({
-                rExp3: value
-            })
-        }
-        const { visibleModalPostandRead } = this.state
+        const { visibleModalPostandRead, lng } = this.state
         return (
             <Overlay
                 isVisible={visibleModalPostandRead}
@@ -152,6 +146,7 @@ export default class EditProfile extends Component {
                     paddingHorizontal: hp('2%')
                 }}
             >
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View style={{
                     borderBottomColor: '#707070',
                     borderBottomWidth: 1,
@@ -162,7 +157,7 @@ export default class EditProfile extends Component {
                         color: '#003764',
                         fontSize: hp('1.7%'),
                         fontWeight: '600'
-                    }}>Change permission to posts and read</Text>
+                    }}>{lng.change_user_type_title}</Text>
                 </View>
                 <Text
                     style={{
@@ -173,20 +168,18 @@ export default class EditProfile extends Component {
                         fontWeight: '300'
                     }}
                 >
-                    Please, enter your reason for change
-                    permission to posts and read.
+                    {lng.change_user_type_detail}
                 </Text>
 
                 <View style={{ ...style.customInput, height: hp('10%') }}>
                     <TextInput
+                        value={this.state.rReason}
                         style={{ fontSize: hp('2%') }}
-                        placeholder="Enter your reason…"
+                        placeholder={lng.enter_reason}
                         multiline={true}
-                        onChangeText={(value) => {
-                            onChangeTextReason(value)
-                        }}
+                        placeholderTextColor="#ccc"
+                        onChangeText={ (value) => this.setState({rReason: value}) }
                         numberOfLines={50}
-
                     />
                 </View>
 
@@ -200,52 +193,50 @@ export default class EditProfile extends Component {
                         fontWeight: '300'
                     }}
                 >
-                    Please, enter your experience or
-                    workmanship that will help make decision
-                    for ETDA. (Give 3 experience or less than)
+                    {lng.change_user_type_detail2}
                 </Text>
 
                 <View >
                     <TextInput
+                        value={this.state.rExp.exp1}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
-                        placeholder="Enter your experience…"
-                        onChangeText={(value) => {
-                            onChangeTextExp1(value)
-                        }}
+                        placeholder={lng.enter_experience}
+                        placeholderTextColor="#ccc"
+                        onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp1: value } } ) }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
+                        value={this.state.rExp.exp2}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
-                        placeholder="Enter your experience…"
-                        onChangeText={(value) => {
-                            onChangeTextExp2(value)
-                        }}
+                        placeholder={lng.enter_experience}
+                        placeholderTextColor="#ccc"
+                        onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp2: value} } ) }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <TextInput
+                        value={this.state.rExp.exp3}
                         style={{ ...style.customInput, fontSize: hp('2%') }}
-                        placeholder="Enter your experience…"
-                        onChangeText={(value) => {
-                            onChangeTextExp3(value)
-                        }}
+                        placeholder={lng.enter_experience}
+                        placeholderTextColor="#ccc"
+                        onChangeText={ (value) => this.setState({ rExp: { ...this.state.rExp, exp3: value} } ) }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
-                        title="Confirm"
-                        buttonStyle={{
+                        title={lng.confirm}
+                        buttonStyle={ {
                             padding: hp('1.5%'),
                             ...style.btnRounded,
                             ...style.btnPrimary
-                        }}
-                        onPress={() => this.setState({ visibleModalPostandRead: false })}
+                        } }
+                        onPress={ () => this.saveTypeOfUser() }
                     />
                 </View>
                 <View style={{ marginTop: hp('1%') }}>
                     <Button
-                        title="Cancle"
+                        title={lng.cancle}
                         Outline={true}
                         titleStyle={{ color: '#003764' }}
                         buttonStyle={{
@@ -255,67 +246,102 @@ export default class EditProfile extends Component {
                         onPress={() => this.setState({ visibleModalPostandRead: false })}
                     />
                 </View>
+                </KeyboardAvoidingView>
+            </Overlay>
+        )
+    }
+
+    showSuccessModal() {
+        const { successModal,lng } = this.state
+        return (
+            <Overlay
+                isVisible={ successModal }
+                overlayStyle={{
+                    width: wp('90%'),
+                    paddingVertical: hp('2%'),
+                    paddingHorizontal: hp('2%')
+                }}
+            >
+                <>
+                    <Icon name="check-circle" size={hp('12%')} style={{ alignSelf: "center" }} color="#30D100"/>
+                    <Text style={{ marginTop: 20, textAlign: 'center' }}>
+                    {lng.sucess_change_role}
+                    </Text>
+                    <View style={{
+                        marginTop: hp('3%')
+                    }}>
+                        <Button
+                            title="Done"
+                            buttonStyle={{
+                                ...style.btnRounded,
+                                ...style.btnPrimary
+                            }}
+                            onPress={() => this.setState({successModal: false})}
+                        />
+                    </View>
+                </>
             </Overlay>
         )
     }
 
     renderChangeTypeOfUser() {
-        const { visibleChangeTypeOfUser } = this.state
+        const { visibleChangeTypeOfUser, lng } = this.state
         return (
             <Overlay
                 isVisible={visibleChangeTypeOfUser}
                 onBackdropPress={() => this.setState({ visibleChangeTypeOfUser: false })}
                 overlayStyle={{ width: '90%', padding: hp('2%') }}
             >
-                <Text style={{ fontSize: hp('2%'), textAlign: 'center', color: '#003764' }}>Change type of your account</Text>
+                <>
+                <Text style={{ fontSize: hp('2%'), textAlign: 'center', color: '#003764' }}>{lng.change_type_of_account}</Text>
                 <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
                 <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
                 <TouchableOpacity
-                        style={{ width: '49%' }}
-                        onPress={() => this.setState({ visible: true , type : 'read' })}
+                    style={{ width: '49%' }}
+                    onPress={() => this.confirmReadOnly() }
                     >
-                        <View style={{ ...styleScoped.option, backgroundColor: colors.primary }}>
-                            <Icons name="description" size={hp('12%')} style={{ alignSelf: "center" }} color="white" />
+                        <View style={{ ...styleScoped.option, backgroundColor: this.state.readButtonColor }}>
+                            <Icons name="description" size={hp('12%')} style={{ alignSelf: "center" }} color={ this.state.readTextColor } />
                         </View>
                         <Text style={{
                             marginTop: hp('3%'),
                             textAlign: 'center',
                             fontSize: hp('2%'),
                             color: '#000000'
-                        }}>Read only</Text>
+                        }}>{lng.read_only}</Text>
                     </TouchableOpacity>
-
+ 
                     <TouchableOpacity
                         style={{ width: '49%' }}
-                        onPress={() => this.setState({ visible: true , type : 'read, post_read' })}
+                        onPress={ () => this.confirmPostRead() }
                     >
-                        <View style={styleScoped.option}>
-                                    <Icons name="create" size={hp('12%')} style={{ alignSelf: "center" }} color={colors.primary} />
+                        <View style={{ ...styleScoped.option, backgroundColor: this.state.postButtonColor }}>
+                            <Icons 
+                            name="create" size={hp('12%')} 
+                            style={{ alignSelf: "center" }} 
+                            color={ this.state.postTextColor } />
                         </View>
                         <Text style={{
                             marginTop: hp('3%'),
                             textAlign: 'center',
                             fontSize: hp('2%'),
                             color: '#000000'
-                        }}>
-                            Posts and Read
-                                </Text>
-
+                        }}>{lng.post_and_read}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: hp('2%') }}>
                     <Button
-                        title="Continue"
+                        title={lng.continue}
                         buttonStyle={{
                             padding: hp('1%'),
                             ...style.btnRounded,
                             ...style.btnPrimary
                         }}
-                        onPress={() => this.continueTypeOfUser(this.state.type)}
+                        onPress={() => this.saveTypeOfUser()}
                     />
                     <View style={{ marginTop: hp('1%') }}></View>
                     <Button
-                        title="Cancle"
+                        title={lng.cancle}
                         Outline={true}
                         titleStyle={{ color: '#003764' }}
                         buttonStyle={{
@@ -325,105 +351,122 @@ export default class EditProfile extends Component {
                         onPress={() => this.setState({ visibleChangeTypeOfUser: false })}
                     />
                 </View>
-
+                </>
             </Overlay>
         )
     }
 
-    callEditProfile = async (token) => {
-        this.state.rExp.push(this.state.rExp1)
-        this.state.rExp.push(this.state.rExp2)
-        this.state.rExp.push(this.state.rExp3)
-        var image = []
-        if (this.state.photo == '' || this.state.photo == null){
-            image = this.state.photo
-        }else{
-            image = ''
-        }
+    async saveTypeOfUser() {
+        await this.setState({
+            visibleModalPostandRead: false,
+            visibleChangeTypeOfUser: false,
+            successModal: true
+        })
+        await this.requestChangeRole('read,post_read')
+    }
 
-        const data = {
-            "user_id": this.state.userId,
-            "user_fullname": this.state.name,
-            "user_photo": image,
-            "mobile_number": this.state.phone,
-            "organization": this.state.organization,
-            "position": this.state.position,
-            "professional": this.state.professional,
-            "user_rq_type": this.state.type,
-            "rq_reason": this.state.rReason,
-            "rq_exp": this.state.rExp
-        }
-
-        axios.put(apiServer.url + '/api/backend/user/update/' + this.props.userId, data,{
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
+    async confirmReadOnly () {
+        await this.setState({
+            readButtonColor: colors.primary,
+            readTextColor: '#fff',
+            postButtonColor: '#fff',
+            postTextColor: colors.primary,
+            visible: true, 
+            visibleChangeTypeOfUser: false,
+            type: 'read',
+            successModal: true,
+            userObject: {
+                ...this.state.userObject,
+                user_type: 'read'
             }
         })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    console.log(response.data)
-                    Actions.MyProfile()
-                } else {
+        await this.requestChangeRole('read')
+    }
 
-                }
-            })
-            .catch((error) => {
-                console.log('error 1 : ', error)
-            })
-            .finally(function () {
+    async confirmPostRead () {
+        await this.setState({
+            readButtonColor: '#fff',
+            readTextColor: colors.primary,
+            postButtonColor: colors.primary,
+            postTextColor: '#fff',
+            visible: true,
+            visibleModalPostandRead: true,
+            type: 'read',
+            successModal: false,
+            userObject: {
+                ...this.state.userObject,
+                user_type: 'read'
+            }
+        })
+        
+        await this.continueTypeOfUser('read,post_read')
+    }
+
+    callEditProfile = async () => {
+        let {userObject} = this.state;
+        let data = {
+            "user_id": userObject.userid,
+            "user_fullname": userObject.fullname,
+            "user_photo": this.state.updatePhoto ? userObject.photo : '',
+            "mobile_number": userObject.mobile_number,
+            "organization": userObject.organization,
+            "bio": userObject.bio?userObject.bio:'',
+            "position": userObject.position,
+            "professional": userObject.professional,
+            "user_rq_type": userObject.user_type,
+            "rq_reason": userObject.rReason,
+            "rq_exp": {
+                "exp1": this.state.rExp.exp1,
+                "exp2": this.state.rExp.exp2,
+                "exp3": this.state.rExp.exp3
+            }
+        }
+
+        await http.setTokenHeader();
+        let update = await http.put(apiServer.url + '/api/backend/user/update/' + userObject.userid, data);
+        let {status} = await update.data;
+        if (status == "success") {
+            Alert.alert("success", "Update success!")
+            await this.setState({
+                userObject: {
+                        ...this.state.userObject,
+                        photo: this.state.ImagePath
+                    }
             });
-
+            await AsyncStorage.removeItem('user_data');
+            await AsyncStorage.setItem('user_data', JSON.stringify( userObject ) );
+            await Actions.pop({refresh:{}});
+        } else {
+            alert('Update fail.');
+        }
     };
 
-
     render() {
-        const { navigation } = this.props;
-
-        onChangeTextPhone = async (value) => {
-            this.setState({
-                phone: value
-            })
-        }
-
-        onChangeTextOrganization = async (value) => {
-            this.setState({
-                organization: value
-            })
-        }
-
-
-        onChangeTextPosition = async (value) => {
-            this.setState({
-                position: value
-            })
-        }
-
-
-        onChangeTextProfessional = async (value) => {
-            this.setState({
-                professional: value
-            })
-        }
+        const { userObject, lng } = this.state;
+        
         return (
             <View style={{ flex: 1 }}>
-                <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+                {
+                    this.showSuccessModal()
+                }
+                <View style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%'), marginBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Edit Profile</Text>
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop({refresh:{}})} />
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.edit_profile}</Text>
                             <TouchableOpacity
-                                onPress={() => this.callEditProfile(this.state.token)}
+                                onPress={() => this.callEditProfile()}
                             >
-                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Save</Text>
+                                <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.save}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ ...style.container }}>
+                    <ScrollView style={{ ...style.container }}>
+                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
 
                             <View style={{ width: hp('15%'), height: hp('15%'), borderRadius: 100 }}>
-                                {this.state.photo == '' || this.state.photo == null ?
+                                {this.state.userObject.photo === '' || this.state.userObject.photo === null ?
                                 <Image source={this.state.dafault_avatar} style={{
                                     width: '100%',
                                     height: '100%',
@@ -432,7 +475,7 @@ export default class EditProfile extends Component {
                                 }} />
                                 :
                                 <Image source={{
-                                    uri: this.state.photo,
+                                    uri: userObject.photo,
                                   }} style={{
                                     width: '100%',
                                     height: '100%',
@@ -440,19 +483,18 @@ export default class EditProfile extends Component {
                                     borderRadius: 100
                                 }} />
                             }
-                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}  onPress={() => {this.chooseImageFileRegister()}}>
+                                <TouchableOpacity style={{ ...styleScoped.btnImageProfile }}  onPress={ () => this.chooseImageFileRegister() }>
                                     <IconFonAwesome name="pencil" size={hp('2%')} color="white" />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ marginLeft: hp('2%') }}>
-                                <Text style={{ fontSize: hp('2.5%') }}>Name</Text>
+                                <Text style={{ fontSize: hp('2.5%') }}>{lng.name}</Text>
                                 <TextInput
-                                    value={this.state.name}
+                                    value={userObject.fullname}
                                     style={{ ...style.customInput, minWidth: '60%', marginTop: 5, borderWidth: 0 }}
                                     placeholder="Fullname"
-                                    onChangeText={(value) => {
-                                        this.setState({name: value})
-                                    }}
+                                    placeholderTextColor="#ccc"
+                                    onChangeText={ (value) => this.setState({userObject: { ...userObject, fullname: value } }) }
                                 />
                             </View>
 
@@ -460,115 +502,116 @@ export default class EditProfile extends Component {
 
                         <View style={{ marginTop: hp('4%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
-                                <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Contact me</Text>
+                                <Icon name="badge-account" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.bio}</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                
                                 <TextInput
-                                    style={{ ...style.customInput, marginRight: hp('1%') }}
-                                    placeholder="TH 66+"
-                                />
-                                <TextInput
-                                    style={{ ...style.customInput, width: '80%' }}
-                                    placeholder={navigation.getParam('phone', '')}
-                                    keyboardType='number-pad'
-                                    onChangeText={(value) => {
-                                        onChangeTextPhone(value)
-                                    }}
+                                    style={{ ...style.customInput, width: '100%' }}
+                                    placeholder={this.props.bio}
+                                    placeholderTextColor="#ccc"
+                                    value={userObject.bio?userObject.bio:''}
+                                    onChangeText={ (value) => this.setState({userObject: { ...userObject, bio: value } }) }
                                 />
                             </View>
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>TH 66+ 099-999-9999</Text> */}
+                        </View>
+
+                        <View style={{ marginTop: hp('4%') }}>
+                            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
+                                <Icon name="phone" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.contact_me}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                
+                                <TextInput
+                                    style={{ ...style.customInput, width: '100%' }}
+                                    placeholder={this.props.mobile_number}
+                                    keyboardType='number-pad'
+                                    placeholderTextColor="#ccc"
+                                    value={userObject.mobile_number}
+                                    onChangeText={ (value) => this.setState({userObject: { ...userObject, mobile_number: value } }) }
+                                />
+                            </View>
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="lightbulb-outline" size={hp('3%')} color="#FED449" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Professional</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.professional}</Text>
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder={this.state.professional}
-                                onChangeText={(value) => {
-                                    onChangeTextProfessional(value)
-                                }}
+                                value={userObject.professional}
+                                placeholderTextColor="#ccc"
+                                onChangeText={ (value) => this.setState({userObject: { ...userObject, professional: value } }) }
                             />
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Digital Identity</Text> */}
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="domain" size={hp('3%')} color="#EE3397" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Organization</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.organization}</Text>
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder={this.state.organization}
-                                onChangeText={(value) => {
-                                    onChangeTextOrganization(value)
-                                }}
+                                value={userObject.organization}
+                                placeholderTextColor="#ccc"
+                                onChangeText={ (value) => this.setState({userObject: { ...userObject, organization: value } }) }
                             />
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Data Guardian</Text> */}
                         </View>
 
                         <View style={{ marginTop: hp('2%') }}>
                             <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
                                 <Icon name="bag-checked" size={hp('3%')} color="#427AA1" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Position</Text>
+                                <Text style={{ fontSize: hp('2.2%') }}>{lng.position}</Text>
                             </View>
                             <TextInput
                                 style={{ ...style.customInput, width: '100%' }}
-                                placeholder={this.state.position}
-                                onChangeText={(value) => {
-                                    onChangeTextPosition(value)
-                                }}
+                                value={userObject.position}
+                                placeholderTextColor="#ccc"
+                                onChangeText={ (value) => this.setState({userObject: { ...userObject, position: value } }) }
                             />
-                            {/* <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>Software engineer</Text> */}
                         </View>
+                            {
+                                userObject.user_role == 'Member' &&
+                                <>
+                                <View style={{ marginTop: hp('2%') }}>
+                                    <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
+                                        <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                                        <Text style={{ fontSize: hp('2.2%') }}>{lng.type_of_user}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{ userObject.user_type }</Text>
+                                        <TouchableOpacity
+                                            style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
+                                            onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
+                                        >
+                                            <Text style={{ color: "white" }}>{lng.change}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
 
-                        <View style={{ marginTop: hp('2%') }}>
-                            <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: hp('1%') }}>
-                                <Icon name="account-group" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                                <Text style={{ fontSize: hp('2.2%') }}>Type of user</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#707070', fontWeight: '300' }}>{this.state.type == "read" ? "Read only" : "Read , Post_read"}</Text>
-                                <TouchableOpacity
-                                    style={{ padding: hp('1%'), paddingHorizontal: hp('2%'), backgroundColor: '#427AA1', borderRadius: 20 }}
-                                    onPress={() => this.setState({ visibleChangeTypeOfUser: true })}
-                                >
-                                    <Text style={{ color: "white" }}>Change</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: hp('2%') }}>
-                            <Text style={{ fontSize: hp('1.7%'), width: '70%', color: '#707070' }}>*If you want to change permission to post. You can request to admin.</Text>
-                        </View>
-
-                    </View>
-                </ScrollView>
+                                <View style={{ marginTop: hp('2%') }}>
+                                    <Text style={{ fontSize: hp('1.7%'), width: '70%', color: '#707070' }}>{lng.edit_profile_footer}</Text>
+                                </View>
+                                </>
+                            }
+                    </KeyboardAvoidingView>
+                    </ScrollView>
+                </View>
                 {this.renderChangeTypeOfUser()}
                 {this.renderModalPostandRead()}
             </View >
         );
-
-
-
-
-
     }
-
-
 };
 
 const styleScoped = StyleSheet.create({
     btnImageProfile: {
-        // padding: hp('1%'),
         width: hp('4%'),
         height: hp('4%'),
         borderRadius: 100,
-        // borderWidth: 1,
-        // borderColor: 'black',
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',

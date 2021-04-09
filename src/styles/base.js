@@ -45,6 +45,9 @@ export default StyleSheet.create({
     btnGoogle: {
         backgroundColor: '#FF0000'
     },
+    btnApple: {
+        backgroundColor: '#333333'
+    },
     btnTagPrimary: {
         backgroundColor: colors.primary,
         paddingHorizontal: hp('1.5%'),
@@ -124,12 +127,26 @@ export default StyleSheet.create({
     sectionSocial: {
         marginTop: hp('2%'),
         paddingTop: hp('2.5%'),
-        borderTopWidth: 1,
+        borderTopWidth: 0.5,
         borderTopColor: '#B5B5B5',
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingHorizontal: hp('2%'),
         paddingBottom: hp('1%')
-    }
+    },
+
+    flex__start: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+    },
+    flex__end: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
+    space__between: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+
 })

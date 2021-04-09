@@ -1,32 +1,39 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
-    TextInput,
     TouchableOpacity,
     Platform
 } from 'react-native';
 
-import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import IconMaterail from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import translate from '../constant/lang'
 import { colors, fonts, apiServer } from '../constant/util';
 
 export default class MenuFooterUser extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            lng: {}
+        }
     }
+    async UNSAFE_componentWillMount () {
+        await this.getLang();
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+
     render() {
+        const { lng } = this.state
         return (
             <View >
                 <View style={styleScoped.container}>
@@ -34,22 +41,20 @@ export default class MenuFooterUser extends Component {
                         Actions.replace('Main')
                     }}>
                         <Icon name="home" size={hp('2.6%')} color={this.props.value == 'home' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'home' ? fonts.color.primary : color = "#B5B5B5" }}>Home</Text>
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'home' ? fonts.color.primary : color = "#B5B5B5" }}>{lng.home}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ width: '33.33%' }} onPress={() => {
                         Actions.replace('MessageBoard')
                     }}>
                         <Icon name="globe" size={hp('2.6%')} color={this.props.value == 'message' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'message' ? fonts.color.primary : color = "#B5B5B5" }}>Message Board</Text>
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'message' ? fonts.color.primary : color = "#B5B5B5" }}>{lng.message_board}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ width: '33.33%' }} onPress={() => {
                         Actions.replace('Activity')
                     }}>
                         <Icon name="calendar" size={hp('2.6%')} color={this.props.value == 'activity' ? colors.primary : color = "#B5B5B5"} style={{ alignSelf: 'center' }} />
-                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'activity' ? fonts.color.primary : color = "#B5B5B5" }}>Activity</Text>
+                        <Text style={{ textAlign: 'center', fontSize: hp('1.2%'), color: this.props.value == 'activity' ? fonts.color.primary : color = "#B5B5B5" }}>{lng.activity}</Text>
                     </TouchableOpacity>
-
-
                 </View>
             </View>
         );

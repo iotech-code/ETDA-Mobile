@@ -1,165 +1,247 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
     StatusBar,
-    Image,
-    TextInput,
     TouchableOpacity,
+    ActivityIndicator,
+    Clipboard,
+    SafeAreaView,
     FlatList,
-    AsyncStorage
+    RefreshControl
 } from 'react-native';
-import axios from 'axios';
-import { Button, BottomSheet } from 'react-native-elements';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import HeaderNavbar from '../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import MenuFooter from '../components/MenuFooter'
 import MenuFooterUser from '../components/MenuFooterUser'
 import Post from '../components/Post'
-import { apiServer, refreshToken } from '../constant/util';
+import { homeFeed } from '../Service/PostService'
+import EventPost from '../components/EventPost'
+import translate from '../constant/lang'
+import FlashMessage, { showMessage } from "react-native-flash-message";
 export default class Main extends Component {
-    state = {
-        visibleSearch: false,
-        user_type: '',
-        token :'',
-        list_data : [],
-        user_role : ''
+    constructor(props) {
+        super(props)
+        this.state = {
+            visibleSearch: false,
+            user_type: '',
+            token: '',
+            list_data: [],
+            user_role: '',
+            isFetching: false,
+            lng: {},
+            loading: false,
+            feedCurrentPage: 0,
+            isFinish: false,
+        }
+        this.callHomeFeed.bind(this)
     }
 
-    async componentDidMount() {
+    async componentWillUnmount() {
+        await this.setState({ list_data: false })
+    }
+
+    async UNSAFE_componentWillReceiveProps() {
+
+    }
+
+    async UNSAFE_componentWillMount() {
+        // console.log('test : ',  global.lng) // แสดงค่า gobal testGobal
+        await this.getUserInfo();
+        await this.getLang();
+        await this.callHomeFeed();
+    }
+
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+    }
+
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+        this.setState({
+            user_type: user_data.user_type,
+            user_role: user_data.user_role
+        })
+    };
+
+    async callHomeFeed() {
+        this.setState({ list_data: false })
+        this.setState({ isFetching: true })
         try {
-            await refreshToken()
-            const token = await AsyncStorage.getItem('token');
-            const user_type = await AsyncStorage.getItem('user_type');
-            const user_role = await AsyncStorage.getItem('user_role');
-            this.setState({
-                user_type: user_type,
-                token : token,
-                user_role : user_role
-            })
-            this.callHomeFeed(token)
-        } catch (err) {
-            console.log('err 1 : ' ,err)
+            console.log('Refreshing...')
+            let { data } = await homeFeed(0, 0);
+            await this.setState({ list_data: data.post_data });
+        } catch (error) {
+            console.log("Main scene error : ", error)
+        }
+        this.setState({ isFetching: false })
+    };
+
+
+    shareCallback(url) {
+        showMessage({
+            message: "Share url copied!",
+            description: url,
+            type: "info",
+        });
+        Clipboard.setString(url)
+    }
+
+    async updateHomeFeed() {
+        try {
+            let { feedCurrentPage, isFinish } = this.state
+            await this.setState({ loading: true })
+            
+            if (isFinish === false) {
+                let { data } = await homeFeed(this.state.feedCurrentPage, this.state.feedCurrentPage + 1);
+                console.log('Loading more...', this.state.feedCurrentPage, this.state.feedCurrentPage + 1)
+                if (feedCurrentPage < Math.ceil(data.post_count / 10)) {
+                    let new_data = [...this.state.list_data, ...data.post_data]
+                    await this.setState({
+                        list_data: new_data,
+                        feedCurrentPage: this.state.feedCurrentPage + 1
+                    })
+                } else {
+                    this.setState({ isFinish: true })
+                }
+            }
+
+            await this.setState({ loading: true })
+        } catch (error) {
+            console.log("Main scene error : ", error)
         }
     }
 
+    createPost() {
+        Actions.replace('CreatePost', {
+            'type_value': 'create', 'title': '',
+            'description': '',
+            'post_images': []
+        })
+    }
 
+    sortFeed(feed) {
+        this.setState({ list_data: feed.reverse() });
+    }
 
-    callHomeFeed = async (token) => {
-        axios.get(apiServer.url + '/api/backend/post/home-feed',{
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
+    updatePostLike(like, like_count, post_id) {
+        // console.log(like , post_id)
+        let { list_data } = this.state
+        list_data.forEach(el => {
+            if (el.post_id == post_id) {
+                el.is_like = like
+                el.like = like_count
             }
         })
-        .then((response) => {
-            var i  
-            var objectHomeFeed = {}
-            var list = []
-            for (i = 0 ; i < response.data.post_data.length ; i++){
-                objectHomeFeed = {
-                    post_id : response.data.post_data[i].post_id,
-                    title : response.data.post_data[i].title,
-                    date : response.data.post_data[i].post_date,
-                    description : response.data.post_data[i].post_description,
-                    tags : response.data.post_data[i].tags,
-                    post_images :  response.data.post_data[i].post_images,
-                    comment : response.data.post_data[i].comment_number,
-                    like : response.data.post_data[i].like,
-                }
-                this.setState({
-                    list_data : list
-                })
-            })
-            .catch((error) => {
-                console.log('err 2 : ' ,error)
-            })
-        })
-        .catch((error) => {
-            console.log('err 2 : ' ,error)
-        })
-        .finally(function () {
-        });
+        this.setState({ list_data })
+    }
 
+    renderTypeInFlatlist({ item }) {
+        // console.log(item)
+        if (item.post_type == 'event') {
+            return (
+                <EventPost data={item} onDeletePost={() => this.callHomeFeed()} ></EventPost>
+            )
+        } else if (item.post_type == 'blog') {
+            return (
+                <Post
+                    data={item}
+                    page="main"
+                    sharePressButton={(url) => this.shareCallback(url)}
+                    onPostUpdate={async () => this.callHomeFeed()}
+                    onDeletePost={() => this.callHomeFeed()}
+                    updatePostLike={(like,like_count, post_id) => this.updatePostLike(like,like_count, post_id)}
+                >
+                </Post>
+            )
+        }
+    }
+
+    renderFooter = () => {
+        //it will show indicator at the bottom of the list when data is loading otherwise it returns null
+        if (!this.state.loading) return null;
+        return (
+            <ActivityIndicator
+                style={{ color: '#000'}}
+            />
+        );
     };
 
     render() {
-
-        const { dataList } = this.state
+        const { isFetching, user_role, list_data, lng, user_type } = this.state
         return (
-            <View style={{ flex: 1, ...style.marginHeaderStatusBar }}>
+            <View style={{ flex: 1, ...style.marginHeaderStatusBar, backgroundColor: '#F9FCFF' }}>
                 <StatusBar barStyle="dark-content" />
-                <ScrollView>
-                    <View style={{ flex: 1, backgroundColor: '#F9FCFF', paddingBottom: hp('1%') }}>
-                    {this.state.user_role == "Member" ? 
-                    <HeaderNavbar  value={'member'}></HeaderNavbar>
-                    :
-                    <HeaderNavbar  value={'admin'}></HeaderNavbar>
+                <FlashMessage position="top" style={{ backgroundColor: '#5b5b5b'}} />
+                <View style={{ flex: 1, paddingBottom: hp('1%') }}>
+                    {
+                        user_role == "Member" ?
+                            <HeaderNavbar value={'member'}></HeaderNavbar>
+                            :
+                            <HeaderNavbar value={'admin'}></HeaderNavbar>
                     }
-                        <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                padding: hp('2%'),
-                                alignItems: 'center'
-                            }}>
-                                <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}> ETDA Blogs </Text>
-                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
-                            </View>
-
-                            {/* section admin */}
-                            {this.state.user_type == 'read, post_read' ?
-                                <View style={{ ...style.container, marginBottom: hp('1%') }}>
-                                    <Button
-                                        title="Write New Blog"
-                                        Outline={true}
-                                        titleStyle={{ color: '#003764', }}
-                                        buttonStyle={{
-                                            padding: hp('1%'),
-                                            ...style.btnPrimaryOutline,
-                                            ...style.btnRounded
-                                        }}
-                                        onPress={() => Actions.CreatePost({ 'type_value' : 'create' , 'title': '',
-                                        'description': '',
-                                        'post_images': []})}
-                                    />
 
 
+                    {/* loading data */}
+
+                    {
+                        isFetching ?
+                            <ActivityIndicator color="#003764" style={{ marginTop: hp('35%') }} />
+                            : <Fragment>
+                                <View style={{ ...style.space__between, padding: hp('2%'), alignItems: 'center' }}>
+                                    <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.etda_blog}</Text>
+                                    <TouchableOpacity onPress={() => this.sortFeed(list_data)}>
+                                        <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                                    </TouchableOpacity>
                                 </View>
-                                :
-                                <View style={{ ...style.container, marginBottom: hp('1%') }}></View>
-                            }
-                            {/* end section admin */}
+                                {
+                                    user_role == 'Admin'?
+                                        <View style={{ ...style.container, marginBottom: hp('1%') }}>
+                                            <Button
+                                                title={lng.new_post}
+                                                Outline={true}
+                                                titleStyle={{ color: '#003764', }}
+                                                buttonStyle={{
+                                                    padding: hp('1%'),
+                                                    ...style.btnPrimaryOutline,
+                                                    ...style.btnRounded
+                                                }}
+                                                onPress={() => this.createPost()}
+                                            />
+                                        </View> : null
+                                }
+                                <SafeAreaView style={{ flex: 1 }}>
+                                    <FlatList
+                                        data={this.state.list_data}
+                                        renderItem={this.renderTypeInFlatlist.bind(this)}
+                                        keyExtractor={item => item.id}
+                                        // onEndReached={this.updateHomeFeed()}
+                                        onEndReached={!this.state.isFinish && this.updateHomeFeed.bind(this)}
+                                        ListFooterComponent={this.renderFooter.bind(this)}
+                                        onEndReachedThreshold={0.4}
+                                        refreshControl={
+                                            <RefreshControl
+                                                refreshing={this.state.isFetching}
+                                                onRefresh={this.callHomeFeed.bind(this)}
+                                            />
+                                        }
+                                    />
+                                </SafeAreaView>
 
-                            <ScrollView style={{ marginBottom: 24 }}>
-                                {this.state.list_data.map((item, index) => {
-                                return (
-                                    <Post data={item} key={`post_${index}`}></Post>
-                                    )}
-                                )}
-                            </ScrollView>
-
-
-                        </View>
-                    </View>
-                
-                
-                </ScrollView>
-                <View style={{ backgroundColor: null }}>
-                    {this.state.user_role == "Member" ? 
-                         <MenuFooterUser value={'home'}></MenuFooterUser>
-                        :
-                        <MenuFooter value={'home'}></MenuFooter>
+                            </Fragment>
                     }
-                   
+                    {/* end loading data */}
                 </View>
             </View>
         );

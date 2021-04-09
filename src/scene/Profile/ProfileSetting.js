@@ -1,62 +1,127 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
-    TextInput,
-    TouchableOpacity,
-    FlatList
+    TouchableOpacity
 } from 'react-native';
 
-import { Button, BottomSheet } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconFonAwesome from 'react-native-vector-icons/FontAwesome'
-import { apiServer } from '../../constant/util';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import translate from '../../constant/lang'
 
 export default class ProfileSetting extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super();
+        this.state = {
+            visibleSearch: false,
+            socialID: 'no', 
+            lng: {},
+            user_data: {}
+        }
     }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
+
+    async UNSAFE_componentWillReceiveProps(props){
+        await this.getLang();
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+
+    async componentDidMount () {
+        const social = await AsyncStorage.getItem('social_network');
+        await this.getUserInfo();
+        await this.setState({
+            socialID:  social
+        })
+    }
+
+    async getUserInfo () {
+        let json_data = await AsyncStorage.getItem('user_data');
+        let user_info = await JSON.parse(json_data);
+        await this.setState({
+            user_data: user_info
+        });
+    }
+
     render() {
+        const {socialID, lng} = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ backgroundColor: 'white', paddingBottom: hp('2%') }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('Main')} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Setting</Text>
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.replace('MyProfile', {refresh: {}})} />
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.setting}</Text>
                             <View></View>
                         </View>
                     </View>
                     <View >
-                        <TouchableOpacity style={{ padding: hp('2%'), flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}
-                            onPress={() => Actions.replace('ChangePassword')}
-                        >
-                            <Icon name="key" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Change password</Text>
-                        </TouchableOpacity>
-                        <View style={{ ...style.divider }}></View>
-                        <TouchableOpacity
-                            style={{
-                                padding: hp('2%'),
-                                flexDirection: 'row',
-                                justifyContent: 'flex-start',
-                                alignItems: 'center'
+           
+                        <TouchableOpacity 
+                            style={{ 
+                                padding: hp('2%'), 
+                                flexDirection: 'row', 
+                                justifyContent: 'flex-start', 
+                                alignItems: 'center' 
                             }}
-                            onPress={() => Actions.replace('DeleteAccount')}
+                            onPress={() => Actions.push('Language')}
                         >
-                            <Icon name="close-octagon" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#FF0000' }} />
-                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete account</Text>
-                        </TouchableOpacity>
-                        <View style={{ ...style.divider }}></View>
+                            <Icon name="earth" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.language}</Text>
+                    </TouchableOpacity>
+                    <View style={{ ...style.divider }}></View>
+                        {
+                            socialID == 'no' ?
+                            <>
+                                <TouchableOpacity 
+                                    style={{ 
+                                        padding: hp('2%'), 
+                                        flexDirection: 'row', 
+                                        justifyContent: 'flex-start', 
+                                        alignItems: 'center' 
+                                    }}
+                                    onPress={() => Actions.push('ChangePassword')}
+                                >
+                                    <Icon name="key" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#707070' }} />
+                                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.change_password}</Text>
+                                </TouchableOpacity>
+                                <View style={{ ...style.divider }}></View>
+                            </>
+                            :
+                            <></>
+                        }
+                        {
+                            (this.state.user_data.user_role != 'Admin') &&
+                            <>
+                            <TouchableOpacity
+                                style={{
+                                    padding: hp('2%'),
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center'
+                                }}
+                                onPress={() => Actions.push('DeleteAccount')}
+                            >
+                                <Icon name="close-octagon" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#FF0000' }} />
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_account}</Text>
+                            </TouchableOpacity>
+                            <View style={{ ...style.divider }}></View>
+                            </>
+                        }
 
                     </View>
                 </ScrollView>

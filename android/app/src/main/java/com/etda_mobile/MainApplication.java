@@ -3,20 +3,25 @@ package com.etda_mobile;
 import android.app.Application;
 import android.content.Context;
 
-import com.facebook.react.BuildConfig;
+// import com.facebook.react.BuildConfig;
 import com.facebook.react.PackageList;
+import com.facebook.FacebookSdk;
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.beefe.picker.PickerViewPackage;
+import fr.snapp.imagebase64.RNImgToBase64Package;
+import com.xmartlabs.rnline.RNLinePackage;
+// import com.xmartlabs.lineloginmanager.LineLoginPackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.imagepicker.ImagePickerPackage;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.reactnativecommunity.checkbox.ReactCheckBoxPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage; 
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -39,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+         
           return packages;
         }
 

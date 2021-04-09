@@ -10,10 +10,9 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    Platform,
-    AsyncStorage
+    Platform
 } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, ListItem } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
@@ -34,11 +33,11 @@ export default class MessagsPost extends Component {
             type: 'edit',
             visibleBottomSheet: false,
             data: {
-                title: 'E-commerce new gen',
-                time: ' 11/11/2020  3:30 pm',
-                image: require('../assets/images/post_1.png'),
-                detail: ' Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et',
-                tag: ['E-commerce', 'Digital Law']
+                title: '',
+                time: '',
+                image: '',
+                detail: '',
+                tag: []
             },
             socail: {
                 like: 22,
@@ -47,18 +46,15 @@ export default class MessagsPost extends Component {
             default_avatar: require('../assets/images/default_avatar.jpg'),
             isImageViewVisible: false,
             isIndeximageForshow: 0,
-            like: 0
+            like: 0,
+         
         }
     }
-
-
-
 
     async componentDidMount() {
         try {
             const token = await AsyncStorage.getItem('token')
             const like = this.props.data.like
-            console.log('token : ', token)
             this.setState({
                 token: token,
                 like: like
@@ -85,23 +81,20 @@ export default class MessagsPost extends Component {
         axios.delete(apiServer.url + '/api/backend/post/delete/' + post_id, {
             headers
         })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    Actions.MessageBoard()
-                } else {
+        .then((response) => {
+            console.log('data : ', response.data)
+            if (response.data.status == "success") {
+                Actions.MessageBoard()
+            } else {
 
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
+            }
+        })
+        .catch((error) => {
+            console.log('data : ', error)
+        })
+        .finally(function () {
+        });
     };
-
-
 
     callPostLike = async (post_id) => {
         const headers = {
@@ -155,17 +148,11 @@ export default class MessagsPost extends Component {
         })
             .then((response) => {
                 if (response.data.status == "success") {
-
+                    
                 } else {
 
                 }
             })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
     };
 
     async imageViewer(url, index) {
@@ -205,13 +192,13 @@ export default class MessagsPost extends Component {
                     ...styleScoped.listMore
                 }}
                     onPress={() => {
-                           Actions.CreatePost({
-                            'type_value' : 'edit',
+                        Actions.CreatePost({
+                            'type_value': 'edit',
                             'title': this.props.data.title,
                             'description': this.props.data.description,
                             'post_images': this.props.data.post_images
                         })
-                            this.setState({ visibleBottomSheet: false }),
+                        this.setState({ visibleBottomSheet: false }),
                             this.RBSheet.close()
                     }}
                 >
@@ -268,12 +255,11 @@ export default class MessagsPost extends Component {
                                 marginRight: hp('1%'),
                                 borderRadius: 50
                             }}>
-
                                 <Image source={this.props.data.user_image ? { uri: this.props.data.user_image } : default_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                             </View>
                             <View >
                                 <Text style={{ fontSize: hp('2%'), }}>{this.props.data.user_name}</Text>
-                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
+                                <Text style={{ fontSize: hp('1.2%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
                             </View>
                         </View>
                         <TouchableOpacity onPress={() => this.openOption()} >
@@ -298,10 +284,6 @@ export default class MessagsPost extends Component {
                         </View>
                     </View>
                     <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                        {/* <Image
-                            source={{ uri: this.props.data.post_images[0] }}
-                            style={{ width: '100%', height: '100%', resizeMode: 'stretch' }}
-                        /> */}
                         <FbGrid
                             images={post_images}
                             onPress={(url, index) => this.imageViewer(url, index)}
@@ -314,20 +296,19 @@ export default class MessagsPost extends Component {
                         />
 
                     </View>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={() => {
                             Actions.CreatePost({
-                                'type_value' : 'detail',
+                                'type_value': 'detail',
                                 'title': this.props.data.title,
                                 'description': this.props.data.description,
                                 'post_images': this.props.data.post_images
                             })
-                          //  Actions.CreatePost({ 'type': this.props.type , 'type_value' : 'detail' , 'data' : item })
                         }}
                     >
-                    <View style={{ marginTop: hp('1%') }}>
-                        <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
-                    </View>
+                        <View style={{ marginTop: hp('1%') }}>
+                            <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
+                        </View>
 
                     </TouchableOpacity>
 

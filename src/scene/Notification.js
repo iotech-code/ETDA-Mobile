@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
-    TextInput,
     TouchableOpacity,
-    FlatList,
-    KeyboardAvoidingView,
-    AsyncStorage,
 } from 'react-native';
-
-import { Button, BottomSheet } from 'react-native-elements';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -23,97 +15,55 @@ import style from '../styles/base';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconMaterail from 'react-native-vector-icons/MaterialIcons';
-import axios from 'axios';
-import HeaderNavbar from '../components/Navbar';
 import { Fragment } from 'react';
-import { apiServer } from '../constant/util';
+import HttpRequest from '../Service/HttpRequest'
+import translate from '../constant/lang'
+import { getListNoti } from '../Service/PostService'
+import moment from 'moment'
+import { Avatar } from 'react-native-elements';
+const http = new HttpRequest();
 export default class Notification extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            lng: {},
             dataEvent: [
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    title: 'Events Topic',
-                    time: '11/02/2020  3:30 pm'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    title: 'Events Topic',
-                    time: '11/02/2020  5:30 pm'
-                }
             ],
             dataNoti: [
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                },
-                {
-                    imageAvatar: require('../assets/images/default_avatar.jpg'),
-                    user: 'ETDA',
-                    title: 'commented on your blog.',
-                    time: '2 minutes ago'
-                }
+
             ],
-            list_data :[]
+            default_avatar: require('../assets/images/default_avatar.jpg')
         }
     }
 
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+    }
 
-    async componentDidMount() {
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+
+    componentDidMount() {
+        this.getListNotification();
+    }
+
+    async getListNotification() {
         try {
-            const token = await AsyncStorage.getItem('token');
-            this.setState({
-                token : token,
-            })
-            this.callNotiList(token)
-        } catch (err) {
-
+            let { data } = await getListNoti()
+            this.setState({ dataEvent: data.post_data.event })
+            this.setState({ dataNoti: data.post_data.notification })
+        } catch (error) {
+            console.log('Error list Notification : ', error)
         }
+
     }
-
-
-    callNotiList = async (token) => {
-        console.log('token : ' , token)
-        axios.get(apiServer.url + '/api/backend/noti/noti-list',{
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-            .then((response) => {
-               
-            })
-            .catch((error) => {
-                console.log('error : ' , error)
-            })
-            .finally(function () {
-            });
-
-    };
 
     render() {
-        const { dataEvent, dataNoti } = this.state
+        const { dataEvent, dataNoti, lng, default_avatar } = this.state
         return (
             <View
                 style={{
@@ -121,7 +71,15 @@ export default class Notification extends Component {
                     ...style.marginHeaderStatusBar,
                     backgroundColor: '#F9FCFF'
                 }}>
-                <HeaderNavbar value={'admin'}></HeaderNavbar>
+                <View style={{ ...style.navbar }}>
+                    <TouchableOpacity onPress={() => Actions.replace('MainScene')}>
+                        <Icon name="chevron-left" size={hp('3%')} color="white" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>
+                        {lng.notifications}
+                    </Text>
+                    <View></View>
+                </View>
                 <View
                     style={{
                         ...style.container,
@@ -130,41 +88,49 @@ export default class Notification extends Component {
                         paddingBottom: hp('2%'),
                         ...styleScoped.shadowCard
                     }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                    <View style={{ ...style.space__between }}>
+                        <View style={{ ...style.flex__start }}>
                             <Icon
                                 name="calendar"
                                 size={hp('2.5%')}
                                 color="#427AA1"
                                 style={{ marginRight: hp('1%') }}
                             />
-                            <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>Your events today</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>{lng.event_today}</Text>
                         </View>
-                        <TouchableOpacity>
+                        {/* <TouchableOpacity>
                             <Icon
                                 name="chevron-down"
                                 size={hp('2.5%')}
                                 color="#B5B5B5"
                                 style={{ marginRight: hp('1%') }}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
 
                     {/* content */}
                     <View style={{ marginTop: hp('2%') }}>
                         {
+                            !dataEvent ?
+                            <Text>{lng.no_new_event}</Text>
+                            :
                             dataEvent.map((el, index) => {
                                 return (
-                                    <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`}>
-                                        <View style={{ ...styleScoped.wrapperImageAvatar }}>
-                                            <Image source={el.imageAvatar} style={{ ...styleScoped.imageAvatar }} />
+                                    <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`} onPress={() => Actions.EventDetail({ data: el })}>
+                                        <View style={{ marginRight: hp('1.5%') }}>
+                                            <Avatar source={!el.author.photo ? default_avatar : { uri: el.author.photo }} rounded size="medium" />
                                         </View>
                                         <View >
                                             <Text style={{ ...styleScoped.textTtile }}>
                                                 {el.title}
                                             </Text>
                                             <Text style={{ ...styleScoped.textTime }}>
-                                                {el.time}
+                                                {
+                                                    el.post_addition_data ?
+                                                        moment(el.post_addition_data.event_date).format('DD/MM/YYYY')
+                                                        : ''
+                                                } {el.post_addition_data && el.post_addition_data.event_schedule[0].time}
+
                                             </Text>
                                         </View>
                                     </TouchableOpacity>
@@ -172,11 +138,6 @@ export default class Notification extends Component {
                             })
                         }
                     </View>
-                    <View style={{ ...style.divider, marginVertical: hp('1%') }}></View>
-                    <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styleScoped.textSeeMore }}>See Upcoming Events</Text>
-                        <Icon name="chevron-right" size={hp('2.5%')} color="#707070" />
-                    </TouchableOpacity>
                 </View>
 
                 {/* Notification */}
@@ -190,24 +151,38 @@ export default class Notification extends Component {
                 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                         <IconMaterail name="notifications" size={hp('2.5%')} color="#427AA1" style={{ marginRight: hp('1%') }} />
-                        <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>Notifications</Text>
+                        <Text style={{ fontSize: hp('2%'), color: '#427AA1' }}>{lng.notifications}</Text>
                     </View>
                     <View style={{ ...style.divider, marginVertical: hp('2.5%') }}></View>
                     <ScrollView>
                         {
+                            !dataNoti ?
+                            <Text>{lng.no_notification}</Text>
+                            :
                             dataNoti.map((el, index) => {
+                                let action_to = null
+                                if (el.post_type == 'blog') {
+                                    action_to = 'PostDetail'
+                                } else if (el.post_type == 'poll') {
+                                    action_to = 'PollDetail'
+                                } else if (el.post_type == 'event') {
+                                    action_to = 'EventDetail'
+                                } else if (el.post_type == 'survey') {
+                                    action_to = 'SurveyDetail'
+                                }
+                                let post_type = el.post_type.toUpperCase()
                                 return (
                                     <Fragment>
-                                        <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`}>
-                                            <View style={{ ...styleScoped.wrapperImageAvatar }}>
-                                                <Image source={el.imageAvatar} style={{ ...styleScoped.imageAvatar }} />
+                                        <TouchableOpacity style={{ ...styleScoped.warpperTitleEvent }} key={`event_${index}`} onPress={() => Actions.push(action_to, { data: el })}>
+                                            <View style={{ marginRight: hp('1%') }}>
+                                                <Avatar source={!el.author.photo ? default_avatar : { uri: el.author.photo }} rounded size="medium" />
                                             </View>
                                             <View >
                                                 <Text style={{ ...styleScoped.textTtile, color: '#0D1F2D' }}>
-                                                    {el.user} <Text style={{ fontWeight: '400' }}>{el.title}</Text>
+                                                    {el.author.full_name} <Text style={{ fontWeight: '400' }} ellipsizeMode="tail" numberOfLines={0.5}>CREATE {post_type} </Text>
                                                 </Text>
                                                 <Text style={{ ...styleScoped.textTime, fontWeight: '300' }}>
-                                                    {el.time}
+                                                    {el.post_date}
                                                 </Text>
                                             </View>
                                         </TouchableOpacity>

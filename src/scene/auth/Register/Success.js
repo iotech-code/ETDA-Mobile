@@ -3,53 +3,55 @@ import React, { Component } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
     StatusBar,
-    Image,
-    TouchableOpacity,
-    TextInput,
-    AsyncStorage
+    Platform
 } from 'react-native';
-
+import HttpRequest from '../../../Service/HttpRequest';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
-import { colors, apiServer } from '../../../constant/util'
+import { apiServer } from '../../../constant/util';
 
+const http = new HttpRequest();
 export default class RegisterSuccess extends Component {
 
-
-
     callLogin = async () => {
-        const { navigation } = this.props;
         const data = {
-            "user_email": navigation.getParam('email', ''),
-            "user_password": navigation.getParam('password', ''),
-            "authen_method": "local"
+            "user_email": this.props.authen_method == 'local' ? this.props.email : '',
+            "user_password": this.props.authen_method == 'local' ? this.props.password : '',
+            "authen_method": this.props.authen_method,
+            "google_id": this.props.authen_method == 'google' && this.props.email,
+            "facebook_id": !this.props.authen_method && this.props.email,
+            "line_id": this.props.authen_method == 'line' && this.props.email,
+            "device": Platform.OS
         }
-        axios.post(apiServer.url+'/api/backend/user/login', data)
-            .then((response) => {
-                if (response.data.status == "success") {
-                    AsyncStorage.setItem('token', response.data.token);
-                    Actions.replace('Main')
-                } else {
+        let loginRequest = await http.post(apiServer.url+'/api/backend/user/login', data);
+        let {status, token} = await loginRequest.data
 
-                }
-            })
-            .catch((error) => {
+        if (status == "success") {
+            await AsyncStorage.setItem('token', token);
+            this.callInfomation();
+        }
+    }
 
-                // setLoading(false)
-                // console.log('data error : ', error)
-            })
-            .finally(function () {
-            });
+    callInfomation = async () => {
+        await http.setTokenHeader();
+        let request = await http.post(apiServer.url + '/api/backend/user/information', data);
+        let {status, data} = await request.data
 
-    };
+        if (status == "success") {
+            await AsyncStorage.setItem('user_data', JSON.stringify(data));
+            Actions.replace('MainScene');
+        } else {
+            alert('Can\'t login: issue about server response data please try again.')
+        }
+    }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -61,10 +63,7 @@ export default class RegisterSuccess extends Component {
                         justifyContent: 'center',
                         ...style.container
                     }}>
-
                         <Icon name="check-circle" size={hp('30%')} color="#30D100" />
-
-
                     </View>
                     <View style={{ marginTop: hp('3%') }}>
                         <Text style={styleScoped.textWelcome}>Your registration has been submitted,</Text>

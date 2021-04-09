@@ -1,181 +1,227 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
+    Clipboard,
     Image,
     TextInput,
     TouchableOpacity,
     FlatList,
-    AsyncStorage
+    Keyboard
 } from 'react-native';
-
-import { Button, BottomSheet } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Comment from '../../components/Comment'
-import { fonts, apiServer } from '../../constant/util'
-import axios from 'axios';
+import { fonts } from '../../constant/util'
 import { KeyboardAvoidingView } from 'react-native';
+import { getListCommentPost, createCommentPost } from '../../Service/PostService'
+import ImageGrid from '../../components/ImageGrid'
+import ImageView from 'react-native-image-view';
+import ImagePicker from 'react-native-image-crop-picker';
+import FlashMessage, { showMessage } from "react-native-flash-message";
+import translate from '../../constant/lang'
+import { actionLikePost, updatePostView, getPost, deleteComment } from '../../Service/PostService'
 
 export default class EventDetail extends Component {
-    state = {
-        visibleSearch: false,
-        data: {
-            title: 'E-commerce new gen By ETDA official',
-            time: '11/11/2020  3:30 pm',
-            detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur',
-            image: require('../../assets/images/post_1.png')
-        },
-        socail: {
-
-        },
-        comment: '',
-        post_id: 0,
-        reply_to: 0
-    }
-
-
-
-
-
 
     constructor(props) {
         super(props)
         this.state = {
             visibleSearch: false,
-            data: {
-                title: 'E-commerce new gen By ETDA official',
-                time: '11/11/2020  3:30 pm',
-                detail: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur',
-                image: require('../../assets/images/post_1.png')
-            },
             token: '',
             post_id: 0,
             list_comment: [],
             default_avatar: require('../../assets/images/default_avatar.jpg'),
+            reply_to: null,
+            comment: null,
+            indeximageView: 0,
+            isImageViewVisible: false,
+            commentImage: null,
+            commentImage64: null,
+            lng: {},
+            is_like: this.props.data.is_like,
+            like_count: this.props.data.like,
+            post_data: this.props.data
         }
     }
 
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
 
     async componentDidMount() {
+        const { post_id } = this.props.data
+        await this.setState({ post_id })
+        this.callGetComment(post_id)
+        await updatePostView({ "post_id": post_id })
+        setTimeout(() => {
+            this.getPostDetail();
+        }, 1000)
+    }
+
+    async getPostDetail() {
+        const { post_id } = this.props.data
+        let post_data = await getPost({ "post_id": post_id });
+        let data = post_data.data.post_data
+        this.setState({ post_data: data })
+    }
+
+    async callGetComment(post_id) {
+
         try {
-            const token = await AsyncStorage.getItem('token')
-            const post_id = await AsyncStorage.getItem('post_id')
-            this.setState({
-                token: token,
-                post_id: post_id
-            })
-
-            this.callGetComment(post_id)
-
-        } catch (err) {
-            // handle errors
+            let response = await getListCommentPost({ post_id })
+            this.setState({ list_comment: response.data.comments })
+        } catch (error) {
+            console.log('Get list comment error : ', error)
         }
-    }
-
-
-    callGetComment = async (post_id) => {
-        const data = {
-            "post_id": post_id
-        }
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/get-comment', data, {
-            headers
-        })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    this.setState({
-                        list_comment: response.data.comments
-                    })
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
 
     };
-
-
-    callPostComment = async () => {
-        const data = {
-            "post_id": this.state.post_id,
-            "reply_to": this.state.reply_to,
-            "message": this.state.comment
+    async createComment() {
+        try {
+            const { post_id, reply_to, comment } = this.state
+            let res = await createCommentPost(post_id, reply_to, comment)
+            let { status } = res.data
+            if (status == "success") {
+                await this.callGetComment(post_id)
+                this.setState({ comment: null })
+                Keyboard.dismiss()
+            }
+        } catch (error) {
+            console.log('Create comment error : ', error)
         }
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/comment', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    this.callGetComment(this.state.post_id)
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
     };
-
-
     onPressButtonChildren(data) {
-        this.setState({
-            reply_to: data
-        })
-        console.log(data)
+        this.setState({ reply_to: data.User_id, comment: '@' + data.Fullname + ' ' })
+        this.secondTextInput.focus()
+
     }
 
+
+    async onPressCommentDelete(ID) {
+        
+        const comments = await this.state.list_comment;
+        for(var i=0;i<comments.length;i++) {
+            if(comments[i].Comment_id == ID) {
+                comments.splice(i, 1);
+            }
+        }
+        await this.setState({ list_comment: comments})
+        await deleteComment(ID);
+    }
+
+    async pickImage() {
+        this.setState({ loadingImage: true })
+        let images = await ImagePicker.openPicker({
+            multiple: false,
+            includeBase64: true
+        })
+        var image_base64 = 'data:image/jpeg;base64,' + images.data
+
+        await this.setState({
+            commentImage: images.sourceURL,
+            commentImage64: image_base64
+        });
+        console.log(this.state)
+    }
+
+    showImage(index) {
+        this.setState({
+            indeximageView: index,
+            isImageViewVisible: true
+        })
+    }
+
+    sharePOST(post_url) {
+        console.log(post_url)
+        showMessage({
+            message: "Share url copied!",
+            description: post_url,
+            type: "info",
+        });
+        Clipboard.setString(post_url)
+    }
+
+    async callPostLike(post_id) {
+        try {
+            let { is_like, like_count } = this.state
+            let response = await actionLikePost({ post_id })
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_like: is_like ? 0 : 1,
+                    like_count: is_like ? like_count - 1 : like_count + 1
+                })
+            }
+        } catch (error) {
+            console.log('Like post error : ', error)
+        }
+    };
+
+    async goBack() {
+        const { from_menu } = this.props
+        if (from_menu == "message_board") {
+            Actions.replace('MainScene', { menu: 'message' })
+        } else {
+            Actions.replace('MainScene', { menu: 'main' })
+        }
+    }
+    searchTag(item) {
+        Actions.push('Search', { tag: item })
+    }
 
     render() {
-        const { data, default_avatar } = this.state
-        const { navigation } = this.props;
-
-        onChangeTextComment = async (value) => {
-            this.setState({
-                comment: value
-            })
+        const { post_date, tags, post_description, post_images, post_id, title, share_link, total_view } = this.state.post_data;
+        const { author } = this.props.data;
+        // console.log(this.props.data)
+        const { default_avatar, list_comment, comment, indeximageView, isImageViewVisible, lng, is_like, like_count } = this.state
+        let imageForView = []
+        for (let index = 0; index < post_images.length; index++) {
+            const element = post_images[index];
+            let objImage = {
+                source: {
+                    uri: element,
+                },
+                width: 806,
+                height: 720,
+            }
+            imageForView.push(objImage)
         }
 
         return (
             <View style={{ flex: 1 }}>
+                <FlashMessage position="top"
+                    style={{
+                        backgroundColor: '#5b5b5b'
+                    }} />
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
 
                     <View style={{
-                        ...styleScoped.shadowCard, backgroundColor: 'white', paddingBottom: hp('2%'),
+                        ...styleScoped.shadowCard,
+                        backgroundColor: 'white',
+                        paddingBottom: hp('2%'),
                         marginBottom: hp('2%'),
                     }}>
                         <View style={{ ...style.navbar }}>
-                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Blog Detail</Text>
+                            <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => this.goBack()} />
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }} numberOfLines={1}>{title}</Text>
                             <View></View>
                         </View>
                         <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
+                            ...style.space__between,
                             alignItems: 'center',
                             paddingHorizontal: hp('2%'),
                             marginTop: hp('2%')
@@ -186,32 +232,28 @@ export default class EventDetail extends Component {
                                     width: hp('7%'),
                                     marginRight: hp('1%')
                                 }}>
-                                    <Image source={navigation.getParam('user_image') ? { uri: navigation.getParam('user_image') } : default_avatar} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+                                    <Image source={!author.photo ? default_avatar : { uri: author.photo }} style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                                 </View>
                                 <View >
-                                    <Text style={{ fontSize: hp('2%') }}>{navigation.getParam('user_name', '')}</Text>
-                                    {/* <Text style={{ fontSize: hp('2%') }}>By ETDA official</Text> */}
-                                    <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary }}>{navigation.getParam('user_date', '')}</Text>
+                                    <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
+                                    <Text style={{ fontSize: 12, color: fonts.color.secondary }}>{post_date}</Text>
                                 </View>
                             </View>
                         </View>
 
 
                         <View style={style.container}>
-                            <View style={{ marginTop: hp('2%'), flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-                                {/* <Button
-                                    title="E-commerce"
-                                    titleStyle={{ fontSize: hp('1.5%') }}
-                                    buttonStyle={{ ...style.btnTagPrimary }}
-                                /> */}
+                            <Text style={{ fontSize: hp('2.2%'), color: '#333', marginTop: 20, fontWeight: 'bold' }}>{title}</Text>
+                            <View style={{ marginTop: hp('1%'), ...style.flex__start, alignItems: 'center', flexWrap: 'wrap' }}>
                                 {
-                                    navigation.getParam('user_tags', '').map((item, index) => {
+                                    tags.map((item, index) => {
                                         return (
                                             <Button
                                                 title={item}
                                                 titleStyle={{ fontSize: hp('1.5%') }}
                                                 buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
                                                 key={index}
+                                                onPress={() => this.searchTag(item)}
                                             />
                                         )
                                     })
@@ -219,79 +261,105 @@ export default class EventDetail extends Component {
                             </View>
 
 
-                            <View style={{ height: hp('24%'), width: '100%', marginTop: hp('1%') }}>
-                                <Image source={{ uri: navigation.getParam('user_images', '') }} style={{ width: '100%', height: '100%', resizeMode: 'stretch' }} />
+                            <View style={{ maxHeight: hp('31%'), width: '100%', marginTop: hp('1%') }}>
+                                <ImageGrid
+                                    data={post_images}
+                                    getIndexImage={true}
+                                    onPressImage={(index) => this.showImage(index)} />
+                                <ImageView
+                                    images={imageForView}
+                                    imageIndex={indeximageView}
+                                    isVisible={isImageViewVisible}
+                                    onClose={() => this.setState({ isImageViewVisible: false })}
+                                />
                             </View>
                             <View style={{ marginTop: hp('1%') }}>
                                 <Text style={{ fontSize: hp('1.8%') }}>
-                                    {navigation.getParam('user_description', '')}
+                                    {post_description}
                                 </Text>
                             </View>
 
-                            <View style={{
-                                marginTop: hp('2%'),
-                                flexDirection: 'row',
-                                justifyContent: 'flex-start',
-                                alignItems: 'center'
-                            }}>
-                                <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}> {navigation.getParam('user_like', '')}</Text>
-                                <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                                <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{navigation.getParam('user_comment', '')}</Text>
-                            </View>
                         </View>
 
                         <View style={{
+                            ...style.flex__start,
                             marginTop: hp('2%'),
                             paddingTop: hp('1.5%'),
-                            borderTopWidth: 1,
-                            borderTopColor: '#B5B5B5',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
                             alignItems: 'center',
+                            width: wp('100%'),
                             paddingHorizontal: hp('2%'),
                         }}>
-                            <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
-                            <Text style={{ fontSize: hp('2%'), fontWeight: '300', color: '#707070' }}>{this.state.list_comment.length} comments</Text>
+                            <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{ flexDirection: 'row' }}>
+                                <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                                <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like_count}</Text>
+                            </TouchableOpacity>
+
+                            <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined ? 0 : total_view}</Text>
+
+                            <TouchableOpacity onPress={() => this.sharePOST(share_link)}>
+                                <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            </TouchableOpacity>
                         </View>
+                        <TouchableOpacity
+                            onPress={() => this.secondTextInput.focus()}
+                            style={{
+                                ...style.flex__start,
+                                marginTop: hp('2%'),
+                                paddingTop: hp('1.5%'),
+                                borderTopWidth: 1,
+                                borderTopColor: '#B5B5B5',
+                                alignItems: 'center',
+                                paddingHorizontal: hp('2%'),
+                            }}>
+                            <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                            <Text style={{ color: '#B5B5B5' }}>{list_comment.length}  {lng.comments}</Text>
+                        </TouchableOpacity>
                     </View>
 
 
                     {/* comment */}
                     <ScrollView style={{ marginBottom: 24 }}>
-                        {this.state.list_comment.map((item, index) => {
-                            return (
-                                <Comment data={item} fnPressButton={this.onPressButtonChildren.bind(this)}></Comment>
-                            )
+                        {
+                            list_comment.map((item, index) => {
+                                return (
+                                    <Comment data={item} key={`comment_${index}`} 
+                                    deleteButton={(ID) => this.onPressCommentDelete(ID)}
+                                    fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
+                                )
+                            })
                         }
-                        )}
                     </ScrollView>
-                    {/* <View style={{ ...style.container }}>
-                       
-                    </View> */}
+                    {/* end comment */}
                 </ScrollView>
-                <KeyboardAvoidingView behavior="position">
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{ ...styleScoped.warpperComment }}>
-                        <TouchableOpacity>
-                            <Icon name="camera" size={hp('4%')} color="#707070" style={{ marginRight: hp('2%') }} />
-                        </TouchableOpacity>
+                        <View>
+                            {
+                                this.state.commentImage &&
+                                <Image
+                                    source={{ uri: this.state.commentImage }}
+                                    style={{ width: '50%', height: '25%', resizeMode: 'cover', borderRadius: 4 }} />
+                            }
+                        </View>
                         <View style={{ ...styleScoped.boxInputCommment }}>
                             <TextInput
-                                placeholder="Comment here"
+                                placeholder={lng.comment_here}
                                 style={{ padding: 0, fontSize: hp('2%') }}
-                                onChangeText={(value) => {
-                                    onChangeTextComment(value)
-                                }}>
+                                value={comment}
+                                ref={(input) => { this.secondTextInput = input; }}
+                                onChangeText={(comment) => this.setState({ comment })} >
                             </TextInput>
                         </View>
                         <Button
-                            title="send"
-                            buttonStyle={{...style.btnPrimary }}
+                            title={lng.send}
+                            buttonStyle={{ ...style.btnPrimary, minWidth: wp('13%') }}
+                            onPress={() => this.createComment()}
+                            disabled={comment ? false : true}
                         />
 
                     </View>
                 </KeyboardAvoidingView>
-
             </View >
         );
     }
@@ -311,23 +379,8 @@ const styleScoped = StyleSheet.create({
         borderColor: '#C8C8CC',
         borderWidth: 1,
         borderRadius: 5,
-        width: '70%',
-        marginRight:hp('1%')
-    },
-    imageLogo: {
-        height: hp('15%'),
-        width: hp('23%')
-    },
-    textWelcome: {
-        textAlign: 'center',
-        fontSize: hp('2%'),
-        color: '#003764'
-    },
-    inputCustom: {
-        height: hp('5%'),
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: hp('1%')
+        width: '83%',
+        marginRight: hp('1%')
     },
     shadowCard: {
         shadowColor: "#000",
@@ -338,17 +391,6 @@ const styleScoped = StyleSheet.create({
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
         elevation: 4,
-    },
-    sectionSocial: {
-        marginTop: hp('2%'),
-        paddingTop: hp('2.5%'),
-        borderTopWidth: 0.5,
-        borderTopColor: '#B5B5B5',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingHorizontal: hp('2%'),
-        paddingBottom: hp('1%')
     }
 });
 

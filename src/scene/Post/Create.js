@@ -1,291 +1,330 @@
-
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
     ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
     TextInput,
     TouchableOpacity,
     FlatList,
-    AsyncStorage
+    ActivityIndicator,
+    Alert
 } from 'react-native';
-import { SliderBox } from "react-native-image-slider-box";
-
-import { Button, BottomSheet, ThemeConsumer } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
-import HeaderNavbar from '../../components/Navbar'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MenuFooter from '../../components/MenuFooter'
 import { fonts } from '../../constant/util';
-import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
-import { apiServer } from '../../constant/util';
-
+import ImageGrid from '../../components/ImageGrid'
+import { getTagsList, createPost, updatePost } from '../../Service/PostService'
+import Spinner from 'react-native-loading-spinner-overlay';
+import translate from '../../constant/lang'
 export default class CreatePost extends Component {
     constructor() {
         super();
-        this.state = { visibleSearch: false, token: '', title: '', type: 'blog', image: [], description: '', tag: [], addition: '', postId: '' , images : [] , tags : [] }
+        this.state = {
+            visibleSearch: false,
+            token: '',
+            title: null,
+            type: 'blog',
+            image: [],
+            description: null,
+            tag: [],
+            editTag: false,
+            addition: {
+                "event_date": "",
+                "event_schedule": [],
+                "post_to_etda": true
+            },
+            postId: '',
+            images: [],
+            loadingImage: false,
+            listTags: [],
+            originalTag: [],
+            spinner: false,
+            lng: {},
+            loadingTags: false
+        }
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+        this.setState({})
+    }
+    
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
     }
 
     async componentDidMount() {
         try {
-            console.log('data : ' , this.props.title)
             const token = await AsyncStorage.getItem('token')
-            this.setState({
+            let { title, description, post_images, post_tag } = this.props
+            await this.setState({
                 token: token,
-                title : this.props.title,
-                description : this.props.description,
-                image : this.props.post_images
+                title: title,
+                description: description,
+                image: post_images,
+                tag: post_tag
             })
-            this.callTagsList(token)
+            this.getListTag();
         } catch (err) {
             // handle errors
         }
     }
 
-
-    callTagsList = async (token) => {
-        console.log('token : ' , token)
-        axios.get(apiServer.url + '/api/backend/post/tag-list',{
-            headers: {
-                Accept: 'application/json',
-                'Authorization': 'Bearer ' + token,
+    async getListTag() {
+        this.setState({ loadingTags: true })
+        try {
+            let { data } = await getTagsList();
+            for (let index = 0; index < data.post_data.length; index++) {
+                const element = data.post_data[index];
+                let result = await this.state.listTags.find(el => {
+                    return el == element.tag
+                })
+                element.selected = result ? true : false
             }
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    var list = []
-                    var i
-                    for (i = 0 ; i < response.data.post_data.length ; i++){
-                        var name = response.data.post_data[i].tag
-                        list.push(name)
-                    }
-                    this.setState({
-                        tag : list
-                    })
-                } else {
+            await this.setState({ listTags: data.post_data })
+            await this.setState({ originalTag: data.post_data })
+        } catch (error) {
+            console.log('Get list tags error : ', error)
+        }
+        this.setState({ loadingTags: false })
+    }
 
+    selectTag(indexTag) {
+        let { originalTag } = this.state
+        let listTagSelected = []
+        if (indexTag) {
+            this.setState({ editTag: true })
+        }
+        for (let index = 0; index < originalTag.length; index++) {
+            const element = originalTag[index];
+            if (index == indexTag) {
+                element.selected = element.selected ? false : true
+            }
+            if (element.selected) {
+                listTagSelected.push(element.tag)
+            }
+        }
+        this.setState({ originalTag })
+        this.setState({ tag: listTagSelected })
+    }
+
+    validateFrom() {
+        let pass = true
+        let { title, description } = this.state
+        if (!title) {
+            Alert.alert('Please enter your topic')
+            pass = false
+        }
+        else if (!description) {
+            Alert.alert('Please enter your description')
+            pass = false
+        }
+        return pass
+    }
+
+    async callCreatePost() {
+        this.setState({ spinner: true })
+        try {
+            let { title, type, images, description, tag, addition } = this.state
+            if(!tag) 
+            {
+                tag = [];
+            }
+            
+            if (this.validateFrom()) {
+                let res = await createPost(title, type, images, description, tag, addition)
+                let { status } = res.data
+                if (status == 'success') {
+                    Actions.replace('MainScene',{menu:'main'})
                 }
-            })
-            .catch((error) => {
-                console.log('error : ' , error)
-            })
-            .finally(function () {
-            });
+            }
 
+        } catch (error) {
+            console.log('Create post error: ', error)
+            Alert.alert('Someting wrong!')
+        }
+        this.setState({ spinner: false })
+    }
+
+    async callUpdatePost(title, type, images, description, tags, addition, post_id) {
+        this.setState({ spinner: true })
+        try {
+            const data = {
+                "post_title": title,
+                "post_type": type,
+                "post_images": images,
+                "post_description": description,
+                "post_tag": tags,
+                "post_addition_data": addition,
+                "post_id": post_id
+            }
+            console.log('data', data)
+            let result = await updatePost(data)
+            console.log('result', result)
+        } catch (error) {
+            console.log('Update post error : ', error)
+        }
+        this.setState({ spinner: false })
     };
 
-    callCreatePost = async () => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        const data = {
-            "post_title": this.state.title,
-            "post_type": this.state.type,
-            "post_images": this.state.images,
-            "post_description": this.state.description,
-            "post_tag": this.state.tag,
-            "post_addition_data": this.state.addition
-        }
-
-
-        console.log('post : ' , this.state.images )
-
-        axios.post(apiServer.url + '/api/backend/post/create', data, {
-            headers
+    async pickImage() {
+        this.setState({ loadingImage: true })
+        let images = await ImagePicker.openPicker({
+            multiple: true,
+            includeBase64: true,
+            maxFiles: 8
         })
-            .then((response) => {
-                if (response.data.status == "success") {
-                   Actions.MessageBoard()
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
-
-
-
-    callUpdatePost = async (title , type , images , description , tags , addition , post_id) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+        var image = []
+        var image_base64 = []
+        for (let index = 0; index < images.length; index++) {
+            const element = images[index];
+            if (index < 7) {
+                image.push(element.path)
+                var image_send = 'data:image/jpeg;base64,' + element.data
+                image_base64.push(image_send)
+            }
         }
-
-        const data = {
-            "post_title": title,
-            "post_type": type,
-            "post_images": images,
-            "post_description": description,
-            "post_tag": tags,
-            "post_addition_data": addition
-        }
-
-
-        axios.put(apiServer.url + '/api/backend/post/update/' + post_id, data, {
-            headers
+        await this.setState({
+            image: image,
+            images: image_base64
         })
-            .then((response) => {
-                console.log('data : ', response.data)
-                if (response.data.status == "success") {
-                    Actions.MessageBoard()
-                } else {
+        this.setState({ loadingImage: false })
+    }
 
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
+    searchTags(text) {
+        let { originalTag } = this.state
+        let result = originalTag.filter((option) => {
+            return option.tag
+                .toString()
+                .toLowerCase()
+                .indexOf(text.toLowerCase()) >= 0
+        })
+        this.setState({ listTags: result })
+    }
 
-    };
+    createPost() {
+
+        if (this.props.type_value == 'create') {
+            this.callCreatePost()
+        } else {
+            const { title, image, images, description, tag, addition ,editTag } = this.state
+            this.callUpdatePost(
+                title,
+                'blog',
+                images,
+                description,
+                editTag ?  tag : [],
+                addition,
+                this.props.post_id,
+            )
+        }
+    }
 
     render() {
-        const { dataList } = this.state
-
-        onChangeTextTitle = async (value) => {
-            this.setState({
-                title: value
-            })
-        }
-
-        onChangeTextDescription = async (value) => {
-            this.setState({
-                description: value
-            })
-        }
-
+        const { loadingImage, listTags, spinner, loadingTags, lng } = this.state
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
+                <Spinner visible={spinner} />
                 <View style={{ ...style.navbar }}>
-                    <TouchableOpacity onPress={() => Actions.pop()}>
+                    <TouchableOpacity onPress={() => Actions.replace('MainScene')}>
                         <Icon name="chevron-left" size={hp('3%')} color="white" />
                     </TouchableOpacity>
-                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{this.props.type_value == 'detail' ? 'Detail Blog' : this.props.type_value == 'create' ? 'Create Blog' : 'Edit Blog'}</Text>
-                    {this.props.type_value == 'detail' ? 
-                        <View>
-                        </View>     
-                    
-                    :
-                    <TouchableOpacity onPress={() => 
-                    {
-                        if (this.props.type_value == 'create'){
-                                this.callCreatePost()
-                        }else{
-                            this.callUpdatePost(this.state.title,
-                            'blog' ,
-                            this.state.images,
-                            this.state.description,
-                            this.state.tag,
-                            this.state.addition,
-                            this.props.data.post_id,
-                            )
+                    <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>
+                        {
+                            this.props.type_value == 'detail'
+                                ? lng.detail
+                                : this.props.type_value == 'create'
+                                    ? lng.create_blog
+                                    : lng.edit_blog
                         }
-    }
-    }>
-<Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Post</Text>
-</TouchableOpacity>
+                    </Text>
+                    {this.props.type_value == 'detail' ? null
+                        :
+                        <TouchableOpacity onPress={() => this.createPost()}>
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.post}</Text>
+                        </TouchableOpacity>
                     }
-                   
+
                 </View>
                 {/* content */}
                 <View>
                     <View style={{ height: hp('7%') }}>
-                        <TextInput placeholder="Enter your topic here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
+                        <TextInput placeholder={lng.enter_topic} style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }}
                             defaultValue={this.state.title}
+                            placeholderTextColor="#ccc"
                             editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
-                            onChangeText={(value) => {
-                                onChangeTextTitle(value)
-                            }}
+                            onChangeText={(value) => { this.setState({ title: value }) }}
                         >
-
-
-
                         </TextInput>
                     </View>
                     <View style={{ ...style.divider }}></View>
-                    <View style={{ height: hp('25%') }}>
-                        <TextInput placeholder="Enter your post here…" style={{ paddingVertical: hp('2%'), paddingHorizontal: hp('2%'), fontSize: hp('2.2%') }} multiline={true}
-                          defaultValue={this.state.description}
-                          editable={this.props.type_value == 'detail' ? false : true} selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
-                        onChangeText={(value) => {
-                            onChangeTextDescription(value)
-                        }}
+                    <View style={{ minHeight: hp('10%') }}>
+                        <TextInput
+                            placeholder={lng.enter_post_detail==null?"Enter post description":lng.enter_post_detail}
+                            style={{
+                                paddingVertical: hp('2%'),
+                                paddingHorizontal: hp('2%'),
+                                fontSize: hp('2.2%')
+                            }}
+                            placeholderTextColor="#ccc"
+                            multiline={true}
+                            defaultValue={this.state.description}
+                            editable={this.props.type_value == 'detail' ? false : true}
+                            selectTextOnFocus={this.props.type_value == 'detail' ? false : true}
+                            onChangeText={(value) => {
+                                this.setState({ description: value })
+                            }}
                         ></TextInput>
                     </View>
 
-                    { this.state.image.length == 0 ? 
-                    <View >
-
-                    </View>
-                    
-                    : 
-                    
-                    <View style={{ height: hp('30%') }}>
-                        <SliderBox
-                            images={this.state.image}
-                            sliderBoxHeight={hp('30%')}
-                        />
-                    </View>
+                    {
+                        loadingImage ?
+                            <ActivityIndicator color="#003764" style={{ marginVertical: hp('3%') }} />
+                            : null
                     }
 
-                    
+                    {this.state.image.length == 0 ? null :
+
+                        <View style={{ maxHeight: hp('30%'), alignItems: 'center' }}>
+                            <ImageGrid data={this.state.image} />
+                        </View>
+                    }
 
                     <View style={{ ...style.divider }}></View>
-                    <TouchableOpacity onPress={() =>  
-                                ImagePicker.openPicker({ multiple: true,
-                                    includeBase64 : true
-                                    }).then(images => {
-                                    var j 
-                                    var image = []
-                                    var image_base64 = []
-                                    for (j = 0 ; j < images.length ; j++){
-                                        console.log('image path : ' , images[j].path)
-                                        image.push(images[j].path)
-                                        var image_send = 'data:image/jpeg;base64,' + images[j].data
-                                        image_base64.push(image_send)
-                                    }
-                                    this.setState({
-                                        image : image,
-                                        images : image_base64
-                                    })
-                                   // console.log('result image : ' , images[0]);
-                                  })}>
-                          {this.props.type_value == 'detail' ?           
-                   <View>
-                       
-                   </View>
 
-                    :
-                    <View style={{
-                        marginTop: hp('1%'),
-                        marginBottom: hp('1%'),
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingHorizontal: hp('2%')
-                    }}>
-                        <Icon name="camera" style={{ marginRight: hp('2%') }} color="#003764" size={hp('3%') } />
-                        <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Pick picture</Text>
-                    
-                    </View>
-                } 
+                    <TouchableOpacity onPress={() => this.pickImage()}>
+                        {
+                            this.props.type_value == 'detail' ?
+                                null
+                                :
+                                <View style={{
+                                    marginTop: hp('1%'),
+                                    marginBottom: hp('1%'),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingHorizontal: hp('2%')
+                                }}>
+                                    <Icon
+                                        name="camera"
+                                        style={{ marginRight: hp('2%') }}
+                                        color="#003764"
+                                        size={hp('3%')} />
+                                    <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>{lng.pick_picture}</Text>
 
-
+                                </View>
+                        }
                     </TouchableOpacity>
+
                     <View style={{ ...style.divider }}></View>
 
                     <View style={{
@@ -295,31 +334,37 @@ export default class CreatePost extends Component {
                         paddingHorizontal: hp('2%')
                     }}>
                         <Icon name="tag" style={{ marginRight: hp('2%') }} color="#003764" size={hp('2.5%')} />
-                        <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>Tag</Text>
+                        <Text style={{ fontSize: hp('2.5%'), color: '#003764' }}>{lng.tag}</Text>
                     </View>
-                    {this.props.type_value == 'detail' ?   
-                        <View>
-                        </View>    
-                    :
-                    <View>
-                    <View style={{ marginTop: hp('2%'), paddingHorizontal: hp('2%') }}>
-                        <TextInput
-                            style={style.customInput}
-                            placeholder="Add tag by yourself…"
-                        />
-                    </View>
+                    {
+                        this.props.type_value == 'detail'
+                            ? null
+                            : <Fragment>
+                                <View style={{ paddingHorizontal: hp('2%'), marginTop: hp('2%') }}>
+                                    <TextInput
+                                        style={{ ...style.customInput }}
+                                        placeholder={lng.search_tags}
+                                        placeholderTextColor="#ccc"
+                                        onChangeText={(text) => this.searchTags(text)}
+                                    />
+                                </View>
+
+                                <View style={{ paddingHorizontal: hp('2%') }}>
+                                    <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
+                                        <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>{lng.or}</Text>
+                                    </View>
+                                </View>
+                            </Fragment>
+                    }
 
 
-                    <View style={{ paddingHorizontal: hp('2%') }}>
-                        <View style={{ marginTop: hp('4%'), alignItems: 'center', ...style.boxTextBorder }}>
-                            <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5' }}>Or</Text>
-                        </View>
-                    </View>
-                    </View>
-
-                }
-
-
+                    {
+                        loadingTags ?
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: hp('2%') }}>
+                                <ActivityIndicator color="#003764" />
+                            </View>
+                            : null
+                    }
 
                     <View style={{
                         marginTop: hp('2%'),
@@ -330,32 +375,27 @@ export default class CreatePost extends Component {
                         flexWrap: 'wrap'
 
                     }}>
-                    
-                        <Button
-                            title="E-commerce"
-                            titleStyle={{ fontSize: hp('2%') }}
-                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
-                            onPress={() => { 
-                               
-                            }} 
-                        />
-                        <Button
-                            title="E-commerce"
-                            titleStyle={{ fontSize: hp('2%') }}
-                            buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
-                        />
-                        <Button
-                            title="E-commerce"
-                            titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
-                            buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') , marginBottom : hp('10%') }}
-                        />
+
+                        {
+                            listTags.map((el, index) => {
+                                let tagStyle = el.selected ? style.btnPrimary : style.btnPrimaryOutline
+                                return (
+                                    <Button
+                                        title={el.tag}
+                                        titleStyle={{
+                                            fontSize: hp('2%'),
+                                            color: !el.selected ? fonts.color.primary : 'white'
+                                        }}
+                                        buttonStyle={{ ...tagStyle, margin: hp('0.5%') }}
+                                        onPress={() => { this.selectTag(index) }}
+                                        key={`tags_${index}`}
+                                    />
+                                )
+                            })
+                        }
 
                     </View>
-
-
-
                 </View>
-
             </ScrollView>
         );
     }

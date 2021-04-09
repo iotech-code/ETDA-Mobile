@@ -3,82 +3,68 @@ import React, { Component } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
-    TextInput,
-    TouchableOpacity,
-    AsyncStorage
+    TouchableOpacity
 } from 'react-native';
-
-import { Button } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { colors, apiServer } from '../constant/util'
-
 export default class HeaderNavbar extends Component {
     state = {
         imageAvatar: require('../assets/images/default_avatar.jpg'),
-        name : '',
-        photo : ''
+        name: '',
+        photo: ''
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.getUserInfo();
+    }
+    
+    async getUserInfo () {
         try {
-            const fullname = await AsyncStorage.getItem('fullname');
-            const photo = await AsyncStorage.getItem('photo');
+            let json_info = await AsyncStorage.getItem('user_data');
+            let info = JSON.parse(json_info);
+
             this.setState({
-                name: fullname,
-                photo : photo
+                name: info.fullname,
+                photo: info.photo
             })
         } catch (err) {
-            console.log('err 1 : ' ,err)
+            console.log(err.message)
         }
     }
     render() {
-        const { imageAvatar, user_name } = this.state
+        const { imageAvatar, name, photo } = this.state
 
         return (
             <View style={styleScoped.container}>
-                {/* left side  */}
                 <View style={styleScoped.leftSide}>
-               
-                    <TouchableOpacity style={styleScoped.avatar} onPress={() => {
-                        Actions.replace('MyProfile')
-                    }}>
-
-                    {this.state.photo == '' || this.state.photo == null ? 
-                     <Image
-                     source={imageAvatar}
-                     style={styleScoped.imageAvatar}
-                 />
-                :
-                <Image
-                source={{ uri: this.state.photo}}
-                style={styleScoped.imageAvatar}
-            />
-                }
-                   
-                </TouchableOpacity>
-                    <Text style={styleScoped.textName}>{this.state.name}</Text>
+                    <TouchableOpacity style={styleScoped.avatar} onPress={() => { Actions.replace('MyProfile') }}>
+                        {
+                            photo == '' || photo == null ?
+                                <Image
+                                    source={imageAvatar}
+                                    style={styleScoped.imageAvatar}
+                                />
+                                :
+                                <Image
+                                    source={{ uri: photo }}
+                                    style={styleScoped.imageAvatar}
+                                />
+                        }
+                    </TouchableOpacity>
+                    <Text style={styleScoped.textName}>{name}</Text>
                 </View>
-
-                {/* right side */}
                 <View style={styleScoped.rightSide}>
                     <TouchableOpacity onPress={() => Actions.push('Search')}>
                         <Icon name="search" size={hp('3%')} color="white" style={{ marginRight: hp('1.5%') }} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=> Actions.push('Notification')}>
-                        <Icon name="notifications" size={hp('3%')} color="white" />
-                    </TouchableOpacity>
-
+                    <></>
                 </View>
-
-
             </View>
         );
     }

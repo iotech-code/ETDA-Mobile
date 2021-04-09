@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -10,32 +10,130 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    FlatList
+    KeyboardAvoidingView,
+    Platform,
+    FlatList,
+    Keyboard
 } from 'react-native';
-
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { apiServer } from '../../constant/util';
+import Comment from '../../components/Comment'
+import translate from '../../constant/lang'
+import moment from 'moment'
+import { actionLikePost, getListCommentPost, createCommentPost, deleteComment } from '../../Service/PostService'
 export default class EventDetail extends Component {
     state = {
-        visibleSearch: false
+        visibleSearch: false,
+        data: {},
+        list_comment: [],
+        comment: null,
+        reply_to: null,
+        default_avatar: require('../../assets/images/default_avatar.jpg'),
+        etda_avatar: require('../../assets/images/etdaprofile.png'),
+        lng: {},
+        isFetching: false,
+        like: 0,
+        is_like: 0,
+        commentImage: null
     }
+
+    componentDidMount() {
+
+    }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+        const { like, is_like, post_id } = this.props.data
+        await this.setState({ like, is_like })
+        await this.callGetComment(post_id)
+
+    }
+
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+    async likePost() {
+        try {
+            const { post_id } = this.props.data
+            let { data } = await actionLikePost({ post_id })
+            if (data.status == 'success') {
+                await this.setState({ like: this.state.like == 0 ? 1 : 0 })
+                await this.setState({ is_like: this.state.is_like == 0 ? 1 : 0 })
+            }
+        } catch (error) {
+            console.log('Like event detail error : ', error)
+        }
+    }
+
+
+    async callGetComment(post_id) {
+
+        try {
+            let response = await getListCommentPost({ post_id })
+            this.setState({ list_comment: response.data.comments })
+        } catch (error) {
+            console.log('Get list comment error : ', error)
+        }
+
+    };
+
+    async createComment() {
+        try {
+            const { reply_to, comment } = this.state
+            const { post_id } = this.props.data
+            let res = await createCommentPost(post_id, reply_to, comment)
+            let { status } = res.data
+            if (status == "success") {
+                await this.callGetComment(post_id)
+                this.setState({ comment: '' })
+                Keyboard.dismiss()
+            }
+        } catch (error) {
+            console.log('Create comment error : ', error)
+        }
+    };
+
+    async onPressCommentDelete(ID) {
+        
+        const comments = await this.state.list_comment;
+        for(var i=0;i<comments.length;i++) {
+            if(comments[i].Comment_id == ID) {
+                comments.splice(i, 1);
+            }
+        }
+        await this.setState({ list_comment: comments})
+        await deleteComment(ID);
+    }
+
+    onPressButtonChildren(data) {
+        this.setState({ reply_to: data.User_id, comment: '@' + data.Fullname + ' ' })
+        this.secondTextInput.focus()
+
+    }
+
+
     render() {
+        const { author, title, post_description, post_addition_data, comment_number, post_id } = this.props.data
+        const { default_avatar, list_comment, comment, lng, like, is_like } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: '#F9FCFF', ...style.marginHeaderStatusBar }}>
 
-                    <View style={{ ...styleScoped.shadowCard  , backgroundColor:'white'}}>
-                        <View style={{...style.navbar }}>
+                    <View style={{ ...styleScoped.shadowCard, backgroundColor: 'white' }}>
+                        <View style={{ ...style.navbar }}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
-                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Event Detail</Text>
-                            <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} />
+                            <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{title}</Text>
+                            <View></View>
+                            {/* <Icon name="magnify" size={hp('3%')} color="white" onPress={() => Actions.pop()} /> */}
                         </View>
                         <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
+                            ...style.space__between,
                             alignItems: 'center',
                             paddingHorizontal: hp('2%'),
                             marginTop: hp('2%')
@@ -49,61 +147,98 @@ export default class EventDetail extends Component {
                                     <Image source={require('../../assets/images/avatar2.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
                                 </View>
                                 <View >
-                                    <Text style={{ fontSize: hp('2%'), color: "#707070" }}>Name</Text>
+                                    <Text style={{ fontSize: hp('2%'), color: "#707070" }}>{author.full_name}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity onPress={() => this.openOption()} >
-                                <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
-                            </TouchableOpacity>
                         </View>
 
 
                         <View style={{ marginTop: hp('1.5%'), paddingHorizontal: hp('2%') }} >
-                            <Text style={{ fontSize: hp('2%') }}>Event Topic</Text>
-                            <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>10/11/2020</Text>
+                            <Text style={{ fontSize: hp('2%') }}>{title}</Text>
+                            <Text style={{ fontSize: hp('2%'), color: '#707070', marginTop: hp('1%') }}>{moment(post_addition_data.event_date).format('DD/MM/YYYY')}</Text>
+                            <Text style={{ fontSize: hp('2%'), marginTop: hp('1%') }}>{post_description}</Text>
 
-                            <View style={{ height: hp('20%'), width: '100%', marginVertical: hp('2%') }}>
+
+
+                            {/* <View style={{ height: hp('20%'), width: '100%', marginVertical: hp('2%') }}>
                                 <Image source={require('../../assets/images/event_post.png')} style={{ height: '100%', width: '100%', resizeMode: 'stretch' }} />
+                            </View> */}
+
+                            <View style={{ marginTop: hp('3%'), marginBottom: hp('2%'), alignItems: 'flex-start', ...style.boxTextBorder }}>
+                                <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5', paddingLeft: 0, paddingRight: hp('1%') }}>{lng.schedule}</Text>
                             </View>
 
-                            <View style={{ marginVertical: hp('2%'), alignItems: 'flex-start', ...style.boxTextBorder }}>
-                                <Text style={{ ...style.textOnBorder, fontSize: hp('2%'), color: '#B5B5B5', paddingLeft: 0, paddingRight: hp('1%') }}>Scheduler</Text>
-                            </View>
+                            {
+                                post_addition_data.event_schedule ?
+                                    post_addition_data.event_schedule.map((el, index) => {
+                                        return (
+                                            <Fragment key={`event_schedule_${index}`}>
+                                                <View style={{ ...style.flex__start, marginTop: hp('1%'), alignItems: 'center' }}>
+                                                    <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>{el.time}</Text>
+                                                    <Text style={{ fontSize: hp('2%') }}>{el.detail}</Text>
+                                                </View>
+                                            </Fragment>
+                                        )
+                                    })
+                                    : null
+                            }
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>10:00 am</Text>
-                                <Text style={{ fontSize: hp('2%') }}>Start event</Text>
-                            </View>
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>10:00 am</Text>
-                                <Text style={{ fontSize: hp('2%') }}>Workshop</Text>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>10:00 am</Text>
-                                <Text style={{ fontSize: hp('2%') }}>Workshop</Text>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%') }}>
-                                <Text style={{ fontSize: hp('2%'), color: '#4267B2', marginRight: hp('2%') }}>10:00 am</Text>
-                                <Text style={{ fontSize: hp('2%') }}>Workshop</Text>
-                            </View>
                         </View>
 
                         <View style={{ ...styleScoped.sectionSocial }}>
-                            <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('3%'), color: '#4267B2' }} />
-                            <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('3%'), color: '#B5B5B5' }} />
+                            <TouchableOpacity style={{ ...style.flex__start, alignItems: 'center', marginRight: hp('3%') }} onPress={() => this.likePost()}>
+                                <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                                <Text style={{ color: is_like ? '#4267B2' : '#B5B5B5' }}>{like}</Text>
+                            </TouchableOpacity>
                             <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-
                         </View>
                     </View>
-
-
-
-
+                    <View style={{ marginTop: hp('2%') }}>
+                        {/* comment */}
+                        {
+                            list_comment.map((item, index) => {
+                                return (
+                                    <Comment data={item} key={`comment_${index}`} 
+                                    deleteButton={(ID) => this.onPressCommentDelete(ID)}
+                                    fnPressButton={(data) => this.onPressButtonChildren(data)}></Comment>
+                                )
+                            })
+                        }
+                        {/* end comment */}
+                    </View>
 
                 </ScrollView>
+
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                    <View style={{ ...styleScoped.warpperComment }}>
+                        <View>
+                            {
+                                this.state.commentImage &&
+                                <Image
+                                    source={{ uri: this.state.commentImage }}
+                                    style={{ width: '50%', height: '25%', resizeMode: 'cover', borderRadius: 4 }} />
+                            }
+                        </View>
+                        <View style={{ ...styleScoped.boxInputCommment }}>
+                            <TextInput
+                                placeholder={lng.comment_here}
+                                style={{ padding: 0, fontSize: hp('2%') }}
+                                value={comment}
+                                ref={(input) => { this.secondTextInput = input; }}
+                                onChangeText={(comment) => this.setState({ comment })} >
+                            </TextInput>
+                        </View>
+                        <Button
+                            title={lng.send}
+                            buttonStyle={{ ...style.btnPrimary, minWidth: wp('13%') }}
+                            onPress={() => this.createComment()}
+                            disabled={comment ? false : true}
+                        />
+
+                    </View>
+                </KeyboardAvoidingView>
+
             </View>
         );
     }
@@ -118,6 +253,22 @@ const styleScoped = StyleSheet.create({
         textAlign: 'center',
         fontSize: hp('2%'),
         color: '#003764'
+    },
+    warpperComment: {
+        paddingHorizontal: hp('3%'),
+        paddingTop: hp('1%'),
+        paddingBottom: hp('4%'),
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    boxInputCommment: {
+        padding: hp('1%'),
+        borderColor: '#C8C8CC',
+        borderWidth: 1,
+        borderRadius: 5,
+        width: '85%',
+        marginRight: hp('1%')
     },
     inputCustom: {
         height: hp('5%'),

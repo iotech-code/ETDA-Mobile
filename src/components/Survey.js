@@ -10,75 +10,127 @@ import {
     Image,
     TextInput,
     TouchableOpacity,
-    Platform
+    Platform,
+    Alert
 } from 'react-native';
-
-import { Button, ListItem } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { apiServer } from '../constant/util';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { actionDeletePost } from '../Service/PostService'
 
-export default class MessagsPost extends Component {
+export default class SurveyPost extends Component {
 
     constructor(props) {
         super(props)
-    }
-
-    state = {
-        visibleBottomSheet: false
+        this.state = {
+            visibleBottomSheet: false,
+            data: null,
+            default_avatar: require('../assets/images/default_avatar.jpg'),
+            user_data: {}
+        }
     }
 
     openOption() {
-        console.log('askdjkasjdkasjdk')
         this.setState({ visibleBottomSheet: true })
         this.RBSheet.open()
     }
 
-    componentDidMount() {
-        // this.RBSheet.open()
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+        console.log('user_data : ' , user_data)
+        this.setState({
+            user_data: user_data
+        })
+    }
 
+    async UNSAFE_componentWillMount() {
+        await this.setState({ data: this.props.data })
+        await this.getUserInfo()
+    }
+
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
+        this.RBSheet.close()
+    }
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            console.log(post_id)
+            let { data } = await actionDeletePost(post_id)
+            if (data.status == 'success') {
+                this.props.onDeletePost()
+            }
+        } catch (error) {
+            console.log('Delete survey error : ', error)
+        }
     }
 
     renderBottomSheet() {
-        const { visibleBottomSheet } = this.state
+        const { visibleBottomSheet, user_data } = this.state
         return (
             <RBSheet
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('24%') : hp('22%')}
                 openDuration={250}
             >
-                <TouchableOpacity style={{
+                {/* <TouchableOpacity style={{
                     ...styleScoped.listMore
                 }}>
                     <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
                     <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
+                </TouchableOpacity> */}
 
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}>
-                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
-                </TouchableOpacity>
                 <View style={{ ...style.divider }}></View>
+                {
+                    user_data.user_role == 'Admin' || user_data.userid == this.props.data.author.id ?
+                    <>
+                        <TouchableOpacity style={{
+                            ...styleScoped.listMore
+                        }}>
+                            <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
+                        </TouchableOpacity>
+                        <View style={{ ...style.divider }}></View>
+
+                        <TouchableOpacity style={{
+                            ...styleScoped.listMore
+                        }}>
+                            <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
+                        </TouchableOpacity>
+                    </>
+                    :null
+                }
 
             </RBSheet>
         )
     }
     render() {
+        const { title, author, post_date } = this.state.data
+        const { default_avatar, user_data } = this.state
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -98,20 +150,29 @@ export default class MessagsPost extends Component {
                                 width: hp('5%'),
                                 marginRight: hp('1%')
                             }}>
-                                <Image source={require('../assets/images/avatar.png')} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
+                                <Image
+                                    source={!author.photo ? default_avatar : { uri: author.photo }}
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
                             </View>
                             <View >
-                                <Text style={{ fontSize: hp('2%'), }}>ETDA official</Text>
-                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} > 11/11/2020  3:30 pm </Text>
+                                <Text style={{ fontSize: hp('2%'), }}>{author.full_name}</Text>
+                                <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text>
                             </View>
                         </View>
-                        <TouchableOpacity onPress={() => this.openOption()} >
-                            <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
-                        </TouchableOpacity>
+                        {
+                            user_data.user_role == 'Admin' || user_data.userid == this.props.data.author.id ?
+                                <TouchableOpacity onPress={() => this.openOption()} >
+                                    <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
+                                </TouchableOpacity>
+                                    : null
+                        }
+
+
+
                     </View>
                     <View style={{ marginTop: hp('2%') }}>
-                        <Text style={{ fontSize: hp('2%') }}>Survey Topic</Text>
-                        <TouchableOpacity onPress={() => Actions.SurveyDetail()}>
+                        <Text style={{ fontSize: hp('2%') }}>{title}</Text>
+                        <TouchableOpacity onPress={() => Actions.SurveyDetail({ data: this.state.data })}>
                             <Text style={{ fontSize: hp('2%'), color: '#707070', marginVertical: hp('1%') }}>Detail</Text>
                         </TouchableOpacity>
                     </View>

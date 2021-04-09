@@ -18,24 +18,77 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import style from '../../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import MenuFooter from '../../components/MenuFooter'
-import PostSurvey from '../../components/Survey'
-import { apiServer } from '../../constant/util';
+import MenuFooterUser from '../../components/MenuFooterUser'
+import SurveyPost from '../../components/Survey'
+import { Button } from 'react-native-elements'
+import translate from '../../constant/lang'
+import { getListPostSurvey } from '../../Service/PostService'
 export default class Survey extends Component {
-    state = {
-        visibleSearch: false
+    constructor() {
+        super()
+        this.state = {
+            user_type: '',
+            user_role: '',
+            lng: {},
+            list_data: []
+        }
     }
+
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+        await this.onGetlistSurvey()
+        this.getUserInfo()
+    }
+
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let user_data = JSON.parse(user_json);
+
+        this.setState({
+            user_type: user_data.user_type,
+            user_role: user_data.user_role
+        })
+    }
+
+    async getLang() {
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+    }
+
+    componentDidMount() {
+
+    }
+
+
+    async onGetlistSurvey() {
+        try {
+            await this.setState({ list_data: [] })
+            let { data } = await getListPostSurvey()
+            this.setState({ list_data: data.post_data })
+        } catch (error) {
+            console.log('Get list Post survey error : ', error)
+        }
+    }
+
+    sortSuvery() {
+        let { list_data } = this.state
+        this.setState({ list_data: list_data.reverse() });
+    }
+
     render() {
+        const { lng, list_data } = this.state
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1, backgroundColor: 'white', ...style.marginHeaderStatusBar }}>
                     <View style={{ ...style.navbar }}>
-                        <TouchableOpacity onPress={() => Actions.replace('Activity')}>
+                        <TouchableOpacity onPress={() => Actions.replace('MainScene', { menu: 'activity', sub_menu: 'no' })}>
                             <Icon name="chevron-left" size={hp('3%')} color="white" />
                         </TouchableOpacity>
-                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>Survey</Text>
+                        <Text style={{ fontSize: hp('2.2%'), color: 'white' }}>{lng.survey}</Text>
                         <TouchableOpacity onPress={() => Actions.push('Search')}>
-                            <Icon name="magnify" size={hp('3%')} color="white"  />
+                            <Icon name="magnify" size={hp('3%')} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={{ backgroundColor: '#F9FCFF', paddingBottom: hp('8%') }}>
@@ -45,23 +98,50 @@ export default class Survey extends Component {
                             padding: hp('2%'),
                             alignItems: 'center'
                         }}>
-                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>Survey</Text>
-                            <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            <Text style={{ fontSize: hp('2.2%'), color: '#003764' }}>{lng.survey}</Text>
+                            <TouchableOpacity onPress={() => this.sortSuvery()}>
+                                <Icon name="compare-vertical" size={hp('3%')} color="#707070" />
+                            </TouchableOpacity>
                         </View>
-
-
+                        {
+                            this.state.user_role == 'Admin' &&
+                            <View style={{ ...style.container }}>
+                                <Button
+                                    title={lng.create_new_survey}
+                                    Outline={true}
+                                    titleStyle={{ color: '#003764', }}
+                                    buttonStyle={{
+                                        padding: hp('1%'),
+                                        ...style.btnPrimaryOutline,
+                                        ...style.btnRounded,
+                                    }}
+                                    onPress={() => Actions.replace('SurveyCreate')}
+                                />
+                            </View>
+                        }
                         <View style={{ marginTop: hp('2%') }}>
-                            <PostSurvey></PostSurvey>
-                            <PostSurvey></PostSurvey>
-                            <PostSurvey></PostSurvey>
-                            <PostSurvey></PostSurvey>
+                            {
+                                list_data.map((el, index) => {
+                                    return (
+                                        <SurveyPost
+                                            data={el}
+                                            key={`survey_${index}`}
+                                            onDeletePost={() => this.onGetlistSurvey()}
+                                        ></SurveyPost>
+                                    )
+                                })
+                            }
                         </View>
 
 
 
                     </View>
                 </ScrollView>
-                <MenuFooter></MenuFooter>
+                {/* {this.state.user_role == "Member" ?
+                    <MenuFooterUser value={'activity'}></MenuFooterUser>
+                    :
+                    <MenuFooter value={'activity'}></MenuFooter>
+                } */}
             </View>
         );
     }

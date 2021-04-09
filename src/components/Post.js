@@ -1,17 +1,14 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
     Image,
     TextInput,
     TouchableOpacity,
     KeyboardAvoidingView,
-    AsyncStorage
+    Alert
 } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
@@ -20,10 +17,11 @@ import style from '../styles/base'
 import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from "react-native-raw-bottom-sheet";
-import { fonts, apiServer } from '../constant/util';
-import axios from 'axios';
-import FbGrid from "react-native-fb-image-grid";
-import ImageView from 'react-native-image-view';
+import { fonts } from '../constant/util';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ImageGrid from './ImageGrid'
+import { actionLikePost, actionDeletePost, actionFollowPost } from '../Service/PostService'
+import translate from '../constant/lang'
 
 export default class Post extends Component {
     constructor(props) {
@@ -36,59 +34,104 @@ export default class Post extends Component {
                 detail: '',
                 tag: []
             },
-            socail: {
-                like: 0,
-                view: 0
-            },
+            default_avatar: require('../assets/images/default_avatar.jpg'),
             visibleBottomSheet: false,
             visibleModalReport: false,
-            imagesForView: [],
-            isImageViewVisible: false,
-            isIndeximageForshow: 0,
-            imageForShow: [],
-            like: 0
+            is_like: this.props.is_like,
+            like_count: this.props.like_count,
+            lng: {},
+            is_follow: 0,
+            user_data: {},
+            user_id: '',
+            user_role: ''
         }
     }
 
+    async UNSAFE_componentWillMount() {
+        await this.getLang();
+        await this.getUserInfo();
+    }
 
-
+    async getLang() {
+        this.setState({ isFetching: true })
+        let vocap = await translate()
+        this.setState({ lng: vocap })
+        this.setState({ isFetching: false })
+    }
+    async getUserInfo() {
+        let user_json = await AsyncStorage.getItem('user_data');
+        let userInfo = await JSON.parse(user_json);
+        await this.setState({ user_id: userInfo.userid, user_role: userInfo.user_role })
+    };
     async componentDidMount() {
-        try {
-            this.setState({
-                token: await AsyncStorage.getItem('token'),
-                like: this.props.data.like
-            })
-        } catch (err) {
-            // handle errors
-        }
+        let { is_like, like, is_follow } = this.props.data
+        // console.log(this.props.data)
+        this.setState({
+            token: await AsyncStorage.getItem('token'),
+            is_like: is_like,
+            like_count: like,
+            is_follow: is_follow
+        })
     }
-
-
 
     openOption() {
         this.RBSheet.open()
     }
 
-    openReport() {
-        this.setState({ visibleModalReport: true })
+    async openReport() {
+        await this.RBSheet.close()
+        // await this.setState({ visibleModalReport: true })
+        let self = this
+        setTimeout(() => {
+            self.props.onPostReport(this.props.data.post_id)
+        }, 300);
+    }
+
+
+    async onConfirmDeletePost() {
+        Alert.alert(
+            "Confirm",
+            "Are you sure to delete this post ? ",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel delete post"),
+                    style: "cancel"
+                },
+                {
+                    text: "Confirm",
+                    onPress: () => this.onDeletePost(),
+                }
+            ],
+            { cancelable: false }
+        );
         this.RBSheet.close()
     }
-    async imageViewer(url, index) {
-        await this.setState({ isIndeximageForshow: index })
-        await this.setState({ isImageViewVisible: true })
+
+    async onDeletePost() {
+        try {
+            const { post_id } = this.props.data
+            let { data } = await actionDeletePost(post_id)
+            if (data.status == 'success') {
+                this.props.onDeletePost()
+            }
+        } catch (error) {
+            console.log('Delete poll error : ', error)
+        }
     }
+
     renderModalReport() {
-        const { visibleModalReport } = this.state
+        const { visibleModalReport, lng } = this.state
         return (
             <Overlay
-                isVisible={visibleModalReport}
+                isVisible={true}
                 overlayStyle={{
                     width: wp('90%'),
                     paddingVertical: hp('2%'),
                     paddingHorizontal: hp('2%')
                 }}
             >
-                <KeyboardAvoidingView behavior="position">
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                     <View style={{
                         borderBottomColor: '#707070',
                         borderBottomWidth: 1,
@@ -99,35 +142,35 @@ export default class Post extends Component {
                             color: fonts.color.primary,
                             fontSize: hp('2%'),
                             fontWeight: '600'
-                        }}>Report</Text>
+                        }}>{lng.report}</Text>
                     </View>
 
                     <View style={{ marginVertical: hp('1%') }}>
-                        <Text style={{ fontSize: hp('2%') }}>Select topic for report</Text>
+                        <Text style={{ fontSize: hp('2%') }}>{lng.select_topic_for_report}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
                             <Button
-                                title="Fake news"
+                                title={lng.fake_news}
                                 titleStyle={{ fontSize: hp('2%') }}
                                 buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
                             />
                             <Button
-                                title="Cyber bully"
+                                title={lng.cyber_bully}
                                 titleStyle={{ fontSize: hp('2%') }}
                                 buttonStyle={{ ...style.btnPrimary, margin: hp('0.5%') }}
                             />
                             <Button
-                                title="Threat"
+                                title={lng.threat}
                                 titleStyle={{ fontSize: hp('2%'), color: fonts.color.primary }}
                                 buttonStyle={{ ...style.btnPrimaryOutline, margin: hp('0.5%') }}
                             />
                         </View>
-                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>Give reason for report this post not suitable</Text>
+                        <Text style={{ fontSize: hp('2%'), marginTop: hp('2%') }}>{lng.report_reason}</Text>
                     </View>
 
                     <View style={{ ...style.customInput, height: hp('20%'), flexDirection: 'column', justifyContent: 'flex-start' }}>
                         <TextInput
                             style={{ fontSize: hp('2%'), padding: 0 }}
-                            placeholder="Enter your reason…"
+                            placeholder={lng.enter_reason}
                             multiline={true}
                         />
                     </View>
@@ -135,13 +178,13 @@ export default class Post extends Component {
 
                     <View style={{ marginTop: hp('1%') }}>
                         <Button
-                            title="Report"
+                            title={lng.report}
                             buttonStyle={{
                                 padding: hp('1.5%'),
                                 ...style.btnRounded,
                                 ...style.btnPrimary
                             }}
-                            onPress={() => this.setState({ visibleModalReport: false })}
+                            onPress={() => this.setState({ visibleModalReport: tr })}
                         />
                     </View>
                 </KeyboardAvoidingView>
@@ -149,22 +192,29 @@ export default class Post extends Component {
         )
     }
 
+
+
     renderBottomSheet() {
-        const { visibleBottomSheet } = this.state
+        const { visibleBottomSheet, is_follow, lng, user_id, user_role } = this.state
+        const { report } = this.props
+        let height = Platform.OS === 'ios' ? hp('32%') : hp('30%')
+        height = report ? height : Platform.OS === 'ios' ? hp('25%') : hp('23%')
         return (
             <RBSheet
                 ref={ref => {
                     this.RBSheet = ref;
                 }}
-                height={Platform.OS === 'ios' ? hp('32%') : hp('30%')}
+                // height={height}
                 openDuration={250}
                 customStyles={{
                     container: {
                         borderTopRightRadius: 30,
                         borderTopLeftRadius: 30,
                         paddingTop: hp('1%'),
+                        paddingBottom: hp('2%'),
                         backgroundColor: 'white',
-                        ...style.shadowCard
+                        ...style.shadowCard,
+                        height: 'auto'
                     }
                 }}
             >
@@ -173,157 +223,134 @@ export default class Post extends Component {
                 }}
                     onPress={() => this.callPostFollow(this.props.data.post_id)}
                 >
-                    <Icon name="heart" size={hp('3%')} color="#FF0066" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Follow Blog</Text>
+                    <Icon
+                        name={is_follow ? "heart" : 'heart-outline'}
+                        size={hp('3%')} color={is_follow ? "#FF0066" : '#707070'}
+                        style={{ marginRight: hp('2%') }} />
+                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.follow_blog}</Text>
                 </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}
-                    onPress={() => {
-                        Actions.CreatePost({
-                            'type_value' : 'edit',
-                            'title': this.props.data.title,
-                            'description': this.props.data.detail,
-                            'post_images': this.props.data.post_images
-                        })
-                            this.setState({ visibleBottomSheet: false }),
-                            this.RBSheet.close()
-                    }}
-                >
-                    <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Edit blog</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
+                {
+                    user_role == 'Admin' || user_id == this.props.data.author.id ?
+                        <>
+                            <View style={{ ...style.divider }}></View>
+                            <TouchableOpacity style={{
+                                ...styleScoped.listMore
+                            }}
+                                onPress={() => {
+                                    Actions.replace('CreatePost', {
+                                        'type_value': 'edit',
+                                        'title': this.props.data.title,
+                                        'description': this.props.data.post_description,
+                                        'post_images': this.props.data.post_images,
+                                        'post_tag': this.props.data.tags,
+                                        'post_id': this.props.data.post_id
+                                    })
+                                    this.setState({ visibleBottomSheet: false }),
+                                        this.RBSheet.close()
+                                }}
+                            >
+                                <Icon name="pencil" size={hp('3%')} color="#29B100" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.edit_blog}</Text>
+                            </TouchableOpacity>
+                            <View style={{ ...style.divider }}></View>
 
-                <TouchableOpacity style={{
-                    ...styleScoped.listMore
-                }}
-                    onPress={() => this.callDeletePost(this.props.data.post_id)}
-                >
-                    <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Delete blog</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
+                            <TouchableOpacity style={{
+                                ...styleScoped.listMore
+                            }}
+                                onPress={() => this.onConfirmDeletePost()}
+                            >
+                                <Icon name="delete" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                                <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.delete_blog}</Text>
+                            </TouchableOpacity>
+                            <View style={{ ...style.divider }}></View>
 
-                <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
-                    <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
-                    <Text style={{ fontSize: hp('2%'), color: '#707070' }}>Report</Text>
-                </TouchableOpacity>
-                <View style={{ ...style.divider }}></View>
+                        </>
+                        : null
+                }
+                {
+                    report && this.state.user_data.userid != this.props.data.author.id ?
+                        <TouchableOpacity style={{ ...styleScoped.listMore }} onPress={() => this.openReport()}>
+                            <Icon name="file-document" size={hp('3%')} color="#003764" style={{ marginRight: hp('2%') }} />
+                            <Text style={{ fontSize: hp('2%'), color: '#707070' }}>{lng.report}</Text>
+                        </TouchableOpacity>
+                        : null
+                }
+
 
             </RBSheet>
         )
     }
 
 
-    callDeletePost = async (post_id) => {
-        this.setState({ visibleBottomSheet: false }),
-            this.RBSheet.close()
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
+
+    async callPostLike(post_id) {
+        try {
+            let { is_like, like_count } = this.state
+            let response = await actionLikePost({ post_id })
+            let { status } = response.data
+            if (status == 'success') {
+                this.setState({
+                    is_like: is_like ? 0 : 1,
+                    like_count: is_like ? like_count - 1 : like_count + 1
+                })
+                let like = is_like ? 0 : 1
+                this.props.updatePostLike(like , is_like ? like_count - 1 : like_count + 1 , post_id)
+            }
+        } catch (error) {
+            console.log('Like post error : ', error)
         }
-
-        axios.delete(apiServer.url + '/api/backend/post/delete/' + post_id, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    Actions.refresh();
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
     };
 
 
-
-    callPostLike = async (post_id) => {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        const data = {
-            "post_id": post_id
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/like', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-                    var like_result = this.state.like + 1
-
-                    this.setState({
-                        like: like_result
-                    })
-
-                    console.log('data success post like : ', response.data)
+    async callPostFollow(post_id) {
+        this.setState({ visibleBottomSheet: false })
+        this.RBSheet.close()
+        try {
+            let { is_follow } = this.state
+            let response = await actionFollowPost({ post_id })
+            let { status } = response.data
+            if (status == 'success') {
+                await this.setState({
+                    is_follow: is_follow ? 0 : 1,
+                })
+                if (this.state.is_follow == 1) {
+                    Alert.alert('Follow blog success')
                 } else {
-
+                    Alert.alert('Unfollow blog success')
                 }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
+            }
+        } catch (error) {
+            console.log('Follow post error : ', error)
+        }
     };
 
+    postView() {
+        const { page } = this.props
+        Actions.PostDetail({ data: { ...this.props.data }, from_menu: page })
+        // AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
+    }
 
-    callPostFollow = async (post_id) => {
-        this.setState({ visibleBottomSheet: false }),
-            this.RBSheet.close()
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.state.token
-        }
-
-        const data = {
-            "post_id": post_id
-        }
-
-        axios.post(apiServer.url + '/api/backend/post/follow', data, {
-            headers
-        })
-            .then((response) => {
-                if (response.data.status == "success") {
-
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                console.log('data : ', error)
-            })
-            .finally(function () {
-            });
-
-    };
+    sharePOST(post_url) {
+        this.props.sharePressButton(post_url)
+    }
 
     render() {
-        const { data, socail } = this.state
 
-        let { post_images } = this.props.data
-        let image_viewer = []
-        for (let index = 0; index < post_images.length; index++) {
-            const element = post_images[index];
-            let obj = {
-                source: {
-                    uri: element,
-                },
-                width: 806,
-                height: 720,
-            }
-            image_viewer.push(obj)
-        }
+        let {
+            title,
+            post_date,
+            post_description,
+            post_images, tags,
+            post_id,
+            like,
+            comment_number,
+            share_link,
+            author,
+            total_view
+        } = this.props.data
+
+        let { is_like, like_count, default_avatar, lng } = this.state
+
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -332,93 +359,96 @@ export default class Post extends Component {
                 marginBottom: hp('2%')
             }}>
                 <TouchableOpacity
-                    onPress={() => {
-                        Actions.PostDetail({
-                            'user_image': '',
-                            'user_name': '',
-                            'user_date': this.props.data.date,
-                            'user_title': this.props.data.title,
-                            'user_tags': this.props.data.tags,
-                            'user_images': this.props.data.post_images[0],
-                            'user_description': this.props.data.description,
-                            'user_like': this.props.data.like,
-                            'user_comment': this.props.data.comment,
-                            'user_post_id': this.props.data.post_id
-                        })
-                        AsyncStorage.setItem('post_id', this.props.data.post_id.toString())
-                    }}
+                    onPress={() => { this.postView() }}
                     style={{ paddingHorizontal: hp('2%') }}
                 >
                     <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        ...style.space__between,
                         alignItems: 'center'
                     }}>
-                        <Text style={{ fontSize: hp('2%'), }}>{this.props.data.title}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{
+                                height: hp('5%'),
+                                width: hp('5%'),
+                                marginRight: hp('1%')
+                            }}>
+
+                                <Image source={!author.photo ? default_avatar : { uri: author.photo }}
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover', borderRadius: 50 }} />
+
+                            </View>
+                            <View >
+                                <Text style={{ fontSize: hp('2%') }}>{author.full_name}</Text>
+                                <Text style={{ fontSize: hp('2%'), color: fonts.color.secondary, fontSize: 12 }}>{post_date}</Text>
+                            </View>
+                        </View>
                         <TouchableOpacity onPress={() => this.openOption()}>
                             <Icon name="dots-horizontal" size={hp('3%')} color="#707070" />
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.post_date}</Text>
+                    <Text style={{ fontSize: hp('2%'), fontWeight: '400', marginTop: hp('2%') }} >{title}</Text>
                     <View style={{ marginTop: hp('0.5%'), justifyContent: 'flex-start', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {
-                            this.props.data.tags.map((item, index) => {
+                            tags.map((item, index) => {
                                 return (
                                     <Button
                                         title={item}
                                         titleStyle={{ fontSize: hp('1.5%') }}
                                         buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
+                                        onPress={() => Actions.push('Search', { 'search_type': 'tag', 'search_txt': item , 'tag' : item })}
                                         key={index}
                                     />
                                 )
                             })
                         }
-
                     </View>
-                    <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                        <FbGrid
-                            images={post_images}
-                            onPress={(url, index) => this.imageViewer(url, index)}
-                        />
-                        <ImageView
-                            images={image_viewer}
-                            imageIndex={this.state.isIndeximageForshow}
-                            isVisible={this.state.isImageViewVisible}
-                            onClose={() => this.setState({ isImageViewVisible: false })}
-                        />
+                    <View style={{ maxHeight: hp('31%'), marginVertical: hp('1%') }} >
+                        <ImageGrid data={post_images} onPressImage={() => this.postView()} getIndexImage={true} />
                     </View>
-                    {/* <TouchableOpacity style={{ marginTop: hp('1%') }} onPress={() => Actions.PostDetail()}> */}
-                    <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.detail}</Text>
-                    {/* </TouchableOpacity> */}
-
-                    <View style={{
-                        marginTop: hp('2%'),
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center'
-                    }}>
-                        {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#4267B2' }} />
-                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.like}</Text>
-                        {/* </TouchableOpacity> */}
-                        {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: "flex-start" }}> */}
-                        <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
-                        <Text style={{ color: '#B5B5B5', marginTop: hp('0.4%') }}>{this.props.data.comment}</Text>
-                        {/* </TouchableOpacity> */}
-                    </View>
+                    <Text
+                        style={{ fontSize: hp('2%'), fontWeight: '300' }}
+                        numberOfLines={4}
+                        ellipsizeMode="tail"
+                    >{post_description}</Text>
                 </TouchableOpacity>
 
-                <View style={{ ...style.sectionSocial }}>
-                    <TouchableOpacity onPress={() => this.callPostLike(this.props.data.post_id)}>
-                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#4267B2' }} />
+                <View style={{
+                    justifyContent: 'flex-start',
+                    marginTop: hp('2%'),
+                    paddingTop: hp('1.5%'),
+                    flexDirection: 'row',
+                    width: wp('100%'),
+                    paddingHorizontal: hp('2%'),
+                }}>
+                    <TouchableOpacity onPress={() => this.callPostLike(post_id)} style={{ flexDirection: 'row' }}>
+                        <Icon name="thumb-up" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: is_like ? '#4267B2' : '#B5B5B5' }} />
+                        <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {like_count}</Text>
                     </TouchableOpacity>
-                    <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('2%'), color: '#B5B5B5' }} />
-                    <TouchableOpacity>
+
+                    <Icon name="eye" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                    <Text style={{ marginRight: hp('3%'), color: '#B5B5B5' }}> {total_view === undefined ? 0 : total_view}</Text>
+
+                    <TouchableOpacity onPress={() => this.sharePOST(share_link)}>
                         <Icon name="share-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity
+                    onPress={() => this.postView()}
+                    style={{
+                        ...style.flex__start,
+                        marginTop: hp('2%'),
+                        paddingTop: hp('1.5%'),
+                        borderTopWidth: 1,
+                        borderTopColor: '#B5B5B5',
+                        alignItems: 'center',
+                        paddingHorizontal: hp('2%'),
+                    }}>
+                    <Icon name="comment-outline" size={hp('2.5%')} style={{ marginRight: hp('1%'), color: '#B5B5B5' }} />
+                    <Text style={{ color: '#B5B5B5' }}>{comment_number}  {lng.comment}</Text>
+                </TouchableOpacity>
+
                 {this.renderBottomSheet()}
-                {this.renderModalReport()}
+                {/* {this.renderModalReport()} */}
             </View>
         );
     }
@@ -444,5 +474,3 @@ const styleScoped = StyleSheet.create({
 
     }
 });
-
-

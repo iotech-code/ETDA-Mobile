@@ -1,27 +1,18 @@
 
 import React, { Component } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
-    Image,
-    TextInput,
     TouchableOpacity
 } from 'react-native';
 
-import { Button, Overlay } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import style from '../styles/base'
-import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import RBSheet from "react-native-raw-bottom-sheet";
-import { fonts } from '../constant/util';
-import FbGrid from "react-native-fb-image-grid";
-import ImageView from 'react-native-image-view';
-import { apiServer } from '../constant/util';
+import ImageGrid from '../components/ImageGrid'
+import { Actions } from 'react-native-router-flux'
 
 export default class ManageBlog extends Component {
     state = {
@@ -37,25 +28,13 @@ export default class ManageBlog extends Component {
             view: 22
         },
         selected: false
-
     }
-
-
+    updatePostSelected(index) {
+        this.props.onPressSelectBox(index)
+    }
     render() {
-        const { data, socail, selected } = this.state
-        let { post_images } = this.props.data
-        let image_viewer = []
-        for (let index = 0; index < post_images.length; index++) {
-            const element = post_images[index];
-            let obj = {
-                source: {
-                    uri: element,
-                },
-                width: 806,
-                height: 720,
-            }
-            image_viewer.push(obj)
-        }
+        const { data, socail } = this.state
+        let { post_images, post_description, post_date, post_id , selected } = this.props.data
         return (
             <View style={{
                 ...styleScoped.shadowCard,
@@ -63,7 +42,7 @@ export default class ManageBlog extends Component {
                 paddingVertical: hp('1%'),
                 marginBottom: hp('2%')
             }}>
-                <View style={{ paddingHorizontal: hp('2%'), paddingBottom: hp('1%') }}>
+                <TouchableOpacity onPress={() => Actions.PostDetail({ data: { ...this.props.data } }) } style={{ paddingHorizontal: hp('2%'), paddingBottom: hp('1%') }}>
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -72,48 +51,44 @@ export default class ManageBlog extends Component {
                         <Text style={{ fontSize: hp('2%'), }}>{this.props.data.title}</Text>
                         {
                             !selected ?
-                                <TouchableOpacity onPress={() => this.setState({ selected: true })}>
+                                <TouchableOpacity onPress={() => this.updatePostSelected(post_id)}>
                                     <Icon name="checkbox-blank-circle-outline" size={hp('3%')} color="rgba(0,0,0,0.16)" />
                                 </TouchableOpacity>
                                 :
-                                <TouchableOpacity onPress={() => this.setState({ selected: false })}>
+                                <TouchableOpacity onPress={() => this.updatePostSelected(post_id)}>
                                     <Icon name="checkbox-marked-circle" size={hp('3%')} color="#4267B2" />
                                 </TouchableOpacity>
                         }
 
                     </View>
-                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{this.props.data.date}</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginTop: hp('1%'), flexWrap: 'wrap' }}>
-                            {
-                                this.props.data.tags.map((item, index) => {
-                                    return (
-                                        <Button
-                                            title={item}
-                                            titleStyle={{ fontSize: hp('1.5%') }}
-                                            buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
-                                            key={index}
-                                        />
-                                    )
-                                })
-                            }
-                        </View>
-                    <View style={{ height: hp('23%'), marginTop: hp('1%') }}>
-                    <FbGrid
-                            images={post_images}
-                            onPress={(url, index) => console.log('url : ' , url)}
-                        />
-                        {/* <ImageView
-                            images={image_viewer}
-                            imageIndex={this.state.isIndeximageForshow}
-                            isVisible={this.state.isImageViewVisible}
-                            onClose={() => this.setState({ isImageViewVisible: false })}
-                        /> */}
+                    <Text style={{ fontSize: hp('1.5%'), fontWeight: '300', color: '#B5B5B5' }} >{post_date}</Text>
+                    <View style={{ ...style.flex__start, marginTop: hp('1%'), flexWrap: 'wrap' }}>
+                        {
+                            this.props.data.tags.map((item, index) => {
+                                return (
+                                    <Button
+                                        title={item}
+                                        titleStyle={{ fontSize: hp('1.5%') }}
+                                        buttonStyle={{ ...style.btnTagPrimary, marginTop: hp('1%') }}
+                                        key={index}
+                                    />
+                                )
+                            })
+                        }
                     </View>
+                    <View style={{ maxheight: hp('23%'), marginTop: hp('1%') }}>
+                        <ImageGrid data={post_images} />
+                    </View>
+                    <Text
+                        style={{ fontSize: hp('2%'), fontWeight: '300' }}
+                        numberOfLines={4}
+                        ellipsizeMode="tail"
+                    >{post_description}</Text>
                     <TouchableOpacity style={{ marginTop: hp('1%') }} >
                         <Text style={{ fontSize: hp('2%'), fontWeight: '300' }}>{this.props.data.description}</Text>
                     </TouchableOpacity>
 
-                </View>
+                </TouchableOpacity>
 
             </View>
         );
