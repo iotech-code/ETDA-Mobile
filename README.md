@@ -116,3 +116,6 @@
 
     - update ui ในส่วนของ admin 
     - ยังเหลือ poll และ survey ในส่วนของ admin
+
+
+<!-- Security scan triggered at 2026-10-07 14:41:13 -->
